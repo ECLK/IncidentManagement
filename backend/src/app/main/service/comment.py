@@ -57,13 +57,13 @@ def get_a_comment(id):
     return Comment.query.filter_by(id=id).first()
 
 def get_comments_by_user(user_id):
-    return Comment.query.filter_by(user_id=user_id).first()
+    return Comment.query.filter_by(user_id=user_id).all()
 
 def get_comments_by_role(role_id):
-    return Comment.query.filter_by(role_id=role_id).first()
+    return Comment.query.filter_by(role_id=role_id).all()
 
 def delete_a_comment(id):
-    comment = Comment.query.filter_by(id=id).first()
+    comment = Comment.query.filter_by(id=id).all()
     if not comment:
         response_object = {
             'status': 'fail',
@@ -96,27 +96,11 @@ def edit_a_comment(id, data):
     except KeyError:
         pass
     try:
-        new_comment.user_id = data['user_id'],
-    except KeyError:
-        pass
-    try:
-        new_comment.role_id = data['role_id'],
-    except KeyError:
-        pass
-    try:
         new_comment.is_active = data['is_active'],
     except KeyError:
         pass
     try:
-        new_comment.created_date = data['created_date'],
-    except KeyError:
-        pass
-    try:
         new_comment.updated_date = data['updated_date'],
-    except KeyError:
-        pass
-    try:
-        new_comment.deleted_date = data['deleted_date'],
     except KeyError:
         pass
     
