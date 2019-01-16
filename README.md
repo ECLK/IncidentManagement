@@ -1,2 +1,2 @@
-# IncidentManagement
-incident management system for EC
+# Incident Management
+Incident Management System for Elections Commission of Sri Lanka
