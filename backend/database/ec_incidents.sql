@@ -34,7 +34,7 @@ CREATE TABLE `alembic_version` (
 
 LOCK TABLES `alembic_version` WRITE;
 /*!40000 ALTER TABLE `alembic_version` DISABLE KEYS */;
-INSERT INTO `alembic_version` VALUES ('5fe1860ff03b');
+INSERT INTO `alembic_version` VALUES ('04f61aaf51e8');
 /*!40000 ALTER TABLE `alembic_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -97,6 +97,77 @@ INSERT INTO `district` VALUES (1,'Ampara','Eastern',NULL,NULL,NULL,NULL),(2,'Anu
 UNLOCK TABLES;
 
 --
+-- Table structure for table `election`
+--
+
+DROP TABLE IF EXISTS `election`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `election` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(1024) DEFAULT NULL,
+  `sn_name` varchar(1024) DEFAULT NULL,
+  `tm_name` varchar(1024) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `election`
+--
+
+LOCK TABLES `election` WRITE;
+/*!40000 ALTER TABLE `election` DISABLE KEYS */;
+INSERT INTO `election` VALUES (1,'Provincial Council Election 2019',NULL,NULL);
+/*!40000 ALTER TABLE `election` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `incident`
+--
+
+DROP TABLE IF EXISTS `incident`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `incident` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `token` varchar(1024) DEFAULT NULL,
+  `election_id` int(11) DEFAULT NULL,
+  `police_station_id` int(11) DEFAULT NULL,
+  `polling_station_id` int(11) DEFAULT NULL,
+  `reporter_id` int(11) DEFAULT NULL,
+  `location` varchar(4096) DEFAULT NULL,
+  `channel` varchar(4096) DEFAULT NULL,
+  `title` text,
+  `description` text,
+  `sn_title` text,
+  `sn_description` text,
+  `tm_title` text,
+  `tm_description` text,
+  `created_date` datetime DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `election_id` (`election_id`),
+  KEY `police_station_id` (`police_station_id`),
+  KEY `polling_station_id` (`polling_station_id`),
+  KEY `reporter_id` (`reporter_id`),
+  CONSTRAINT `incident_ibfk_1` FOREIGN KEY (`election_id`) REFERENCES `election` (`id`),
+  CONSTRAINT `incident_ibfk_2` FOREIGN KEY (`police_station_id`) REFERENCES `policestation` (`id`),
+  CONSTRAINT `incident_ibfk_3` FOREIGN KEY (`polling_station_id`) REFERENCES `pollingstation` (`id`),
+  CONSTRAINT `incident_ibfk_4` FOREIGN KEY (`reporter_id`) REFERENCES `reporter` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `incident`
+--
+
+LOCK TABLES `incident` WRITE;
+/*!40000 ALTER TABLE `incident` DISABLE KEYS */;
+/*!40000 ALTER TABLE `incident` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `policestation`
 --
 
@@ -126,6 +197,63 @@ LOCK TABLES `policestation` WRITE;
 /*!40000 ALTER TABLE `policestation` DISABLE KEYS */;
 INSERT INTO `policestation` VALUES (1,2,'Anuradapura','Anuradapura',NULL,NULL,NULL,NULL),(2,2,'Hidogama','Anuradapura',NULL,NULL,NULL,NULL),(3,2,'Udamaluwa','Anuradapura',NULL,NULL,NULL,NULL),(4,2,'Mihintale','Anuradapura',NULL,NULL,NULL,NULL),(5,2,'Kekirawa','Anuradapura',NULL,NULL,NULL,NULL),(6,2,'Thirappone','Anuradapura',NULL,NULL,NULL,NULL),(7,2,'Eppawala','Anuradapura',NULL,NULL,NULL,NULL),(8,2,'Galnewa','Anuradapura',NULL,NULL,NULL,NULL),(9,2,'Galkiriyagama','Anuradapura',NULL,NULL,NULL,NULL),(10,2,'Kebithigollawa','Anuradapura',NULL,NULL,NULL,NULL),(11,2,'Medawachchiya','Anuradapura',NULL,NULL,NULL,NULL),(12,2,'Padaviya','Anuradapura',NULL,NULL,NULL,NULL),(13,2,'Thambuttegama','Anuradapura',NULL,NULL,NULL,NULL),(14,2,'Rajangane','Anuradapura',NULL,NULL,NULL,NULL),(15,2,'Nochchiyagama','Anuradapura',NULL,NULL,NULL,NULL),(16,2,'Thalawa','Anuradapura',NULL,NULL,NULL,NULL),(17,2,'Horowpathana','Anuradapura',NULL,NULL,NULL,NULL),(18,2,'Kahatagasdigiliya','Anuradapura',NULL,NULL,NULL,NULL),(19,2,'Thanthirimalaya','Anuradapura',NULL,NULL,NULL,NULL),(20,2,'Mahawilachchiya','Anuradapura',NULL,NULL,NULL,NULL),(21,2,'Galenbidunuwewa','Anuradapura',NULL,NULL,NULL,NULL),(22,2,'Ipalogama','Anuradapura',NULL,NULL,NULL,NULL),(23,21,'Polonnaruwa','Polonnaruwa',NULL,NULL,NULL,NULL),(24,21,'Pulasthipura','Polonnaruwa',NULL,NULL,NULL,NULL),(25,21,'Welikanda','Polonnaruwa',NULL,NULL,NULL,NULL),(26,21,'Aralaganwila','Polonnaruwa',NULL,NULL,NULL,NULL),(27,21,'Hingurakgoda','Polonnaruwa',NULL,NULL,NULL,NULL),(28,21,'Medirigiriya','Polonnaruwa',NULL,NULL,NULL,NULL),(29,21,'Habarana','Polonnaruwa',NULL,NULL,NULL,NULL),(30,21,'Bakamuna','Polonnaruwa',NULL,NULL,NULL,NULL),(31,21,'Minneriya','Polonnaruwa',NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `policestation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `pollingstation`
+--
+
+DROP TABLE IF EXISTS `pollingstation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `pollingstation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `district_id` int(11) DEFAULT NULL,
+  `name` varchar(1024) DEFAULT NULL,
+  `division` varchar(1024) DEFAULT NULL,
+  `sn_name` varchar(1024) DEFAULT NULL,
+  `sn_division` varchar(1024) DEFAULT NULL,
+  `tm_name` varchar(1024) DEFAULT NULL,
+  `tm_division` varchar(1024) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `district_id` (`district_id`),
+  CONSTRAINT `pollingstation_ibfk_1` FOREIGN KEY (`district_id`) REFERENCES `district` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pollingstation`
+--
+
+LOCK TABLES `pollingstation` WRITE;
+/*!40000 ALTER TABLE `pollingstation` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pollingstation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `reporter`
+--
+
+DROP TABLE IF EXISTS `reporter`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `reporter` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(1024) DEFAULT NULL,
+  `sn_name` varchar(1024) DEFAULT NULL,
+  `tm_name` varchar(1024) DEFAULT NULL,
+  `type` varchar(1024) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `reporter`
+--
+
+LOCK TABLES `reporter` WRITE;
+/*!40000 ALTER TABLE `reporter` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reporter` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -219,4 +347,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-16 19:14:26
+-- Dump completed on 2019-01-16 20:25:42
