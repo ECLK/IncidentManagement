@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # uncomment the line below for postgres database url from environment variable
 # postgres_local_base = os.environ['DATABASE_URL']
@@ -15,7 +17,7 @@ class DevelopmentConfig(Config):
     # uncomment the line below to use postgres
     # SQLALCHEMY_DATABASE_URI = postgres_local_base
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'mysql://samisa:samisa123@localhost/kanban'
+    SQLALCHEMY_DATABASE_URI = os.getenv("MYSQL_PATH")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
