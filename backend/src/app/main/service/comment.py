@@ -79,7 +79,7 @@ def delete_a_comment(id):
         }
         return response_object, 201
 
-def edit_a_comment(id, data):
+def update_a_comment(id, data):
     comment = Comment.query.filter_by(id = id).first()
     status = 'none'
     SUCESS = 'success'
