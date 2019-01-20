@@ -1,4 +1,4 @@
-import {CHANGE_LANGUAGE} from '../actions/mainActions'
+import {CHANGE_LANGUAGE} from '../actions'
 
 const initialState = {
     selectedLanguage: 'sinhala'

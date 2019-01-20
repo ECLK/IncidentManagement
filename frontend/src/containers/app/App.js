@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router} from 'react-router-dom'
 
 import './App.css';
-import mainStore from '../../store/mainStore';
-import mainRoutes from '../../routes/mainRoutes'
+import store from '../../store';
+import routes from '../../routes'
 
 class App extends Component {
   render() {
     return (
-      <Provider store={mainStore}>
+      <Provider store={store}>
         <Router>
           <div>
-            {mainRoutes.map((currRoute, key)=>{
-              return (<Route exact path={currRoute.path} component={currRoute.component} key={key}/>)
+            {routes.map((route, key)=>{
+              return (route);
             })}
           </div>
         </Router>

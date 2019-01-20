@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import {changeLanguage} from '../../actions/mainActions'
+import {changeLanguage} from '../../actions'
 
 class LangaugeSelector extends Component {
 
