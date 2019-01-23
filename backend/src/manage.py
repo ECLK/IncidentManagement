@@ -5,7 +5,7 @@ from flask_migrate import Migrate, MigrateCommand
 
 from app.main import create_app, db, blueprint, api
 from app.main.model import category, comment, district, election, incident, policestation, pollingstation, reporter, role, state, task, user
-from app.main.controller import user_controller, state_controller, task, category, district, policestation, election, pollingstation, reporter, incident, comment
+from app.main.controller import user_controller, state_controller, task, category, district, policestation, election, pollingstation, reporter, incident, comment, incident_severity
 
 app = create_app(os.getenv('BOILERPLATE_ENV') or 'dev')
 #app.register_blueprint(blueprint)
