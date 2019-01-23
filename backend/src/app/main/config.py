@@ -17,7 +17,7 @@ class DevelopmentConfig(Config):
     # uncomment the line below to use postgres
     # SQLALCHEMY_DATABASE_URI = postgres_local_base
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.getenv("MYSQL_PATH")
+    SQLALCHEMY_DATABASE_URI = 'mysql://samisa:samisa123@localhost/kanban'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 

@@ -12,7 +12,7 @@ comment_fields = {
     'body' : fields.String,
     'sn_body' : fields.String,
     'tm_body' : fields.String,
-    'user_id' : fields.String(1024),
+    'user_id' : fields.Integer,
     'role_id' : fields.Integer,
 }
 
