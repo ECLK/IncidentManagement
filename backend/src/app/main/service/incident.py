@@ -35,6 +35,14 @@ def save_new_incident(data):
     except KeyError:
         pass
     try:
+        new_incident.timing_nature = data['timing_nature'],
+    except KeyError:
+        pass
+    try:
+        new_incident.validity = data['validity'],
+    except KeyError:
+        pass
+    try:
         new_incident.title = data['title'],
     except KeyError:
         pass
@@ -133,6 +141,16 @@ def update_a_incident(id, data):
         pass
     try:
         incident.channel = data['channel']
+        status = SUCESS
+    except KeyError:
+        pass
+    try:
+        incident.timing_nature = data['timing_nature']
+        status = SUCESS
+    except KeyError:
+        pass
+    try:
+        incident.validity = data['validity']
         status = SUCESS
     except KeyError:
         pass
