@@ -7,6 +7,7 @@ from app.main import create_app, db, blueprint, api
 from app.main.model import category, district, election, incident, policestation, pollingstation, reporter, role, state, task, user
 from app.main.controller import user_controller, state_controller, task, category, district, policestation, election, pollingstation, reporter
 from app.main.controller import incident, incident_comment, incident_severity, incident_status, incident_media
+from app.main.controller import action_entity
 
 app = create_app(os.getenv('BOILERPLATE_ENV') or 'dev')
 #app.register_blueprint(blueprint)
