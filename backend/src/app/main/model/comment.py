@@ -9,7 +9,7 @@ class Comment(db.Model):
     body = db.Column(db.Text)
     sn_body = db.Column(db.Text)
     tm_body = db.Column(db.Text)
-    user_id = db.Column(db.String(1024))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
     is_active = db.Column(db.Boolean)
     created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)

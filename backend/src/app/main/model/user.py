@@ -6,7 +6,7 @@ class User(db.Model):
     __tablename__ = "user"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(50), unique=True)
+    name = db.Column(db.String(1024))
   
 
     def __repr__(self):
