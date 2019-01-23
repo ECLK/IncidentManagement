@@ -10,10 +10,11 @@ from .. import api
 incident_entity_fields = {
     
     'id' : fields.Integer,
-    'name' : fields.String(1024),
-    'description' : fields.String,
     'incident_id' : fields.Integer,
     'entity_id' : fields.Integer,
+    'description' : fields.String,
+    'sn_description' : fields.String,
+    'tn_description' : fields.String,
     'created_date' : fields.DateTime,
 }
 

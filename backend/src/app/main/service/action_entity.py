@@ -15,11 +15,23 @@ def save_new_action_entity(data):
     except KeyError:
         pass
     try:
+        new_action_entity.description = data['description'],
+    except KeyError:
+        pass
+    try:
         new_action_entity.sn_name = data['sn_name'],
     except KeyError:
         pass
     try:
-        new_action_entity.tm_name = data['tm_name'],
+        new_action_entity.sn_description = data['sn_description'],
+    except KeyError:
+        pass
+    try:
+        new_action_entity.tn_name = data['tn_name'],
+    except KeyError:
+        pass
+    try:
+        new_action_entity.tn_description = data['tn_description'],
     except KeyError:
         pass
     
@@ -68,12 +80,27 @@ def update_a_action_entity(id, data):
     except KeyError:
         pass
     try:
+        action_entity.description = data['description']
+        status = SUCESS
+    except KeyError:
+        pass
+    try:
         action_entity.sn_name = data['sn_name']
         status = SUCESS
     except KeyError:
         pass
     try:
-        action_entity.tm_name = data['tm_name']
+        action_entity.sn_description = data['sn_description']
+        status = SUCESS
+    except KeyError:
+        pass
+    try:
+        action_entity.tn_name = data['tn_name']
+        status = SUCESS
+    except KeyError:
+        pass
+    try:
+        action_entity.tn_description = data['tn_description']
         status = SUCESS
     except KeyError:
         pass
