@@ -12,8 +12,11 @@ action_entity_fields = {
     'id' : fields.Integer,
     'type' : fields.String(1024),
     'name' : fields.String(1024),
+    'description' : fields.String,
     'sn_name' : fields.String(1024),
-    'tm_name' : fields.String(1024),
+    'sn_description' : fields.String,
+    'tn_name' : fields.String(1024),
+    'tn_description' : fields.String,
 }
 
 action_entity_list_fields = {
