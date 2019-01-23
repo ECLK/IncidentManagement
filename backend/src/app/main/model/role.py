@@ -2,11 +2,15 @@ from .. import db
 import datetime
 
 class Role(db.Model):
-    """ District Model for storing task related details """
+    """ Role Model for storing task related details """
     __tablename__ = "role"
 
+    
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(1024))
+    entiry_id = db.Column(db.Integer, db.ForeignKey('action_entity.id'))
+    name = db.Column(db.String(1024))
+    sn_name = db.Column(db.String(1024))
+    tm_name = db.Column(db.String(1024))
 
     def __repr__(self):
-        return "<Role '{}'>".format(self.title)
+        return "<Role '{}'>".format(self.name)

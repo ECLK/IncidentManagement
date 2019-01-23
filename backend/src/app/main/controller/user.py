@@ -1,14 +1,19 @@
-from flask import Flask
+import json
+from flask import Flask, jsonify
 
 from flask_restful import reqparse, abort, Api, Resource, request, fields, marshal_with
 
-from ..service.user_service import save_new_user, get_all_users, get_a_user, delete_a_user
+from ..service.user import save_new_user, get_all_users, get_a_user, update_a_user, delete_a_user
 
 from .. import api
 
 user_fields = {
-    'id': fields.Integer,
-    'name': fields.String
+    
+    'id' : fields.Integer,
+    'role_id' : fields.Integer,
+    'name' : fields.String(1024),
+    'sn_name' : fields.String(1024),
+    'tm_name' : fields.String(1024),
 }
 
 user_list_fields = {
@@ -39,13 +44,11 @@ class User(Resource):
         else:
             return user
 
+    def put(self, id):
+        """Update a given User """
+        data = request.get_json()
+        return update_a_user(id=id, data=data)
+
     def delete(self, id):
+        """Delete a given User """
         return delete_a_user(id)
-
-class HelloWorld(Resource):
-    def get(self):
-        return {'hello': 'world'}
-
-def set_routes():
-    api.add_resource(HelloWorld, '/hello')
-    print("api.add_resource")
