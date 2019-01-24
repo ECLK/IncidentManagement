@@ -1,7 +1,7 @@
 import {CHANGE_LANGUAGE} from '../actions'
 
 const initialState = {
-    selectedLanguage: 'sinhala'
+    selectedLanguage: 'si'
 }
 
 export default function mainApp(state, action){
