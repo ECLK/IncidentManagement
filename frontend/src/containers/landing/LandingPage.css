@@ -1,0 +1,31 @@
+.navigation-container{
+    display: flex;
+    margin: 25%;
+    margin-top: 5%;
+    
+}
+.landing-page{
+    width: 100%;
+}
+.logo-container{
+    width: 100%;
+    text-align: center;
+    margin-top: 5%;
+}
+
+.logo-container img{
+    max-width: 400px;
+    width: 20%;
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 3%;
+
+}
+
+.title-container h3 {
+    font-size: 3vw;
+}
