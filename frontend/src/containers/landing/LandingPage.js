@@ -6,12 +6,13 @@ import { Icon } from "@material-ui/core";
 import ECLogo from "../../static/img/ec-logo.png";
 
 import {FormattedMessage} from 'react-intl';
+import Link from "react-router-dom/Link";
 
 function LandingPage(props) {
 
     const getCardContents = ()=>{
         return([
-            <React.Fragment>
+            <Link to='/report'>
                 <Typography variant="h5" component="h2">
                     <FormattedMessage
                         id='eclk.incident.management.report.incidents'
@@ -20,20 +21,19 @@ function LandingPage(props) {
                     />
                 </Typography>
                 <Icon fontSize="large">call</Icon>
-            </React.Fragment>,
-            <React.Fragment>
+            </Link>,
+            <Link to='/ongoing'>
                 <Typography variant="h5" component="h2">                
-                <FormattedMessage
+                    <FormattedMessage
                         id='eclk.incident.management.ongoing.incidents'
                         description='Ongoing Incidents'
                         defaultMessage='Ongoing Incidents'
                     />
                 </Typography>
                 <Icon fontSize="large">autorenew</Icon>
-            </React.Fragment>,
-            <React.Fragment>
+            </Link>,
+            <Link to='/historic'>
                 <Typography variant="h5" component="h2">
-                
                 <FormattedMessage
                     id='eclk.incident.management.historic.reports'
                     description='Historic Reports'
@@ -41,7 +41,7 @@ function LandingPage(props) {
                 />
                 </Typography>
                 <Icon fontSize="large">assessment</Icon>
-            </React.Fragment>,
+            </Link>,
         ]);
     }
     return (

@@ -7,6 +7,9 @@ import { IntlProvider } from "react-intl";
 import i18n from "../translation/i18n.js";
 import LandingPage from "../containers/landing/LandingPage";
 import LanguageSelector from "../components/LanguageSelector";
+import Historic from "../containers/app/domains/Historic";
+import Report from "../containers/app/domains/Report";
+import Ongoing from "../containers/app/domains/Ongoing";
 
 class MainRouter extends Component {
 
@@ -22,6 +25,9 @@ class MainRouter extends Component {
           <React.Fragment>
             <LanguageSelector/>
             <Route exact path="/" component={LandingPage} />
+            <Route path="/report" component={Report} />
+            <Route path="/ongoing" component={Ongoing}/>
+            <Route path="/historic" component={Historic}/>
             <Route exact path="/home" component={HomePage} />
           </React.Fragment>
         </Router>
