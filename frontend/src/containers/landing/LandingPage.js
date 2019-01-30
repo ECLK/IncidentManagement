@@ -7,6 +7,8 @@ import ECLogo from "../../static/img/ec-logo.png";
 
 import {FormattedMessage} from 'react-intl';
 import Link from "react-router-dom/Link";
+import LanguageSelector from "../../components/LanguageSelector";
+import Logo from "../../components/Logo";
 
 function LandingPage(props) {
 
@@ -46,9 +48,8 @@ function LandingPage(props) {
     }
     return (
         <div className='landing-page'>
-            <div className='logo-container'>
-                <img src={ECLogo} alt='logo'></img>
-            </div>
+            <LanguageSelector/>
+            <Logo />
             <div className="title-container">
                 <Typography variant="h3" gutterBottom>
                     <FormattedMessage

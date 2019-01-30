@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Typography } from '@material-ui/core';
 import Link from 'react-router-dom/Link';
 import { FormattedMessage } from 'react-intl';
-
+import '../Domains.css';
 class Ongoing extends Component {
 
     render(){

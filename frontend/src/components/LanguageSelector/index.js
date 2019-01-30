@@ -13,13 +13,13 @@ function LangaugeSelector(props) {
 
     return (
         <div className="language-selector">
-            <Button variant="outlined" size="large" onClick={()=>{selectLanguage('si')}} className={selectedLanguage === 'si'? 'active' : ''}>
+            <Button variant="contained" color="default" onClick={()=>{selectLanguage('si')}} disabled={selectedLanguage === 'si'}>
                 Sinhala
             </Button>
-            <Button variant="outlined" size="large" onClick={()=>{selectLanguage('ta')}} className={selectedLanguage === 'ta'? 'active' : ''}>
+            <Button variant="contained" color="default" onClick={()=>{selectLanguage('ta')}} disabled={selectedLanguage === 'ta'}>
                 Tamil
             </Button>
-            <Button variant="outlined" size="large" onClick={()=>{selectLanguage('en')}} className={selectedLanguage === 'en'? 'active' : ''}>
+            <Button variant="contained" color="default" onClick={()=>{selectLanguage('en')}} disabled={selectedLanguage === 'en'}>
                 English
             </Button>
         </div>

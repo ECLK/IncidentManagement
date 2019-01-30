@@ -7,16 +7,6 @@
 .landing-page{
     width: 100%;
 }
-.logo-container{
-    width: 100%;
-    text-align: center;
-    margin-top: 5%;
-}
-
-.logo-container img{
-    max-width: 400px;
-    width: 20%;
-}
 
 .title-container {
     display: flex;

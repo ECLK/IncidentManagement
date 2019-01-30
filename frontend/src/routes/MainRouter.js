@@ -23,7 +23,6 @@ class MainRouter extends Component {
       > 
         <Router>
           <React.Fragment>
-            <LanguageSelector/>
             <Route exact path="/" component={LandingPage} />
             <Route path="/report" component={Report} />
             <Route path="/ongoing" component={Ongoing}/>

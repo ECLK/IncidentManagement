@@ -1,7 +1,5 @@
 .language-selector{
-    display: flex;
     width: 100%;
-    justify-content: flex-end;
 }
 
 .language-selector button{
@@ -22,9 +20,7 @@
     border-bottom-right-radius: 4px;
 }
 
-.language-selector button.active{
+.language-selector button:disabled{
     pointer-events: none;
     cursor: default;
-    background-color: #8e8e8e;
-    color: #ffffff;
 }
