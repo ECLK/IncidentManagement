@@ -11,6 +11,10 @@ def save_new_action_entity(data):
     except KeyError:
         pass
     try:
+        new_action_entity.category = data['category'],
+    except KeyError:
+        pass
+    try:
         new_action_entity.name = data['name'],
     except KeyError:
         pass
@@ -71,6 +75,11 @@ def update_a_action_entity(id, data):
     SUCESS = 'success'
     try:
         action_entity.type = data['type']
+        status = SUCESS
+    except KeyError:
+        pass
+    try:
+        action_entity.category = data['category']
         status = SUCESS
     except KeyError:
         pass

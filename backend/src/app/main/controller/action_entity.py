@@ -11,6 +11,7 @@ action_entity_fields = {
     
     'id' : fields.Integer,
     'type' : fields.String(1024),
+    'category' : fields.String(1024),
     'name' : fields.String(1024),
     'description' : fields.String,
     'sn_name' : fields.String(1024),

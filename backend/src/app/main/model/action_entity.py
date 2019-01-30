@@ -8,6 +8,7 @@ class ActionEntity(db.Model):
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     type = db.Column(db.String(1024))
+    category = db.Column(db.String(1024))
     name = db.Column(db.String(1024))
     description = db.Column(db.Text)
     sn_name = db.Column(db.String(1024))
