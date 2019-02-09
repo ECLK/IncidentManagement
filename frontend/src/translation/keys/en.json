@@ -1,3 +1,8 @@
 {
-  "eclk.incident.management.incidents": "Incidents"
+  "eclk.incident.management.incidents": "Incidents",
+  "eclk.incident.management.incidents.reporting.system": "Election Violation Incidents Reporting System",
+  "eclk.incident.management.report.incidents":"Report an Incident",
+  "eclk.incident.management.ongoing.incidents": "Ongoing Incidents",
+  "eclk.incident.management.historic.reports": "Historic Reports"
+
 }

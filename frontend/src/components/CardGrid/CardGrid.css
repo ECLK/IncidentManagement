@@ -1,0 +1,47 @@
+div.card {
+    height: 15vw;
+    margin: 8px 0 0 0;
+    padding: 0.5vw 0 0 0;
+    width: 92%;
+}
+
+div.card-grid div{
+    width: 100%;
+}
+
+.card-grid-container{
+    width: 100%;
+}
+
+.card:hover {
+    background-color: #cacaca;
+    cursor: pointer;
+}
+
+.card:active {
+   color: #ffffff;
+    background-color: #cacaca;
+}
+
+.card div{
+    text-align: center;
+}
+
+.card div span{
+    margin-top: 20px;
+    font-size:2vw;
+}
+
+@media only screen and (max-width: 680px) {
+    .card div span{
+        margin-top: 20px;
+        font-size: 4vw;
+    }
+
+    div.card {
+        height: 32vw;
+        margin: 13px 0 0 0;
+        padding: 0.5vw 0 0 0;
+        width: 100%;
+    }
+}
