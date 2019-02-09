@@ -5,7 +5,7 @@
     
 }
 .landing-page{
-    width: 100%;
+    padding: 22px 30px;
 }
 
 .title-container {
@@ -13,9 +13,35 @@
     align-items: center;
     justify-content: center;
     padding-top: 3%;
+    max-width: 98vw;
+    text-align: center;
+    margin: 15px 0px;
+    height: 54px;
 
 }
 
 .title-container h3 {
     font-size: 3vw;
+}
+
+.landing-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 94%;
+}
+
+@media only screen and (max-width: 680px) {
+    .landing-header {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .title-container h3 {
+        font-size: 5vw;
+    }
+}
+
+.landing-header div {
+    max-width: 300px;
 }

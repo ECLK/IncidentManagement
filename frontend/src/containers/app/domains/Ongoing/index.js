@@ -1,25 +1,19 @@
 import React, { Component } from 'react';
-import { Typography } from '@material-ui/core';
-import Link from 'react-router-dom/Link';
+import DomainContainer from '../../../../components/DomainContainer';
 import { FormattedMessage } from 'react-intl';
-import '../Domains.css';
+import { Typography } from '@material-ui/core';
 class Ongoing extends Component {
 
     render(){
-        return(
-            <div className='domain-container'>
-                <Link to='/'>
-                    Back
-                </Link>
-                <Typography variant="h3" gutterBottom>
-                    <FormattedMessage
-                        id='eclk.incident.management.ongoing.incidents'
-                        description='Ongoing Incidents'
-                        defaultMessage='Ongoing Incidents'
-                    />
-                </Typography>
-            </div>
-        )
+        return(<DomainContainer header={()=>
+            <Typography variant="h5" color='inherit' noWrap className='line-height-fix'>
+                <FormattedMessage
+                    id='eclk.incident.management.ongoing.incidents'
+                    description='Ongoing Incidents'
+                    defaultMessage='Ongoing Incidents'
+                />
+            </Typography>
+        } />)
     }
 }
 

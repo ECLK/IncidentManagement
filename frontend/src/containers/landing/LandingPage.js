@@ -3,7 +3,6 @@ import Typography from '@material-ui/core/Typography';
 import './LandingPage.css'
 import CardGrid from "../../components/CardGrid";
 import { Icon } from "@material-ui/core";
-import ECLogo from "../../static/img/ec-logo.png";
 
 import {FormattedMessage} from 'react-intl';
 import Link from "react-router-dom/Link";
@@ -48,8 +47,14 @@ function LandingPage(props) {
     }
     return (
         <div className='landing-page'>
-            <LanguageSelector/>
-            <Logo />
+            <div className='landing-header'>
+                <div>
+                    <Logo maxWidth='300px'/>
+                </div>
+                <div>
+                    <LanguageSelector/>
+                </div>
+            </div>
             <div className="title-container">
                 <Typography variant="h3" gutterBottom>
                     <FormattedMessage

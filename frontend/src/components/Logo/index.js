@@ -1,6 +1,7 @@
 import React from "react";
+import PropTypes from 'prop-types';
+
 import ECLogo from "../../static/img/ec-logo.png";
-import { withStyles } from '@material-ui/core/styles';
 import './Logo.css';
 
 function Logo(props) {
@@ -14,5 +15,8 @@ function Logo(props) {
   
 }
 
+Logo.propTypes ={
+    maxWidth: PropTypes.string
+}
 
 export default Logo;

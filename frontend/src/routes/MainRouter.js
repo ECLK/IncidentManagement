@@ -6,7 +6,6 @@ import HomePage from "../containers/landing/homePage";
 import { IntlProvider } from "react-intl";
 import i18n from "../translation/i18n.js";
 import LandingPage from "../containers/landing/LandingPage";
-import LanguageSelector from "../components/LanguageSelector";
 import Historic from "../containers/app/domains/Historic";
 import Report from "../containers/app/domains/Report";
 import Ongoing from "../containers/app/domains/Ongoing";

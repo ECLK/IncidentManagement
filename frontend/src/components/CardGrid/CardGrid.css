@@ -1,8 +1,10 @@
 div.card {
-    height: 137px;
-    margin: 0 15px;
+    height: 15vw;
+    margin: 8px 0 0 0;
+    padding: 0.5vw 0 0 0;
     width: 92%;
 }
+
 div.card-grid div{
     width: 100%;
 }
@@ -26,6 +28,20 @@ div.card-grid div{
 }
 
 .card div span{
-    margin-top: 10px;
-    font-size: 1.5vw;
+    margin-top: 20px;
+    font-size:2vw;
+}
+
+@media only screen and (max-width: 680px) {
+    .card div span{
+        margin-top: 20px;
+        font-size: 4vw;
+    }
+
+    div.card {
+        height: 32vw;
+        margin: 13px 0 0 0;
+        padding: 0.5vw 0 0 0;
+        width: 100%;
+    }
 }

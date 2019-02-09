@@ -20,7 +20,15 @@
     border-bottom-right-radius: 4px;
 }
 
+
+.language-selector button{
+    border: 1px solid rgba(245, 245, 245, 0.46);
+    padding: 5px 21px;
+}
+
 .language-selector button:disabled{
     pointer-events: none;
     cursor: default;
+    color: #fff;
 }
+
