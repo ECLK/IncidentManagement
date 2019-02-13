@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import DomainContainer from '../../../../components/DomainContainer';
+import DomainContainer from '../../components/DomainContainer';
 import { FormattedMessage } from 'react-intl';
 import { Typography } from '@material-ui/core';
 class Ongoing extends Component {

@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import {fetchCatogories} from '../../actions'
+import {fetchCatogories} from './state/LandingActions'
 
-class HomePage extends Component {
+class LandingPage extends Component {
 
     render(){
         return(
             <React.Fragment>
             <div>Catogories</div>
-            <div style={{'display':'flex','justify-content':'center','padding-top':'300px'}}>
-                
+            <div style={{'display':'flex','justify-content':'center','padding-top':'300px'}}>     
                 <button onClick={()=>{this.props.onClick()}}>getCats</button>
                 {this.props.isCatogoryFetching ? <p>"Loading"</p>:<p></p>}
             </div>
@@ -39,4 +38,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-  )(HomePage);
+  )(LandingPage);

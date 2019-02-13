@@ -1,18 +1,15 @@
-import {CHANGE_LANGUAGE, REQUEST_CATAGORIES, REQUEST_CATAGORIES_SUCCESS} from '../actions'
+import { REQUEST_CATAGORIES, REQUEST_CATAGORIES_SUCCESS} from './LandingTypes'
 
 const initialState = {
-    selectedLanguage: 'si'
+    isCatogoryFetching:false,
+    catogories:[]
 }
 
-export default function mainApp(state, action){
+export default function landingReducer(state, action){
     if (typeof state === 'undefined') {
         return initialState
     }
     switch(action.type){
-        case CHANGE_LANGUAGE:
-            return Object.assign({}, state, {
-                selectedLanguage: action.selectedLanguage
-            })
         case REQUEST_CATAGORIES:
             return Object.assign({}, state, {
                 isCatogoryFetching:true

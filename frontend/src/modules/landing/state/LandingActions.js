@@ -1,30 +1,9 @@
-
-import {getCatogories} from '../api'
-
+import {getCatogories} from '../../../api'
+import { REQUEST_CATAGORIES, REQUEST_CATAGORIES_SUCCESS} from './LandingTypes'
 
 /*
- * action types
- */
-
- export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';
- export const REQUEST_CATAGORIES = 'REQUEST_CATAGORIES';
- export const REQUEST_CATAGORIES_SUCCESS = 'REQUEST_CATAGORIES_SUCCESS';
- export const REQUEST_CATAGORIES_FAILURE = 'REQUEST_CATAGORIES_FAILURE';
-
-
-
-
-
- /*
  * action creators
  */
-
-export function changeLanguage(selectedLanguage) {
-    return {
-        type: CHANGE_LANGUAGE,
-        selectedLanguage
-    }
-}
 
 export function requestCatogories() {
     return {
