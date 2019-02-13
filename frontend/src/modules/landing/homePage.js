@@ -22,7 +22,7 @@ class LandingPage extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        isCatogoryFetching: state.isCatogoryFetching,
+        isCatogoryFetching: state.landingReducer.isCatogoryFetching,
         ...ownProps
     }
 }
