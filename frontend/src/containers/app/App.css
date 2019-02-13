@@ -1,0 +1,30 @@
+a {
+  text-decoration: none !important;
+}
+
+.title-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 10%;
+}
+
+.header-title-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-lang-select-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.line-height-fix{
+  line-height: 2 !important;
+}
+
+div.header-icon-container a {
+  margin: 0;
+}

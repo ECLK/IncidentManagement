@@ -17,6 +17,8 @@ incident_fields = {
     'reporter_id' : fields.Integer,
     'location' : fields.String(4096),
     'channel' : fields.String(4096),
+    'timing_nature' : fields.String(1024),
+    'validity' : fields.String(1024),
     'title' : fields.String,
     'description' : fields.String,
     'sn_title' : fields.String,

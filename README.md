@@ -2,17 +2,16 @@
 
 Incident Management System for Elections Commission of Sri Lanka
 
-## python
+# Setting up
 
-python 3.x 
+## Setting up runtime
 
-## Installation for mysql 5.x
+1. Use Python 3.x and Pip 3.x versions
+2. Install the dependencies by `pip install -r requirements.txt `
 
-### DB dump import 
+## Setting up database
 
-Change the folllwing in the dump before import  
-`charset = utf8`   
-`collate = utf8_general_ci`
+Use MySQL 8  
 
 ## DB migrations
 Remove the migrations dir if any  
@@ -20,3 +19,12 @@ Remove the migrations dir if any
 1) flask db init
 2) flask db migrate
 3) flask db upgrade
+
+### Installation for MySQL 5.x
+
+If you are using MySQL 5.x, Change the folllwing in the dump before importiing it
+
+```
+charset = utf8
+collate = utf8_general_ci
+```
