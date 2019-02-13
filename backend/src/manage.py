@@ -19,7 +19,7 @@ migrate = Migrate(app, db)
 #set_routes()
 
 def run():
-    app.run()
+    app.run(host="0.0.0.0")
 
 
 def test():
@@ -31,4 +31,4 @@ def test():
     return 1
 
 if __name__ == '__main__':
-    app.run()
+    run()
