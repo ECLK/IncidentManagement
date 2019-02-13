@@ -15,6 +15,9 @@ from app.main.service import category as categoryService
 from app.main.service import policestation as policestationService
 from app.main.service import district as districtService
 from app.main.service import action_entity as actionEntityService
+from app.main.service import election as electionService
+from app.main.service import pollingstation as pollingstationService
+from app.main.service import reporter as reporterService
 
 def seed_categorys():
     """ Seed category data to the database """
@@ -100,8 +103,27 @@ def seed_action_entities():
         print(e)
         print("Error seeding action entities")
 
+def seed_dummy_data():
+    """ Seed dummy data for now for development """
+    electionService.save_new_election({
+        "name": "Dummy election"
+    })
+
+    pollingstationService.save_new_pollingstation({
+        "district_id": 2,
+        "name": "Dummy polling station",
+        "division": "Some division"
+    })
+
+    reporterService.save_new_reporter({
+        "name": "Dummy reporter",
+        "type": "Some type"
+    })
+
+
 if __name__ == "__main__":
     seed_categorys()
     seed_districts()
     seed_police_stations()
     seed_action_entities()
+    seed_dummy_data()
