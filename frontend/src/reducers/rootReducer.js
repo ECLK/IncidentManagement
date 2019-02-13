@@ -1,9 +1,7 @@
 import {CHANGE_LANGUAGE, REQUEST_CATAGORIES, REQUEST_CATAGORIES_SUCCESS} from '../actions'
 
 const initialState = {
-    selectedLanguage: 'sinhala',
-    isCatogoryFetching: false,
-    catogories: []
+    selectedLanguage: 'si'
 }
 
 export default function mainApp(state, action){

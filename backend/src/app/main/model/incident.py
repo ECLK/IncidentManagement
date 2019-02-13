@@ -14,6 +14,8 @@ class Incident(db.Model):
     reporter_id = db.Column(db.Integer, db.ForeignKey('reporter.id'))
     location = db.Column(db.String(4096))
     channel = db.Column(db.String(4096))
+    timing_nature = db.Column(db.String(1024))
+    validity = db.Column(db.String(1024))
     title = db.Column(db.Text)
     description = db.Column(db.Text)
     sn_title = db.Column(db.Text)

@@ -1,0 +1,9 @@
+
+.logo-container{
+    height: 100%;
+}
+
+.logo-container img{
+    width: 100%;
+    background-color: white;
+}
