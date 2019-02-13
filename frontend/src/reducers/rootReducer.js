@@ -1,7 +1,9 @@
-import {CHANGE_LANGUAGE} from '../actions'
+import {CHANGE_LANGUAGE, REQUEST_CATAGORIES, REQUEST_CATAGORIES_SUCCESS} from '../actions'
 
 const initialState = {
-    selectedLanguage: 'sinhala'
+    selectedLanguage: 'sinhala',
+    isCatogoryFetching: false,
+    catogories: []
 }
 
 export default function mainApp(state, action){
@@ -12,6 +14,16 @@ export default function mainApp(state, action){
         case CHANGE_LANGUAGE:
             return Object.assign({}, state, {
                 selectedLanguage: action.selectedLanguage
+            })
+        case REQUEST_CATAGORIES:
+            return Object.assign({}, state, {
+                isCatogoryFetching:true
+            })
+        case REQUEST_CATAGORIES_SUCCESS:
+            console.log(action.catogories)
+            return Object.assign({}, state, {
+                isCatogoryFetching: false,
+                catogories:action.catogories
             })
         default:
             return state
