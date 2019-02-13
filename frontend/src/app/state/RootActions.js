@@ -1,17 +1,9 @@
-/*
- * action types
- */
 
- export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';
-
-
- /*
- * action creators
- */
+import { CHANGE_LANGUAGE } from './RootTypes'
 
 export function changeLanguage(selectedLanguage) {
     return {
         type: CHANGE_LANGUAGE,
         selectedLanguage
     }
-  }
+}

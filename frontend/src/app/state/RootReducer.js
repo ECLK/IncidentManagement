@@ -1,15 +1,17 @@
-import {CHANGE_LANGUAGE} from '../actions'
+import { CHANGE_LANGUAGE } from './RootTypes'
 
 const initialState = {
-    selectedLanguage: 'si'
+    selectedLanguage: 'si',
 }
 
-export default function mainApp(state, action){
+export default function rootReducer(state, action){
     if (typeof state === 'undefined') {
+        console.log(initialState)
         return initialState
     }
     switch(action.type){
         case CHANGE_LANGUAGE:
+            console.log(action.selectedLanguage)
             return Object.assign({}, state, {
                 selectedLanguage: action.selectedLanguage
             })
@@ -18,4 +20,3 @@ export default function mainApp(state, action){
         
     }
 }
-

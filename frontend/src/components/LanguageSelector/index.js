@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 
-import {changeLanguage} from '../../actions'
+import {changeLanguage} from '../../app/state/RootActions'
 import { Button } from '@material-ui/core';
 import "./LanguageSelector.css";
 function LangaugeSelector(props) {
