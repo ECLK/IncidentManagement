@@ -2,13 +2,13 @@ import React, { Component } from "react";
 import { Route, BrowserRouter as Router } from "react-router-dom";
 import { connect } from "react-redux";
 
-import HomePage from "../containers/landing/homePage";
+import HomePage from "../modules/landing/homePage";
 import { IntlProvider } from "react-intl";
 import i18n from "../translation/i18n.js";
-import LandingPage from "../containers/landing/LandingPage";
-import Historic from "../containers/app/domains/Historic";
-import Report from "../containers/app/domains/Report";
-import Ongoing from "../containers/app/domains/Ongoing";
+import LandingPage from "../modules/landing/LandingPage";
+import Historic from "../modules/reporting";
+import Report from "../modules/incident-filing";
+import Ongoing from "../modules/ongoing-incidents";
 
 class MainRouter extends Component {
 
@@ -36,7 +36,7 @@ class MainRouter extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    selectedLanguage: state.selectedLanguage
+    selectedLanguage: state.rootReducer.selectedLanguage
   };
 };
 

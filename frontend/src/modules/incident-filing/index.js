@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-import DomainContainer from '../../../../components/DomainContainer';
+import DomainContainer from '../../components/DomainContainer';
+
 
 class Report extends Component {
 
