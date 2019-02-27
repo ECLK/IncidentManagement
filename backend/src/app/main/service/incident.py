@@ -7,80 +7,77 @@ from app.main.model.incident import Incident
 def save_new_incident(data):
     new_incident = Incident()
     try:
-        new_incident.token = data['token'],
+        new_incident.token = data['token']
     except KeyError:
         pass
     try:
-        new_incident.election_id = data['election_id'],
+        new_incident.election_id = data['election_id']
     except KeyError:
         pass
     try:
-        new_incident.police_station_id = data['police_station_id'],
+        new_incident.police_station_id = data['police_station_id']
     except KeyError:
         pass
     try:
-        new_incident.polling_station_id = data['polling_station_id'],
+        new_incident.polling_station_id = data['polling_station_id']
     except KeyError:
         pass
     try:
-        new_incident.reporter_id = data['reporter_id'],
+        new_incident.reporter_id = data['reporter_id']
     except KeyError:
         pass
     try:
-        new_incident.location = data['location'],
+        new_incident.location = data['location']
     except KeyError:
         pass
     try:
-        new_incident.channel = data['channel'],
+        new_incident.channel = data['channel']
     except KeyError:
         pass
     try:
-        new_incident.timing_nature = data['timing_nature'],
+        new_incident.timing_nature = data['timing_nature']
     except KeyError:
         pass
     try:
-        new_incident.validity = data['validity'],
+        new_incident.validity = data['validity']
     except KeyError:
         pass
     try:
-        new_incident.title = data['title'],
+        new_incident.title = data['title']
     except KeyError:
         pass
     try:
-        new_incident.description = data['description'],
+        new_incident.description = data['description']
     except KeyError:
         pass
     try:
-        new_incident.sn_title = data['sn_title'],
+        new_incident.sn_title = data['sn_title']
     except KeyError:
         pass
     try:
-        new_incident.sn_description = data['sn_description'],
+        new_incident.sn_description = data['sn_description']
     except KeyError:
         pass
     try:
-        new_incident.tm_title = data['tm_title'],
+        new_incident.tm_title = data['tm_title']
     except KeyError:
         pass
     try:
-        new_incident.tm_description = data['tm_description'],
+        new_incident.tm_description = data['tm_description']
     except KeyError:
         pass
     try:
-        new_incident.created_date = data['created_date'],
+        new_incident.created_date = data['created_date']
     except KeyError:
         pass
     try:
-        new_incident.updated_date = data['updated_date'],
+        new_incident.updated_date = data['updated_date']
     except KeyError:
         pass
     
     save_changes(new_incident)
-    response_object = {
-        'status': 'success',
-        'message': 'Successfully created incident.',
-    }
-    return response_object, 201
+
+    return new_incident
 
 def get_all_incidents():
     return Incident.query.all()

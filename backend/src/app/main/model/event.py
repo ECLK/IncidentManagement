@@ -4,7 +4,7 @@ import enum
 from sqlalchemy import Enum
 
 class EventAction(enum.Enum):
-    CREATE = 1  
+    CREATED = 1  
     ATTRIBUTE_CHANGED = 2
     COMMENTED = 3
     MEDIA_ATTACHED = 4
@@ -16,7 +16,7 @@ class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     
     # action type for the event, refer enums
-    action = db.Column(Enum(EventAction))
+    action = db.Column(db.Enum(EventAction), unique=True)
 
     # refers to an external entity, ex: comment, media, outcome
     reference_id = db.Column(db.Integer)
@@ -35,6 +35,12 @@ class Event(db.Model):
 
     # attribute changed by the current event action
     affected_attribute = db.Column(db.String(1024))
+
+    # flag to check if the event was approved or not
+    is_approved = db.Column(db.Boolean)
+
+    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    approved_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     
     def __repr__(self):
-        return "<Event '{}'>".format(self.name)
+        return "<Event '{}'>".format(self.id)

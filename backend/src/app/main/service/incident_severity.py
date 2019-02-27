@@ -7,19 +7,19 @@ from app.main.model.incident_severity import IncidentSeverity
 def save_new_incident_severity(data):
     new_incident_severity = IncidentSeverity()
     try:
-        new_incident_severity.level = data['level'],
+        new_incident_severity.level = data['level']
     except KeyError:
         pass
     try:
-        new_incident_severity.detail = data['detail'],
+        new_incident_severity.detail = data['detail']
     except KeyError:
         pass
     try:
-        new_incident_severity.incident_id = data['incident_id'],
+        new_incident_severity.incident_id = data['incident_id']
     except KeyError:
         pass
     try:
-        new_incident_severity.executed_at = data['executed_at'],
+        new_incident_severity.executed_at = data['executed_at']
     except KeyError:
         pass
     

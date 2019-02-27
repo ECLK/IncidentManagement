@@ -7,31 +7,31 @@ from app.main.model.pollingstation import PollingStation
 def save_new_pollingstation(data):
     new_pollingstation = PollingStation()
     try:
-        new_pollingstation.district_id = data['district_id'],
+        new_pollingstation.district_id = data['district_id']
     except KeyError:
         pass
     try:
-        new_pollingstation.name = data['name'],
+        new_pollingstation.name = data['name']
     except KeyError:
         pass
     try:
-        new_pollingstation.division = data['division'],
+        new_pollingstation.division = data['division']
     except KeyError:
         pass
     try:
-        new_pollingstation.sn_name = data['sn_name'],
+        new_pollingstation.sn_name = data['sn_name']
     except KeyError:
         pass
     try:
-        new_pollingstation.sn_division = data['sn_division'],
+        new_pollingstation.sn_division = data['sn_division']
     except KeyError:
         pass
     try:
-        new_pollingstation.tm_name = data['tm_name'],
+        new_pollingstation.tm_name = data['tm_name']
     except KeyError:
         pass
     try:
-        new_pollingstation.tm_division = data['tm_division'],
+        new_pollingstation.tm_division = data['tm_division']
     except KeyError:
         pass
     

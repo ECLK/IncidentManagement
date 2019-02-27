@@ -7,35 +7,35 @@ from app.main.model.action_entity import ActionEntity
 def save_new_action_entity(data):
     new_action_entity = ActionEntity()
     try:
-        new_action_entity.type = data['type'],
+        new_action_entity.type = data['type']
     except KeyError:
         pass
     try:
-        new_action_entity.category = data['category'],
+        new_action_entity.category = data['category']
     except KeyError:
         pass
     try:
-        new_action_entity.name = data['name'],
+        new_action_entity.name = data['name']
     except KeyError:
         pass
     try:
-        new_action_entity.description = data['description'],
+        new_action_entity.description = data['description']
     except KeyError:
         pass
     try:
-        new_action_entity.sn_name = data['sn_name'],
+        new_action_entity.sn_name = data['sn_name']
     except KeyError:
         pass
     try:
-        new_action_entity.sn_description = data['sn_description'],
+        new_action_entity.sn_description = data['sn_description']
     except KeyError:
         pass
     try:
-        new_action_entity.tn_name = data['tn_name'],
+        new_action_entity.tn_name = data['tn_name']
     except KeyError:
         pass
     try:
-        new_action_entity.tn_description = data['tn_description'],
+        new_action_entity.tn_description = data['tn_description']
     except KeyError:
         pass
     

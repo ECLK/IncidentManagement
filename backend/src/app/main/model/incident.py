@@ -24,7 +24,7 @@ class Incident(db.Model):
     tm_description = db.Column(db.Text)
 
     # the occurence flag of the incident - check enums for more details
-    occurence = db.Column(Enum(Occurence))
+    occurence = db.Column(db.Enum(Occurence))
     
     # the person who reported the incident, not ncessarily the one 
     # that entered it to the system
@@ -47,4 +47,4 @@ class Incident(db.Model):
     updated_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     def __repr__(self):
-        return "<Incident '{}'>".format(self.name)
+        return "<Incident '{}'>".format(self.id)

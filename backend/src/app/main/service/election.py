@@ -7,15 +7,15 @@ from app.main.model.election import Election
 def save_new_election(data):
     new_election = Election()
     try:
-        new_election.name = data['name'],
+        new_election.name = data['name']
     except KeyError:
         pass
     try:
-        new_election.sn_name = data['sn_name'],
+        new_election.sn_name = data['sn_name']
     except KeyError:
         pass
     try:
-        new_election.tm_name = data['tm_name'],
+        new_election.tm_name = data['tm_name']
     except KeyError:
         pass
     

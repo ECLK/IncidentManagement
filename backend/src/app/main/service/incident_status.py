@@ -7,19 +7,19 @@ from app.main.model.incident_status import IncidentStatus
 def save_new_incident_status(data):
     new_incident_status = IncidentStatus()
     try:
-        new_incident_status.name = data['name'],
+        new_incident_status.name = data['name']
     except KeyError:
         pass
     try:
-        new_incident_status.detail = data['detail'],
+        new_incident_status.detail = data['detail']
     except KeyError:
         pass
     try:
-        new_incident_status.incident_id = data['incident_id'],
+        new_incident_status.incident_id = data['incident_id']
     except KeyError:
         pass
     try:
-        new_incident_status.executed_at = data['executed_at'],
+        new_incident_status.executed_at = data['executed_at']
     except KeyError:
         pass
     

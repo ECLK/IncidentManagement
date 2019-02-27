@@ -4,8 +4,13 @@ from flask import Flask, jsonify
 from flask_restful import reqparse, abort, Api, Resource, request, fields, marshal_with
 
 from ..service.incident import save_new_incident, get_all_incidents, get_a_incident, update_a_incident, delete_a_incident
+from ..service.reporter import save_new_reporter
+from ..service.event import save_new_event
+from ..service.state_service import save_new_state
 
 from .. import api
+
+from ..model.event import EventAction
 
 incident_fields = {
     
@@ -42,8 +47,23 @@ class IncidentList(Resource):
 
     def post(self):
         """Creates a new Incident """
-        data = request.get_json()
-        return save_new_incident(data=data)
+        save_new_state({"name": "Backlog"})
+        incident_data = request.get_json()
+
+        reporter = save_new_reporter({})
+
+        incident_data["reporter_id"] = reporter.id
+        incident = save_new_incident(incident_data)
+
+        event_data = {
+            "action": EventAction.CREATED,
+            "incident_id": incident.id,
+            "intiator": reporter.id,
+            "approver": reporter.id,
+            "is_approved": True
+        }
+        save_new_event(event_data)
+
 
 
 @api.resource('/incidents/<id>')

@@ -7,19 +7,19 @@ from app.main.model.role import Role
 def save_new_role(data):
     new_role = Role()
     try:
-        new_role.entiry_id = data['entiry_id'],
+        new_role.entiry_id = data['entiry_id']
     except KeyError:
         pass
     try:
-        new_role.name = data['name'],
+        new_role.name = data['name']
     except KeyError:
         pass
     try:
-        new_role.sn_name = data['sn_name'],
+        new_role.sn_name = data['sn_name']
     except KeyError:
         pass
     try:
-        new_role.tm_name = data['tm_name'],
+        new_role.tm_name = data['tm_name']
     except KeyError:
         pass
     

@@ -7,31 +7,31 @@ from app.main.model.policestation import PoliceStation
 def save_new_policestation(data):
     new_policestation = PoliceStation()
     try:
-        new_policestation.district_id = data['district_id'],
+        new_policestation.district_id = data['district_id']
     except KeyError:
         pass
     try:
-        new_policestation.name = data['name'],
+        new_policestation.name = data['name']
     except KeyError:
         pass
     try:
-        new_policestation.division = data['division'],
+        new_policestation.division = data['division']
     except KeyError:
         pass
     try:
-        new_policestation.sn_name = data['sn_name'],
+        new_policestation.sn_name = data['sn_name']
     except KeyError:
         pass
     try:
-        new_policestation.sn_division = data['sn_division'],
+        new_policestation.sn_division = data['sn_division']
     except KeyError:
         pass
     try:
-        new_policestation.tm_name = data['tm_name'],
+        new_policestation.tm_name = data['tm_name']
     except KeyError:
         pass
     try:
-        new_policestation.tm_division = data['tm_division'],
+        new_policestation.tm_division = data['tm_division']
     except KeyError:
         pass
     

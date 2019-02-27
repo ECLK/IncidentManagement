@@ -7,27 +7,27 @@ from app.main.model.category import Category
 def save_new_category(data):
     new_category = Category()
     try:
-        new_category.top_category = data['top_category'],
+        new_category.top_category = data['top_category']
     except KeyError:
         pass
     try:
-        new_category.sub_category = data['sub_category'],
+        new_category.sub_category = data['sub_category']
     except KeyError:
         pass
     try:
-        new_category.sn_top_category = data['sn_top_category'],
+        new_category.sn_top_category = data['sn_top_category']
     except KeyError:
         pass
     try:
-        new_category.sn_sub_category = data['sn_sub_category'],
+        new_category.sn_sub_category = data['sn_sub_category']
     except KeyError:
         pass
     try:
-        new_category.tm_top_category = data['tm_top_category'],
+        new_category.tm_top_category = data['tm_top_category']
     except KeyError:
         pass
     try:
-        new_category.tm_sub_category = data['tm_sub_category'],
+        new_category.tm_sub_category = data['tm_sub_category']
     except KeyError:
         pass
     

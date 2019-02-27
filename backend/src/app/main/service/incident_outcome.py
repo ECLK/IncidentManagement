@@ -7,39 +7,39 @@ from app.main.model.incident_outcome import IncidentOutcome
 def save_new_incident_outcome(data):
     new_incident_outcome = IncidentOutcome()
     try:
-        new_incident_outcome.incident_id = data['incident_id'],
+        new_incident_outcome.incident_id = data['incident_id']
     except KeyError:
         pass
     try:
-        new_incident_outcome.type = data['type'],
+        new_incident_outcome.type = data['type']
     except KeyError:
         pass
     try:
-        new_incident_outcome.title = data['title'],
+        new_incident_outcome.title = data['title']
     except KeyError:
         pass
     try:
-        new_incident_outcome.sn_title = data['sn_title'],
+        new_incident_outcome.sn_title = data['sn_title']
     except KeyError:
         pass
     try:
-        new_incident_outcome.tm_title = data['tm_title'],
+        new_incident_outcome.tm_title = data['tm_title']
     except KeyError:
         pass
     try:
-        new_incident_outcome.description = data['description'],
+        new_incident_outcome.description = data['description']
     except KeyError:
         pass
     try:
-        new_incident_outcome.sn_description = data['sn_description'],
+        new_incident_outcome.sn_description = data['sn_description']
     except KeyError:
         pass
     try:
-        new_incident_outcome.tn_description = data['tn_description'],
+        new_incident_outcome.tn_description = data['tn_description']
     except KeyError:
         pass
     try:
-        new_incident_outcome.created_date = data['created_date'],
+        new_incident_outcome.created_date = data['created_date']
     except KeyError:
         pass
     

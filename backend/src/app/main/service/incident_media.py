@@ -7,39 +7,39 @@ from app.main.model.incident_media import IncidentMedia
 def save_new_incident_media(data):
     new_incident_media = IncidentMedia()
     try:
-        new_incident_media.file_name = data['file_name'],
+        new_incident_media.file_name = data['file_name']
     except KeyError:
         pass
     try:
-        new_incident_media.url = data['url'],
+        new_incident_media.url = data['url']
     except KeyError:
         pass
     try:
-        new_incident_media.incident_id = data['incident_id'],
+        new_incident_media.incident_id = data['incident_id']
     except KeyError:
         pass
     try:
-        new_incident_media.user_id = data['user_id'],
+        new_incident_media.user_id = data['user_id']
     except KeyError:
         pass
     try:
-        new_incident_media.role_id = data['role_id'],
+        new_incident_media.role_id = data['role_id']
     except KeyError:
         pass
     try:
-        new_incident_media.is_active = data['is_active'],
+        new_incident_media.is_active = data['is_active']
     except KeyError:
         pass
     try:
-        new_incident_media.created_date = data['created_date'],
+        new_incident_media.created_date = data['created_date']
     except KeyError:
         pass
     try:
-        new_incident_media.updated_date = data['updated_date'],
+        new_incident_media.updated_date = data['updated_date']
     except KeyError:
         pass
     try:
-        new_incident_media.deleted_date = data['deleted_date'],
+        new_incident_media.deleted_date = data['deleted_date']
     except KeyError:
         pass
     
