@@ -3,10 +3,10 @@ import { Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import DomainContainer from '../../components/DomainContainer';
-import IncidentForm from './containers/IncidentForm';
+import IncidentForm from '../../components/IncidentForm';
+import { Route, BrowserRouter as Router } from "react-router-dom";
 
 import Divider from '@material-ui/core/Divider';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -18,7 +18,9 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HomeIcon from '@material-ui/icons/Home';
 
 import { withStyles } from '@material-ui/core/styles';
-
+import Link from 'react-router-dom/Link';
+import ReviewIncidentListView from './ReviewIncidentListView';
+import ReviewIncidentView from './ReviewIncidentView';
 
 const drawerWidth = 240;
 const styles = theme => ({
@@ -57,12 +59,10 @@ const styles = theme => ({
 class Report extends Component {
 
 
-
-    render() {
-        const { classes, theme } = this.props;
+    render(){
+        const { classes, theme, match } = this.props;
         const drawer = (
             <div>
-                <div className={classes.toolbar} />
                 <Divider />
                 <List>
                     {/* {['Home','Report Incident', 'View Incidents', 'Approve Incident'].map((text, index) => (
