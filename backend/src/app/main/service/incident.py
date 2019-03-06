@@ -127,31 +127,6 @@ def update_a_incident(id, data):
     except KeyError:
         pass
     try:
-        incident.reporter_id = data['reporter_id']
-        status = SUCESS
-    except KeyError:
-        pass
-    try:
-        incident.location = data['location']
-        status = SUCESS
-    except KeyError:
-        pass
-    try:
-        incident.channel = data['channel']
-        status = SUCESS
-    except KeyError:
-        pass
-    try:
-        incident.timing_nature = data['timing_nature']
-        status = SUCESS
-    except KeyError:
-        pass
-    try:
-        incident.validity = data['validity']
-        status = SUCESS
-    except KeyError:
-        pass
-    try:
         incident.title = data['title']
         status = SUCESS
     except KeyError:
@@ -182,6 +157,41 @@ def update_a_incident(id, data):
     except KeyError:
         pass
     try:
+        incident.occurence = data['occurence']
+        status = SUCESS
+    except KeyError:
+        pass
+    try:
+        incident.reporter_id = data['reporter_id']
+        status = SUCESS
+    except KeyError:
+        pass
+    try:
+        incident.channel = data['channel']
+        status = SUCESS
+    except KeyError:
+        pass
+    try:
+        incident.category = data['category']
+        status = SUCESS
+    except KeyError:
+        pass
+    try:
+        incident.location = data['location']
+        status = SUCESS
+    except KeyError:
+        pass
+    try:
+        incident.timing_nature = data['timing_nature']
+        status = SUCESS
+    except KeyError:
+        pass
+    try:
+        incident.validity = data['validity']
+        status = SUCESS
+    except KeyError:
+        pass
+    try:
         incident.created_date = data['created_date']
         status = SUCESS
     except KeyError:
@@ -192,18 +202,8 @@ def update_a_incident(id, data):
     except KeyError:
         pass
     
-    if status == SUCESS:
-        db.session.commit()
-        response_object = {
-            'status': SUCESS,
-            'message': 'Successfully updated incident.',
-        }
-    else:
-        response_object = {
-            'status': 'none',
-            'message': 'Nothing to updated in incident.',
-        }
-    return response_object, 201
+    db.session.commit()
+    return True
 
 def save_changes(data):
     db.session.add(data)

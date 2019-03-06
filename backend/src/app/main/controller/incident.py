@@ -6,6 +6,8 @@ from flask_restful import reqparse, abort, Api, Resource, request, fields, marsh
 from ..service.incident import save_new_incident, get_all_incidents, get_a_incident, update_a_incident, delete_a_incident
 from ..service.reporter import save_new_reporter
 from ..service.event import save_new_event, get_incident_events
+from ..service.incident_entity import get_incident_entities
+from ..service.incident_outcome import get_incident_outcomes
 
 from .. import api
 
@@ -16,6 +18,9 @@ incident_fields = {
     'id' : fields.Integer,
     'token' : fields.String(1024),
     'election_id' : fields.Integer,
+
+    'category': fields.Integer,
+
     'police_station_id' : fields.Integer,
     'polling_station_id' : fields.Integer,
     'reporter_id' : fields.Integer,
@@ -56,14 +61,13 @@ class IncidentList(Resource):
         event_data = {
             "action": EventAction.CREATED,
             "incident_id": incident.id,
-            "intiator": "ANON",
-            "approver": "ANON",
-            "is_approved": True
+            "intiator": "ANON"
         }
         save_new_event(event_data)
 
         return {
-            "incident_id": incident.id
+            "incident_id": incident.id,
+            "reporter_id": reporter.id
         }, 200
 
 @api.resource('/incidents/<id>')
@@ -80,7 +84,21 @@ class Incident(Resource):
     def put(self, id):
         """Update a given Incident """
         data = request.get_json()
-        return update_a_incident(id=id, data=data)
+        update_a_incident(id=id, data=data)
+
+        event_data = {
+            "action": EventAction.GENERIC_UPDATE,
+            "incident_id": id,
+            "intiator": "ANON"
+        }
+        save_new_event(event_data)
+
+        return {
+            "status": "SUCCESS",
+            "message": "Updated succesfully!"
+        }, 200
+
+
 
     def delete(self, id):
         """Delete a given Incident """
@@ -92,8 +110,19 @@ class Events(Resource):
     @marshal_with(incident_fields)
     def get(self, incident_id):
         """get all events of an incident in the chronological order"""
-        events = get_incident_events(incident_id)
-        if not incident:
-            api.abort(404)
-        else:
-            return incident
+        return get_incident_events(incident_id)
+
+@api.resource('/incident/<id>/entitys')
+class IncidentEntities(Resource):
+    @marshal_with(incident_fields)
+    def get(self, incident_id):
+        """get all entities related to the incident"""
+        return get_incident_entities(incident_id)
+    
+
+@api.resource('/incident/<id>/outcomes')
+class IncidentOutcomes(Resource):
+    @marshal_with(incident_fields)
+    def get(self, incident_id):
+        """get all entities related to the incident"""
+        return get_incident_outcomes(incident_id)
