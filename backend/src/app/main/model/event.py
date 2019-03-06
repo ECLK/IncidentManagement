@@ -43,8 +43,6 @@ class Event(db.Model):
     # attribute changed by the current event action
     affected_attribute = db.Column(db.String(1024))
 
-    # created_date = db.Column(db.Integer, default=datetime.datetime.utcnow)
-    # approved_date = db.Column(db.Integer, default=datetime.datetime.utcnow)
     created_date = db.Column(db.Integer, default=int(time.time()))
     approved_date = db.Column(db.Integer, default=int(time.time()))
     
