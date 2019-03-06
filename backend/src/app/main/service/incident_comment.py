@@ -52,11 +52,8 @@ def save_new_incident_comment(data):
         pass
     
     save_changes(new_incident_comment)
-    response_object = {
-        'status': 'success',
-        'message': 'Successfully created incident_comment.',
-    }
-    return response_object, 201
+
+    return new_incident_comment
 
 def get_all_incident_comments():
     return IncidentComment.query.all()
