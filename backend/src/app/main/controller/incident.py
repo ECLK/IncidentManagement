@@ -62,7 +62,9 @@ class IncidentList(Resource):
         }
         save_new_event(event_data)
 
-        return incident, 200
+        return {
+            "incident_id": incident.id
+        }, 200
 
 @api.resource('/incidents/<id>')
 class Incident(Resource):

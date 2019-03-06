@@ -43,11 +43,13 @@ def test_create_incident(client):
         description="Test decription"
     ))
 
-    res = client.post('/incidents', data=data, content_type='application/json')
+    rv = client.post('/incidents', data=data, content_type='application/json')
+    res = rv.get_json()
 
     incidents = incident.get_all_incidents()
 
-    assert len(incidents) == 1 and incidents[0].title == "Test incident" and res["id"] == incidents[0].id
+    assert len(incidents) == 1 and incidents[0].title == "Test incident" and \
+            res["incident_id"] == incidents[0].id
 
     cur_incident = incidents[0]
     incident_events = event.get_incident_events(cur_incident.id)
