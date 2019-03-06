@@ -51,7 +51,7 @@ def get_an_event(id):
     return Event.query.filter_by(id=id).first()
 
 def get_incident_events(incident_id):
-    return Event.query.filter_by(incident_id=incident_id)
+    return Event.query.filter_by(incident_id=incident_id).all()
 
 def save_changes(data):
     db.session.add(data)

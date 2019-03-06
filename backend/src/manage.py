@@ -9,16 +9,20 @@ from app.main.controller import user, state_controller, task, category, district
 from app.main.controller import incident, incident_comment, incident_severity, incident_status, incident_media, incident_entity, incident_relation, incident_outcome
 from app.main.controller import action_entity
 
-app = create_app(os.getenv('BOILERPLATE_ENV') or 'dev')
-#app.register_blueprint(blueprint)
+def make_app(env):
+    app = create_app(env)
+    #app.register_blueprint(blueprint)
 
-app.app_context().push()
+    app.app_context().push()
 
-migrate = Migrate(app, db)
+    migrate = Migrate(app, db)
 
-#set_routes()
+    #set_routes()
+
+    return app
 
 def run():
+    app = make_app(os.getenv('BOILERPLATE_ENV') or 'dev')
     app.run(host="0.0.0.0")
 
 
