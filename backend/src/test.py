@@ -1,47 +1,59 @@
+"""
+Sketch of a testing framework
+This does end-to-end testing, but right now for ease of development
+the test db is created only ONCE for the seesion and destroyed aftet running ALL
+tests
+This must be later changed
+"""
 from unittest import TestCase
-from manage import app, db
+from manage import make_app, db
+import seed
 
-import unittest
 import pytest
+import json
 
-@pytest.fixture
+from app.main.service import incident, event
+
+from app.main.model.event import EventAction
+
+@pytest.fixture(scope='session')
 def client():
-    app.config['TESTING'] = True
-    app.config["MYSQL_PATH"] = "mysql://root:toor@localhost/lsf-test"
-    
+    app = make_app('test')
+    app.app_context().push()
     client = app.test_client()
 
-    # with app.app_context():
-    #     flaskr.init_db()
+    with app.app_context():
+        db.create_all()
+        seed.main()
 
     yield client
 
-def test_empty_db(client):
-    """Start with a blank database."""
+    db.session.remove()
+    db.drop_all()
 
-    rv = client.get('/categorys')
-    assert b'No entries here so far' in rv.data
+# def test_categorys(client):
+#     """Test categorys"""
 
-# class IncidentTest(TestCase):
+#     res = client.get('/categorys').json
 
-#     # I removed some config passing here
-#     def create_app(self):
-#         app.config['TESTING'] = True
-#         app.config["MYSQL_PATH"] = "mysql://root:toor@localhost/lsf-test"
-#         return app
+#     assert len(res) == 15, "Expect %dcategorys" % 15
 
-#     def setUp(self):
-#         print(self)
-#         db.create_all()
-    
-#     def test_incident(self):
-#         pass
+def test_post_incident(client):
+    """Posting an incident"""
 
-#     def tearDown(self):
+    data = json.dumps(dict(
+        title="Test incident",
+        description="Test decription"
+    ))
 
-#         db.session.remove()
-#         db.drop_all()
-#         # app.app_context.pop()
+    res = client.post('/incidents', data=data, content_type='application/json')
 
-if __name__ == "__main__":
-    unittest.main()
+    incidents = incident.get_all_incidents()
+
+    assert len(incidents) == 1 and incidents[0].title == "Test incident"
+
+    cur_incident = incidents[0]
+    incident_events = event.get_incident_events(cur_incident.id)
+
+    assert len(incident_events) == 1 and incident_events[0].action == EventAction.CREATED
+
