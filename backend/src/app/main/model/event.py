@@ -1,5 +1,6 @@
 from .. import db
 import datetime
+import time
 import enum
 from sqlalchemy import Enum
 
@@ -15,7 +16,8 @@ class Event(db.Model):
     """ Event model represents an auditable action done by a system user """
     __tablename__ = "event"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    # id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.String(36), primary_key=True)
     
     # action type for the event, refer enums
     action = db.Column(db.Enum(EventAction))
@@ -40,8 +42,10 @@ class Event(db.Model):
     # attribute changed by the current event action
     affected_attribute = db.Column(db.String(1024))
 
-    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    approved_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    # created_date = db.Column(db.Integer, default=datetime.datetime.utcnow)
+    # approved_date = db.Column(db.Integer, default=datetime.datetime.utcnow)
+    created_date = db.Column(db.Integer, default=int(time.time()))
+    approved_date = db.Column(db.Integer, default=int(time.time()))
     
     def __repr__(self):
         return "<Event '{}'>".format(self.id)
