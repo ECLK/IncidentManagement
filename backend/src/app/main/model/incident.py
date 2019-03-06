@@ -1,5 +1,5 @@
 from .. import db
-import datetime
+import time
 from sqlalchemy import Enum
 from ..model.occurence import Occurence
 
@@ -49,8 +49,8 @@ class Incident(db.Model):
     timing_nature = db.Column(db.String(1024))
     validity = db.Column(db.String(1024))
     
-    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    updated_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    created_date = db.Column(db.Integer, default=int(time.time()))
+    updated_date = db.Column(db.Integer, default=int(time.time()), onupdate=int(time.time()))
 
     def __repr__(self):
         return "<Incident '{}'>".format(self.id)

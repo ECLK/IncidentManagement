@@ -1,5 +1,5 @@
 from .. import db
-import datetime
+import time
 
 class Category(db.Model):
     """ Category Model for storing task related details """
@@ -13,6 +13,8 @@ class Category(db.Model):
     sn_sub_category = db.Column(db.String(1024))
     tm_top_category = db.Column(db.String(1024))
     tm_sub_category = db.Column(db.String(1024))
-
+    created_date = db.Column(db.Integer, default=int(time.time()))
+    updated_date = db.Column(db.Integer, default=int(time.time()), onupdate=int(time.time()))
+    
     def __repr__(self):
         return "<Category '{}'>".format(self.name)

@@ -1,5 +1,5 @@
 from .. import db
-import datetime
+import time
 
 class Reporter(db.Model):
     """ Reporter Model for storing task related details """
@@ -11,6 +11,8 @@ class Reporter(db.Model):
     sn_name = db.Column(db.String(1024))
     tm_name = db.Column(db.String(1024))
     type = db.Column(db.String(1024))
+    created_date = db.Column(db.Integer, default=int(time.time()))
+    updated_date = db.Column(db.Integer, default=int(time.time()), onupdate=int(time.time()))
 
     def __repr__(self):
         return "<Reporter '{}'>".format(self.name)

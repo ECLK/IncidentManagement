@@ -16,6 +16,7 @@ class ActionEntity(db.Model):
     tn_name = db.Column(db.String(1024))
     tn_description = db.Column(db.Text)
     created_date = db.Column(db.Integer, default=int(time.time()))
+    updated_date = db.Column(db.Integer, default=int(time.time()), onupdate=int(time.time()))
 
     def __repr__(self):
         return "<ActionEntity '{}'>".format(self.name)
