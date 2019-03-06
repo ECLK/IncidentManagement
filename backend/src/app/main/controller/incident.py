@@ -5,8 +5,7 @@ from flask_restful import reqparse, abort, Api, Resource, request, fields, marsh
 
 from ..service.incident import save_new_incident, get_all_incidents, get_a_incident, update_a_incident, delete_a_incident
 from ..service.reporter import save_new_reporter
-from ..service.event import save_new_event
-from ..service.state_service import save_new_state
+from ..service.event import save_new_event, get_incident_events
 
 from .. import api
 
@@ -47,7 +46,6 @@ class IncidentList(Resource):
 
     def post(self):
         """Creates a new Incident """
-        save_new_state({"name": "Backlog"})
         incident_data = request.get_json()
 
         reporter = save_new_reporter({})
@@ -58,13 +56,11 @@ class IncidentList(Resource):
         event_data = {
             "action": EventAction.CREATED,
             "incident_id": incident.id,
-            "intiator": reporter.id,
-            "approver": reporter.id,
+            "intiator": "ANON",
+            "approver": "ANON",
             "is_approved": True
         }
         save_new_event(event_data)
-
-
 
 @api.resource('/incidents/<id>')
 class Incident(Resource):
@@ -85,3 +81,15 @@ class Incident(Resource):
     def delete(self, id):
         """Delete a given Incident """
         return delete_a_incident(id)
+
+
+@api.resource('/incident/<id>/events')
+class Events(Resource):
+    @marshal_with(incident_fields)
+    def get(self, incident_id):
+        """get all events of an incident in the chronological order"""
+        events = get_incident_events(incident_id)
+        if not incident:
+            api.abort(404)
+        else:
+            return incident

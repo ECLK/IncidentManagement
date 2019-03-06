@@ -3,7 +3,6 @@ import datetime
 from app.main import db
 from app.main.model.event import Event
 
-
 def save_new_event(data):
     new_event = Event()
     try:
@@ -47,6 +46,12 @@ def save_new_event(data):
         pass
     
     save_changes(new_event)
+
+def get_an_event(id):
+    return Event.query.filter_by(id=id).first()
+
+def get_incident_events(incident_id):
+    return Event.query.filter_by(incident_id=incident_id)
 
 def save_changes(data):
     db.session.add(data)
