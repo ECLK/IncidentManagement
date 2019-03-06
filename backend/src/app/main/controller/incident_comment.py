@@ -45,8 +45,9 @@ class IncidentCommentList(Resource):
 
         event_data = {
             "action": EventAction.COMMENTED,
-            "incident_id": new_incident_comment.incident_id,
-            "intiator": new_incident_comment.user_id
+            "reference_id": new_incident_comment.id,
+            "intiator": new_incident_comment.user_id,
+            "incident_id": new_incident_comment.incident_id
         }
         save_new_event(event_data)
 

@@ -36,6 +36,12 @@ class Incident(db.Model):
     # top-sub category of the incident (ex: violation of law - xxx)
     category = db.Column(db.Integer, db.ForeignKey('category.id'))
 
+    # current status of the icident
+    current_status = db.Column(db.Integer, db.ForeignKey('incident_status.id'))
+
+    # current severity of the incident
+    current_severity = db.Column(db.Integer, db.ForeignKey('incident_severity.id'))
+
     # keeping it as string for now
     location = db.Column(db.String(4096))
 

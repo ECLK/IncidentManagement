@@ -1,10 +1,13 @@
 import datetime
+import uuid
 
 from app.main import db
 from app.main.model.event import Event
 
 def save_new_event(data):
     new_event = Event()
+    new_event.id = uuid.uuid4()
+
     try:
         new_event.action = data['action']
     except KeyError:
@@ -48,7 +51,3 @@ def get_an_event(id):
 
 def get_incident_events(incident_id):
     return Event.query.filter_by(incident_id=incident_id).all()
-
-def save_changes(data):
-    db.session.add(data)
-    db.session.commit()
