@@ -44,11 +44,7 @@ def save_new_incident_outcome(data):
         pass
     
     save_changes(new_incident_outcome)
-    response_object = {
-        'status': 'success',
-        'message': 'Successfully created incident_outcome.',
-    }
-    return response_object, 201
+    return new_incident_outcome
 
 def get_all_incident_outcomes():
     return IncidentOutcome.query.all()
@@ -135,6 +131,9 @@ def update_a_incident_outcome(id, data):
             'message': 'Nothing to updated in incident_outcome.',
         }
     return response_object, 201
+
+def get_incident_outcomes(incident_id):
+    return IncidentOutcome.query.filter_by(incident_id=incident_id).all()
 
 def save_changes(data):
     db.session.add(data)

@@ -32,11 +32,7 @@ def save_new_incident_entity(data):
         pass
     
     save_changes(new_incident_entity)
-    response_object = {
-        'status': 'success',
-        'message': 'Successfully created incident_entity.',
-    }
-    return response_object, 201
+    return new_incident_entity
 
 def get_all_incident_entitys():
     return IncidentEntity.query.all()
@@ -108,6 +104,9 @@ def update_a_incident_entity(id, data):
             'message': 'Nothing to updated in incident_entity.',
         }
     return response_object, 201
+
+def get_incident_entities(incident_id):
+    return IncidentEntity.query.filter_by(incident_id=incident_id).all()
 
 def save_changes(data):
     db.session.add(data)

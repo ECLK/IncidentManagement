@@ -5,11 +5,12 @@ from sqlalchemy import Enum
 
 class EventAction(enum.Enum):
     CREATED = 1  
-    ATTRIBUTE_CHANGE_REQUESTED = 2
-    ATTRIBUTE_CHANGED = 3
-    ATTRIBUTE_CHANGE_REJECTED = 4
-    COMMENTED = 5
-    MEDIA_ATTACHED = 6
+    GENERIC_UPDATE = 2
+    ATTRIBUTE_CHANGE_REQUESTED = 3
+    ATTRIBUTE_CHANGED = 4
+    ATTRIBUTE_CHANGE_REJECTED = 5
+    COMMENTED = 6
+    MEDIA_ATTACHED = 7
 
 class Event(db.Model):
     """ Event model represents an auditable action done by a system user """
