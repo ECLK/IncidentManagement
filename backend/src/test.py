@@ -5,15 +5,12 @@ the test db is created only ONCE for the seesion and destroyed aftet running ALL
 tests
 This must be later changed
 """
-from unittest import TestCase
-from manage import make_app, db
-import seed
-
 import pytest
 import json
 
+from manage import make_app, db
+import seed
 from app.main.service import incident, event
-
 from app.main.model.event import EventAction
 
 @pytest.fixture(scope='session')
@@ -38,7 +35,7 @@ def client():
 
 #     assert len(res) == 15, "Expect %dcategorys" % 15
 
-def test_post_incident(client):
+def test_create_incident(client):
     """Posting an incident"""
 
     data = json.dumps(dict(
@@ -50,7 +47,7 @@ def test_post_incident(client):
 
     incidents = incident.get_all_incidents()
 
-    assert len(incidents) == 1 and incidents[0].title == "Test incident"
+    assert len(incidents) == 1 and incidents[0].title == "Test incident" and res["id"] == incidents[0].id
 
     cur_incident = incidents[0]
     incident_events = event.get_incident_events(cur_incident.id)

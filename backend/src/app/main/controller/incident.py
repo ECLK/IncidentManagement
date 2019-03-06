@@ -62,6 +62,8 @@ class IncidentList(Resource):
         }
         save_new_event(event_data)
 
+        return incident, 200
+
 @api.resource('/incidents/<id>')
 class Incident(Resource):
     @marshal_with(incident_fields)

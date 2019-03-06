@@ -16,7 +16,7 @@ class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     
     # action type for the event, refer enums
-    action = db.Column(db.Enum(EventAction), unique=True)
+    action = db.Column(db.Enum(EventAction))
 
     # refers to an external entity, ex: comment, media, outcome
     reference_id = db.Column(db.Integer)
