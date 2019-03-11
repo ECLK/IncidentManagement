@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import DomainContainer from '../../components/DomainContainer';
-import IncidentForm from '../../components/IncidentForm';
+import IncidentForm from './containers/IncidentForm';
 
 import Divider from '@material-ui/core/Divider';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
