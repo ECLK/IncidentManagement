@@ -4,7 +4,7 @@
 import json
 import traceback
 
-from manage import app, db
+from manage import db
 
 from app.main.model.category import Category
 from app.main.model.policestation import PoliceStation
@@ -120,6 +120,12 @@ def seed_dummy_data():
         "type": "Some type"
     })
 
+def main():
+    seed_categorys()
+    seed_districts()
+    seed_police_stations()
+    seed_action_entities()
+    seed_dummy_data()
 
 if __name__ == "__main__":
     seed_categorys()

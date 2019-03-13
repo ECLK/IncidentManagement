@@ -7,27 +7,27 @@ from app.main.model.district import District
 def save_new_district(data):
     new_district = District()
     try:
-        new_district.name = data['name'],
+        new_district.name = data['name']
     except KeyError:
         pass
     try:
-        new_district.province = data['province'],
+        new_district.province = data['province']
     except KeyError:
         pass
     try:
-        new_district.sn_name = data['sn_name'],
+        new_district.sn_name = data['sn_name']
     except KeyError:
         pass
     try:
-        new_district.sn_province = data['sn_province'],
+        new_district.sn_province = data['sn_province']
     except KeyError:
         pass
     try:
-        new_district.tm_name = data['tm_name'],
+        new_district.tm_name = data['tm_name']
     except KeyError:
         pass
     try:
-        new_district.tm_province = data['tm_province'],
+        new_district.tm_province = data['tm_province']
     except KeyError:
         pass
     

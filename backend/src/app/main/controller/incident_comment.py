@@ -5,6 +5,9 @@ from flask_restful import reqparse, abort, Api, Resource, request, fields, marsh
 
 from ..service.incident_comment import save_new_incident_comment, get_all_incident_comments, get_a_incident_comment, update_a_incident_comment, delete_a_incident_comment
 
+from ..service.event import save_new_event, get_incident_events
+from ..model.event import EventAction
+
 from .. import api
 
 incident_comment_fields = {
@@ -37,7 +40,16 @@ class IncidentCommentList(Resource):
     def post(self):
         """Creates a new IncidentComment """
         data = request.get_json()
-        return save_new_incident_comment(data=data)
+        new_incident_comment = save_new_incident_comment(data=data)
+
+
+        event_data = {
+            "action": EventAction.COMMENTED,
+            "reference_id": new_incident_comment.id,
+            "intiator": new_incident_comment.user_id,
+            "incident_id": new_incident_comment.incident_id
+        }
+        save_new_event(event_data)
 
 
 @api.resource('/incident_comments/<id>')

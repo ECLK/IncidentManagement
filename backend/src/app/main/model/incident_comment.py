@@ -1,5 +1,6 @@
 from .. import db
 import datetime
+import time
 
 class IncidentComment(db.Model):
     """ IncidentComment Model for storing task related details """
@@ -15,9 +16,8 @@ class IncidentComment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
     is_active = db.Column(db.Boolean)
-    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    updated_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    deleted_date = db.Column(db.DateTime)
+    created_date = db.Column(db.Integer, default=int(time.time()))
+    updated_date = db.Column(db.Integer, default=int(time.time()), onupdate=int(time.time()))
 
     def __repr__(self):
         return "<IncidentComment '{}'>".format(self.name)

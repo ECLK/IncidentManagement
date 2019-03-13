@@ -6,90 +6,45 @@ from app.main.model.incident_severity import IncidentSeverity
 
 def save_new_incident_severity(data):
     new_incident_severity = IncidentSeverity()
+
     try:
-        new_incident_severity.level = data['level'],
+        new_incident_severity.level = data["level"]
     except KeyError:
         pass
     try:
-        new_incident_severity.detail = data['detail'],
+        new_incident_severity.incident_id = data["incident_id"]
     except KeyError:
         pass
-    try:
-        new_incident_severity.incident_id = data['incident_id'],
-    except KeyError:
-        pass
-    try:
-        new_incident_severity.executed_at = data['executed_at'],
-    except KeyError:
-        pass
-    
+
     save_changes(new_incident_severity)
-    response_object = {
-        'status': 'success',
-        'message': 'Successfully created incident_severity.',
-    }
-    return response_object, 201
+    return new_incident_severity
+
 
 def get_all_incident_severitys():
     return IncidentSeverity.query.all()
 
+
 def get_a_incident_severity(id):
     return IncidentSeverity.query.filter_by(id=id).first()
+
 
 def delete_a_incident_severity(id):
     incident_severity = IncidentSeverity.query.filter_by(id=id).first()
     if not incident_severity:
         response_object = {
-            'status': 'fail',
-            'message': 'IncidentSeverity with id ' + id + ' does not exists.',
+            "status": "fail",
+            "message": "IncidentSeverity with id " + id + " does not exists.",
         }
         return response_object, 409
     else:
         db.session.delete(incident_severity)
         db.session.commit()
         response_object = {
-            'status': 'success',
-            'message': 'Successfully deleted incident_severity with id ' + id + '.',
+            "status": "success",
+            "message": "Successfully deleted incident_severity with id " + id + ".",
         }
         return response_object, 201
 
-def update_a_incident_severity(id, data):
-    incident_severity = IncidentSeverity.query.filter_by(id = id).first()
-    status = 'none'
-    SUCESS = 'success'
-    try:
-        incident_severity.level = data['level']
-        status = SUCESS
-    except KeyError:
-        pass
-    try:
-        incident_severity.detail = data['detail']
-        status = SUCESS
-    except KeyError:
-        pass
-    try:
-        incident_severity.incident_id = data['incident_id']
-        status = SUCESS
-    except KeyError:
-        pass
-    try:
-        incident_severity.executed_at = data['executed_at']
-        status = SUCESS
-    except KeyError:
-        pass
-    
-    if status == SUCESS:
-        db.session.commit()
-        response_object = {
-            'status': SUCESS,
-            'message': 'Successfully updated incident_severity.',
-        }
-    else:
-        response_object = {
-            'status': 'none',
-            'message': 'Nothing to updated in incident_severity.',
-        }
-    return response_object, 201
 
 def save_changes(data):
     db.session.add(data)

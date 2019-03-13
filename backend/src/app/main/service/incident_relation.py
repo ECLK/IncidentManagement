@@ -7,31 +7,31 @@ from app.main.model.incident_relation import IncidentRelation
 def save_new_incident_relation(data):
     new_incident_relation = IncidentRelation()
     try:
-        new_incident_relation.incident1_id = data['incident1_id'],
+        new_incident_relation.incident1_id = data['incident1_id']
     except KeyError:
         pass
     try:
-        new_incident_relation.incident2_id = data['incident2_id'],
+        new_incident_relation.incident2_id = data['incident2_id']
     except KeyError:
         pass
     try:
-        new_incident_relation.relationship = data['relationship'],
+        new_incident_relation.relationship = data['relationship']
     except KeyError:
         pass
     try:
-        new_incident_relation.description = data['description'],
+        new_incident_relation.description = data['description']
     except KeyError:
         pass
     try:
-        new_incident_relation.sn_description = data['sn_description'],
+        new_incident_relation.sn_description = data['sn_description']
     except KeyError:
         pass
     try:
-        new_incident_relation.tn_description = data['tn_description'],
+        new_incident_relation.tn_description = data['tn_description']
     except KeyError:
         pass
     try:
-        new_incident_relation.created_date = data['created_date'],
+        new_incident_relation.created_date = data['created_date']
     except KeyError:
         pass
     

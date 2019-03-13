@@ -1,5 +1,5 @@
 from .. import db
-import datetime
+import time
 
 class PollingStation(db.Model):
     """ PollingStation Model for storing task related details """
@@ -14,6 +14,8 @@ class PollingStation(db.Model):
     sn_division = db.Column(db.String(1024))
     tm_name = db.Column(db.String(1024))
     tm_division = db.Column(db.String(1024))
+    created_date = db.Column(db.Integer, default=int(time.time()))
+    updated_date = db.Column(db.Integer, default=int(time.time()), onupdate=int(time.time()))
 
     def __repr__(self):
         return "<PollingStation '{}'>".format(self.name)
