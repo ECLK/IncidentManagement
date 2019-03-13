@@ -9,7 +9,7 @@ Incident Backend
 
 1) Install mysql server
 2) Install python3, pip3
-3) `pip3 install -r requirements.txt`
+3) From /src directory, run `pip3 install -r requirements.txt`
 4) Copy .env.sample -> .env
 5) Edit the MYQQL_PATH link to your config
 

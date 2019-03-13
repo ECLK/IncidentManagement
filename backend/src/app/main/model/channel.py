@@ -1,5 +1,5 @@
 from .. import db
-import datetime
+import time
 
 class Channel(db.Model):
     """ Channel Model for storing task related details """
@@ -8,6 +8,9 @@ class Channel(db.Model):
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(1024))
+    
+    created_date = db.Column(db.Integer, default=int(time.time()))
+    updated_date = db.Column(db.Integer, default=int(time.time()), onupdate=int(time.time()))
 
     def __repr__(self):
         return "<Channel '{}'>".format(self.name)
