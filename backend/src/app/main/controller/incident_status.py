@@ -3,24 +3,27 @@ from flask import Flask, jsonify
 
 from flask_restful import reqparse, abort, Api, Resource, request, fields, marshal_with
 
-from ..service.incident_status import save_new_incident_status, get_all_incident_statuss, get_a_incident_status, update_a_incident_status, delete_a_incident_status
+from ..service.incident_status import (
+    save_new_incident_status,
+    get_all_incident_statuss,
+    get_a_incident_status
+)
 
 from .. import api
 
 incident_status_fields = {
-    
-    'id' : fields.Integer,
-    'name' : fields.String(1024),
-    'detail' : fields.String,
-    'incident_id' : fields.Integer,
-    'executed_at' : fields.DateTime,
+    "id": fields.Integer,
+    "status_type": fields.String(1024),
+    "incident_id": fields.Integer,
+    "created_at": fields.DateTime,
 }
 
 incident_status_list_fields = {
-    'incident_statuss': fields.List(fields.Nested(incident_status_fields))
+    "incident_statuss": fields.List(fields.Nested(incident_status_fields))
 }
 
-@api.resource('/incident_statuss')
+
+@api.resource("/incident_statuss")
 class IncidentStatusList(Resource):
     @marshal_with(incident_status_fields)
     def get(self):
@@ -33,7 +36,7 @@ class IncidentStatusList(Resource):
         return save_new_incident_status(data=data)
 
 
-@api.resource('/incident_statuss/<id>')
+@api.resource("/incident_statuss/<id>")
 class IncidentStatus(Resource):
     @marshal_with(incident_status_fields)
     def get(self, id):

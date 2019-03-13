@@ -201,6 +201,17 @@ def update_a_incident(id, data):
         status = SUCESS
     except KeyError:
         pass
+
+    try:
+        incident.current_status = data['current_status']
+        status = SUCESS
+    except KeyError:
+        pass
+    try:
+        incident.current_severity = data['current_severity']
+        status = SUCESS
+    except KeyError:
+        pass
     
     db.session.commit()
     return True
