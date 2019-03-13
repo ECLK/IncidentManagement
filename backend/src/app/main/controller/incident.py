@@ -121,7 +121,7 @@ class Incident(Resource):
         return delete_a_incident(id)
 
 
-@api.resource("/incident/<id>/events")
+@api.resource("/incident/<incident_id>/events")
 class Events(Resource):
     @marshal_with(incident_fields)
     def get(self, incident_id):
@@ -129,7 +129,7 @@ class Events(Resource):
         return get_incident_events(incident_id)
 
 
-@api.resource("/incident/<id>/entitys")
+@api.resource("/incident/<incident_id>/entitys")
 class IncidentEntities(Resource):
     @marshal_with(incident_fields)
     def get(self, incident_id):
@@ -137,9 +137,73 @@ class IncidentEntities(Resource):
         return get_incident_entities(incident_id)
 
 
-@api.resource("/incident/<id>/outcomes")
+@api.resource("/incident/<incident_id>/outcomes")
 class IncidentOutcomes(Resource):
     @marshal_with(incident_fields)
     def get(self, incident_id):
         """get all entities related to the incident"""
         return get_incident_outcomes(incident_id)
+
+@api.resource("/incident/<incident_id>/status")
+class Status(Resource):
+    def post(self, incident_id):
+        """change the current status of the incident"""
+        data = request.get_json()
+
+        status_type = None
+        try:
+            status_type = StatusType[data['status_type']]
+        except:
+            pass
+
+        # create a new status flag
+        status = save_new_incident_status(
+            dict(incident_id=incident_id, status_type=status_type)
+        )
+
+        # update incident with the status flag
+        update_a_incident(
+            incident_id, dict(current_status=status.id)
+        )
+
+        event_data = {
+            "action": EventAction.ATTRIBUTE_CHANGED,
+            "incident_id": incident_id,
+            'reference_id': status.id,
+            "intiator": "ANON",
+        }
+        save_new_event(event_data)
+
+        return {"status": "SUCCESS", "message": "Updated succesfully!"}, 200
+
+@api.resource("/incident/<incident_id>/severity")
+class Severity(Resource):
+    def post(self, incident_id):
+        """change the current severity of the incident"""
+        data = request.get_json()
+
+        status_type = None
+        try:
+            level = SeverityLevel[data['level']]
+        except:
+            pass
+
+        # create the default severity for incident
+        severity = save_new_incident_severity(
+            dict(incident_id=incident_id, level=level)
+        )
+
+        # update incident with the status flag
+        update_a_incident(
+            incident_id, dict(current_severity=severity.id)
+        )
+
+        event_data = {
+            "action": EventAction.ATTRIBUTE_CHANGED,
+            "incident_id": incident_id,
+            'reference_id': severity.id,
+            "intiator": "ANON",
+        }
+        save_new_event(event_data)
+
+        return {"status": "SUCCESS", "message": "Updated succesfully!"}, 200

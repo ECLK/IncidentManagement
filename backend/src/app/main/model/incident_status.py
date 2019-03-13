@@ -25,4 +25,4 @@ class IncidentStatus(db.Model):
     created_at = db.Column(db.Integer, default=int(time.time()))
 
     def __repr__(self):
-        return "<IncidentStatus '{}'>".format(self.name)
+        return "<IncidentStatus '{}'>".format(self.status_type)

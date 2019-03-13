@@ -10,9 +10,18 @@ import json
 
 from manage import make_app, db
 import seed
-from app.main.service import incident, event, incident_entity, incident_outcome
+from app.main.service import (
+    incident,
+    event,
+    incident_entity,
+    incident_outcome,
+    incident_status,
+    incident_severity
+)
 from app.main.model.event import EventAction
 from app.main.model.occurence import Occurence
+from app.main.model.incident_status import StatusType
+from app.main.model.incident_severity import SeverityLevel
 
 
 @pytest.fixture(scope="session")
@@ -123,3 +132,54 @@ def test_add_incident_outcome(client):
     db_outcomes = incident_outcome.get_incident_outcomes(incident_id)
 
     assert len(db_outcomes) == 1 and db_outcomes[0].id == res["incident_outcome_id"]
+
+
+def test_change_status(client):
+    """Adding new outcome to incident"""
+
+    data = json.dumps(dict(title="Test incident", description="Test decription"))
+    rv = client.post("/incidents", data=data, content_type="application/json")
+    res = rv.get_json()
+
+    incident_id = res["incident_id"]
+
+    data = json.dumps(dict(status_type="ACTION_TAKEN"))
+    rv = client.post(
+        "/incident/%d/status" % incident_id, data=data, content_type="application/json"
+    )
+    res = rv.get_json()
+
+    db_incident = incident.get_a_incident(incident_id)
+    db_incident_status = incident_status.get_a_incident_status(
+        db_incident.current_status
+    )
+
+    assert (
+        db_incident_status is not None
+        and db_incident_status.status_type == StatusType.ACTION_TAKEN
+    )
+
+def test_change_severity(client):
+    """Adding new outcome to incident"""
+
+    data = json.dumps(dict(title="Test incident", description="Test decription"))
+    rv = client.post("/incidents", data=data, content_type="application/json")
+    res = rv.get_json()
+
+    incident_id = res["incident_id"]
+
+    data = json.dumps(dict(level="MODERATE"))
+    rv = client.post(
+        "/incident/%d/severity" % incident_id, data=data, content_type="application/json"
+    )
+    res = rv.get_json()
+
+    db_incident = incident.get_a_incident(incident_id)
+    db_incident_severity = incident_severity.get_a_incident_severity(
+        db_incident.current_severity
+    )
+
+    assert (
+        db_incident_severity is not None
+        and db_incident_severity.level == SeverityLevel.MODERATE
+    )
