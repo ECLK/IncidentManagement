@@ -7,36 +7,45 @@ import {
 } from './IncidentFiling.types'
 
 const initialState = {
-    incidentFormActiveStep: 0,
-    isIncidentBasicDetailsSubmitting: false,
+    guestIncidentForm: {
+        activeStep: 0,
+        stepOneSubmission: {
+            inProgress: false,
+            error: [],
+            result: null
+        }
+    }
 }
 
 export default function incidentReducer(state, action) {
     if (typeof state === 'undefined') {
         return initialState
     }
+    let newState = {}
+    console.log(action)
     switch (action.type) {
         case INCIDENT_STEPPER_FORWARD:
-            return Object.assign({}, state, {
-                incidentFormActiveStep: state.incidentFormActiveStep+1
-            })
+            Object.assign(newState, state);
+            newState.guestIncidentForm.activeStep = state.guestIncidentForm.activeStep + 1;
+            return newState;
         case INCIDENT_STEPPER_BACKWARD:
-            return Object.assign({}, state, {
-                incidentFormActiveStep: state.incidentFormActiveStep-1
-            })
+            newState = Object.assign(newState, state);
+            newState.guestIncidentForm.activeStep = state.guestIncidentForm.activeStep - 1;
+            return newState;
         case INCIDENT_BASIC_DATA_SUBMIT_REQUEST:
-            return Object.assign({}, state, {
-                isIncidentBasicDetailsSubmitting: true
-            })
+            newState = Object.assign(newState, state)
+            newState.guestIncidentForm.stepOneSubmission.inProgress = true
+            console.log(newState)
+            return newState
         case INCIDENT_BASIC_DATA_SUBMIT_SUCCESS:
-            return Object.assign({}, state, {
-                isIncidentBasicDetailsSubmitting: false,
-            })
+            newState = Object.assign(newState, state)
+            newState.guestIncidentForm.stepOneSubmission.inProgress = false
+            console.log(newState)
+            return newState
         case INCIDENT_BASIC_DATA_SUBMIT_ERROR:
-            return Object.assign({}, state, {
-                isIncidentBasicDetailsSubmitting: false,
-                //TODO: add error handling logic here
-            })
+            newState = Object.assign(newState, state)
+            newState.guestIncidentForm.stepOneSubmission.inProgress = false
+            return newState
         default:
             return state
 

@@ -11,6 +11,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MailIcon from '@material-ui/icons/Mail';
+import AssignmentLateIcon from '@material-ui/icons/AssignmentLate';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
 import { withStyles } from '@material-ui/core/styles';
 
 
@@ -59,13 +63,26 @@ class Report extends Component {
                 <div className={classes.toolbar} />
                 <Divider />
                 <List>
-                {['Home','Report Incident', 'View Incidents', 'Approve Incident'].map((text, index) => (
+                {/* {['Home','Report Incident', 'View Incidents', 'Approve Incident'].map((text, index) => (
                     <ListItem button key={text}>
                     <ListItemIcon><MailIcon /></ListItemIcon>
                     <ListItemText primary={text} />
                     </ListItem>
-                ))}
+                ))} */}
+                <ListItem button >
+                    <ListItemIcon><AssignmentLateIcon /></ListItemIcon>
+                    <ListItemText primary='Report Incident' />
+                </ListItem>
+                <ListItem button >
+                    <ListItemIcon><AssignmentIcon /></ListItemIcon>
+                    <ListItemText primary='View Incident' />
+                </ListItem>
+                <ListItem button >
+                    <ListItemIcon><CheckCircleIcon /></ListItemIcon>
+                    <ListItemText primary='Approve Incident' />
+                </ListItem>
                 </List>
+                
             </div>
         );
 

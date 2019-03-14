@@ -17,10 +17,21 @@ import Typography from '@material-ui/core/Typography';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import Divider from '@material-ui/core/Divider';
 import Select from '@material-ui/core/Select';
 import Paper from '@material-ui/core/Paper';
 import StepContent from '@material-ui/core/StepContent';
 import CircularProgress from '@material-ui/core/CircularProgress';
+
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
+
+// date picker impoerts
+import Grid from '@material-ui/core/Grid';
+import MomentUtils from '@date-io/moment';
+import { MuiPickersUtilsProvider, TimePicker, DatePicker } from 'material-ui-pickers';
 
 import { submitIncidentBasicData, stepBackwardIncidentStepper } from '../state/IncidentFiling.actions'
 
@@ -63,6 +74,98 @@ class IncidentFormBasicDetails extends Component {
                 />
                 {errors.incidentDescription &&
                     touched.incidentDescription && <div>{errors.incidentTitle}</div>}
+
+                <FormControl component="fieldset" className={classes.formControl}>
+                    <FormLabel component="legend" className={classes.radioSelecLabel}>Current Status</FormLabel>
+                    <RadioGroup
+                        aria-label="Current Status"
+                        name="currStatus"
+                        className={classes.group}
+                        value={values.currStatus}
+                        onChange={handleChange}
+                        row
+                    >
+                        <FormControlLabel value="Occured" control={<Radio color="primary" />} label="Occured" labelPlacement="end" />
+                        <FormControlLabel value="Occurring" control={<Radio color="primary" />} label="Occurring" labelPlacement="end" />
+                        <FormControlLabel value="WillOccur" control={<Radio color="primary" />} label="Will Occur" labelPlacement="end" />
+                    </RadioGroup>
+                </FormControl>
+                
+              
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <Grid container className={classes.dataTimePickers} justify="space-between">
+                        <DatePicker
+                            margin="normal"
+                            label="Date"
+                            name='date'
+                            id='date'
+                            value={values.date}
+                            onChange={handleChange}
+                        />
+                        <TimePicker
+                            margin="normal"
+                            label="Time"
+                            name='time'
+                            value={values.time}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+                </MuiPickersUtilsProvider>
+                <Divider variant="middle" />
+
+                <div style={{'width':'100%'}}></div>
+
+                <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="electionId">Election</InputLabel>
+                    <Select
+                        value={values.electionId}
+                        onChange={handleChange}
+                        inputProps={{
+                            name: 'electionId',
+                            id: 'electionId',
+                        }}
+                    >
+                        <MenuItem value="">
+                            <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={1}>General Election 2020 </MenuItem>
+                        <MenuItem value={2}>Presedential Election 2020</MenuItem>
+                        <MenuItem value={3}>Presedential Election 2008</MenuItem>
+                    </Select>
+                </FormControl>
+
+                <div style={{'width':'100%'}}></div>
+
+                <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="category">Catagory</InputLabel>
+                    <Select
+                        value={values.electionId}
+                        onChange={handleChange}
+                        inputProps={{
+                            name: 'category',
+                            id: 'category',
+                        }}
+                    >
+                        <MenuItem value="">
+                            <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={1}>Cat1</MenuItem>
+                        <MenuItem value={2}>Cat2</MenuItem>
+                        <MenuItem value={3}>Cat3</MenuItem>
+                    </Select>
+                </FormControl>
+
+                <TextField
+                    type="text"
+                    name="otherCat"
+                    label="If Other(Specify Here)"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    margin="normal"
+                    value={values.otherCat}
+                    className={classes.otherCat}
+                />
+
 
                 {status && status.msg && <div>{status.msg}</div>}
             </form>
@@ -226,6 +329,7 @@ const styles = theme => ({
     container: {
         display: 'flex',
         flexWrap: 'wrap',
+        marginBottom: 4*theme.spacing.unit,
     },
     textField: {
         marginLeft: 4 * theme.spacing.unit,
@@ -244,13 +348,15 @@ const styles = theme => ({
         width: 200,
     },
     formControl: {
-        margin: theme.spacing.unit,
+        marginTop: 4 * theme.spacing.unit,
+        marginLeft: 4 * theme.spacing.unit,
         minWidth: 120,
     },
 
     //stepper styling
     actionsContainer: {
         marginBottom: theme.spacing.unit * 2,
+        marginLeft: theme.spacing.unit * 3 ,
     },
 
     // warpper for button and circular loading
@@ -258,6 +364,25 @@ const styles = theme => ({
         margin: theme.spacing.unit,
         position: 'relative',
     },
+
+
+    // radio select
+    radioSelecLabel: {
+        width: 1000,
+    },
+
+    // calander
+    dataTimePickers: {
+        width: '50%',
+        marginLeft: 4 * theme.spacing.unit,
+    },
+
+    //catogories
+    otherCat: {
+        width: '50%',
+        marginTop: 4*theme.spacing.unit,
+        marginLeft:4*theme.spacing.unit
+    }
 });
 
 function getSteps() {
@@ -349,7 +474,16 @@ class IndicdentForm extends React.Component {
     }
 
     handleSubmit = (values, actions) => {
-        this.props.submitIncidentBasicDetails();
+        this.props.submitIncidentBasicDetails(values);
+        // switch (this.propsincidentFormActiveStep) {
+        //     case 1:
+        //         this.props.submitIncidentBasicDetails(values);
+        //     default:
+        //         return false;
+
+
+        // }
+
     }
 
 
@@ -363,6 +497,7 @@ class IndicdentForm extends React.Component {
                 <Formik
                     initialValues={{}}
                     onSubmit={(values, actions) => {
+                        console.log('formik.onsubmit', values)
                         this.handleSubmit(values, actions);
                     }}
                     render={(formikProps) => {
@@ -517,18 +652,18 @@ IndicdentForm.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
+    console.log(state)
     return {
-        isIncidentBasicDetailsSubmitting: state.incidentReducer.isIncidentBasicDetailsSubmitting,
-        incidentFormActiveStep: state.incidentReducer.incidentFormActiveStep,
-        isIncidentBasicDetailsSubmitting: state.incidentReducer.isIncidentBasicDetailsSubmitting,
+        isIncidentBasicDetailsSubmitting: state.incidentReducer.guestIncidentForm.stepOneSubmission.inProgerss,
+        incidentFormActiveStep: state.incidentReducer.guestIncidentForm.activeStep,
         ...ownProps
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        submitIncidentBasicDetails: () => {
-            dispatch(submitIncidentBasicData())
+        submitIncidentBasicDetails: (values) => {
+            dispatch(submitIncidentBasicData(values))
         },
         stepBackward: () => {
             dispatch(stepBackwardIncidentStepper())
