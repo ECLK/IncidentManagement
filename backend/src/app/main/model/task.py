@@ -7,7 +7,7 @@ class Task(db.Model):
 
     
     id = db.Column(db.Integer , primary_key=True, autoincrement=True)
-    description = db.Column(db.String )
+    description = db.Column(db.String(1024) )
     state_id = db.Column(db.Integer , db.ForeignKey('state.id'))
     owner_id = db.Column(db.Integer , db.ForeignKey('user.id'))
     created_date = db.Column(db.DateTime , default=datetime.datetime.utcnow)
