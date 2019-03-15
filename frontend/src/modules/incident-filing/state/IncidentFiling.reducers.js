@@ -22,29 +22,26 @@ export default function incidentReducer(state, action) {
         return initialState
     }
     let newState = {}
-    console.log(action)
     switch (action.type) {
         case INCIDENT_STEPPER_FORWARD:
-            Object.assign(newState, state);
+            newState = JSON.parse(JSON.stringify(state)); //deep copy state object. prolly need a better way
             newState.guestIncidentForm.activeStep = state.guestIncidentForm.activeStep + 1;
             return newState;
         case INCIDENT_STEPPER_BACKWARD:
-            newState = Object.assign(newState, state);
+            newState = JSON.parse(JSON.stringify(state));
             newState.guestIncidentForm.activeStep = state.guestIncidentForm.activeStep - 1;
             return newState;
         case INCIDENT_BASIC_DATA_SUBMIT_REQUEST:
-            newState = Object.assign(newState, state)
-            newState.guestIncidentForm.stepOneSubmission.inProgress = true
-            console.log(newState)
-            return newState
+            newState = JSON.parse(JSON.stringify(state));
+            newState.guestIncidentForm.stepOneSubmission.inProgress = true;
+            return newState;
         case INCIDENT_BASIC_DATA_SUBMIT_SUCCESS:
-            newState = Object.assign(newState, state)
-            newState.guestIncidentForm.stepOneSubmission.inProgress = false
-            console.log(newState)
-            return newState
+            newState = JSON.parse(JSON.stringify(state));
+            newState.guestIncidentForm.stepOneSubmission.inProgress = false;
+            return newState;
         case INCIDENT_BASIC_DATA_SUBMIT_ERROR:
-            newState = Object.assign(newState, state)
-            newState.guestIncidentForm.stepOneSubmission.inProgress = false
+            newState = JSON.parse(JSON.stringify(state));
+            newState.guestIncidentForm.stepOneSubmission.inProgress = false;
             return newState
         default:
             return state

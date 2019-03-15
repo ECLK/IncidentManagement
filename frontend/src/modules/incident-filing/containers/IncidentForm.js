@@ -92,7 +92,6 @@ class IncidentFormBasicDetails extends Component {
                 </FormControl>
                 
               
-                <MuiPickersUtilsProvider utils={MomentUtils}>
                     <Grid container className={classes.dataTimePickers} justify="space-between">
                         <DatePicker
                             margin="normal"
@@ -110,7 +109,6 @@ class IncidentFormBasicDetails extends Component {
                             onChange={handleChange}
                         />
                     </Grid>
-                </MuiPickersUtilsProvider>
                 <Divider variant="middle" />
 
                 <div style={{'width':'100%'}}></div>
@@ -491,11 +489,15 @@ class IndicdentForm extends React.Component {
         const { classes } = this.props;
         const steps = getSteps();
         const activeStep = this.props.incidentFormActiveStep;
+        console.log('isSubmitting ',this.props.isIncidentBasicDetailsSubmitting)
 
         return (
             <div className={classes.root}>
                 <Formik
-                    initialValues={{}}
+                    initialValues={{
+                        date:new Date('2014-08-18T21:11:54'),
+                        time:new Date('2014-08-18T21:11:54'),
+                    }}
                     onSubmit={(values, actions) => {
                         console.log('formik.onsubmit', values)
                         this.handleSubmit(values, actions);
@@ -538,6 +540,7 @@ class IndicdentForm extends React.Component {
                                                                 color="primary"
                                                                 onClick={() => { this.handleNext(formikProps.handleSubmit) }}
                                                                 className={classes.button}
+                                                                disabled={this.props.isIncidentBasicDetailsSubmitting}
                                                             >
                                                                 {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                                                             </Button>
@@ -652,9 +655,8 @@ IndicdentForm.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-    console.log(state)
     return {
-        isIncidentBasicDetailsSubmitting: state.incidentReducer.guestIncidentForm.stepOneSubmission.inProgerss,
+        isIncidentBasicDetailsSubmitting: state.incidentReducer.guestIncidentForm.stepOneSubmission.inProgress,
         incidentFormActiveStep: state.incidentReducer.guestIncidentForm.activeStep,
         ...ownProps
     }
