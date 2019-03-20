@@ -153,6 +153,8 @@ class IndicdentForm extends Component {
         this.props.getPoliceStations();
         this.props.getPollingStations();
         this.props.getWards();
+
+        console.log(this.props.incidentId);
     }
 
     isStepOptional = step => step === 1 || step === 2;
