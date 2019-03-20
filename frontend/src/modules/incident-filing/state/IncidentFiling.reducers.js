@@ -9,7 +9,10 @@ import {
     INCIDENT_STEPPER_BACKWARD,
     INCIDENT_BASIC_DATA_UPDATE_REQUEST,
     INCIDENT_BASIC_DATA_UPDATE_SUCCESS,
-    INCIDENT_BASIC_DATA_UPDATE_ERROR
+    INCIDENT_BASIC_DATA_UPDATE_ERROR,
+    INCIDENT_REPORTER_UPDATE_REQUEST,
+    INCIDENT_REPORTER_UPDATE_SUCCESS,
+    INCIDENT_REPORTER_UPDATE_ERROR
 } from './IncidentFiling.types'
 
 const initialState = {
@@ -68,6 +71,13 @@ export default function incidentReducer(state, action) {
                 draft.isIncidentPosting = false;
                 draft.hasError = true;
                 draft.error = action.error;
+                return draft
+            
+            case INCIDENT_REPORTER_UPDATE_REQUEST:
+                return draft
+            case INCIDENT_REPORTER_UPDATE_SUCCESS:
+                return draft
+            case INCIDENT_REPORTER_UPDATE_ERROR:
                 return draft
         }
     })

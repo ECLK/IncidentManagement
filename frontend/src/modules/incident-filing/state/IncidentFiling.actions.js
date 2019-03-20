@@ -12,9 +12,12 @@ import {
     REQUEST_INCIDENT_CATAGORIES_FAILURE,
     INCIDENT_BASIC_DATA_UPDATE_REQUEST,
     INCIDENT_BASIC_DATA_UPDATE_SUCCESS,
-    INCIDENT_BASIC_DATA_UPDATE_ERROR
+    INCIDENT_BASIC_DATA_UPDATE_ERROR,
+    INCIDENT_REPORTER_UPDATE_REQUEST,
+    INCIDENT_REPORTER_UPDATE_SUCCESS,
+    INCIDENT_REPORTER_UPDATE_ERROR
 } from './IncidentFiling.types'
-import { createIncident } from '../../../api/incident';
+import { createIncident, updateIncident, updateReporter } from '../../../api/incident';
 
 // Form Submission
 
@@ -53,20 +56,15 @@ export function recieveIncidentSubmitError(errorResponse) {
 }
 
 export function submitIncidentBasicData(incidentData) {
-    return function (dispatch) {
+    return async function(dispatch) {
         dispatch(requestIncidentSubmit());
-        return createIncident(incidentData)
-            .then(
-                response => response.data,
-                error => {
-                    dispatch(recieveIncidentSubmitError(error))
-                }
-            )
-            .then(json =>
-                dispatch(recieveIncidentSubmitSuccess(json))
-            ).then(()=>
-                dispatch(stepForwardIncidentStepper())
-            )
+        try{
+            const response = await createIncident(incidentData);
+            await dispatch(recieveIncidentSubmitSuccess(response.data));
+            await dispatch(stepForwardIncidentStepper());
+        }catch(error){
+            await dispatch(recieveIncidentSubmitError(error));
+        }
     }
 }
 
@@ -94,19 +92,51 @@ export function recieveIncidentUpdateError(errorResponse) {
     }
 }
 
-export function updateIncident(incidentData) {
-    return function (dispatch) {
+export function updateIncidentData(incidentId, incidentData) {
+    return async function (dispatch) {
         dispatch(requestIncidentUpdate());
-        return updateIncident(incidentData)
-            .then(
-                response => response.data,
-                error => {
-                    dispatch(recieveIncidentUpdateError(error))
-                }
-            )
-            .then(json =>
-                dispatch(recieveIncidentUpdateSuccess(json))
-            )
+        try{
+            const response = await updateIncident(incidentId, incidentData);
+            await dispatch(recieveIncidentUpdateSuccess(response.data));
+        }catch(error){
+            await dispatch(recieveIncidentUpdateError(error));
+        }
+    }
+}
+
+// Update reporter
+
+export function requestReporterUpdate() {
+    return {
+        type: INCIDENT_REPORTER_UPDATE_REQUEST,
+    }
+}
+
+export function recieveReporterUpdateSuccess(response) {
+    return {
+        type: INCIDENT_REPORTER_UPDATE_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function recieveReporterUpdateError(errorResponse) {
+    return {
+        type: INCIDENT_REPORTER_UPDATE_ERROR,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchUpdateReporter(reporterId, reporterData) {
+    return async function (dispatch) {
+        dispatch(requestReporterUpdate());
+        try{
+            const response = await updateReporter(reporterId, reporterData);
+            await dispatch(recieveReporterUpdateSuccess(response.data));
+        }catch(error){
+            await dispatch(recieveReporterUpdateError(error));
+        }
     }
 }
 

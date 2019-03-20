@@ -1,13 +1,13 @@
 import handler from './apiHandler'
 
-export const createIncident = (incidentData) => {
+export const createIncident = async (incidentData) => {
     return handler.post('/incidents', incidentData);
 }
 
-export const updateReporter = (reporterId, reporterData) => {
+export const updateReporter = async (reporterId, reporterData) => {
     return handler.post(`/reporters/${reporterId}`, reporterData);
 }
 
-export const updateIncident = (incidentId, incidentData) => {
-    return handler.post(`/incidents/${incidentId}`, incidentData);
+export const updateIncident = async (incidentId, incidentData) => {
+    return handler.put(`/incidents/${incidentId}`, incidentData);
 }
