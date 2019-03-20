@@ -7,9 +7,13 @@ export const getCatogories = async () => {
 }
 
 export const postIncidentReport = async (incidentData) => {
-    return handler.post('/incident', incidentData)
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    return {data:""}
+    // return handler.post('/incident', incidentData)
 }
 
 export const getIncidentCatogories = async () => {
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    return {data:""}
     return handler.get('/categorys')
 }

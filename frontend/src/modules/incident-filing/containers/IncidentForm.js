@@ -240,6 +240,7 @@ class IncidentFormContactDetails extends Component {
 
         return (
             <form onSubmit={handleSubmit} className={classes.container}>
+
                 <TextField
                     type="text"
                     name="name"
@@ -251,6 +252,7 @@ class IncidentFormContactDetails extends Component {
                     className={classes.textField}
                 />
                 {errors.email && touched.email && <div>{errors.email}</div>}
+
                 <FormControl className={classes.formControl}>
                     <InputLabel htmlFor="type">Type</InputLabel>
                     <Select
@@ -268,6 +270,7 @@ class IncidentFormContactDetails extends Component {
                         <MenuItem value={20}>Entity</MenuItem>
                     </Select>
                 </FormControl>
+
                 <TextField
                     type="text"
                     name="address"
@@ -281,6 +284,7 @@ class IncidentFormContactDetails extends Component {
                 {errors.social &&
                     errors.social.facebook &&
                     touched.facebook && <div>{errors.social.facebook}</div>}
+
                 <TextField
                     type="tel"
                     name="telephone"
@@ -293,6 +297,7 @@ class IncidentFormContactDetails extends Component {
                 />
                 {errors.telephone &&
                     touched.telephone && <div>{errors.telephone}</div>}
+
                 <TextField
                     type="email"
                     name="email"
@@ -307,6 +312,151 @@ class IncidentFormContactDetails extends Component {
                     touched.email && <div>{errors.email}</div>}
 
                 {status && status.msg && <div>{status.msg}</div>}
+            </form>
+        );
+    };
+}
+
+
+class IncidentFormLocationDetails extends Component {
+    render() {
+        const { user, onClose, classes, } = this.props;
+
+        // formikProps
+        const {
+            status,
+            values,
+            touched,
+            errors,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+        } = this.props;
+
+        return (
+            <form onSubmit={handleSubmit} className={classes.container}>
+
+                <TextField
+                    type="text"
+                    name="name"
+                    label="Name/Description"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    margin="normal"
+                    value={values.locationName}
+                    className={classes.textField}
+                />
+
+                <TextField
+                    type="text"
+                    name="address"
+                    label="Address"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    margin="normal"
+                    value={values.title}
+                    className={classes.textField}
+                />
+
+                <div style={{'width':'100%'}}></div>
+                
+                <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="province">Province</InputLabel>
+                    <Select
+                        value={values.province}
+                        onChange={handleChange}
+                        inputProps={{
+                            name: 'province',
+                            id: 'province',
+                        }}
+                    >
+                        <MenuItem value="">
+                            <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={1}>General Election 2020 </MenuItem>
+                        <MenuItem value={2}>Presedential Election 2020</MenuItem>
+                        <MenuItem value={3}>Presedential Election 2008</MenuItem>
+                    </Select>
+                </FormControl>
+
+                <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="district">Distric</InputLabel>
+                    <Select
+                        value={values.district}
+                        onChange={handleChange}
+                        inputProps={{
+                            name: 'district',
+                            id: 'district',
+                        }}
+                    >
+                        <MenuItem value="">
+                            <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={1}>Colombo </MenuItem>
+                        <MenuItem value={2}>Gampaha</MenuItem>
+                        <MenuItem value={3}>Kalutara</MenuItem>
+                        <MenuItem value={3}>Galle</MenuItem>
+                        <MenuItem value={3}>Matara</MenuItem>
+                    </Select>
+                </FormControl>
+
+                <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="polling_division">Polling division</InputLabel>
+                    <Select
+                        value={values.polling_division}
+                        onChange={handleChange}
+                        inputProps={{
+                            name: 'polling_division',
+                            id: 'polling_division',
+                        }}
+                    >
+                        <MenuItem value="">
+                            <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={1}>General Election 2020 </MenuItem>
+                        <MenuItem value={2}>Presedential Election 2020</MenuItem>
+                        <MenuItem value={3}>Presedential Election 2008</MenuItem>
+                    </Select>
+                </FormControl>
+
+                <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="ward">Ward</InputLabel>
+                    <Select
+                        value={values.ward}
+                        onChange={handleChange}
+                        inputProps={{
+                            name: 'ward',
+                            id: 'ward',
+                        }}
+                    >
+                        <MenuItem value="">
+                            <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={1}>General Election 2020 </MenuItem>
+                        <MenuItem value={2}>Presedential Election 2020</MenuItem>
+                        <MenuItem value={3}>Presedential Election 2008</MenuItem>
+                    </Select>
+                </FormControl>
+
+                <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="police_station">Police station</InputLabel>
+                    <Select
+                        value={values.polling_station}
+                        onChange={handleChange}
+                        inputProps={{
+                            name: 'police_station',
+                            id: 'police_station',
+                        }}
+                    >
+                        <MenuItem value="">
+                            <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={1}>General Election 2020 </MenuItem>
+                        <MenuItem value={2}>Presedential Election 2020</MenuItem>
+                        <MenuItem value={3}>Presedential Election 2008</MenuItem>
+                    </Select>
+                </FormControl>
+
             </form>
         );
     };
@@ -384,7 +534,7 @@ const styles = theme => ({
 });
 
 function getSteps() {
-    return ['Submit Incident Details', 'Submit Contact Details', 'Add additoinal details'];
+    return ['Submit Incident Details', 'Submit Incident Location Details', 'Submit Contact Details', 'Add additoinal details'];
 }
 
 function getStepContent(step, props, formikProps) {
@@ -392,8 +542,10 @@ function getStepContent(step, props, formikProps) {
         case 0:
             return (<IncidentFormBasicDetails {...props} {...formikProps} />);
         case 1:
-            return (<IncidentFormContactDetails {...props} {...formikProps} />);
+            return (<IncidentFormLocationDetails {...props} {...formikProps} />)
         case 2:
+            return (<IncidentFormContactDetails {...props} {...formikProps} />);
+        case 3:
             return (<IncidentAdvancedDetailsSection {...props} {...formikProps} />);
         default:
             return 'Unknown step';
