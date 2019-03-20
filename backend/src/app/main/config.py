@@ -30,9 +30,10 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
-    DEBUG = False
-    # uncomment the line below to use postgres
-    # SQLALCHEMY_DATABASE_URI = postgres_local_base
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = 'mysql://root:toor@172.22.0.1:3308/lsf'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    print(SQLALCHEMY_DATABASE_URI)
 
 
 config_by_name = dict(
