@@ -153,6 +153,8 @@ class IndicdentForm extends Component {
         this.props.getPoliceStations();
         this.props.getPollingStations();
         this.props.getWards();
+
+        console.log(this.props.incidentId);
     }
 
     isStepOptional = step => step === 1 || step === 2;
@@ -216,8 +218,6 @@ class IndicdentForm extends Component {
                 if (this.props.incidentId) {
                     this.props.updateIncidentBasicDetails(this.props.incidentId, values);
                 } else {
-                    console.log(this.props.location);
-                    this.props.history.replace(...this.props.location, { pathname: '/report/10'});
                     this.props.submitIncidentBasicDetails(values);
                 }
                 break;
