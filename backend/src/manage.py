@@ -4,8 +4,8 @@ import unittest
 from flask_migrate import Migrate, MigrateCommand
 
 from app.main import create_app, db, blueprint, api
-from app.main.model import category, district, election, incident, policestation, pollingstation, reporter, role, state, task, user, channel, event
-from app.main.controller import user, state_controller, task, category, district, policestation, election, pollingstation, reporter
+from app.main.model import category, district, election, incident, policestation, pollingstation, reporter, role, state, user, channel, event, ward
+from app.main.controller import user, state_controller, category, district, policestation, election, pollingstation, reporter
 from app.main.controller import incident, incident_comment, incident_severity, incident_status, incident_media, incident_entity, incident_relation, incident_outcome
 from app.main.controller import action_entity
 

@@ -22,25 +22,38 @@ from .. import api
 from ..model.event import EventAction
 from ..model.incident_status import StatusType
 from ..model.incident_severity import SeverityLevel
+from ..model.occurence import Occurence
 
 incident_fields = {
     "id": fields.Integer,
     "token": fields.String(1024),
     "election_id": fields.Integer,
+    "reporter_id": fields.Integer,
+
+    "occurence": fields.String(1024),
+
     "category": fields.Integer,
+
+    "district_id": fields.Integer,
+    "ward_id": fields.Integer,
     "police_station_id": fields.Integer,
     "polling_station_id": fields.Integer,
-    "reporter_id": fields.Integer,
     "location": fields.String(4096),
+    "address": fields.String(4096),
+    "coordinates": fields.String(4096),
+
+
     "channel": fields.String(4096),
     "timing_nature": fields.String(1024),
     "validity": fields.String(1024),
+    
     "title": fields.String,
     "description": fields.String,
     "sn_title": fields.String,
     "sn_description": fields.String,
     "tm_title": fields.String,
     "tm_description": fields.String,
+
     "created_date": fields.Integer,
     "updated_date": fields.Integer,
 }
@@ -63,6 +76,13 @@ class IncidentList(Resource):
 
         incident_data["reporter_id"] = reporter.id
 
+        occurence = None
+        try:
+            occurence = Occurence[incident_data['occurence']]
+        except:
+            pass
+        
+        incident_data['occurence'] = occurence
         # first save he incident
         incident = save_new_incident(incident_data)
 

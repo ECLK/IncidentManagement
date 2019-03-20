@@ -1,6 +1,6 @@
 import enum
 
 class Occurence(enum.Enum):
-    HAPPENED = 1
-    ON_GOING = 2
-    MAY_HAPPEN = 3
+    OCCURED = 1
+    OCCURRING = 2
+    WILL_OCCUR = 3
