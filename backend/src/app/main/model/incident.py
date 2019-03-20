@@ -61,7 +61,14 @@ class Incident(db.Model):
     def __repr__(self):
         return "<Incident '{}'>".format(self.id)
     
-    def to_json(self):
+    def to_dict(self):
         d = {}
-        for column in row.__table__.columns:
-            d[column.name] = str(getattr(row, column.name))
+        for column in self.__table__.columns:
+            value = getattr(self, column.name)
+            
+            if value is not None and column.name == "occurence":
+                value = value.name
+
+            d[column.name] = value
+
+        return d

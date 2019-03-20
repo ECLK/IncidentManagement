@@ -108,7 +108,10 @@ class IncidentList(Resource):
         }
         save_new_event(event_data)
 
-        return {"incident_id": incident.id, "reporter_id": reporter.id}, 200
+        return {
+            "incident": incident.to_dict(), 
+            "reporter": reporter.to_dict()
+        }, 200
 
 
 @api.resource("/incidents/<id>")
@@ -125,7 +128,7 @@ class Incident(Resource):
     def put(self, id):
         """Update a given Incident """
         data = request.get_json()
-        update_a_incident(id=id, data=data)
+        incident = update_a_incident(id=id, data=data)
 
         event_data = {
             "action": EventAction.GENERIC_UPDATE,
@@ -134,7 +137,7 @@ class Incident(Resource):
         }
         save_new_event(event_data)
 
-        return {"status": "SUCCESS", "message": "Updated succesfully!"}, 200
+        return incident.to_dict(), 200
 
     def delete(self, id):
         """Delete a given Incident """

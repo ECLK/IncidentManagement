@@ -20,3 +20,9 @@ class Reporter(db.Model):
 
     def __repr__(self):
         return "<Reporter '{}'>".format(self.name)
+
+    def to_dict(self):
+        d = {}
+        for column in self.__table__.columns:
+            d[column.name] = getattr(self, column.name)
+        return d

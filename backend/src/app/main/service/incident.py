@@ -254,7 +254,7 @@ def update_a_incident(id, data):
         pass
     
     db.session.commit()
-    return True
+    return incident
 
 def save_changes(data):
     db.session.add(data)
