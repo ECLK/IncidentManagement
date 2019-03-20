@@ -106,7 +106,7 @@ class Report extends Component {
                 </Typography>
             }
             content={()=>(
-                <IncidentForm user={user} incidentId={this.props.match.params.incidentId} />
+                <IncidentForm user={user} paramIncidentId={this.props.match.params.paramIncidentId} />
             )}
             drawer={drawer}
 

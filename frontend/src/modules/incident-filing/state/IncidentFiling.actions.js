@@ -11,9 +11,13 @@ import {
     INCIDENT_BASIC_DATA_UPDATE_ERROR,
     INCIDENT_REPORTER_UPDATE_REQUEST,
     INCIDENT_REPORTER_UPDATE_SUCCESS,
-    INCIDENT_REPORTER_UPDATE_ERROR
+    INCIDENT_REPORTER_UPDATE_ERROR,
+
+    INCIDENT_GET_DATA_REQUEST,
+    INCIDENT_GET_DATA_SUCCESS,
+    INCIDENT_GET_DATA_ERROR
 } from './IncidentFiling.types'
-import { createIncident, updateIncident, updateReporter } from '../../../api/incident';
+import { createIncident, updateIncident, updateReporter, getIncident, getReporter } from '../../../api/incident';
 
 import history from '../../../routes/history';
 
@@ -141,3 +145,46 @@ export function fetchUpdateReporter(reporterId, reporterData) {
         }
     }
 }
+
+// get Incident
+
+export function requestIncidentData() {
+    return {
+        type: INCIDENT_GET_DATA_REQUEST,
+    }
+}
+
+export function getIncidentDataSuccess(response) {
+    return {
+        type: INCIDENT_GET_DATA_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function getIncidentDataError(errorResponse) {
+    return {
+        type: INCIDENT_GET_DATA_ERROR,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchIncidentData(incidentId) {
+    return async function (dispatch) {
+        dispatch(requestIncidentData());
+        try{
+            const responseIncident = await getIncident(incidentId);
+            const responseReporter = await getReporter(responseIncident.data.reporter_id);
+            await dispatch(getIncidentDataSuccess({
+                "incident": responseIncident.data,
+                "reporter": responseReporter.data
+            }));
+        }catch(error){
+            await dispatch(getIncidentDataError(error));
+        }
+    }
+}
+
+
+

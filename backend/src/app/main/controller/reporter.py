@@ -38,14 +38,13 @@ class ReporterList(Resource):
 
 @api.resource('/reporters/<id>')
 class Reporter(Resource):
-    @marshal_with(reporter_fields)
     def get(self, id):
         """get a reporter given its identifier"""
         reporter = get_a_reporter(id)
         if not reporter:
             api.abort(404)
         else:
-            return reporter
+            return reporter.to_dict()
 
     def put(self, id):
         """Update a given Reporter """

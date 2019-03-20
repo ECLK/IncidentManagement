@@ -120,14 +120,13 @@ class IncidentList(Resource):
 
 @api.resource("/incidents/<id>")
 class Incident(Resource):
-    @marshal_with(incident_fields)
     def get(self, id):
         """get a incident given its identifier"""
         incident = get_a_incident(id)
         if not incident:
             api.abort(404)
         else:
-            return incident
+            return incident.to_dict()
 
     def put(self, id):
         """Update a given Incident """
