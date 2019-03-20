@@ -473,14 +473,13 @@ class IndicdentForm extends React.Component {
 
     handleSubmit = (values, actions) => {
         this.props.submitIncidentBasicDetails(values);
-        // switch (this.propsincidentFormActiveStep) {
-        //     case 1:
-        //         this.props.submitIncidentBasicDetails(values);
-        //     default:
-        //         return false;
-
-
-        // }
+        // diffreent endpoints have to be called in different steps.
+        switch (this.propsincidentFormActiveStep) {
+            case 1:
+                this.props.submitIncidentBasicDetails(values);
+            default:
+                return false;
+        }
 
     }
 
