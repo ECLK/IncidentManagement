@@ -14,6 +14,8 @@ class Logger(object):
 
     def __call__(self, environ, start_response):
         req = Request(environ)
+        if (req.method == 'OPTIONS') :
+            return self.app(environ, start_response)
 
         token = req.headers['Authorization'][7:]
         claims = jwt.decode(token, 'eclk-incident-management', algorithms=['HS256'])
