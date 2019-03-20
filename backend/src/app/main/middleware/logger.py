@@ -17,7 +17,6 @@ class Logger(object):
 
         token = req.headers['Authorization'][7:]
         claims = jwt.decode(token, 'eclk-incident-management', algorithms=['HS256'])
-        print(claims)
 
         path = req.path.split("/")[-1]
 

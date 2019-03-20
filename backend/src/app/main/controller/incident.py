@@ -24,6 +24,8 @@ from ..model.incident_status import StatusType
 from ..model.incident_severity import SeverityLevel
 from ..model.occurence import Occurence
 
+from ..util.request_helper import get_user_permissions
+
 incident_fields = {
     "id": fields.Integer,
     "token": fields.String(1024),
@@ -66,6 +68,8 @@ class IncidentList(Resource):
     @marshal_with(incident_fields)
     def get(self):
         """List all registered incidents"""
+        permissions = get_user_permissions(request)
+        print (permissions)
         return get_all_incidents()
 
     def post(self):
