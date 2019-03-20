@@ -1,4 +1,3 @@
-import { postIncidentReport, getIncidentCatogories } from '../../../api'
 import {
     SUBMIT_INCIDENT,
     INCIDENT_BASIC_DATA_SUBMIT_REQUEST,
@@ -6,10 +5,7 @@ import {
     INCIDENT_BASIC_DATA_SUBMIT_ERROR,
     INCIDENT_STEPPER_FORWARD,
     INCIDENT_STEPPER_BACKWARD,
-
-    REQUEST_INCIDENT_CATAGORIES,
-    REQUEST_INCIDENT_CATAGORIES_SUCCESS,
-    REQUEST_INCIDENT_CATAGORIES_FAILURE,
+    
     INCIDENT_BASIC_DATA_UPDATE_REQUEST,
     INCIDENT_BASIC_DATA_UPDATE_SUCCESS,
     INCIDENT_BASIC_DATA_UPDATE_ERROR,
@@ -92,12 +88,13 @@ export function recieveIncidentUpdateError(errorResponse) {
     }
 }
 
-export function updateIncidentData(incidentId, incidentData) {
+export function fetchUpdateIncident(incidentId, incidentData) {
     return async function (dispatch) {
         dispatch(requestIncidentUpdate());
         try{
             const response = await updateIncident(incidentId, incidentData);
             await dispatch(recieveIncidentUpdateSuccess(response.data));
+            await dispatch(stepForwardIncidentStepper());
         }catch(error){
             await dispatch(recieveIncidentUpdateError(error));
         }
@@ -134,47 +131,9 @@ export function fetchUpdateReporter(reporterId, reporterData) {
         try{
             const response = await updateReporter(reporterId, reporterData);
             await dispatch(recieveReporterUpdateSuccess(response.data));
+            await dispatch(stepForwardIncidentStepper());
         }catch(error){
             await dispatch(recieveReporterUpdateError(error));
         }
-    }
-}
-
-
-
-// Get Catogories
-
-export function requestIncidentCatogories() {
-    return {
-        type: REQUEST_INCIDENT_CATAGORIES,
-    }
-}
-
-export function recieveIncidentCatogories(catogories) {
-    return {
-        type: REQUEST_INCIDENT_CATAGORIES_SUCCESS,
-        data: catogories,
-        error: null
-    }
-}
-
-export function recieveIncidentCatogoriesError(errorResponse) {
-    return {
-        type: REQUEST_INCIDENT_CATAGORIES_FAILURE,
-        data: null,
-        error: errorResponse
-    }
-}
-
-export function fetchCatogories(){
-    return function(dispatch){
-        dispatch(requestIncidentCatogories());
-        return getIncidentCatogories()
-        .then(
-            response => response.data
-        )
-        .then(json =>
-            dispatch(recieveIncidentCatogories(json))
-        )
     }
 }

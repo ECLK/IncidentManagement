@@ -1,7 +1,7 @@
 import { CHANGE_LANGUAGE } from './RootTypes'
 
 const initialState = {
-    selectedLanguage: 'si',
+    selectedLanguage: 'en',
 }
 
 export default function rootReducer(state, action){

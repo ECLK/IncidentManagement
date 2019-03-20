@@ -5,7 +5,7 @@ export const createIncident = async (incidentData) => {
 }
 
 export const updateReporter = async (reporterId, reporterData) => {
-    return handler.post(`/reporters/${reporterId}`, reporterData);
+    return handler.put(`/reporters/${reporterId}`, reporterData);
 }
 
 export const updateIncident = async (incidentId, incidentData) => {

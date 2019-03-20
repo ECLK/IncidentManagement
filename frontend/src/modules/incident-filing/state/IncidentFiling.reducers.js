@@ -16,6 +16,8 @@ import {
 } from './IncidentFiling.types'
 
 const initialState = {
+    incident: null,
+    reporter: null,
     incident_id: null,
     reporter_id: null,
 
@@ -52,8 +54,10 @@ export default function incidentReducer(state, action) {
                 return draft
             case INCIDENT_BASIC_DATA_SUBMIT_SUCCESS:
                 draft.guestIncidentForm.stepOneSubmission.inProgress = false;
-                draft.incident_id = action.data.incident_id;
-                draft.reporter_id = action.data.reporter_id;
+
+                draft.incident = action.data.incident;
+                draft.reporter = action.data.reporter;
+
                 return draft
             case INCIDENT_BASIC_DATA_SUBMIT_ERROR:
                 draft.guestIncidentForm.stepOneSubmission.inProgress = false;
@@ -62,22 +66,25 @@ export default function incidentReducer(state, action) {
                 return draft
 
             case INCIDENT_BASIC_DATA_UPDATE_REQUEST:
-                draft.isIncidentPosting = true;
+                draft.guestIncidentForm.stepOneSubmission.inProgress = true;
                 return draft
             case INCIDENT_BASIC_DATA_UPDATE_SUCCESS:
-                draft.isIncidentPosting = false;
+                draft.guestIncidentForm.stepOneSubmission.inProgress = false;
                 return draft
             case INCIDENT_BASIC_DATA_UPDATE_ERROR:
-                draft.isIncidentPosting = false;
+                draft.guestIncidentForm.stepOneSubmission.inProgress = false;
                 draft.hasError = true;
                 draft.error = action.error;
                 return draft
             
             case INCIDENT_REPORTER_UPDATE_REQUEST:
+                draft.guestIncidentForm.stepOneSubmission.inProgress = true;
                 return draft
             case INCIDENT_REPORTER_UPDATE_SUCCESS:
+                draft.guestIncidentForm.stepOneSubmission.inProgress = false;
                 return draft
             case INCIDENT_REPORTER_UPDATE_ERROR:
+                draft.guestIncidentForm.stepOneSubmission.inProgress = false;
                 return draft
         }
     })

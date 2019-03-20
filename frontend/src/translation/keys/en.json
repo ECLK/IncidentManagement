@@ -3,6 +3,11 @@
   "eclk.incident.management.incidents.reporting.system": "Election Violation Incidents Reporting System",
   "eclk.incident.management.report.incidents":"Report an Incident",
   "eclk.incident.management.ongoing.incidents": "Ongoing Incidents",
-  "eclk.incident.management.historic.reports": "Historic Reports"
+  "eclk.incident.management.historic.reports": "Historic Reports",
+  
+  "eclk.incident.management.filing.guest.form.steps.basic.details":"Submit Incident Details",
+  "eclk.incident.management.filing.guest.form.steps.location.details":"Submit Incident Location Details",
+  "eclk.incident.management.filing.guest.form.steps.contact.details":"Submit Contact Details",
+  "eclk.incident.management.filing.guest.form.steps.review.details":"Review details"
 
 }

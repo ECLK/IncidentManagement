@@ -5,12 +5,14 @@ import { createStore, applyMiddleware, combineReducers } from 'redux'
 import landingReducer from '../modules/landing/state/LandingReducers'
 import rootReducer from '../app/state/RootReducer'
 import incidentReducer from '../modules/incident-filing/state/IncidentFiling.reducers';
+import sharedReducer from '../modules/shared/state/Shared.reducers';
 
 
 const reducer = combineReducers({
     landingReducer,
     rootReducer,
-    incidentReducer
+    incidentReducer,
+    sharedReducer
 })
 
 const store = createStore(
