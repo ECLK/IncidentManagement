@@ -202,7 +202,7 @@ class Severity(Resource):
         """change the current severity of the incident"""
         data = request.get_json()
 
-        status_type = None
+        level = None
         try:
             level = SeverityLevel[data['level']]
         except:

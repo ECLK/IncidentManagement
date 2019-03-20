@@ -1,5 +1,6 @@
 # from .. import db
 # import time
+import enum
 
 # class User(db.Model):
 #     """ User Model for storing task related details """
@@ -16,3 +17,8 @@
 
 #     def __repr__(self):
 #         return "<User '{}'>".format(self.name)
+
+class PermissionLevel(enum.Enum):
+    NOT_ALLOWED = 1  
+    ALLOWED_WITH_APPROVAL = 2
+    ALLOWED = 3
