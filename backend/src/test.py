@@ -16,7 +16,8 @@ from app.main.service import (
     incident_entity,
     incident_outcome,
     incident_status,
-    incident_severity
+    incident_severity,
+    incident_comment
 )
 from app.main.model.event import EventAction
 from app.main.model.occurence import Occurence
@@ -200,3 +201,26 @@ def test_add_incident_comment(client):
 
     db_outcomes = incident_comment.get_incident_comments(incident_id)
     assert len(db_outcomes) == 1 and db_outcomes[0].id == res["id"]
+
+def test_update_incident_comment(client):
+    """Test Updating comment of an incident"""
+
+    data = json.dumps(dict(title="Test incident", description="Test decription"))
+    rv = client.post("/incidents", data=data, content_type="application/json")
+    res = rv.get_json()
+    incident_id = res["incident_id"]
+
+    data = json.dumps(dict(incident_id=incident_id, name="Test comment name", \
+        body="Test comment body"))
+    rv = client.post("/incident_comments", data=data, content_type="application/json")
+    res = rv.get_json()
+    incident_comment_id = res["id"]
+
+    data = json.dumps(dict(name="Test updated comment name", body="Test comment updated body"))
+    rv = client.put("/incident_comments/%d" % incident_comment_id, data=data, \
+        content_type="application/json")
+    res = rv.get_json()
+
+    db_outcomes = incident_comment.get_incident_comments(incident_id)
+    assert len(db_outcomes) == 1 and db_outcomes[0].body == "Test comment updated body"
+    
