@@ -4,35 +4,31 @@ import enum
 from flask import Flask, jsonify
 from flask_restful import reqparse, abort, Api, Resource, request, fields, marshal_with
 from .. import api
-
-class PermissionLevel(enum.Enum):
-    NOT_ALLOWED = 1  
-    ALLOWED_WITH_APPROVAL = 2
-    ALLOWED = 3
+from ..model.user import PermissionLevel
 
 user_claims = {
     'supervisor'    :   {
                             "id": "123",
                             "name": "supervicor",
                             "permissions": {
-                                "status_change": PermissionLevel.ALLOWED.value,
-                                "severity_change": PermissionLevel.ALLOWED.value
+                                "status": PermissionLevel.ALLOWED.value,
+                                "severity": PermissionLevel.ALLOWED.value
                             }
                         },
     'subordinate'   :  {
-                            "id": "123",
+                            "id": "456",
                             "name": "subordinate",
                             "permissions": {
-                                "status_change": PermissionLevel.ALLOWED_WITH_APPROVAL.value,
-                                "severity_change": PermissionLevel.ALLOWED_WITH_APPROVAL.value
+                                "status": PermissionLevel.ALLOWED_WITH_APPROVAL.value,
+                                "severity": PermissionLevel.ALLOWED_WITH_APPROVAL.value
                             }
                         },
     'anonymous'     :   {
-                            "id": "123",
+                            "id": "789",
                             "name": "anonymous",
                             "permissions": {
-                                "status_change": PermissionLevel.NOT_ALLOWED.value,
-                                "severity_change": PermissionLevel.NOT_ALLOWED.value
+                                "status": PermissionLevel.NOT_ALLOWED.value,
+                                "severity": PermissionLevel.NOT_ALLOWED.value
                             }
                         }
 }
@@ -43,6 +39,11 @@ class UserList(Resource):
         """List all registered users"""
         return user_claims, 200
 
+    def post(self):
+        data = request.get_json()
+        print ('data')
+        print (data)
+        return 200
 
 @api.resource('/users/<username>')
 class User(Resource):
@@ -53,3 +54,4 @@ class User(Resource):
                     'user' : username,
                     'token': token
         }, 200
+    
