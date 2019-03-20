@@ -15,7 +15,6 @@ export default function landingReducer(state, action){
                 isCatogoryFetching:true
             })
         case REQUEST_CATAGORIES_SUCCESS:
-            console.log(action.catogories)
             return Object.assign({}, state, {
                 isCatogoryFetching: false,
                 catogories:action.catogories

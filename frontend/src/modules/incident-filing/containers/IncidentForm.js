@@ -489,7 +489,6 @@ class IndicdentForm extends React.Component {
         const { classes } = this.props;
         const steps = getSteps();
         const activeStep = this.props.incidentFormActiveStep;
-        console.log('isSubmitting ',this.props.isIncidentBasicDetailsSubmitting)
 
         return (
             <div className={classes.root}>
@@ -499,7 +498,6 @@ class IndicdentForm extends React.Component {
                         time:new Date('2014-08-18T21:11:54'),
                     }}
                     onSubmit={(values, actions) => {
-                        console.log('formik.onsubmit', values)
                         this.handleSubmit(values, actions);
                     }}
                     render={(formikProps) => {

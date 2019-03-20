@@ -53,7 +53,6 @@ export function submitIncidentBasicData(incidentData) {
             .then(
                 response => response.data,
                 error => {
-                    console.log('error occured', error)
                     dispatch(recieveIncidentSubmitError(error))
                 }
             )
