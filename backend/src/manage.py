@@ -22,7 +22,7 @@ def make_app(env):
     return app
 
 def run():
-    app = make_app(os.getenv('BOILERPLATE_ENV') or 'dev')
+    app = make_app(os.getenv('APP_ENV') or 'dev')
     app.run(host="0.0.0.0")
 
 
