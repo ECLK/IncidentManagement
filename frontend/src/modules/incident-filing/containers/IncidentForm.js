@@ -216,8 +216,6 @@ class IndicdentForm extends Component {
                 if (this.props.incidentId) {
                     this.props.updateIncidentBasicDetails(this.props.incidentId, values);
                 } else {
-                    console.log(this.props.location);
-                    this.props.history.replace(...this.props.location, { pathname: '/report/10'});
                     this.props.submitIncidentBasicDetails(values);
                 }
                 break;

@@ -15,6 +15,8 @@ import {
 } from './IncidentFiling.types'
 import { createIncident, updateIncident, updateReporter } from '../../../api/incident';
 
+import history from '../../../routes/history';
+
 // Form Submission
 
 export function stepForwardIncidentStepper() {
@@ -36,6 +38,8 @@ export function requestIncidentSubmit() {
 }
 
 export function recieveIncidentSubmitSuccess(submitResponse) {
+    history.replace({ ...history.location, pathname: `/report/${submitResponse.incident.id}`});
+
     return {
         type: INCIDENT_BASIC_DATA_SUBMIT_SUCCESS,
         data: submitResponse,
