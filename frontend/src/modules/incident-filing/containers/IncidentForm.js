@@ -3,9 +3,12 @@
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import React, { Component } from 'react';
+import { withRouter } from "react-router";
+
 import { Formik, withFormik } from 'formik';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
+import { FormattedMessage } from 'react-intl';
 
 import PropTypes from 'prop-types';
 import Stepper from '@material-ui/core/Stepper';
@@ -20,58 +23,11 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { IncidentBasicDetailsForm } from '../../../components/IncidentBasicDetailsForm';
 import { IncidentLocationDetailsForm } from '../../../components/IncidentLocationDetailsForm';
 import { IncidentContactDetailsForm } from '../../../components/IncidentContactDetailsForm';
+import { IncidentReviewDetailsForm } from '../../../components/IncidentReviewDetailsForm';
 
 
 import { submitIncidentBasicData, stepBackwardIncidentStepper, stepForwardIncidentStepper, fetchUpdateReporter, fetchUpdateIncident } from '../state/IncidentFiling.actions'
-import { fetchCatogories } from '../../shared/state/Shared.actions';
-
-const IncidentAdvancedDetailsForm = props => {
-    const {
-        values,
-        touched,
-        errors,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-    } = props;
-    return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="text"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.incidentAdvancedDetails.incidentTitle}
-                name="incidentTitle"
-            />
-            {errors.name && touched.name && <div id="feedback">{errors.name}</div>}
-            <button type="submit">Submit</button>
-        </form>
-    );
-};
-
-const IncidentAdvancedDetailsSection = withFormik({
-    mapPropsToValues: () => ({ incidentDescription: '', incidentTitle: '', incidentAdvancedDetails: '' }),
-    // Custom sync validation
-    validate: values => {
-        const errors = {};
-
-        if (!values.name) {
-            errors.name = 'Required';
-        }
-
-        return errors;
-    },
-
-    handleSubmit: (values, { setSubmitting }) => {
-        setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
-        }, 1000);
-    },
-
-    displayName: 'IncidentAdvancedDetailsSection',
-})(IncidentAdvancedDetailsForm);
-
+import { fetchCatogories, fetchDistricts, fetchPoliceStations, fetchPollingStations, fetchWards } from '../../shared/state/Shared.actions';
 
 
 const styles = theme => ({
@@ -145,7 +101,25 @@ const styles = theme => ({
 });
 
 function getSteps() {
-    return ['Submit Incident Details', 'Submit Incident Location Details', 'Submit Contact Details', 'Add additoinal details'];
+    return [
+        {
+            id:'eclk.incident.management.filing.guest.form.steps.basic.details',
+            description:'Submit Incident Details',
+            defaultMessage:'Submit Incident Details'
+        },
+        {
+            id:'eclk.incident.management.filing.guest.form.steps.location.details',
+            description:'Submit Incident Location Details',
+            defaultMessage:'Submit Incident Location Details'
+        },{
+            id:'eclk.incident.management.filing.guest.form.steps.contact.details',
+            description:'Submit Contact Details',
+            defaultMessage:'Submit Contact Details'
+        },{
+            id:'eclk.incident.management.filing.guest.form.steps.review.details',
+            description:'Add additoinal details',
+            defaultMessage:'Add additoinal details'
+        }];
 }
 
 function getStepContent(step, props, formikProps, state) {
@@ -157,7 +131,7 @@ function getStepContent(step, props, formikProps, state) {
         case 2:
             return (<IncidentContactDetailsForm {...props} {...formikProps} initialValues={state.incidentContactDetails} />);
         case 3:
-            return (<IncidentAdvancedDetailsSection {...props} {...formikProps} />);
+            return (<IncidentReviewDetailsForm/>);
         default:
             return 'Unknown step';
     }
@@ -168,12 +142,17 @@ class IndicdentForm extends Component {
         activeStep: 0,
         skipped: new Set(),
         incidentBasicDetails: {},
+        incidentLocationDetails: {},
         incidentContactDetails: {},
         incidentAdvancedDetails: {}
     };
 
-    componentDidMount(){
+    componentDidMount() {
         this.props.getCategorys();
+        this.props.getDistricts();
+        this.props.getPoliceStations();
+        this.props.getPollingStations();
+        this.props.getWards();
     }
 
     isStepOptional = step => step === 1 || step === 2;
@@ -230,17 +209,20 @@ class IndicdentForm extends Component {
     }
 
     handleSubmit = (values, actions) => {
+
         // diffreent endpoints have to be called in different steps.
         switch (this.props.incidentFormActiveStep) {
             case 0:
                 if (this.props.incidentId) {
                     this.props.updateIncidentBasicDetails(this.props.incidentId, values);
                 } else {
+                    console.log(this.props.location);
+                    this.props.history.replace(...this.props.location, { pathname: '/report/10'});
                     this.props.submitIncidentBasicDetails(values);
                 }
                 break;
             case 1:
-                this.props.stepForward();
+                this.props.updateIncidentBasicDetails(this.props.incidentId, values);
                 break;
             case 2:
                 this.props.submitContactDetails(this.props.reporterId, values);
@@ -287,7 +269,6 @@ class IndicdentForm extends Component {
         }
     }
 
-
     render() {
         const { classes } = this.props;
         const steps = getSteps();
@@ -297,6 +278,23 @@ class IndicdentForm extends Component {
             <div className={classes.root}>
                 <Formik
                     initialValues={this.getInitialValues()}
+                    validate={values => {
+                        let errors = {};
+                        if (!values.title) {
+                            errors.title = 'required';
+                        }
+                        if (!values.description) {
+                            errors.description = 'required';
+                        }
+                        if (values.email) {
+                            if (
+                                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+                            ) {
+                                errors.email = 'Invalid email address';
+                            }
+                        }
+                        return errors;
+                    }}
                     onSubmit={(values, actions) => {
                         this.handleSubmit(values, actions);
                     }}
@@ -310,8 +308,14 @@ class IndicdentForm extends Component {
                                             labelProps.optional = <Typography variant="caption">Optional</Typography>;
                                         }
                                         return (
-                                            <Step key={label}>
-                                                <StepLabel {...labelProps} >{label}</StepLabel>
+                                            <Step key={label.id}>
+                                                <StepLabel {...labelProps} >
+                                                    <FormattedMessage
+                                                        id={label.id}
+                                                        description={label.description}
+                                                        defaultMessage={label.defaultMessage}
+                                                    />
+                                                </StepLabel>
                                                 <StepContent>
                                                     {getStepContent(index, this.props, formikProps, this.state)}
                                                     <div className={classes.actionsContainer}>
@@ -323,27 +327,27 @@ class IndicdentForm extends Component {
                                                             >
                                                                 Back
                                                         </Button>
-                                                        {this.isStepOptional(activeStep) && (
-                                                        <Button
-                                                            variant="contained"
-                                                            color="primary"
-                                                            onClick={this.handleSkip}
-                                                            className={classes.button}
-                                                        >
-                                                            Skip
+                                                            {this.isStepOptional(activeStep) && (
+                                                                <Button
+                                                                    variant="contained"
+                                                                    color="primary"
+                                                                    onClick={this.handleSkip}
+                                                                    className={classes.button}
+                                                                >
+                                                                    Skip
                                                         </Button>
-                                                        )}
-                                                        <Button
-                                                            variant="contained"
-                                                            color="primary"
-                                                            onClick={() => { this.handleNext(formikProps.handleSubmit, formikProps.values) }}
-                                                            className={classes.button}
-                                                            disabled={this.props.isIncidentBasicDetailsSubmitting}
-                                                        >
-                                                            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                                        </Button>
-                                                        {this.props.isIncidentBasicDetailsSubmitting && <CircularProgress size={24} className={classes.buttonProgress} />}
-                                                        
+                                                            )}
+                                                            <Button
+                                                                variant="contained"
+                                                                color="primary"
+                                                                onClick={() => { this.handleNext(formikProps.handleSubmit, formikProps.values) }}
+                                                                className={classes.button}
+                                                                disabled={this.props.isIncidentBasicDetailsSubmitting}
+                                                            >
+                                                                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                                                            </Button>
+                                                            {this.props.isIncidentBasicDetailsSubmitting && <CircularProgress size={24} className={classes.buttonProgress} />}
+
                                                         </div>
                                                     </div>
                                                 </StepContent>
@@ -381,10 +385,15 @@ const mapStateToProps = (state, ownProps) => {
         isIncidentBasicDetailsSubmitting: state.incidentReducer.guestIncidentForm.stepOneSubmission.inProgress,
         incidentFormActiveStep: state.incidentReducer.guestIncidentForm.activeStep,
 
-        incidentId: state.incidentReducer.incident_id,
-        reporterId: state.incidentReducer.reporter_id,
+        incidentId: state.incidentReducer.incident ? state.incidentReducer.incident.id : null,
+        reporterId: state.incidentReducer.reporter ? state.incidentReducer.reporter.id : null,
 
         categorys: state.sharedReducer.categorys,
+        districts: state.sharedReducer.districts,
+        provinces: state.sharedReducer.provinces,
+        pollingStations: state.sharedReducer.pollingStations,
+        policeStations: state.sharedReducer.policeStations,
+        wards: state.sharedReducer.wards,
 
         ...ownProps
     }
@@ -407,8 +416,21 @@ const mapDispatchToProps = (dispatch) => {
         stepForward: () => {
             dispatch(stepForwardIncidentStepper())
         },
+
         getCategorys: () => {
             dispatch(fetchCatogories())
+        },
+        getDistricts: () => {
+            dispatch(fetchDistricts())
+        },
+        getPollingStations: () => {
+            dispatch(fetchPollingStations())
+        },
+        getPoliceStations: () => {
+            dispatch(fetchPoliceStations())
+        },
+        getWards: () => {
+            dispatch(fetchWards())
         }
     }
 }
@@ -416,5 +438,5 @@ const mapDispatchToProps = (dispatch) => {
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     withStyles(styles)
-)(IndicdentForm);
+)(withRouter(IndicdentForm));
 

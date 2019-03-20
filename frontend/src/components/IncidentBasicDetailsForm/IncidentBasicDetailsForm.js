@@ -13,7 +13,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 
-// date picker impoerts
+// date picker imports
 import Grid from '@material-ui/core/Grid';
 import { TimePicker, DatePicker } from 'material-ui-pickers';
 
@@ -39,14 +39,16 @@ export class IncidentBasicDetailsForm extends Component {
                 <TextField
                     type="text"
                     name="title"
-                    label="Title"
+                    label={<div>Title*</div>}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     margin="normal"
                     value={values.title}
                     className={classes.textField}
+                    
+                    error = {errors.title && touched.title}
+                    helperText={(errors.title && touched.title)? errors.title : null}
                 />
-                {errors.incidentTitle && touched.incidentTitle && <div>{errors.incidentTitle}</div>}
                 <TextField
                     type="text"
                     name="description"
@@ -57,14 +59,15 @@ export class IncidentBasicDetailsForm extends Component {
                     margin="normal"
                     value={values.description}
                     className={classes.description}
+                    required
+                    error = {errors.description && touched.description}
+                    helperText={(errors.description && touched.description)? errors.description : null}
                 />
-                {errors.incidentDescription &&
-                    touched.incidentDescription && <div>{errors.incidentTitle}</div>}
 
                 <FormControl component="fieldset" className={classes.formControl}>
                     <FormLabel component="legend" className={classes.radioSelecLabel}>Current Status</FormLabel>
                     <RadioGroup
-                        aria-label="Current Status"
+                        aria-label="Status"
                         name="occurence"
                         className={classes.group}
                         value={values.occurence}

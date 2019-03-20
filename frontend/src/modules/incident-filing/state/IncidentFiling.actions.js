@@ -126,12 +126,12 @@ export function recieveReporterUpdateError(errorResponse) {
 }
 
 export function fetchUpdateReporter(reporterId, reporterData) {
-    console.log(reporterId, reporterData);
     return async function (dispatch) {
         dispatch(requestReporterUpdate());
         try{
             const response = await updateReporter(reporterId, reporterData);
             await dispatch(recieveReporterUpdateSuccess(response.data));
+            await dispatch(stepForwardIncidentStepper());
         }catch(error){
             await dispatch(recieveReporterUpdateError(error));
         }

@@ -28,12 +28,12 @@ export class IncidentLocationDetailsForm extends Component {
 
                 <TextField
                     type="text"
-                    name="name"
+                    name="location"
                     label="Name/Description"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     margin="normal"
-                    value={values.locationName}
+                    value={values.location}
                     className={classes.textField}
                 />
 
@@ -44,7 +44,7 @@ export class IncidentLocationDetailsForm extends Component {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     margin="normal"
-                    value={values.title}
+                    value={values.address}
                     className={classes.textField}
                 />
 
@@ -63,87 +63,85 @@ export class IncidentLocationDetailsForm extends Component {
                         <MenuItem value="">
                             <em>None</em>
                         </MenuItem>
-                        <MenuItem value={1}>General Election 2020 </MenuItem>
-                        <MenuItem value={2}>Presedential Election 2020</MenuItem>
-                        <MenuItem value={3}>Presedential Election 2008</MenuItem>
+                        {this.props.provinces.map((c, k) => (
+                            <MenuItem value={k} key={k}>{c}</MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
 
                 <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="district">Distric</InputLabel>
+                    <InputLabel htmlFor="district_id">Distric</InputLabel>
                     <Select
-                        value={values.district}
+                        value={values.district_id}
                         onChange={handleChange}
                         inputProps={{
-                            name: 'district',
-                            id: 'district',
+                            name: 'district_id',
+                            id: 'district_id',
                         }}
                     >
                         <MenuItem value="">
                             <em>None</em>
                         </MenuItem>
-                        <MenuItem value={1}>Colombo </MenuItem>
-                        <MenuItem value={2}>Gampaha</MenuItem>
-                        <MenuItem value={3}>Kalutara</MenuItem>
-                        <MenuItem value={3}>Galle</MenuItem>
-                        <MenuItem value={3}>Matara</MenuItem>
+                        {this.props.districts.map((c, k) => (
+                            <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
 
                 <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="polling_division">Polling division</InputLabel>
+                    <InputLabel htmlFor="polling_station_id">Polling division</InputLabel>
                     <Select
-                        value={values.polling_division}
+                        value={values.polling_station_id}
                         onChange={handleChange}
                         inputProps={{
-                            name: 'polling_division',
-                            id: 'polling_division',
+                            name: 'polling_station_id',
+                            id: 'polling_station_id',
                         }}
                     >
                         <MenuItem value="">
                             <em>None</em>
                         </MenuItem>
-                        <MenuItem value={1}>General Election 2020 </MenuItem>
-                        <MenuItem value={2}>Presedential Election 2020</MenuItem>
-                        <MenuItem value={3}>Presedential Election 2008</MenuItem>
+                        {this.props.pollingStations.map((c, k) => (
+                            <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
 
                 <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="ward">Ward</InputLabel>
+                    <InputLabel htmlFor="ward_id">Ward</InputLabel>
                     <Select
-                        value={values.ward}
+                        value={values.ward_id}
                         onChange={handleChange}
                         inputProps={{
-                            name: 'ward',
-                            id: 'ward',
+                            name: 'ward_id',
+                            id: 'ward_id',
                         }}
                     >
                         <MenuItem value="">
                             <em>None</em>
                         </MenuItem>
-                        <MenuItem value={1}>General Election 2020 </MenuItem>
-                        <MenuItem value={2}>Presedential Election 2020</MenuItem>
-                        <MenuItem value={3}>Presedential Election 2008</MenuItem>
+                        {this.props.wards.map((c, k) => (
+                            <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
 
                 <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="police_station">Police station</InputLabel>
+                    <InputLabel htmlFor="police_station_id">Police station</InputLabel>
                     <Select
-                        value={values.polling_station}
+                        value={values.police_station_id}
                         onChange={handleChange}
                         inputProps={{
-                            name: 'police_station',
-                            id: 'police_station',
+                            name: 'police_station_id',
+                            id: 'police_station_id',
                         }}
                     >
                         <MenuItem value="">
                             <em>None</em>
                         </MenuItem>
-                        <MenuItem value={1}>General Election 2020 </MenuItem>
-                        <MenuItem value={2}>Presedential Election 2020</MenuItem>
-                        <MenuItem value={3}>Presedential Election 2008</MenuItem>
+                        {this.props.policeStations.map((c, k) => (
+                            <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
 

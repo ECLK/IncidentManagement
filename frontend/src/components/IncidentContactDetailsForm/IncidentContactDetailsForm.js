@@ -22,48 +22,48 @@ export class IncidentContactDetailsForm extends Component {
             handleBlur,
             handleSubmit,
         } = this.props;
-
+        console.log("contact", values);
         return (
             <form onSubmit={handleSubmit} className={classes.container}>
 
                 <TextField
                     type="text"
-                    name="name"
+                    name="reporter_name"
                     label="Name"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     margin="normal"
-                    value={values.name}
+                    value={values.reporter_name}
                     className={classes.textField}
                 />
                 {errors.email && touched.email && <div>{errors.email}</div>}
 
                 <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="type">Type</InputLabel>
+                    <InputLabel htmlFor="reporter_type">Type</InputLabel>
                     <Select
-                        value={values.type}
+                        value={values.reporter_type}
                         onChange={handleChange}
                         inputProps={{
-                            name: 'type',
-                            id: 'type',
+                            name: 'reporter_type',
+                            id: 'reporter_type',
                         }}
                     >
                         <MenuItem value="">
                             <em>None</em>
                         </MenuItem>
-                        <MenuItem value={10}>Individual</MenuItem>
-                        <MenuItem value={20}>Entity</MenuItem>
+                        <MenuItem value={'Individual'}>Individual</MenuItem>
+                        <MenuItem value={'Entity'}>Entity</MenuItem>
                     </Select>
                 </FormControl>
 
                 <TextField
                     type="text"
-                    name="address"
+                    name="reporter_address"
                     label="Address"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     margin="normal"
-                    value={values.address}
+                    value={values.reporter_address}
                     className={classes.description}
                 />
                 {errors.social &&
@@ -72,29 +72,29 @@ export class IncidentContactDetailsForm extends Component {
 
                 <TextField
                     type="tel"
-                    name="telephone"
+                    name="reporter_telephone"
                     label="Telephone"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     margin="normal"
-                    value={values.telephone}
+                    value={values.reporter_telephone}
                     className={classes.description}
                 />
-                {errors.telephone &&
-                    touched.telephone && <div>{errors.telephone}</div>}
+                {errors.reporter_telephone &&
+                    touched.reporter_telephone && <div>{errors.reporter_telephone}</div>}
 
                 <TextField
                     type="email"
-                    name="email"
+                    name="reporter_email"
                     label="Email"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     margin="normal"
-                    value={values.email}
+                    value={values.reporter_email}
                     className={classes.description}
                 />
-                {errors.email &&
-                    touched.email && <div>{errors.email}</div>}
+                {errors.reporter_email &&
+                    touched.reporter_email && <div>{errors.reporter_email}</div>}
 
                 {status && status.msg && <div>{status.msg}</div>}
             </form>
