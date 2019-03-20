@@ -16,8 +16,8 @@ import {
 } from './IncidentFiling.types'
 
 const initialState = {
-    incident: null,
-    reporter: null,
+    incident: {},
+    reporter: {},
     incident_id: null,
     reporter_id: null,
 
@@ -27,7 +27,7 @@ const initialState = {
     hasError: false,
 
     guestIncidentForm: {
-        activeStep: 3,
+        activeStep: 0,
         stepOneSubmission: {
             inProgress: false,
             error: [],

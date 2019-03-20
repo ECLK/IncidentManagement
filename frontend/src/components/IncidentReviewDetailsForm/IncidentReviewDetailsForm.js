@@ -56,16 +56,52 @@ class IncidentReviewDetailsForm extends Component {
                     <Typography variant="h6" component="h3" className={classes.subTitle}>
                         Incident Location Details.
                     </Typography>
+                    {this.props.incident &&
+                    <React.Fragment>
                     <Typography component="p">
-                        Paper can be used to build surface or other elements for your application.
+                        Location name/description: {this.props.incident.title}
                     </Typography>
+                    <Typography component="p">
+                        Address: {this.props.incident.description}
+                    </Typography>
+                    <Typography component="p">
+                        Coordinates: {this.props.incident.occurance}
+                    </Typography>
+                    <Typography component="p">
+                        Province: {this.props.incident.date}
+                    </Typography>
+                    <Typography component="p">
+                        District: {this.props.incident.time}
+                    </Typography>
+                    <Typography component="p">
+                        Polling division: {this.props.incident.occurance}
+                    </Typography>
+                    <Typography component="p">
+                        Ward: {this.props.incident.occurance}
+                    </Typography>
+                    <Typography component="p">
+                        Police Station: {this.props.incident.occurance}
+                    </Typography>
+                    </React.Fragment>}
 
                     <Typography variant="h6" component="h3" className={classes.subTitle}>
                         Incident Contact Details.
                     </Typography>
+                    {this.props.reporter &&
+                    <React.Fragment>
                     <Typography component="p">
-                        Paper can be used to build surface or other elements for your application.
+                        Location name/description: {this.props.reporter.name}
                     </Typography>
+                    <Typography component="p">
+                        Address: {this.props.reporter.email}
+                    </Typography>
+                    <Typography component="p">
+                        Coordinates: {this.props.reporter.telephone}
+                    </Typography>
+                    <Typography component="p">
+                        Province: {this.props.reporter.address}
+                    </Typography>
+                    </React.Fragment>}
                 </Paper>
             </div>
         );
