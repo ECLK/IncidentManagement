@@ -7,6 +7,9 @@ from ..service.incident_outcome import save_new_incident_outcome, get_all_incide
 
 from .. import api
 
+from ..service.event import save_new_event
+from ..model.event import EventAction
+
 incident_outcome_fields = {
     
     'id' : fields.Integer,
@@ -35,7 +38,19 @@ class IncidentOutcomeList(Resource):
     def post(self):
         """Creates a new IncidentOutcome """
         data = request.get_json()
-        return save_new_incident_outcome(data=data)
+        outcome = save_new_incident_outcome(data=data)
+
+        event_data = {
+            "action": EventAction.ATTRIBUTE_CHANGED,
+            "incident_id": outcome.incident_id,
+            "reference_id": outcome.id,
+            "intiator": "ANON",
+        }
+        save_new_event(event_data)
+
+        return {
+            "incident_outcome_id": outcome.id
+        }, 200
 
 
 @api.resource('/incident_outcomes/<id>')

@@ -1,5 +1,5 @@
 from .. import db
-import datetime
+import time
 
 class District(db.Model):
     """ District Model for storing task related details """
@@ -13,6 +13,9 @@ class District(db.Model):
     sn_province = db.Column(db.String(1024))
     tm_name = db.Column(db.String(1024))
     tm_province = db.Column(db.String(1024))
+
+    created_date = db.Column(db.Integer, default=int(time.time()))
+    updated_date = db.Column(db.Integer, default=int(time.time()), onupdate=int(time.time()))
 
     def __repr__(self):
         return "<District '{}'>".format(self.name)

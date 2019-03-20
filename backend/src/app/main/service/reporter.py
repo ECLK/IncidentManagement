@@ -7,28 +7,25 @@ from app.main.model.reporter import Reporter
 def save_new_reporter(data):
     new_reporter = Reporter()
     try:
-        new_reporter.name = data['name'],
+        new_reporter.name = data['name']
     except KeyError:
         pass
     try:
-        new_reporter.sn_name = data['sn_name'],
+        new_reporter.sn_name = data['sn_name']
     except KeyError:
         pass
     try:
-        new_reporter.tm_name = data['tm_name'],
+        new_reporter.tm_name = data['tm_name']
     except KeyError:
         pass
     try:
-        new_reporter.type = data['type'],
+        new_reporter.type = data['type']
     except KeyError:
         pass
     
     save_changes(new_reporter)
-    response_object = {
-        'status': 'success',
-        'message': 'Successfully created reporter.',
-    }
-    return response_object, 201
+    
+    return new_reporter
 
 def get_all_reporters():
     return Reporter.query.all()

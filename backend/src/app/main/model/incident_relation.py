@@ -1,5 +1,5 @@
 from .. import db
-import datetime
+import time
 
 class IncidentRelation(db.Model):
     """ IncidentRelation Model for storing task related details """
@@ -13,7 +13,8 @@ class IncidentRelation(db.Model):
     description = db.Column(db.Text)
     sn_description = db.Column(db.Text)
     tn_description = db.Column(db.Text)
-    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    created_date = db.Column(db.Integer, default=int(time.time()))
+    updated_date = db.Column(db.Integer, default=int(time.time()), onupdate=int(time.time()))
 
     def __repr__(self):
         return "<IncidentRelation '{}'>".format(self.name)
