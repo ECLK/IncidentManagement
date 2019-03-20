@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, BrowserRouter as Router } from "react-router-dom";
+import { Route, BrowserRouter as Router, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import history from './history'
 
@@ -24,8 +24,7 @@ class MainRouter extends Component {
         <Router history={history}>
           <React.Fragment>
             <Route exact path="/" component={LandingPage} />
-            <Route path="/report/:incidentId" component={Report} />
-            <Route path="/report" component={Report} />
+            <Route path="/report/:paramIncidentId?" component={Report} />        
             <Route path="/ongoing" component={Ongoing}/>
             <Route path="/historic" component={Historic}/>
             <Route exact path="/home" component={HomePage} />

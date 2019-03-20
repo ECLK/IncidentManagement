@@ -26,7 +26,7 @@ import { IncidentContactDetailsForm } from '../../../components/IncidentContactD
 import { IncidentReviewDetailsForm } from '../../../components/IncidentReviewDetailsForm';
 
 
-import { submitIncidentBasicData, stepBackwardIncidentStepper, stepForwardIncidentStepper, fetchUpdateReporter, fetchUpdateIncident } from '../state/IncidentFiling.actions'
+import { submitIncidentBasicData, stepBackwardIncidentStepper, stepForwardIncidentStepper, fetchUpdateReporter, fetchUpdateIncident, fetchIncidentData } from '../state/IncidentFiling.actions'
 import { fetchCatogories, fetchDistricts, fetchPoliceStations, fetchPollingStations, fetchWards } from '../../shared/state/Shared.actions';
 
 
@@ -144,7 +144,9 @@ class IndicdentForm extends Component {
         incidentBasicDetails: {},
         incidentLocationDetails: {},
         incidentContactDetails: {},
-        incidentAdvancedDetails: {}
+        incidentAdvancedDetails: {},
+
+        formInitData: null
     };
 
     componentDidMount() {
@@ -154,7 +156,9 @@ class IndicdentForm extends Component {
         this.props.getPollingStations();
         this.props.getWards();
 
-        console.log(this.props.incidentId);
+        if(this.props.paramIncidentId){
+            this.props.getIncident(this.props.paramIncidentId);
+        }
     }
 
     isStepOptional = step => step === 1 || step === 2;
@@ -214,7 +218,7 @@ class IndicdentForm extends Component {
     }
 
     handleSubmit = (values, actions) => {
-
+        console.log(this.props);
         // diffreent endpoints have to be called in different steps.
         switch (this.props.incidentFormActiveStep) {
             case 0:
@@ -238,13 +242,26 @@ class IndicdentForm extends Component {
     }
 
     getInitialValues = () => {
+        var initData = { ...this.props.incident };
+        const reporter = this.props.reporter;
+
+        if(reporter){
+            Object.assign(initData, {
+                "reporter_name": reporter.name,
+                "reporter_type": reporter.reporter_type,
+                "reporter_email": reporter.email,
+                "reporter_telephone": reporter.telephone,
+                "reporter_address": reporter.address
+            });
+        }
+
         switch (this.props.incidentFormActiveStep) {
             case 0:
-                return this.state.incidentBasicDetails;
+                return { ...initData, ...this.state.incidentBasicDetails };
             case 1:
-                return this.state.incidentLocationDetails;
+                return { ...initData, ...this.state.incidentLocationDetails };
             case 2:
-                return this.state.incidentContactDetails;
+                return { ...initData, ...this.state.incidentContactDetails };
             default:
                 return false;
         }
@@ -276,6 +293,12 @@ class IndicdentForm extends Component {
         const { classes } = this.props;
         const steps = getSteps();
         const activeStep = this.props.incidentFormActiveStep;
+
+        if(this.props.isIncidentLoading){
+            return (
+                <div>Loading</div>
+            )
+        }
 
         return (
             <div className={classes.root}>
@@ -388,6 +411,10 @@ const mapStateToProps = (state, ownProps) => {
         isIncidentBasicDetailsSubmitting: state.incidentReducer.guestIncidentForm.stepOneSubmission.inProgress,
         incidentFormActiveStep: state.incidentReducer.guestIncidentForm.activeStep,
 
+        isIncidentLoading: state.incidentReducer.isIncidentLoading,
+        incident: state.incidentReducer.incident,
+        reporter: state.incidentReducer.reporter,
+
         incidentId: state.incidentReducer.incident ? state.incidentReducer.incident.id : null,
         reporterId: state.incidentReducer.reporter ? state.incidentReducer.reporter.id : null,
 
@@ -437,6 +464,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         getWards: () => {
             dispatch(fetchWards())
+        },
+
+        getIncident: (incidentId) => {
+            dispatch(fetchIncidentData(incidentId))
         }
     }
 }
