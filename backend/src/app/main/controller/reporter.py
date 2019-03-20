@@ -10,10 +10,13 @@ from .. import api
 reporter_fields = {
     
     'id' : fields.Integer,
-    'name' : fields.String(1024),
-    'sn_name' : fields.String(1024),
-    'tm_name' : fields.String(1024),
-    'type' : fields.String(1024),
+    'reporter_name' : fields.String(1024),
+    'reporter_sn_name' : fields.String(1024),
+    'reporter_tm_name' : fields.String(1024),
+    'reporter_type' : fields.String(1024),
+    'reporter_email' : fields.String(1024),
+    'reporter_telephone' : fields.String(1024),
+    'reporter_address' : fields.String(1024),
 }
 
 reporter_list_fields = {

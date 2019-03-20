@@ -1,54 +1,57 @@
 import json
+import jwt
+import enum
 from flask import Flask, jsonify
-
 from flask_restful import reqparse, abort, Api, Resource, request, fields, marshal_with
-
-from ..service.user import save_new_user, get_all_users, get_a_user, update_a_user, delete_a_user
-
 from .. import api
+from ..model.user import PermissionLevel
 
-user_fields = {
-    
-    'id' : fields.Integer,
-    'role_id' : fields.Integer,
-    'name' : fields.String(1024),
-    'sn_name' : fields.String(1024),
-    'tm_name' : fields.String(1024),
-}
-
-user_list_fields = {
-    'users': fields.List(fields.Nested(user_fields))
+user_claims = {
+    'supervisor'    :   {
+                            "id": "123",
+                            "name": "supervicor",
+                            "permissions": {
+                                "status": PermissionLevel.ALLOWED.value,
+                                "severity": PermissionLevel.ALLOWED.value
+                            }
+                        },
+    'subordinate'   :  {
+                            "id": "456",
+                            "name": "subordinate",
+                            "permissions": {
+                                "status": PermissionLevel.ALLOWED_WITH_APPROVAL.value,
+                                "severity": PermissionLevel.ALLOWED_WITH_APPROVAL.value
+                            }
+                        },
+    'anonymous'     :   {
+                            "id": "789",
+                            "name": "anonymous",
+                            "permissions": {
+                                "status": PermissionLevel.NOT_ALLOWED.value,
+                                "severity": PermissionLevel.NOT_ALLOWED.value
+                            }
+                        }
 }
 
 @api.resource('/users')
 class UserList(Resource):
-    @marshal_with(user_fields)
     def get(self):
         """List all registered users"""
-        return get_all_users()
+        return user_claims, 200
 
     def post(self):
-        """Creates a new User """
         data = request.get_json()
-        return save_new_user(data=data)
+        print ('data')
+        print (data)
+        return 200
 
-
-@api.resource('/users/<id>')
+@api.resource('/users/<username>')
 class User(Resource):
-    @marshal_with(user_fields)
-    def get(self, id):
-        """get a user given its identifier"""
-        user = get_a_user(id)
-        if not user:
-            api.abort(404)
-        else:
-            return user
-
-    def put(self, id):
-        """Update a given User """
-        data = request.get_json()
-        return update_a_user(id=id, data=data)
-
-    def delete(self, id):
-        """Delete a given User """
-        return delete_a_user(id)
+    def get(self, username):
+        """get a user token given the username"""
+        token = jwt.encode(user_claims[username], 'eclk-incident-management', algorithm='HS256').decode('utf-8')
+        return {
+                    'user' : username,
+                    'token': token
+        }, 200
+    

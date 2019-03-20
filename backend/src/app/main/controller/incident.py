@@ -22,25 +22,40 @@ from .. import api
 from ..model.event import EventAction
 from ..model.incident_status import StatusType
 from ..model.incident_severity import SeverityLevel
+from ..model.occurence import Occurence
+
+from ..util.request_helper import get_user_permissions
 
 incident_fields = {
     "id": fields.Integer,
     "token": fields.String(1024),
     "election_id": fields.Integer,
+    "reporter_id": fields.Integer,
+
+    "occurence": fields.String(1024),
+
     "category": fields.Integer,
+
+    "district_id": fields.Integer,
+    "ward_id": fields.Integer,
     "police_station_id": fields.Integer,
     "polling_station_id": fields.Integer,
-    "reporter_id": fields.Integer,
     "location": fields.String(4096),
+    "address": fields.String(4096),
+    "coordinates": fields.String(4096),
+
+
     "channel": fields.String(4096),
     "timing_nature": fields.String(1024),
     "validity": fields.String(1024),
+    
     "title": fields.String,
     "description": fields.String,
     "sn_title": fields.String,
     "sn_description": fields.String,
     "tm_title": fields.String,
     "tm_description": fields.String,
+
     "created_date": fields.Integer,
     "updated_date": fields.Integer,
 }
@@ -53,6 +68,8 @@ class IncidentList(Resource):
     @marshal_with(incident_fields)
     def get(self):
         """List all registered incidents"""
+        permissions = get_user_permissions(request)
+        print (permissions)
         return get_all_incidents()
 
     def post(self):
@@ -63,6 +80,13 @@ class IncidentList(Resource):
 
         incident_data["reporter_id"] = reporter.id
 
+        occurence = None
+        try:
+            occurence = Occurence[incident_data['occurence']]
+        except:
+            pass
+        
+        incident_data['occurence'] = occurence
         # first save he incident
         incident = save_new_incident(incident_data)
 
@@ -88,7 +112,10 @@ class IncidentList(Resource):
         }
         save_new_event(event_data)
 
-        return {"incident_id": incident.id, "reporter_id": reporter.id}, 200
+        return {
+            "incident": incident.to_dict(), 
+            "reporter": reporter.to_dict()
+        }, 200
 
 
 @api.resource("/incidents/<id>")
@@ -105,7 +132,7 @@ class Incident(Resource):
     def put(self, id):
         """Update a given Incident """
         data = request.get_json()
-        update_a_incident(id=id, data=data)
+        incident = update_a_incident(id=id, data=data)
 
         event_data = {
             "action": EventAction.GENERIC_UPDATE,
@@ -114,7 +141,7 @@ class Incident(Resource):
         }
         save_new_event(event_data)
 
-        return {"status": "SUCCESS", "message": "Updated succesfully!"}, 200
+        return incident.to_dict(), 200
 
     def delete(self, id):
         """Delete a given Incident """
@@ -182,7 +209,7 @@ class Severity(Resource):
         """change the current severity of the incident"""
         data = request.get_json()
 
-        status_type = None
+        level = None
         try:
             level = SeverityLevel[data['level']]
         except:

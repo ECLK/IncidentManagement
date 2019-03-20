@@ -15,6 +15,14 @@ def save_new_incident(data):
     except KeyError:
         pass
     try:
+        new_incident.district_id = data['district_id']
+    except KeyError:
+        pass
+    try:
+        new_incident.ward_id = data['ward_id']
+    except KeyError:
+        pass
+    try:
         new_incident.police_station_id = data['police_station_id']
     except KeyError:
         pass
@@ -31,7 +39,19 @@ def save_new_incident(data):
     except KeyError:
         pass
     try:
+        new_incident.address = data['address']
+    except KeyError:
+        pass
+    try:
+        new_incident.coordinates = data['coordinates']
+    except KeyError:
+        pass
+    try:
         new_incident.channel = data['channel']
+    except KeyError:
+        pass
+    try:
+        new_incident.category = data['category']
     except KeyError:
         pass
     try:
@@ -64,6 +84,10 @@ def save_new_incident(data):
         pass
     try:
         new_incident.tm_description = data['tm_description']
+    except KeyError:
+        pass
+    try:
+        new_incident.occurence = data['occurence']
     except KeyError:
         pass
     try:
@@ -114,6 +138,14 @@ def update_a_incident(id, data):
     try:
         incident.election_id = data['election_id']
         status = SUCESS
+    except KeyError:
+        pass
+    try:
+        incident.district_id = data['district_id']
+    except KeyError:
+        pass
+    try:
+        incident.ward_id = data['ward_id']
     except KeyError:
         pass
     try:
@@ -182,6 +214,14 @@ def update_a_incident(id, data):
     except KeyError:
         pass
     try:
+        incident.address = data['address']
+    except KeyError:
+        pass
+    try:
+        incident.coordinates = data['coordinates']
+    except KeyError:
+        pass
+    try:
         incident.timing_nature = data['timing_nature']
         status = SUCESS
     except KeyError:
@@ -214,7 +254,7 @@ def update_a_incident(id, data):
         pass
     
     db.session.commit()
-    return True
+    return incident
 
 def save_changes(data):
     db.session.add(data)
