@@ -27,7 +27,7 @@ const initialState = {
     hasError: false,
 
     guestIncidentForm: {
-        activeStep: 0,
+        activeStep: 3,
         stepOneSubmission: {
             inProgress: false,
             error: [],

@@ -131,7 +131,7 @@ function getStepContent(step, props, formikProps, state) {
         case 2:
             return (<IncidentContactDetailsForm {...props} {...formikProps} initialValues={state.incidentContactDetails} />);
         case 3:
-            return (<IncidentReviewDetailsForm/>);
+            return (<IncidentReviewDetailsForm incident={props.incident} reporter={props.reporter} />);
         default:
             return 'Unknown step';
     }
@@ -394,6 +394,9 @@ const mapStateToProps = (state, ownProps) => {
         pollingStations: state.sharedReducer.pollingStations,
         policeStations: state.sharedReducer.policeStations,
         wards: state.sharedReducer.wards,
+
+        incident:state.incidentReducer.incident,
+        reporter:state.incidentReducer.reporter,
 
         ...ownProps
     }
