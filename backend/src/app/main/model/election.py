@@ -1,5 +1,5 @@
 from .. import db
-import datetime
+import time
 
 class Election(db.Model):
     """ Election Model for storing task related details """
@@ -10,6 +10,8 @@ class Election(db.Model):
     name = db.Column(db.String(1024))
     sn_name = db.Column(db.String(1024))
     tm_name = db.Column(db.String(1024))
+    created_date = db.Column(db.Integer, default=int(time.time()))
+    updated_date = db.Column(db.Integer, default=int(time.time()), onupdate=int(time.time()))
 
     def __repr__(self):
         return "<Election '{}'>".format(self.name)

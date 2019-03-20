@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from app.main import db
 from app.main.model.incident_comment import IncidentComment
@@ -7,62 +8,62 @@ from app.main.model.incident_comment import IncidentComment
 def save_new_incident_comment(data):
     new_incident_comment = IncidentComment()
     try:
-        new_incident_comment.name = data['name'],
+        new_incident_comment.name = data['name']
     except KeyError:
         pass
     try:
-        new_incident_comment.body = data['body'],
+        new_incident_comment.body = data['body']
     except KeyError:
         pass
     try:
-        new_incident_comment.sn_body = data['sn_body'],
+        new_incident_comment.sn_body = data['sn_body']
     except KeyError:
         pass
     try:
-        new_incident_comment.tm_body = data['tm_body'],
+        new_incident_comment.tm_body = data['tm_body']
     except KeyError:
         pass
     try:
-        new_incident_comment.incident_id = data['incident_id'],
+        new_incident_comment.incident_id = data['incident_id']
     except KeyError:
         pass
     try:
-        new_incident_comment.user_id = data['user_id'],
+        new_incident_comment.user_id = data['user_id']
     except KeyError:
         pass
     try:
-        new_incident_comment.role_id = data['role_id'],
+        new_incident_comment.role_id = data['role_id']
     except KeyError:
         pass
     try:
-        new_incident_comment.is_active = data['is_active'],
+        new_incident_comment.is_active = data['is_active']
     except KeyError:
         pass
     try:
-        new_incident_comment.created_date = data['created_date'],
+        new_incident_comment.created_date = data['created_date']
     except KeyError:
         pass
     try:
-        new_incident_comment.updated_date = data['updated_date'],
+        new_incident_comment.updated_date = data['updated_date']
     except KeyError:
         pass
     try:
-        new_incident_comment.deleted_date = data['deleted_date'],
+        new_incident_comment.deleted_date = data['deleted_date']
     except KeyError:
         pass
     
     save_changes(new_incident_comment)
-    response_object = {
-        'status': 'success',
-        'message': 'Successfully created incident_comment.',
-    }
-    return response_object, 201
+
+    return new_incident_comment
 
 def get_all_incident_comments():
     return IncidentComment.query.all()
 
 def get_a_incident_comment(id):
     return IncidentComment.query.filter_by(id=id).first()
+
+def get_incident_comments(incident_id):
+    return IncidentComment.query.filter_by(incident_id=incident_id).all()
 
 def delete_a_incident_comment(id):
     incident_comment = IncidentComment.query.filter_by(id=id).first()

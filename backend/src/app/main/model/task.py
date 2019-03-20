@@ -1,5 +1,5 @@
 from .. import db
-import datetime
+import time
 
 class Task(db.Model):
     """ Task Model for storing task related details """
@@ -10,8 +10,8 @@ class Task(db.Model):
     description = db.Column(db.String(1024) )
     state_id = db.Column(db.Integer , db.ForeignKey('state.id'))
     owner_id = db.Column(db.Integer , db.ForeignKey('user.id'))
-    created_date = db.Column(db.DateTime , default=datetime.datetime.utcnow)
-    updated_date = db.Column(db.DateTime , default=datetime.datetime.utcnow)
+    created_date = db.Column(db.Integer, default=int(time.time()))
+    updated_date = db.Column(db.Integer, default=int(time.time()), onupdate=int(time.time()))
 
     def __repr__(self):
         return "<Task '{}'>".format(self.name)

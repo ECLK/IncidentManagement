@@ -1,5 +1,5 @@
 from .. import db
-import datetime
+import time
 
 class ActionEntity(db.Model):
     """ ActionEntity Model for storing task related details """
@@ -15,6 +15,8 @@ class ActionEntity(db.Model):
     sn_description = db.Column(db.Text)
     tn_name = db.Column(db.String(1024))
     tn_description = db.Column(db.Text)
+    created_date = db.Column(db.Integer, default=int(time.time()))
+    updated_date = db.Column(db.Integer, default=int(time.time()), onupdate=int(time.time()))
 
     def __repr__(self):
         return "<ActionEntity '{}'>".format(self.name)
