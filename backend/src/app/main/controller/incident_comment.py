@@ -21,9 +21,9 @@ incident_comment_fields = {
     'user_id' : fields.Integer,
     'role_id' : fields.Integer,
     'is_active' : fields.Boolean,
-    'created_date' : fields.DateTime,
-    'updated_date' : fields.DateTime,
-    'deleted_date' : fields.DateTime,
+    'created_date' : fields.Integer,
+    'updated_date' : fields.Integer,
+    'deleted_date' : fields.Integer,
 }
 
 incident_comment_list_fields = {
@@ -50,6 +50,9 @@ class IncidentCommentList(Resource):
             "incident_id": new_incident_comment.incident_id
         }
         save_new_event(event_data)
+        return {
+            "id": new_incident_comment.id
+        }, 200
 
 
 @api.resource('/incident_comments/<id>')

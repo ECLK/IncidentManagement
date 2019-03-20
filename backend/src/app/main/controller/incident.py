@@ -41,8 +41,8 @@ incident_fields = {
     "sn_description": fields.String,
     "tm_title": fields.String,
     "tm_description": fields.String,
-    "created_date": fields.DateTime,
-    "updated_date": fields.DateTime,
+    "created_date": fields.Integer,
+    "updated_date": fields.Integer,
 }
 
 incident_list_fields = {"incidents": fields.List(fields.Nested(incident_fields))}
