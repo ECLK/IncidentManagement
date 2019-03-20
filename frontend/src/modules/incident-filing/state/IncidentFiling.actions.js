@@ -9,8 +9,12 @@ import {
 
     REQUEST_INCIDENT_CATAGORIES,
     REQUEST_INCIDENT_CATAGORIES_SUCCESS,
-    REQUEST_INCIDENT_CATAGORIES_FAILURE
+    REQUEST_INCIDENT_CATAGORIES_FAILURE,
+    INCIDENT_BASIC_DATA_UPDATE_REQUEST,
+    INCIDENT_BASIC_DATA_UPDATE_SUCCESS,
+    INCIDENT_BASIC_DATA_UPDATE_ERROR
 } from './IncidentFiling.types'
+import { createIncident } from '../../../api/incident';
 
 // Form Submission
 
@@ -35,21 +39,23 @@ export function requestIncidentSubmit() {
 export function recieveIncidentSubmitSuccess(submitResponse) {
     return {
         type: INCIDENT_BASIC_DATA_SUBMIT_SUCCESS,
-        submitResponse
+        data: submitResponse,
+        error: null
     }
 }
 
 export function recieveIncidentSubmitError(errorResponse) {
     return {
         type: INCIDENT_BASIC_DATA_SUBMIT_ERROR,
-        errorResponse
+        data: null,
+        error: errorResponse
     }
 }
 
 export function submitIncidentBasicData(incidentData) {
     return function (dispatch) {
         dispatch(requestIncidentSubmit());
-        return postIncidentReport(incidentData)
+        return createIncident(incidentData)
             .then(
                 response => response.data,
                 error => {
@@ -64,6 +70,48 @@ export function submitIncidentBasicData(incidentData) {
     }
 }
 
+// Update incident
+
+export function requestIncidentUpdate() {
+    return {
+        type: INCIDENT_BASIC_DATA_UPDATE_REQUEST,
+    }
+}
+
+export function recieveIncidentUpdateSuccess(submitResponse) {
+    return {
+        type: INCIDENT_BASIC_DATA_UPDATE_SUCCESS,
+        data: submitResponse,
+        error: null
+    }
+}
+
+export function recieveIncidentUpdateError(errorResponse) {
+    return {
+        type: INCIDENT_BASIC_DATA_UPDATE_ERROR,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function updateIncident(incidentData) {
+    return function (dispatch) {
+        dispatch(requestIncidentUpdate());
+        return updateIncident(incidentData)
+            .then(
+                response => response.data,
+                error => {
+                    dispatch(recieveIncidentUpdateError(error))
+                }
+            )
+            .then(json =>
+                dispatch(recieveIncidentUpdateSuccess(json))
+            )
+    }
+}
+
+
+
 // Get Catogories
 
 export function requestIncidentCatogories() {
@@ -75,14 +123,16 @@ export function requestIncidentCatogories() {
 export function recieveIncidentCatogories(catogories) {
     return {
         type: REQUEST_INCIDENT_CATAGORIES_SUCCESS,
-        catogories
+        data: catogories,
+        error: null
     }
 }
 
 export function recieveIncidentCatogoriesError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_CATAGORIES_FAILURE,
-        errorResponse
+        data: null,
+        error: errorResponse
     }
 }
 
@@ -91,8 +141,7 @@ export function fetchCatogories(){
         dispatch(requestIncidentCatogories());
         return getIncidentCatogories()
         .then(
-            response => response.data,
-            error=> console.log('error occured', error)
+            response => response.data
         )
         .then(json =>
             dispatch(recieveIncidentCatogories(json))

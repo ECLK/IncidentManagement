@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
 import { fetchCatogories } from './state/LandingActions'
+import { submitIncidentBasicData } from '../incident-filing/state/IncidentFiling.actions';
 
 class LandingPage extends Component {
 
@@ -30,7 +31,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onClick: () => {
-            dispatch(fetchCatogories())
+            dispatch(submitIncidentBasicData({
+                title: "test",
+                description: "another test"
+            }))
         }
     }
 }
