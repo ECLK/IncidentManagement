@@ -7,7 +7,7 @@ from app.main.model.incident_status import IncidentStatus
 def save_new_incident_status(data):
     new_incident_status = IncidentStatus()
     try:
-        new_incident_status.name = data['status_type']
+        new_incident_status.status_type = data['status_type']
     except KeyError:
         pass
     try:

@@ -23,4 +23,4 @@ class IncidentSeverity(db.Model):
     created_at = db.Column(db.Integer, default=int(time.time()))
 
     def __repr__(self):
-        return "<IncidentSeverity '{}'>".format(self.name)
+        return "<IncidentSeverity '{}'>".format(self.level)
