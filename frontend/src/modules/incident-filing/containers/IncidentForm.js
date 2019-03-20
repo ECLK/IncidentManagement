@@ -4,7 +4,6 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 import React, { Component } from 'react';
 import { Formik, withFormik } from 'formik';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -14,163 +13,17 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Typography from '@material-ui/core/Typography';
 
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Divider from '@material-ui/core/Divider';
-import Select from '@material-ui/core/Select';
 import Paper from '@material-ui/core/Paper';
 import StepContent from '@material-ui/core/StepContent';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from '@material-ui/core/FormLabel';
-
-// date picker impoerts
-import Grid from '@material-ui/core/Grid';
-import MomentUtils from '@date-io/moment';
-import { MuiPickersUtilsProvider, TimePicker, DatePicker } from 'material-ui-pickers';
-
-import { submitIncidentBasicData, stepBackwardIncidentStepper } from '../state/IncidentFiling.actions'
-
-class IncidentFormBasicDetails extends Component {
-    render() {
-        const { user, onClose, classes, bindBasicDataForm, submitBasicDetails } = this.props;
-        const {
-            status,
-            values,
-            touched,
-            errors,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-        } = this.props;
-
-        return (
-            <form onSubmit={handleSubmit} className={classes.container}>
-                <TextField
-                    type="text"
-                    name="incidentTitle"
-                    label="Title"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    margin="normal"
-                    value={values.title}
-                    className={classes.textField}
-                />
-                {errors.incidentTitle && touched.incidentTitle && <div>{errors.incidentTitle}</div>}
-                <TextField
-                    type="text"
-                    name="incidentDescription"
-                    label="Description"
-                    multiline
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    margin="normal"
-                    value={values.description}
-                    className={classes.description}
-                />
-                {errors.incidentDescription &&
-                    touched.incidentDescription && <div>{errors.incidentTitle}</div>}
-
-                <FormControl component="fieldset" className={classes.formControl}>
-                    <FormLabel component="legend" className={classes.radioSelecLabel}>Current Status</FormLabel>
-                    <RadioGroup
-                        aria-label="Current Status"
-                        name="currStatus"
-                        className={classes.group}
-                        value={values.currStatus}
-                        onChange={handleChange}
-                        row
-                    >
-                        <FormControlLabel value="Occured" control={<Radio color="primary" />} label="Occured" labelPlacement="end" />
-                        <FormControlLabel value="Occurring" control={<Radio color="primary" />} label="Occurring" labelPlacement="end" />
-                        <FormControlLabel value="WillOccur" control={<Radio color="primary" />} label="Will Occur" labelPlacement="end" />
-                    </RadioGroup>
-                </FormControl>
-                
-              
-                    <Grid container className={classes.dataTimePickers} justify="space-between">
-                        <DatePicker
-                            margin="normal"
-                            label="Date"
-                            name='date'
-                            id='date'
-                            value={values.date}
-                            onChange={handleChange}
-                        />
-                        <TimePicker
-                            margin="normal"
-                            label="Time"
-                            name='time'
-                            value={values.time}
-                            onChange={handleChange}
-                        />
-                    </Grid>
-                <Divider variant="middle" />
-
-                <div style={{'width':'100%'}}></div>
-
-                <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="electionId">Election</InputLabel>
-                    <Select
-                        value={values.electionId}
-                        onChange={handleChange}
-                        inputProps={{
-                            name: 'electionId',
-                            id: 'electionId',
-                        }}
-                    >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={1}>General Election 2020 </MenuItem>
-                        <MenuItem value={2}>Presedential Election 2020</MenuItem>
-                        <MenuItem value={3}>Presedential Election 2008</MenuItem>
-                    </Select>
-                </FormControl>
-
-                <div style={{'width':'100%'}}></div>
-
-                <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="category">Catagory</InputLabel>
-                    <Select
-                        value={values.electionId}
-                        onChange={handleChange}
-                        inputProps={{
-                            name: 'category',
-                            id: 'category',
-                        }}
-                    >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={1}>Cat1</MenuItem>
-                        <MenuItem value={2}>Cat2</MenuItem>
-                        <MenuItem value={3}>Cat3</MenuItem>
-                    </Select>
-                </FormControl>
-
-                <TextField
-                    type="text"
-                    name="otherCat"
-                    label="If Other(Specify Here)"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    margin="normal"
-                    value={values.otherCat}
-                    className={classes.otherCat}
-                />
+import { IncidentBasicDetailsForm } from '../../../components/IncidentBasicDetailsForm';
+import { IncidentLocationDetailsForm } from '../../../components/IncidentLocationDetailsForm';
+import { IncidentContactDetailsForm } from '../../../components/IncidentContactDetailsForm';
 
 
-                {status && status.msg && <div>{status.msg}</div>}
-            </form>
-
-        );
-    };
-}
+import { submitIncidentBasicData, stepBackwardIncidentStepper, stepForwardIncidentStepper, fetchUpdateReporter, fetchUpdateIncident } from '../state/IncidentFiling.actions'
+import { fetchCatogories } from '../../shared/state/Shared.actions';
 
 const IncidentAdvancedDetailsForm = props => {
     const {
@@ -221,248 +74,6 @@ const IncidentAdvancedDetailsSection = withFormik({
 
 
 
-
-
-class IncidentFormContactDetails extends Component {
-    render() {
-        const { user, onClose, classes, } = this.props;
-
-        // formikProps
-        const {
-            status,
-            values,
-            touched,
-            errors,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-        } = this.props;
-
-        return (
-            <form onSubmit={handleSubmit} className={classes.container}>
-
-                <TextField
-                    type="text"
-                    name="name"
-                    label="Name"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    margin="normal"
-                    value={values.title}
-                    className={classes.textField}
-                />
-                {errors.email && touched.email && <div>{errors.email}</div>}
-
-                <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="type">Type</InputLabel>
-                    <Select
-                        value={values.type}
-                        onChange={handleChange}
-                        inputProps={{
-                            name: 'type',
-                            id: 'type',
-                        }}
-                    >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={10}>Individual</MenuItem>
-                        <MenuItem value={20}>Entity</MenuItem>
-                    </Select>
-                </FormControl>
-
-                <TextField
-                    type="text"
-                    name="address"
-                    label="Address"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    margin="normal"
-                    value={values.description}
-                    className={classes.description}
-                />
-                {errors.social &&
-                    errors.social.facebook &&
-                    touched.facebook && <div>{errors.social.facebook}</div>}
-
-                <TextField
-                    type="tel"
-                    name="telephone"
-                    label="Telephone"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    margin="normal"
-                    value={values.description}
-                    className={classes.description}
-                />
-                {errors.telephone &&
-                    touched.telephone && <div>{errors.telephone}</div>}
-
-                <TextField
-                    type="email"
-                    name="email"
-                    label="Email"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    margin="normal"
-                    value={values.description}
-                    className={classes.description}
-                />
-                {errors.email &&
-                    touched.email && <div>{errors.email}</div>}
-
-                {status && status.msg && <div>{status.msg}</div>}
-            </form>
-        );
-    };
-}
-
-
-class IncidentFormLocationDetails extends Component {
-    render() {
-        const { user, onClose, classes, } = this.props;
-
-        // formikProps
-        const {
-            status,
-            values,
-            touched,
-            errors,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-        } = this.props;
-
-        return (
-            <form onSubmit={handleSubmit} className={classes.container}>
-
-                <TextField
-                    type="text"
-                    name="name"
-                    label="Name/Description"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    margin="normal"
-                    value={values.locationName}
-                    className={classes.textField}
-                />
-
-                <TextField
-                    type="text"
-                    name="address"
-                    label="Address"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    margin="normal"
-                    value={values.title}
-                    className={classes.textField}
-                />
-
-                <div style={{'width':'100%'}}></div>
-                
-                <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="province">Province</InputLabel>
-                    <Select
-                        value={values.province}
-                        onChange={handleChange}
-                        inputProps={{
-                            name: 'province',
-                            id: 'province',
-                        }}
-                    >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={1}>General Election 2020 </MenuItem>
-                        <MenuItem value={2}>Presedential Election 2020</MenuItem>
-                        <MenuItem value={3}>Presedential Election 2008</MenuItem>
-                    </Select>
-                </FormControl>
-
-                <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="district">Distric</InputLabel>
-                    <Select
-                        value={values.district}
-                        onChange={handleChange}
-                        inputProps={{
-                            name: 'district',
-                            id: 'district',
-                        }}
-                    >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={1}>Colombo </MenuItem>
-                        <MenuItem value={2}>Gampaha</MenuItem>
-                        <MenuItem value={3}>Kalutara</MenuItem>
-                        <MenuItem value={3}>Galle</MenuItem>
-                        <MenuItem value={3}>Matara</MenuItem>
-                    </Select>
-                </FormControl>
-
-                <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="polling_division">Polling division</InputLabel>
-                    <Select
-                        value={values.polling_division}
-                        onChange={handleChange}
-                        inputProps={{
-                            name: 'polling_division',
-                            id: 'polling_division',
-                        }}
-                    >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={1}>General Election 2020 </MenuItem>
-                        <MenuItem value={2}>Presedential Election 2020</MenuItem>
-                        <MenuItem value={3}>Presedential Election 2008</MenuItem>
-                    </Select>
-                </FormControl>
-
-                <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="ward">Ward</InputLabel>
-                    <Select
-                        value={values.ward}
-                        onChange={handleChange}
-                        inputProps={{
-                            name: 'ward',
-                            id: 'ward',
-                        }}
-                    >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={1}>General Election 2020 </MenuItem>
-                        <MenuItem value={2}>Presedential Election 2020</MenuItem>
-                        <MenuItem value={3}>Presedential Election 2008</MenuItem>
-                    </Select>
-                </FormControl>
-
-                <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="police_station">Police station</InputLabel>
-                    <Select
-                        value={values.polling_station}
-                        onChange={handleChange}
-                        inputProps={{
-                            name: 'police_station',
-                            id: 'police_station',
-                        }}
-                    >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={1}>General Election 2020 </MenuItem>
-                        <MenuItem value={2}>Presedential Election 2020</MenuItem>
-                        <MenuItem value={3}>Presedential Election 2008</MenuItem>
-                    </Select>
-                </FormControl>
-
-            </form>
-        );
-    };
-}
-
-
 const styles = theme => ({
     root: {
         width: '90%',
@@ -477,7 +88,7 @@ const styles = theme => ({
     container: {
         display: 'flex',
         flexWrap: 'wrap',
-        marginBottom: 4*theme.spacing.unit,
+        marginBottom: 4 * theme.spacing.unit,
     },
     textField: {
         marginLeft: 4 * theme.spacing.unit,
@@ -504,7 +115,7 @@ const styles = theme => ({
     //stepper styling
     actionsContainer: {
         marginBottom: theme.spacing.unit * 2,
-        marginLeft: theme.spacing.unit * 3 ,
+        marginLeft: theme.spacing.unit * 3,
     },
 
     // warpper for button and circular loading
@@ -528,8 +139,8 @@ const styles = theme => ({
     //catogories
     otherCat: {
         width: '50%',
-        marginTop: 4*theme.spacing.unit,
-        marginLeft:4*theme.spacing.unit
+        marginTop: 4 * theme.spacing.unit,
+        marginLeft: 4 * theme.spacing.unit
     }
 });
 
@@ -537,14 +148,14 @@ function getSteps() {
     return ['Submit Incident Details', 'Submit Incident Location Details', 'Submit Contact Details', 'Add additoinal details'];
 }
 
-function getStepContent(step, props, formikProps) {
+function getStepContent(step, props, formikProps, state) {
     switch (step) {
         case 0:
-            return (<IncidentFormBasicDetails {...props} {...formikProps} />);
+            return (<IncidentBasicDetailsForm {...props} {...formikProps} initialValues={state.incidentBasicDetails} />);
         case 1:
-            return (<IncidentFormLocationDetails {...props} {...formikProps} />)
+            return (<IncidentLocationDetailsForm {...props} {...formikProps} initialValues={state.incidentLocationDetails} />)
         case 2:
-            return (<IncidentFormContactDetails {...props} {...formikProps} />);
+            return (<IncidentContactDetailsForm {...props} {...formikProps} initialValues={state.incidentContactDetails} />);
         case 3:
             return (<IncidentAdvancedDetailsSection {...props} {...formikProps} />);
         default:
@@ -552,29 +163,23 @@ function getStepContent(step, props, formikProps) {
     }
 }
 
-class IndicdentForm extends React.Component {
+class IndicdentForm extends Component {
     state = {
         activeStep: 0,
         skipped: new Set(),
-        incidentBasicDetails: {
-            incidentTitle: null,
-            incidentDescription: null
-        },
-        incidentContactDetails: {
-            name: null,
-            email: null,
-            address: null,
-            telephone: null
-        },
-        incidentAdvancedDetails: {
-            incidentType: null,
-            incidentLocation: null
-        }
+        incidentBasicDetails: {},
+        incidentContactDetails: {},
+        incidentAdvancedDetails: {}
     };
+
+    componentDidMount(){
+        this.props.getCategorys();
+    }
 
     isStepOptional = step => step === 1 || step === 2;
 
-    handleNext = (onSubmit) => {
+    handleNext = (onSubmit, values) => {
+        this.saveStepValues(values);
         onSubmit();
         const { activeStep } = this.state;
         let { skipped } = this.state;
@@ -588,7 +193,8 @@ class IndicdentForm extends React.Component {
         });
     };
 
-    handleBack = () => {
+    handleBack = (values) => {
+        this.saveStepValues(values)
         this.props.stepBackward();
         this.setState(state => ({
             activeStep: state.activeStep - 1,
@@ -624,15 +230,61 @@ class IndicdentForm extends React.Component {
     }
 
     handleSubmit = (values, actions) => {
-        this.props.submitIncidentBasicDetails(values);
         // diffreent endpoints have to be called in different steps.
-        switch (this.propsincidentFormActiveStep) {
+        switch (this.props.incidentFormActiveStep) {
+            case 0:
+                if (this.props.incidentId) {
+                    this.props.updateIncidentBasicDetails(this.props.incidentId, values);
+                } else {
+                    this.props.submitIncidentBasicDetails(values);
+                }
+                break;
             case 1:
-                this.props.submitIncidentBasicDetails(values);
+                this.props.stepForward();
+                break;
+            case 2:
+                this.props.submitContactDetails(this.props.reporterId, values);
+                break;
+            case 3:
+                break;
             default:
                 return false;
         }
+    }
 
+    getInitialValues = () => {
+        switch (this.props.incidentFormActiveStep) {
+            case 0:
+                return this.state.incidentBasicDetails;
+            case 1:
+                return this.state.incidentLocationDetails;
+            case 2:
+                return this.state.incidentContactDetails;
+            default:
+                return false;
+        }
+    }
+
+    saveStepValues = (values) => {
+        switch (this.props.incidentFormActiveStep) {
+            case 0:
+                this.setState({
+                    incidentBasicDetails: values
+                });
+                break;
+            case 1:
+                this.setState({
+                    incidentLocationDetails: values
+                });
+                break;
+            case 2:
+                this.setState({
+                    incidentContactDetails: values
+                });
+                break;
+            default:
+                return false;
+        }
     }
 
 
@@ -644,10 +296,7 @@ class IndicdentForm extends React.Component {
         return (
             <div className={classes.root}>
                 <Formik
-                    initialValues={{
-                        date:new Date('2014-08-18T21:11:54'),
-                        time:new Date('2014-08-18T21:11:54'),
-                    }}
+                    initialValues={this.getInitialValues()}
                     onSubmit={(values, actions) => {
                         this.handleSubmit(values, actions);
                     }}
@@ -664,48 +313,37 @@ class IndicdentForm extends React.Component {
                                             <Step key={label}>
                                                 <StepLabel {...labelProps} >{label}</StepLabel>
                                                 <StepContent>
-                                                    <Typography>{getStepContent(index, this.props, formikProps)}</Typography>
+                                                    {getStepContent(index, this.props, formikProps, this.state)}
                                                     <div className={classes.actionsContainer}>
                                                         <div>
                                                             <Button
                                                                 disabled={activeStep === 0}
-                                                                onClick={this.handleBack}
+                                                                onClick={() => { this.handleBack(formikProps.values) }}
                                                                 className={classes.button}
                                                             >
                                                                 Back
                                                         </Button>
-                                                            {this.isStepOptional(activeStep) && (
-                                                                <Button
-                                                                    variant="contained"
-                                                                    color="primary"
-                                                                    onClick={this.handleSkip}
-                                                                    className={classes.button}
-                                                                >
-                                                                    Skip
+                                                        {this.isStepOptional(activeStep) && (
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            onClick={this.handleSkip}
+                                                            className={classes.button}
+                                                        >
+                                                            Skip
                                                         </Button>
-                                                            )}
-                                                            <Button
-                                                                variant="contained"
-                                                                color="primary"
-                                                                onClick={() => { this.handleNext(formikProps.handleSubmit) }}
-                                                                className={classes.button}
-                                                                disabled={this.props.isIncidentBasicDetailsSubmitting}
-                                                            >
-                                                                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                                            </Button>
-                                                            {this.props.isIncidentBasicDetailsSubmitting && <CircularProgress size={24} className={classes.buttonProgress} />}
-                                                            {/* <div className={classes.wrapper}>
-                                                                <Button
-                                                                    variant="contained"
-                                                                    color="primary"
-                                                                    className={classes.button}
-                                                                    disabled={this.props.isIncidentBasicDetailsSubmitting}
-                                                                    onClick={() => { this.handleNext(formikProps.handleSubmit) }}
-                                                                >
-                                                                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                                                </Button>
-                                                                {this.props.isIncidentBasicDetailsSubmitting && <CircularProgress size={24} className={classes.buttonProgress} />}
-                                                            </div> */}
+                                                        )}
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            onClick={() => { this.handleNext(formikProps.handleSubmit, formikProps.values) }}
+                                                            className={classes.button}
+                                                            disabled={this.props.isIncidentBasicDetailsSubmitting}
+                                                        >
+                                                            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                                                        </Button>
+                                                        {this.props.isIncidentBasicDetailsSubmitting && <CircularProgress size={24} className={classes.buttonProgress} />}
+                                                        
                                                         </div>
                                                     </div>
                                                 </StepContent>
@@ -721,71 +359,6 @@ class IndicdentForm extends React.Component {
                                         </Button>
                                     </Paper>
                                 )}
-
-                                {/* Commented below is the code for horizontal stepper */}
-
-                                {/* <Stepper activeStep={activeStep}>
-                                    {steps.map((label, index) => {
-                                        const props = {};
-                                        const labelProps = {};
-                                        if (this.isStepOptional(index)) {
-                                            labelProps.optional = <Typography variant="caption">Optional</Typography>;
-                                        }
-                                        if (this.isStepSkipped(index)) {
-                                            props.completed = false;
-                                        }
-                                        return (
-                                            <Step key={label} {...props}>
-                                                <StepLabel {...labelProps}>{label}</StepLabel>
-                                            </Step>
-                                        );
-                                    })}
-                                </Stepper>
-                                <div>
-                                    {activeStep === steps.length ? (
-                                        <div>
-                                            <Typography className={classes.instructions}>
-                                                All steps completed - you&apos;re finished
-                                            </Typography>
-                                            <Button onClick={this.handleReset} className={classes.button}>
-                                                Reset
-                                            </Button>
-                                        </div>
-                                    ) : (
-                                            <div>
-                                                <Typography className={classes.instructions}>
-                                                    {getStepContent(activeStep, this.props, formikProps)}
-                                                </Typography>
-                                                <div>
-                                                    <Button
-                                                        disabled={activeStep === 0}
-                                                        onClick={this.handleBack}
-                                                        className={classes.button}
-                                                    >
-                                                        Back
-                                                    </Button>
-                                                    {this.isStepOptional(activeStep) && (
-                                                        <Button
-                                                            variant="contained"
-                                                            color="primary"
-                                                            onClick={this.handleSkip}
-                                                            className={classes.button}
-                                                        >
-                                                            Skip
-                                                        </Button>
-                                                    )}
-                                                    <Button
-                                                        variant="contained"
-                                                        color="primary"
-                                                        onClick={()=>{this.handleNext(formikProps.handleSubmit)}}
-                                                        className={classes.button}
-                                                    >
-                                                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        )}
-                                </div> */}
                             </div>
 
                         )
@@ -807,6 +380,12 @@ const mapStateToProps = (state, ownProps) => {
     return {
         isIncidentBasicDetailsSubmitting: state.incidentReducer.guestIncidentForm.stepOneSubmission.inProgress,
         incidentFormActiveStep: state.incidentReducer.guestIncidentForm.activeStep,
+
+        incidentId: state.incidentReducer.incident_id,
+        reporterId: state.incidentReducer.reporter_id,
+
+        categorys: state.sharedReducer.categorys,
+
         ...ownProps
     }
 }
@@ -816,8 +395,20 @@ const mapDispatchToProps = (dispatch) => {
         submitIncidentBasicDetails: (values) => {
             dispatch(submitIncidentBasicData(values))
         },
+        updateIncidentBasicDetails: (incidentId, incidentData) => {
+            dispatch(fetchUpdateIncident(incidentId, incidentData));
+        },
+        submitContactDetails: (reporterId, reporterData) => {
+            dispatch(fetchUpdateReporter(reporterId, reporterData))
+        },
         stepBackward: () => {
             dispatch(stepBackwardIncidentStepper())
+        },
+        stepForward: () => {
+            dispatch(stepForwardIncidentStepper())
+        },
+        getCategorys: () => {
+            dispatch(fetchCatogories())
         }
     }
 }
