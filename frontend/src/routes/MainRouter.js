@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Route, BrowserRouter as Router } from "react-router-dom";
+import { Route, BrowserRouter as Router, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import history from './history'
 
 import HomePage from "../modules/landing/homePage";
 import { IntlProvider } from "react-intl";
@@ -20,10 +21,10 @@ class MainRouter extends Component {
         key={selectedLanguage}
         messages={i18n.translationMessages[selectedLanguage]}
       > 
-        <Router>
+        <Router history={history}>
           <React.Fragment>
             <Route exact path="/" component={LandingPage} />
-            <Route path="/report" component={Report} />
+            <Route path="/report/:paramIncidentId?" component={Report} />        
             <Route path="/ongoing" component={Ongoing}/>
             <Route path="/historic" component={Historic}/>
             <Route exact path="/home" component={HomePage} />

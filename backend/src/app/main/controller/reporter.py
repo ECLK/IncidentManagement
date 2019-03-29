@@ -10,10 +10,13 @@ from .. import api
 reporter_fields = {
     
     'id' : fields.Integer,
-    'name' : fields.String(1024),
-    'sn_name' : fields.String(1024),
-    'tm_name' : fields.String(1024),
-    'type' : fields.String(1024),
+    'reporter_name' : fields.String(1024),
+    'reporter_sn_name' : fields.String(1024),
+    'reporter_tm_name' : fields.String(1024),
+    'reporter_type' : fields.String(1024),
+    'reporter_email' : fields.String(1024),
+    'reporter_telephone' : fields.String(1024),
+    'reporter_address' : fields.String(1024),
 }
 
 reporter_list_fields = {
@@ -35,14 +38,13 @@ class ReporterList(Resource):
 
 @api.resource('/reporters/<id>')
 class Reporter(Resource):
-    @marshal_with(reporter_fields)
     def get(self, id):
         """get a reporter given its identifier"""
         reporter = get_a_reporter(id)
         if not reporter:
             api.abort(404)
         else:
-            return reporter
+            return reporter.to_dict()
 
     def put(self, id):
         """Update a given Reporter """

@@ -3,6 +3,10 @@
   "eclk.incident.management.incidents.reporting.system": "මැතිවරණ ප්‍රචණ්ඩක්ක්‍රියා  වාර්තාකරණ පද්ධතිය",
   "eclk.incident.management.report.incidents":"සිදුවීමක් වාර්තා කරන්න",
   "eclk.incident.management.ongoing.incidents": "සැකසෙමින් පවතින සිදුවීම්",
-  "eclk.incident.management.historic.reports": "පෙර සිදුවීම් වාරතා"
+  "eclk.incident.management.historic.reports": "පෙර සිදුවීම් වාරතා",
   
+  "eclk.incident.management.filing.guest.form.steps.basic.details":"සිදුවීම් තොරතුරු ඉදිරිපත් කරන්න",
+  "eclk.incident.management.filing.guest.form.steps.location.details":"සිදුවීම් ස්ථානයේ තොරතුරු ඉදිරිපත් කරන්න",
+  "eclk.incident.management.filing.guest.form.steps.contact.details":"සම්බන්ධතා තොරතුරු ඉදිරිපත් කරන්න",
+  "eclk.incident.management.filing.guest.form.steps.review.details":"විස්තර සමාලෝචනය කරන්න"
 }

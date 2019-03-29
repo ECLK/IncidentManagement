@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from app.main import db
 from app.main.model.incident_comment import IncidentComment
@@ -60,6 +61,9 @@ def get_all_incident_comments():
 
 def get_a_incident_comment(id):
     return IncidentComment.query.filter_by(id=id).first()
+
+def get_incident_comments(incident_id):
+    return IncidentComment.query.filter_by(incident_id=incident_id).all()
 
 def delete_a_incident_comment(id):
     incident_comment = IncidentComment.query.filter_by(id=id).first()

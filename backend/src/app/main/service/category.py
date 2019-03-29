@@ -38,7 +38,7 @@ def save_new_category(data):
     }
     return response_object, 201
 
-def get_all_categorys():
+def get_all_categories():
     return Category.query.all()
 
 def get_a_category(id):

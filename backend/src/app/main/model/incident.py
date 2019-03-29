@@ -14,8 +14,6 @@ class Incident(db.Model):
     # getting the elections from a separate service
     election_id = db.Column(db.Integer)
 
-    police_station_id = db.Column(db.Integer, db.ForeignKey('policestation.id'))
-    polling_station_id = db.Column(db.Integer, db.ForeignKey('pollingstation.id'))
     title = db.Column(db.Text)
     description = db.Column(db.Text)
     sn_title = db.Column(db.Text)
@@ -42,8 +40,19 @@ class Incident(db.Model):
     # current severity of the incident
     current_severity = db.Column(db.Integer)
 
+    # occured or probabale occurring date and time in unix timestamp in seconds
+    occurence_timestamp = db.Column(db.Integer)
+
     # keeping it as string for now
     location = db.Column(db.String(4096))
+    address = db.Column(db.String(4096))
+    coordinates = db.Column(db.String(4096))
+
+    district_id = db.Column(db.Integer, db.ForeignKey('district.id'))
+    ward_id = db.Column(db.Integer, db.ForeignKey('ward.id'))
+    police_station_id = db.Column(db.Integer, db.ForeignKey('policestation.id'))
+    polling_station_id = db.Column(db.Integer, db.ForeignKey('pollingstation.id'))
+    
 
     # fields that doesn't make much sense
     timing_nature = db.Column(db.String(1024))
@@ -54,3 +63,15 @@ class Incident(db.Model):
 
     def __repr__(self):
         return "<Incident '{}'>".format(self.id)
+    
+    def to_dict(self):
+        d = {}
+        for column in self.__table__.columns:
+            value = getattr(self, column.name)
+            
+            if value is not None and column.name == "occurence":
+                value = value.name
+
+            d[column.name] = value
+
+        return d
