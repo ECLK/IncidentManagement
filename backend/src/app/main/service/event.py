@@ -6,7 +6,7 @@ from app.main.model.event import Event
 
 def save_new_event(data):
     new_event = Event()
-    new_event.id = uuid.uuid4()
+    new_event.id = str(uuid.uuid4())
 
     try:
         new_event.action = data['action']
