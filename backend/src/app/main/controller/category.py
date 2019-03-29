@@ -3,7 +3,7 @@ from flask import Flask, jsonify
 
 from flask_restful import reqparse, abort, Api, Resource, request, fields, marshal_with
 
-from ..service.category import save_new_category, get_all_categorys, get_a_category, update_a_category, delete_a_category
+from ..service.category import save_new_category, get_all_categories, get_a_category, update_a_category, delete_a_category
 
 from .. import api
 
@@ -22,12 +22,12 @@ category_list_fields = {
     'categorys': fields.List(fields.Nested(category_fields))
 }
 
-@api.resource('/categorys')
+@api.resource('/categories')
 class CategoryList(Resource):
     @marshal_with(category_fields)
     def get(self):
-        """List all registered categorys"""
-        return get_all_categorys()
+        """List all registered categories"""
+        return get_all_categories()
 
     def post(self):
         """Creates a new Category """
@@ -35,7 +35,7 @@ class CategoryList(Resource):
         return save_new_category(data=data)
 
 
-@api.resource('/categorys/<id>')
+@api.resource('/categories/<id>')
 class Category(Resource):
     @marshal_with(category_fields)
     def get(self, id):
