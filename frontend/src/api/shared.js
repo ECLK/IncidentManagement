@@ -1,10 +1,6 @@
 
 import handler from './apiHandler'
 
-export const getIncidentCatogories = async () => {
-    return handler.get('/categorys')
-}
-
 export const getDistricts = async () => {
     return handler.get('/districts')
 }
@@ -19,4 +15,8 @@ export const getPollingStations = async () => {
 
 export const getWards = async () => {
     return handler.get('/wards')
+}
+
+export const getElections = async () => {
+    return handler.get('/elections')
 }

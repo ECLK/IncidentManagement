@@ -20,7 +20,8 @@ import {
     REQUEST_INCIDENT_WARDS_FAILURE,
 } from './Shared.types'
 import { createIncident, updateIncident, updateReporter } from '../../../api/incident';
-import { getIncidentCatogories, getDistricts, getPoliceStations, getPollingStations, getWards } from '../../../api/shared';
+import { getDistricts, getPoliceStations, getPollingStations, getWards } from '../../../api/shared';
+import {getCategories} from '../../../api/category'
 
 // Get Catogories
 
@@ -50,7 +51,7 @@ export function fetchCatogories(){
     return async function(dispatch){
         dispatch(requestIncidentCatogories());
         try{
-            const response = await getIncidentCatogories();
+            const response = await getCategories();
             await dispatch(recieveIncidentCatogories(response.data));
         }catch(error){
             await dispatch(recieveIncidentCatogoriesError(error));

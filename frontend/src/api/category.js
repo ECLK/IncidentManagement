@@ -8,11 +8,11 @@ export const createCategory = async (categoryData) => {
     return handler.post('/categories', categoryData);
 }
 
-export const getCategory = async (CategoryId) => {
-    return handler.get(`/categories/${CategoryId}`);
+export const getCategory = async (categoryId) => {
+    return handler.get(`/categories/${categoryId}`);
 }
 
-export const updateCategory = async (CategoryId, categoryData) => {
-    return handler.put(`/categories/${CategoryId}`, categoryData);
+export const updateCategory = async (categoryId, categoryData) => {
+    return handler.put(`/categories/${categoryId}`, categoryData);
 }
 
