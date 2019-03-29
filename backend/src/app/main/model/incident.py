@@ -40,6 +40,9 @@ class Incident(db.Model):
     # current severity of the incident
     current_severity = db.Column(db.Integer)
 
+    # occured or probabale occurring date and time in unix timestamp in seconds
+    occurence_timestamp = db.Column(db.Integer)
+
     # keeping it as string for now
     location = db.Column(db.String(4096))
     address = db.Column(db.String(4096))

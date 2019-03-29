@@ -91,6 +91,10 @@ def save_new_incident(data):
     except KeyError:
         pass
     try:
+        new_incident.occurence_timestamp = data['occurence_timestamp']
+    except KeyError:
+        pass
+    try:
         new_incident.created_date = data['created_date']
     except KeyError:
         pass
@@ -190,6 +194,11 @@ def update_a_incident(id, data):
         pass
     try:
         incident.occurence = data['occurence']
+        status = SUCESS
+    except KeyError:
+        pass
+    try:
+        new_incident.occurence_timestamp = data['occurence_timestamp']
         status = SUCESS
     except KeyError:
         pass
