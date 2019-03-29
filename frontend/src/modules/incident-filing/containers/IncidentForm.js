@@ -232,7 +232,7 @@ class IndicdentForm extends Component {
                 this.props.updateIncidentBasicDetails(this.props.incidentId, values);
                 break;
             case 2:
-                this.props.submitContactDetails(this.props.reporterId, values);
+                this.props.submitContactDetails(this.props.incidentId, this.props.reporterId, values);
                 break;
             case 3:
                 break;
@@ -440,8 +440,8 @@ const mapDispatchToProps = (dispatch) => {
         updateIncidentBasicDetails: (incidentId, incidentData) => {
             dispatch(fetchUpdateIncident(incidentId, incidentData));
         },
-        submitContactDetails: (reporterId, reporterData) => {
-            dispatch(fetchUpdateReporter(reporterId, reporterData))
+        submitContactDetails: (incidentId, reporterId, reporterData) => {
+            dispatch(fetchUpdateReporter(incidentId, reporterId, reporterData))
         },
         stepBackward: () => {
             dispatch(stepBackwardIncidentStepper())

@@ -5,6 +5,12 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+
+import Grid from '@material-ui/core/Grid';
+
 const styles = theme => ({
     root: {
         ...theme.mixins.gutters(),
@@ -14,7 +20,7 @@ const styles = theme => ({
         marginLeft: theme.spacing.unit * 1,
     },
     subTitle: {
-        marginTop:theme.spacing.unit * 2,
+        marginTop: theme.spacing.unit * 2,
     }
 });
 
@@ -25,83 +31,106 @@ class IncidentReviewDetailsForm extends Component {
             <div>
                 <Paper className={classes.root} elevation={1}>
 
-                    <Typography variant="h6" component="h3" className={classes.subTitle}>
-                        Incident Details.
-                    </Typography>
-                    {this.props.incident &&
-                    <React.Fragment>
-                    <Typography component="p">
-                        Title: {this.props.incident.title}
-                    </Typography>
-                    <Typography component="p">
-                        Description: {this.props.incident.description}
-                    </Typography>
-                    <Typography component="p">
-                        Status: {this.props.incident.occurance}
-                    </Typography>
-                    <Typography component="p">
-                        Date: {this.props.incident.date}
-                    </Typography>
-                    <Typography component="p">
-                        Time: {this.props.incident.time}
-                    </Typography>
-                    <Typography component="p">
-                        Election: {this.props.incident.occurance}
-                    </Typography>
-                    <Typography component="p">
-                        Catagory: {this.props.incident.occurance}
-                    </Typography>
-                    </React.Fragment>}
+                    <Grid container spacing={24}>
+                        <Grid item xs={4}>
+                            {this.props.incident &&
+                                <div>
+                                    <Typography variant="h6" component="h3" className={classes.subTitle} gutterBottom>
+                                        Incident Details.
+                            </Typography>
+                                    <List disablePadding>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Title" secondary={this.props.incident.title} />
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Description" secondary={this.props.incident.description} />
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Status" secondary={this.props.incident.occurance} />
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Date" secondary={this.props.incident.date} />
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Time" secondary={this.props.incident.time} />
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Election" secondary={this.props.incident.election_id} />
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Catagory" secondary={this.props.incident.catogory} />
+                                        </ListItem>
+                                    </List>
+                                </div>}
+                        </Grid>
+                        <Grid item xs={4}>
+                            {this.props.incident &&
+                                <div>
+                                    <Typography variant="h6" component="h3" className={classes.subTitle}>
+                                        Location Details.
+                            </Typography>
 
-                    <Typography variant="h6" component="h3" className={classes.subTitle}>
-                        Incident Location Details.
-                    </Typography>
-                    {this.props.incident &&
-                    <React.Fragment>
-                    <Typography component="p">
-                        Location name/description: {this.props.incident.title}
-                    </Typography>
-                    <Typography component="p">
-                        Address: {this.props.incident.description}
-                    </Typography>
-                    <Typography component="p">
-                        Coordinates: {this.props.incident.occurance}
-                    </Typography>
-                    <Typography component="p">
-                        Province: {this.props.incident.date}
-                    </Typography>
-                    <Typography component="p">
-                        District: {this.props.incident.time}
-                    </Typography>
-                    <Typography component="p">
-                        Polling division: {this.props.incident.occurance}
-                    </Typography>
-                    <Typography component="p">
-                        Ward: {this.props.incident.occurance}
-                    </Typography>
-                    <Typography component="p">
-                        Police Station: {this.props.incident.occurance}
-                    </Typography>
-                    </React.Fragment>}
+                                    <List disablePadding>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Location name/description" secondary={this.props.incident.location} />
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Address:" secondary={this.props.incident.address} />
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Coordinates" secondary={this.props.incident.coordinates} />
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Province" secondary={this.props.incident.district_id} />
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="District" secondary={this.props.incident.district_id} />
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Polling division" secondary={this.props.incident.polling_station_id} />
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Ward" secondary={this.props.incident.ward_id} />
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Police Station" secondary={this.props.incident.police_station_id} />
+                                        </ListItem>
+                                    </List>
+                                </div>}
 
-                    <Typography variant="h6" component="h3" className={classes.subTitle}>
-                        Incident Contact Details.
-                    </Typography>
-                    {this.props.reporter &&
-                    <React.Fragment>
-                    <Typography component="p">
-                        Location name/description: {this.props.reporter.name}
-                    </Typography>
-                    <Typography component="p">
-                        Address: {this.props.reporter.email}
-                    </Typography>
-                    <Typography component="p">
-                        Coordinates: {this.props.reporter.telephone}
-                    </Typography>
-                    <Typography component="p">
-                        Province: {this.props.reporter.address}
-                    </Typography>
-                    </React.Fragment>}
+                        </Grid>
+                        <Grid item xs={4}>
+                            {this.props.reporter &&
+                                <div>
+                                    <Typography variant="h6" component="h3" className={classes.subTitle}>
+                                        Contact Details.
+                            </Typography>
+
+                                    <List disablePadding>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Location name/description" secondary={this.props.reporter.name} />
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Address" secondary={this.props.reporter.address} />
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Telephone" secondary={this.props.reporter.telephone} />
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <ListItemText primary="Email" secondary={this.props.reporter.email} />
+                                        </ListItem>
+                                    </List>
+                                </div>}
+                        </Grid>
+                    </Grid>
+
+
+
+
+
+
+
+
                 </Paper>
             </div>
         );
