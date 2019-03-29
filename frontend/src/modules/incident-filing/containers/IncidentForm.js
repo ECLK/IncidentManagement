@@ -218,7 +218,6 @@ class IndicdentForm extends Component {
     }
 
     handleSubmit = (values, actions) => {
-        console.log(this.props);
         // diffreent endpoints have to be called in different steps.
         switch (this.props.incidentFormActiveStep) {
             case 0:

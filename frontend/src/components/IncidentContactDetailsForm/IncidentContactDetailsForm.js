@@ -22,7 +22,6 @@ export class IncidentContactDetailsForm extends Component {
             handleBlur,
             handleSubmit,
         } = this.props;
-        console.log("contact", values);
         return (
             <form onSubmit={handleSubmit} className={classes.container}>
 
