@@ -1,4 +1,4 @@
-import {getCatogories} from '../../../api/category'
+import {getCategories} from '../../../api/category'
 import { REQUEST_CATAGORIES, REQUEST_CATAGORIES_SUCCESS} from './LandingTypes'
 
 /*
@@ -25,7 +25,7 @@ export function recieveCatogories(catogories) {
 export function fetchCatogories(){
     return function(dispatch){
         dispatch(requestCatogories());
-        return getCatogories()
+        return getCategories()
         .then(
             response => response.data,
             error=> console.log('error occured', error)
