@@ -1,4 +1,4 @@
-import {getCatogories} from '../../../api'
+import {getCatogories} from '../../../api/category'
 import { REQUEST_CATAGORIES, REQUEST_CATAGORIES_SUCCESS} from './LandingTypes'
 
 /*
