@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -45,14 +45,16 @@ const styles = theme => ({
 });
 
 /**
- * Basic Information TabView - Component
+ * Basic Information TabView - (1)
  */
-class BasicDetailView extends Component {
+class BasicDetailTab extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            incident: props.incident
+            incident: props.incident,
+            election: props.election,
+            category: props.category,
         };
     }
 
@@ -115,18 +117,18 @@ class BasicDetailView extends Component {
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography className={classes.label}> Election </Typography>
-                                    <Typography variant="h6" gutterBottom> {this.state.incident.election} </Typography>
+                                    <Typography variant="h6" gutterBottom> {this.state.election.name} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Category </Typography>
-                                    <Typography gutterBottom> {this.state.incident.category} category </Typography>
+                                    <Typography gutterBottom> {this.state.category.top_category} </Typography>
                                 </Grid>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Sub Category </Typography>
-                                    <Typography gutterBottom> {this.state.incident.category} sub-category </Typography>
+                                    <Typography gutterBottom> {this.state.category.sub_category} </Typography>
                                 </Grid>
                             </Grid>
 
@@ -149,20 +151,253 @@ class BasicDetailView extends Component {
 }
 
 /**
+ * Location Information TabView - (2)
+ */
+class LocationTab extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            incident: props.incident
+        };
+    }
+
+    render() {
+        const { classes } = this.props;
+
+        return (
+            <div className={classes.root}>
+                <Grid container spacing={24}>
+                    <Grid item xs={12}>
+                        <Paper elevation={1} className={classes.paper}>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Name / Description </Typography>
+                                    <Typography gutterBottom> Maligawata Road, Main Plaza </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Address </Typography>
+                                    <Typography gutterBottom> 22/2, Maligawatta </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Coordinates </Typography>
+                                    <Typography gutterBottom> 6.936047, 79.869638 </Typography>
+                                </Grid>
+                            </Grid>
+
+                        </Paper>
+                    </Grid>
+                </Grid>
+
+                <Grid container spacing={24}>
+                    <Grid item xs={12}>
+                        <Paper elevation={1} className={classes.paper}>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Province </Typography>
+                                    <Typography variant="" gutterBottom> Western Province </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> District </Typography>
+                                    <Typography gutterBottom> Colombo District </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Polling Division </Typography>
+                                    <Typography gutterBottom> Maligawatta Division </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Ward </Typography>
+                                    <Typography gutterBottom> Ward 7 </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Police Station </Typography>
+                                    <Typography gutterBottom> Maligawatta Police Station </Typography>
+                                </Grid>
+                            </Grid>
+
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </div>
+        );
+    }
+}
+
+
+/**
+ * Contact Information TabView - (3)
+ */
+class ContactTab extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            incident: props.incident,
+            reporter: props.reporter,
+        };
+    }
+
+    render() {
+        const { classes } = this.props;
+
+        return (
+            <div className={classes.root}>
+                <Grid container spacing={24}>
+                    <Grid item xs={12}>
+                        <Paper elevation={1} className={classes.paper}>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Name </Typography>
+                                    <Typography gutterBottom> {this.state.reporter.name} </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Contact Number </Typography>
+                                    <Typography gutterBottom> {this.state.reporter.contact} </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Address </Typography>
+                                    <Typography gutterBottom> {this.state.reporter.address} </Typography>
+                                </Grid>
+                            </Grid>
+
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </div>
+        );
+    }
+}
+
+/**
+ * Review Summary TabView - (4)
+ */
+class ReviewTab extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            incident: props.incident,
+        };
+    }
+
+    render() {
+        const { classes } = this.props;
+
+        return (
+            <div className={classes.root}>
+                <Grid container spacing={24}>
+                    <Grid item xs={12}>
+                        <Paper elevation={1} className={classes.paper}>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography className={classes.label}> Incident Ref ID </Typography>
+                                    <Typography variant="h4" gutterBottom> {this.state.incident.token} </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Status </Typography>
+                                    <Typography gutterBottom> Verified </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Severity </Typography>
+                                    <Typography gutterBottom> Moderate </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Time since creation </Typography>
+                                    <Typography gutterBottom> 10 hours </Typography>
+                                </Grid>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Given reponse time </Typography>
+                                    <Typography gutterBottom> 24 hours </Typography>
+                                </Grid>
+                            </Grid>
+
+
+                        </Paper>
+                    </Grid>
+                </Grid>
+
+
+                <Grid container spacing={24}>
+                    <Grid item xs={12}>
+                        <Paper elevation={1} className={classes.paper}>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Time since last action </Typography>
+                                    <Typography gutterBottom> 4 hours ago </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Last assigned </Typography>
+                                    <Typography gutterBottom> M Ekanayake (Police) </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    
+                                </Grid>
+                            </Grid>
+
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </div>
+        );
+    }
+}
+
+/**
  * Tabular componenet
  */
 class NavTabs extends Component {
     state = {
         value: 0,
         incident: {
-            "id": 5,
+            "id": 1,
             "token": 1024,
-
-            "election_id": 2,
-
-            "reporter_id": 6,
+            "election_id": 1,
+            "reporter_id": 2,
             "occurence": "Occurence.OCCURED",
-            "category": 2,
+            "category": 11,
             "district_id": 0,
             "ward_id": 0,
             "police_station_id": 0,
@@ -170,9 +405,7 @@ class NavTabs extends Component {
             "location": 4096,
             "address": 4096,
             "coordinates": 4096,
-
-            "channel": "facebook",
-            
+            "channel": 4096,
             "timing_nature": 1024,
             "validity": 1024,
             "title": "Illegal picketing event",
@@ -181,8 +414,28 @@ class NavTabs extends Component {
             "sn_description": null,
             "tm_title": null,
             "tm_description": null,
-            "created_date": 1553155218,
-            "updated_date": 1553155218
+            "created_date": 1553154348,
+            "updated_date": 1553154348
+        },
+        election: {
+            id: 1,
+            name: "Provincial Election 2019",
+        },
+        category: {
+            id: 11,
+            top_category: "Violence",
+            sub_category: "Interrupting propaganda"
+        },
+        district: {
+            id: 0,
+            name: "Colombo",
+            province: "Western"
+        },
+        reporter: {
+            id: 2,
+            name: "Jagath Mallawaarchichi",
+            contact: "jagathm@gamil.com",
+            address: "33/3, Church road, Battaramulla."
         }
     };
 
@@ -205,10 +458,10 @@ class NavTabs extends Component {
                             <LinkTab label="Review Summary" href="page4" />
                         </Tabs>
                     </AppBar>
-                    {value === 0 && <TabContainer> <BasicDetailView classes={classes} incident={this.state.incident} /> </TabContainer>}
-                    {value === 1 && <TabContainer>Page Two</TabContainer>}
-                    {value === 2 && <TabContainer>Page Three</TabContainer>}
-                    {value === 3 && <TabContainer>Page Four</TabContainer>}
+                    {value === 0 && <TabContainer> <BasicDetailTab classes={classes} incident={this.state.incident} election={this.state.election} category={this.state.category} /> </TabContainer>}
+                    {value === 1 && <TabContainer> <LocationTab classes={classes} incident={this.state.incident} /> </TabContainer>}
+                    {value === 2 && <TabContainer> <ContactTab classes={classes} reporter={this.state.reporter} /> </TabContainer>}
+                    {value === 3 && <TabContainer> <ReviewTab classes={classes} incident={this.state.incident} /> </TabContainer>}
                 </div>
             </NoSsr>
         );
