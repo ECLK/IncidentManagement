@@ -39,3 +39,4 @@ python-dotenv==0.10.1
 pytest
 flask_restful
 pymysql
+cryptography
