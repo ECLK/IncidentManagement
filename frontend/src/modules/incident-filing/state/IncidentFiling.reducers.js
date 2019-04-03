@@ -27,7 +27,6 @@ const initialState = {
     incident_id: null,
     reporter_id: null,
 
-    isIncidentPosting: false,
     isIncidentLoading: false,
 
     error: null,
@@ -35,11 +34,7 @@ const initialState = {
 
     guestIncidentForm: {
         activeStep: 0,
-        stepOneSubmission: {
-            inProgress: false,
-            error: [],
-            result: null
-        }
+        isSubmitting:false
     }
 }
 
@@ -57,41 +52,41 @@ export default function incidentReducer(state, action) {
                 return draft
 
             case INCIDENT_BASIC_DATA_SUBMIT_REQUEST:
-                draft.guestIncidentForm.stepOneSubmission.inProgress = true;
+                draft.guestIncidentForm.isSubmitting = true;
                 return draft
             case INCIDENT_BASIC_DATA_SUBMIT_SUCCESS:
-                draft.guestIncidentForm.stepOneSubmission.inProgress = false;
+                draft.guestIncidentForm.isSubmitting = false;
 
                 draft.incident = action.data.incident;
                 draft.reporter = action.data.reporter;
 
                 return draft
             case INCIDENT_BASIC_DATA_SUBMIT_ERROR:
-                draft.guestIncidentForm.stepOneSubmission.inProgress = false;
+                draft.guestIncidentForm.isSubmitting = false;
                 draft.hasError = true;
                 draft.error = action.error;
                 return draft
 
             case INCIDENT_BASIC_DATA_UPDATE_REQUEST:
-                draft.guestIncidentForm.stepOneSubmission.inProgress = true;
+                draft.guestIncidentForm.isSubmitting = true;
                 return draft
             case INCIDENT_BASIC_DATA_UPDATE_SUCCESS:
-                draft.guestIncidentForm.stepOneSubmission.inProgress = false;
+                draft.guestIncidentForm.isSubmitting = false;
                 return draft
             case INCIDENT_BASIC_DATA_UPDATE_ERROR:
-                draft.guestIncidentForm.stepOneSubmission.inProgress = false;
+                draft.guestIncidentForm.isSubmitting = false;
                 draft.hasError = true;
                 draft.error = action.error;
                 return draft
             
             case INCIDENT_REPORTER_UPDATE_REQUEST:
-                draft.guestIncidentForm.stepOneSubmission.inProgress = true;
+                draft.guestIncidentForm.isSubmitting = true;
                 return draft
             case INCIDENT_REPORTER_UPDATE_SUCCESS:
-                draft.guestIncidentForm.stepOneSubmission.inProgress = false;
+                draft.guestIncidentForm.isSubmitting = false;
                 return draft
             case INCIDENT_REPORTER_UPDATE_ERROR:
-                draft.guestIncidentForm.stepOneSubmission.inProgress = false;
+                draft.guestIncidentForm.isSubmitting = false;
                 return draft
 
             case INCIDENT_GET_DATA_REQUEST:

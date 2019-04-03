@@ -407,7 +407,7 @@ IndicdentForm.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        isIncidentBasicDetailsSubmitting: state.incidentReducer.guestIncidentForm.stepOneSubmission.inProgress,
+        isIncidentBasicDetailsSubmitting: state.incidentReducer.guestIncidentForm.isSubmitting,
         incidentFormActiveStep: state.incidentReducer.guestIncidentForm.activeStep,
 
         isIncidentLoading: state.incidentReducer.isIncidentLoading,
