@@ -9,7 +9,7 @@ FROM python:3-slim
 
 # RUN apt-get install $requirements -y && rm -rf /var/lib/apt/lists/*
 
-ADD ./src /app/src
+ADD ./src /app/
 
 WORKDIR /app
 

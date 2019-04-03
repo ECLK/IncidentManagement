@@ -1,0 +1,9 @@
+version: '3'
+
+services:  
+  incident_frontend:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - '81:80'
