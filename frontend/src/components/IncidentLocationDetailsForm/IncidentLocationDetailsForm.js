@@ -60,9 +60,6 @@ export class IncidentLocationDetailsForm extends Component {
                             id: 'province',
                         }}
                     >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
                         {this.props.provinces.map((c, k) => (
                             <MenuItem value={k} key={k}>{c}</MenuItem>
                         ))}
@@ -79,9 +76,6 @@ export class IncidentLocationDetailsForm extends Component {
                             id: 'district_id',
                         }}
                     >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
                         {this.props.districts.map((c, k) => (
                             <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
                         ))}
@@ -98,9 +92,6 @@ export class IncidentLocationDetailsForm extends Component {
                             id: 'polling_station_id',
                         }}
                     >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
                         {this.props.pollingStations.map((c, k) => (
                             <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
                         ))}
@@ -117,9 +108,6 @@ export class IncidentLocationDetailsForm extends Component {
                             id: 'ward_id',
                         }}
                     >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
                         {this.props.wards.map((c, k) => (
                             <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
                         ))}
@@ -136,9 +124,6 @@ export class IncidentLocationDetailsForm extends Component {
                             id: 'police_station_id',
                         }}
                     >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
                         {this.props.policeStations.map((c, k) => (
                             <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
                         ))}
