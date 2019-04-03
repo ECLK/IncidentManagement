@@ -1,1 +1,0 @@
-echo 'window._env_.API_BASE = $API_BASE' > env-config.js
