@@ -154,14 +154,12 @@ class Events(Resource):
         """get all events of an incident in the chronological order"""
         return get_incident_events(incident_id)
 
-
 @api.resource("/incident/<incident_id>/entitys")
 class IncidentEntities(Resource):
     @marshal_with(incident_fields)
     def get(self, incident_id):
         """get all entities related to the incident"""
         return get_incident_entities(incident_id)
-
 
 @api.resource("/incident/<incident_id>/outcomes")
 class IncidentOutcomes(Resource):
