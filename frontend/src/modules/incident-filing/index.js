@@ -18,7 +18,6 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HomeIcon from '@material-ui/icons/Home';
 
 import { withStyles } from '@material-ui/core/styles';
-import Link from 'react-router-dom/Link';
 import ReviewIncidentListView from './ReviewIncidentListView';
 import ReviewIncidentView from './ReviewIncidentView';
 
