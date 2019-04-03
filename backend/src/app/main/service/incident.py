@@ -198,7 +198,7 @@ def update_a_incident(id, data):
     except KeyError:
         pass
     try:
-        new_incident.occurence_timestamp = data['occurence_timestamp']
+        incident.occurence_timestamp = data['occurence_timestamp']
         status = SUCESS
     except KeyError:
         pass
