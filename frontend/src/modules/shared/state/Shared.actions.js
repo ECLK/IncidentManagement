@@ -18,8 +18,13 @@ import {
     REQUEST_INCIDENT_WARDS,
     REQUEST_INCIDENT_WARDS_SUCCESS,
     REQUEST_INCIDENT_WARDS_FAILURE,
+
+    ACTIVE_INCIDENT_GET_DATA_REQUEST,
+    ACTIVE_INCIDENT_GET_DATA_SUCCESS,
+    ACTIVE_INCIDENT_GET_DATA_ERROR
 } from './Shared.types'
-import { createIncident, updateIncident, updateReporter } from '../../../api/incident';
+
+import { getIncident, getReporter  } from '../../../api/incident';
 import { getDistricts, getPoliceStations, getPollingStations, getWards } from '../../../api/shared';
 import {getCategories} from '../../../api/category'
 
@@ -201,6 +206,47 @@ export function fetchWards(){
             await dispatch(receiveWards(response.data));
         }catch(error){
             await dispatch(receiveWardsError(error));
+        }
+    }
+}
+
+
+// get active incident data
+
+export function requestActiveIncidentData() {
+    return {
+        type: ACTIVE_INCIDENT_GET_DATA_REQUEST,
+    }
+}
+
+export function getActiveIncidentDataSuccess(response) {
+    return {
+        type: ACTIVE_INCIDENT_GET_DATA_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function getActiveIncidentDataError(errorResponse) {
+    return {
+        type: ACTIVE_INCIDENT_GET_DATA_ERROR,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchActiveIncidentData(incidentId) {
+    return async function (dispatch) {
+        dispatch(requestActiveIncidentData(incidentId));
+        try{
+            const responseIncident = await getIncident(incidentId);
+            const responseReporter = await getReporter(responseIncident.data.reporter_id);
+            await dispatch(getActiveIncidentDataSuccess({
+                "incident": responseIncident.data,
+                "reporter": responseReporter.data
+            }));
+        }catch(error){
+            await dispatch(getActiveIncidentDataError(error));
         }
     }
 }

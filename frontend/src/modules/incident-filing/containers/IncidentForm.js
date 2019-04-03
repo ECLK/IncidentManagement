@@ -27,7 +27,7 @@ import { IncidentReviewDetailsForm } from '../../../components/IncidentReviewDet
 
 
 import { submitIncidentBasicData, stepBackwardIncidentStepper, stepForwardIncidentStepper, fetchUpdateReporter, fetchUpdateIncident, fetchIncidentData } from '../state/IncidentFiling.actions'
-import { fetchCatogories, fetchDistricts, fetchPoliceStations, fetchPollingStations, fetchWards } from '../../shared/state/Shared.actions';
+import { fetchCatogories, fetchDistricts, fetchPoliceStations, fetchPollingStations, fetchWards, fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 
 
 const styles = theme => ({
@@ -131,7 +131,7 @@ function getStepContent(step, props, formikProps, state) {
         case 2:
             return (<IncidentContactDetailsForm {...props} {...formikProps} initialValues={state.incidentContactDetails} />);
         case 3:
-            return (<IncidentReviewDetailsForm/>);
+            return (<IncidentReviewDetailsForm incident={props.incident} reporter={props.reporter} />);
         default:
             return 'Unknown step';
     }
@@ -187,8 +187,8 @@ class IndicdentForm extends Component {
     };
 
     handleSkip = () => {
-        const { activeStep } = this.state;
-        if (!this.isStepOptional(activeStep)) {
+        const { incidentFormActiveStep } = this.props;
+        if (!this.isStepOptional(incidentFormActiveStep)) {
             // You probably want to guard against something like this,
             // it should never occur unless someone's actively trying to break something.
             throw new Error("You can't skip a step that isn't optional.");
@@ -196,12 +196,15 @@ class IndicdentForm extends Component {
 
         this.setState(state => {
             const skipped = new Set(state.skipped.values());
-            skipped.add(activeStep);
+            skipped.add(incidentFormActiveStep);
             return {
                 activeStep: state.activeStep + 1,
                 skipped,
             };
         });
+
+        this.props.stepForward();   
+
     };
 
     handleReset = () => {
@@ -215,7 +218,6 @@ class IndicdentForm extends Component {
     }
 
     handleSubmit = (values, actions) => {
-        console.log(this.props);
         // diffreent endpoints have to be called in different steps.
         switch (this.props.incidentFormActiveStep) {
             case 0:
@@ -229,7 +231,7 @@ class IndicdentForm extends Component {
                 this.props.updateIncidentBasicDetails(this.props.incidentId, values);
                 break;
             case 2:
-                this.props.submitContactDetails(this.props.reporterId, values);
+                this.props.submitContactDetails(this.props.incidentId, this.props.reporterId, values);
                 break;
             case 3:
                 break;
@@ -405,15 +407,15 @@ IndicdentForm.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        isIncidentBasicDetailsSubmitting: state.incidentReducer.guestIncidentForm.stepOneSubmission.inProgress,
+        isIncidentBasicDetailsSubmitting: state.incidentReducer.guestIncidentForm.isSubmitting,
         incidentFormActiveStep: state.incidentReducer.guestIncidentForm.activeStep,
 
-        isIncidentLoading: state.incidentReducer.isIncidentLoading,
-        incident: state.incidentReducer.incident,
-        reporter: state.incidentReducer.reporter,
+        isIncidentLoading: state.sharedReducer.activeIncident.isLoading,
+        incident: state.sharedReducer.activeIncident.data,
+        reporter: state.sharedReducer.activeIncidentReporter,
 
-        incidentId: state.incidentReducer.incident ? state.incidentReducer.incident.id : null,
-        reporterId: state.incidentReducer.reporter ? state.incidentReducer.reporter.id : null,
+        incidentId: state.sharedReducer.activeIncident.data ? state.sharedReducer.activeIncident.data.id : null,
+        reporterId: state.sharedReducer.activeIncidentReporter ? state.sharedReducer.activeIncidentReporter.id : null,
 
         categorys: state.sharedReducer.categorys,
         districts: state.sharedReducer.districts,
@@ -434,8 +436,8 @@ const mapDispatchToProps = (dispatch) => {
         updateIncidentBasicDetails: (incidentId, incidentData) => {
             dispatch(fetchUpdateIncident(incidentId, incidentData));
         },
-        submitContactDetails: (reporterId, reporterData) => {
-            dispatch(fetchUpdateReporter(reporterId, reporterData))
+        submitContactDetails: (incidentId, reporterId, reporterData) => {
+            dispatch(fetchUpdateReporter(incidentId, reporterId, reporterData))
         },
         stepBackward: () => {
             dispatch(stepBackwardIncidentStepper())
@@ -461,7 +463,7 @@ const mapDispatchToProps = (dispatch) => {
         },
 
         getIncident: (incidentId) => {
-            dispatch(fetchIncidentData(incidentId))
+            dispatch(fetchActiveIncidentData(incidentId))
         }
     }
 }

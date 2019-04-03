@@ -19,6 +19,8 @@ import {
 } from './IncidentFiling.types'
 import { createIncident, updateIncident, updateReporter, getIncident, getReporter } from '../../../api/incident';
 
+import { getActiveIncidentDataSuccess, fetchActiveIncidentData } from '../../shared/state/Shared.actions'
+
 import history from '../../../routes/history';
 
 // Form Submission
@@ -64,6 +66,7 @@ export function submitIncidentBasicData(incidentData) {
         dispatch(requestIncidentSubmit());
         try{
             const response = await createIncident(incidentData);
+            await dispatch(getActiveIncidentDataSuccess(response.data));
             await dispatch(recieveIncidentSubmitSuccess(response.data));
             await dispatch(stepForwardIncidentStepper());
         }catch(error){
@@ -133,12 +136,13 @@ export function recieveReporterUpdateError(errorResponse) {
     }
 }
 
-export function fetchUpdateReporter(reporterId, reporterData) {
+export function fetchUpdateReporter(incidentId, reporterId, reporterData) {
     return async function (dispatch) {
         dispatch(requestReporterUpdate());
         try{
             const response = await updateReporter(reporterId, reporterData);
             await dispatch(recieveReporterUpdateSuccess(response.data));
+            await dispatch(fetchActiveIncidentData(incidentId));
             await dispatch(stepForwardIncidentStepper());
         }catch(error){
             await dispatch(recieveReporterUpdateError(error));
@@ -172,7 +176,7 @@ export function getIncidentDataError(errorResponse) {
 
 export function fetchIncidentData(incidentId) {
     return async function (dispatch) {
-        dispatch(requestIncidentData());
+        dispatch(requestIncidentData(incidentId));
         try{
             const responseIncident = await getIncident(incidentId);
             const responseReporter = await getReporter(responseIncident.data.reporter_id);
