@@ -27,7 +27,7 @@ import { IncidentReviewDetailsForm } from '../../../components/IncidentReviewDet
 
 
 import { submitIncidentBasicData, stepBackwardIncidentStepper, stepForwardIncidentStepper, fetchUpdateReporter, fetchUpdateIncident, fetchIncidentData } from '../state/IncidentFiling.actions'
-import { fetchCatogories, fetchDistricts, fetchPoliceStations, fetchPollingStations, fetchWards } from '../../shared/state/Shared.actions';
+import { fetchCatogories, fetchDistricts, fetchPoliceStations, fetchPollingStations, fetchWards, fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 
 
 const styles = theme => ({
@@ -410,12 +410,12 @@ const mapStateToProps = (state, ownProps) => {
         isIncidentBasicDetailsSubmitting: state.incidentReducer.guestIncidentForm.isSubmitting,
         incidentFormActiveStep: state.incidentReducer.guestIncidentForm.activeStep,
 
-        isIncidentLoading: state.incidentReducer.isIncidentLoading,
-        incident: state.incidentReducer.incident,
-        reporter: state.incidentReducer.reporter,
+        isIncidentLoading: state.sharedReducer.activeIncident.isLoading,
+        incident: state.sharedReducer.activeIncident.data,
+        reporter: state.sharedReducer.activeIncidentReporter,
 
-        incidentId: state.incidentReducer.incident ? state.incidentReducer.incident.id : null,
-        reporterId: state.incidentReducer.reporter ? state.incidentReducer.reporter.id : null,
+        incidentId: state.sharedReducer.activeIncident.data ? state.sharedReducer.activeIncident.data.id : null,
+        reporterId: state.sharedReducer.activeIncidentReporter ? state.sharedReducer.activeIncidentReporter.id : null,
 
         categorys: state.sharedReducer.categorys,
         districts: state.sharedReducer.districts,
@@ -423,9 +423,6 @@ const mapStateToProps = (state, ownProps) => {
         pollingStations: state.sharedReducer.pollingStations,
         policeStations: state.sharedReducer.policeStations,
         wards: state.sharedReducer.wards,
-
-        incident:state.incidentReducer.incident,
-        reporter:state.incidentReducer.reporter,
 
         ...ownProps
     }
@@ -466,7 +463,7 @@ const mapDispatchToProps = (dispatch) => {
         },
 
         getIncident: (incidentId) => {
-            dispatch(fetchIncidentData(incidentId))
+            dispatch(fetchActiveIncidentData(incidentId))
         }
     }
 }

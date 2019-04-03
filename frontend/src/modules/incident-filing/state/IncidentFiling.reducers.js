@@ -24,8 +24,6 @@ import {
 const initialState = {
     incident: {},
     reporter: {},
-    incident_id: null,
-    reporter_id: null,
 
     isIncidentLoading: false,
 
