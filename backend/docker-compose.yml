@@ -4,7 +4,7 @@ services:
   mysql:
     hostname: mysql
     image: mysql
-    entrypoint: ['docker-entrypoint.sh', '--default-authentication-plugin=mysql_native_password']
+    # entrypoint: ['docker-entrypoint.sh', '--default-authentication-plugin=mysql_native_password']
     restart: always
     environment:
       MYSQL_ROOT_USER: root
@@ -26,4 +26,5 @@ services:
       - mysql
     environment:
       - APP_ENV=prod
-    command: bash -c 'mysqld & python migrate.py'
+    ports:
+      - '5000:5000'

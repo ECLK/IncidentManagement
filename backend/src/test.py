@@ -7,6 +7,8 @@ This must be later changed
 """
 import pytest
 import json
+from flask import testing
+from werkzeug.datastructures import Headers
 
 from manage import make_app, db
 import seed
@@ -25,10 +27,23 @@ from app.main.model.incident_status import StatusType
 from app.main.model.incident_severity import SeverityLevel
 
 
+token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJtaXNzaW9ucyI6eyJzZXZlcml0eSI6Mywic3RhdHVzIjozfSwiaWQiOiIxMjMiLCJuYW1lIjoic3VwZXJ2aWNvciJ9.KVsQKyWRg18NxElk5jGcqo7O8DgmEQRpBgkomiCQr1o"
+
+class TestClient(testing.FlaskClient):
+    def open(self, *args, **kwargs):
+        api_key_headers = Headers({
+            'Authorization': token
+        })
+        headers = kwargs.pop('headers', Headers())
+        headers.extend(api_key_headers)
+        kwargs['headers'] = headers
+        return super().open(*args, **kwargs)
+
 @pytest.fixture(scope="session")
 def client():
     app = make_app("test")
     app.app_context().push()
+    app.test_client_class = TestClient
     client = app.test_client()
 
     with app.app_context():
@@ -56,13 +71,13 @@ def test_create_incident(client):
 
     rv = client.post("/incidents", data=data, content_type="application/json")
     res = rv.get_json()
-
+    
     incidents = incident.get_all_incidents()
 
     assert (
         len(incidents) == 1
         and incidents[0].title == "Test incident"
-        and res["incident_id"] == incidents[0].id
+        and res["incident"]["id"] == incidents[0].id
     )
 
     cur_incident = incidents[0]
@@ -80,20 +95,19 @@ def test_update_incident(client):
     rv = client.post("/incidents", data=data, content_type="application/json")
     res = rv.get_json()
 
-    incident_id = res["incident_id"]
+    incident_id = res["incident"]["id"]
 
-    data = json.dumps(dict(category=1, police_station_id=1, occurence="HAPPENED"))
+    data = json.dumps(dict(category=1, police_station_id=1, occurence="OCCURED"))
     rv = client.put(
         "/incidents/%d" % incident_id, data=data, content_type="application/json"
     )
     res = rv.get_json()
-
+    
     db_incident = incident.get_a_incident(incident_id)
 
     assert (
-        res["status"] == "SUCCESS"
-        and db_incident.category == 1
-        and db_incident.occurence == Occurence.HAPPENED
+        db_incident.category == 1
+        and db_incident.occurence == Occurence.OCCURED
     )
 
 
@@ -104,7 +118,7 @@ def test_add_incident_entity(client):
     rv = client.post("/incidents", data=data, content_type="application/json")
     res = rv.get_json()
 
-    incident_id = res["incident_id"]
+    incident_id = res["incident"]["id"]
 
     data = json.dumps(dict(incident_id=incident_id, entity_id=1, description="Polize"))
     rv = client.post("/incident_entitys", data=data, content_type="application/json")
@@ -122,7 +136,7 @@ def test_add_incident_outcome(client):
     rv = client.post("/incidents", data=data, content_type="application/json")
     res = rv.get_json()
 
-    incident_id = res["incident_id"]
+    incident_id = res["incident"]["id"]
 
     data = json.dumps(
         dict(incident_id=incident_id, type="Outcome type", title="Generic outcome")
@@ -141,7 +155,7 @@ def test_change_status(client):
     rv = client.post("/incidents", data=data, content_type="application/json")
     res = rv.get_json()
 
-    incident_id = res["incident_id"]
+    incident_id = res["incident"]["id"]
 
     data = json.dumps(dict(status_type="ACTION_TAKEN"))
     rv = client.post(
@@ -166,7 +180,7 @@ def test_change_severity(client):
     rv = client.post("/incidents", data=data, content_type="application/json")
     res = rv.get_json()
 
-    incident_id = res["incident_id"]
+    incident_id = res["incident"]["id"]
 
     data = json.dumps(dict(level="MODERATE"))
     rv = client.post(
@@ -191,7 +205,7 @@ def test_add_incident_comment(client):
     rv = client.post("/incidents", data=data, content_type="application/json")
     res = rv.get_json()
 
-    incident_id = res["incident_id"]
+    incident_id = res["incident"]["id"]
 
     data = json.dumps(dict(incident_id=incident_id, name="Test comment name", \
         body="Test comment body"))
@@ -208,7 +222,7 @@ def test_update_incident_comment(client):
     data = json.dumps(dict(title="Test incident", description="Test decription"))
     rv = client.post("/incidents", data=data, content_type="application/json")
     res = rv.get_json()
-    incident_id = res["incident_id"]
+    incident_id = res["incident"]["id"]
 
     data = json.dumps(dict(incident_id=incident_id, name="Test comment name", \
         body="Test comment body"))

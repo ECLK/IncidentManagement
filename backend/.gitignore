@@ -178,3 +178,9 @@ dmypy.json
 # End of https://www.gitignore.io/api/flask,python
 
 migrations
+
+# media folders
+src/media/temp/*
+!src/media/temp/.gitkeep
+src/media/*
+!src/media/.gitkeep

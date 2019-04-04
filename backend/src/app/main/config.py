@@ -31,7 +31,7 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:toor@172.22.0.1:3308/lsf'
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:toor@mysql:3306/lsf'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     print(SQLALCHEMY_DATABASE_URI)
 

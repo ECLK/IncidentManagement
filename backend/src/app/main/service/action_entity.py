@@ -46,7 +46,7 @@ def save_new_action_entity(data):
     }
     return response_object, 201
 
-def get_all_action_entitys():
+def get_all_action_entities():
     return ActionEntity.query.all()
 
 def get_a_action_entity(id):

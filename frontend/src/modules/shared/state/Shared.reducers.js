@@ -21,6 +21,10 @@ import {
     REQUEST_INCIDENT_WARDS,
     REQUEST_INCIDENT_WARDS_SUCCESS,
     REQUEST_INCIDENT_WARDS_FAILURE,
+
+    ACTIVE_INCIDENT_GET_DATA_REQUEST,
+    ACTIVE_INCIDENT_GET_DATA_SUCCESS,
+    ACTIVE_INCIDENT_GET_DATA_ERROR
 } from './Shared.types'
 
 const initialState = {
@@ -29,7 +33,13 @@ const initialState = {
     districts: [],
     pollingStations: [],
     policeStations: [],
-    wards: []
+    wards: [],
+    activeIncident:{
+        isLoading:false,
+        data:null,
+        error:null
+    },
+    activeIncidentReporter:null,
 }
 
 export default function sharedReducer(state, action) {
@@ -77,7 +87,19 @@ export default function sharedReducer(state, action) {
                 draft.wards = action.data;
                 return draft
             case REQUEST_INCIDENT_WARDS_FAILURE:
-                return draft            
+                return draft
+
+            case ACTIVE_INCIDENT_GET_DATA_REQUEST:
+                draft.activeIncident.isLoading= true
+                return draft
+            case ACTIVE_INCIDENT_GET_DATA_SUCCESS:
+                draft.activeIncident.data = action.data.incident
+                draft.activeIncidentReporter = action.data.reporter
+                draft.activeIncident.isLoading = false
+                return draft
+            case ACTIVE_INCIDENT_GET_DATA_ERROR:
+                draft.activeIncident.error = action.error
+                return draft
         }
     })
 }
