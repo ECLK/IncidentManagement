@@ -5,7 +5,7 @@
     "DB_HOST": "127.0.0.1",
     "DB_PASSWORD": "toor",
     "DB_CONNECTION_TYPE": "SQLALCHEMY",
-    "SERVER_PORT":8081,
+    "SERVER_PORT":81,
     "CONTEXT": "/incident-api/",
     "swagger-enabled": true,
     "APP_ENV": "",
