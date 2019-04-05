@@ -9,6 +9,10 @@ FROM python:3.6-stretch
 
 # RUN apt-get install $requirements -y && rm -rf /var/lib/apt/lists/*
 
+ENV DB_USER=root
+ENV DB_PASSWD=toor
+ENV DB_NAME=lsfclem
+
 ADD ./src /app/
 
 WORKDIR /app

@@ -31,7 +31,7 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:toor@mysql:3306/lsf'
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:toor@mysql:3306/lsf' if os.getenv("DB_USER") is None and os.getenv("DB_PASSWD") is None else 'mysql+pymysql://'+os.getenv("DB_USER")+':'+os.getenv("DB_PASSWD")+'@mysql:3306/'+os.getenv("DB_NAME")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     print(SQLALCHEMY_DATABASE_URI)
 

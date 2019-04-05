@@ -1,0 +1,13 @@
+{
+    "env-message": "App Started on Production Environment.",
+    "DB_NAME": "lsf",
+    "DB_USER": "root",
+    "DB_HOST": "127.0.0.1",
+    "DB_PASSWORD": "toor",
+    "DB_CONNECTION_TYPE": "SQLALCHEMY",
+    "SERVER_PORT":8081,
+    "CONTEXT": "/incident-api/",
+    "swagger-enabled": true,
+    "APP_ENV": "",
+    "APP_NAME": "EC_INCIDENT_API"
+  }

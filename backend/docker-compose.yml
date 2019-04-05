@@ -9,7 +9,7 @@ services:
     environment:
       MYSQL_ROOT_USER: root
       MYSQL_ROOT_PASSWORD: toor
-      MYSQL_DATABASE: lsf
+      MYSQL_DATABASE: lsfclem
     expose:
       - '3306'
     ports:
