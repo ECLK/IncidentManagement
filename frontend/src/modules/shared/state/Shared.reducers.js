@@ -40,6 +40,11 @@ const initialState = {
         error:null
     },
     activeIncidentReporter:null,
+    elections:{
+        1:"General Election 2020",
+        2:"Presedential Election 2020",
+        3:"Presedential Election 2008"
+    }
 }
 
 export default function sharedReducer(state, action) {

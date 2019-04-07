@@ -77,7 +77,7 @@ export class IncidentLocationDetailsForm extends Component {
                         }}
                     >
                         {this.props.districts.map((c, k) => (
-                            <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
+                            values.province ? (c.province === this.props.provinces[values.province] ? <MenuItem value={c.id} key={k}>{c.name}</MenuItem>:null):<MenuItem value={c.id} key={k}>{c.name}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
@@ -93,7 +93,7 @@ export class IncidentLocationDetailsForm extends Component {
                         }}
                     >
                         {this.props.pollingStations.map((c, k) => (
-                            <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
+                            values.district_id ? ( c.district_id === values.district_id ? <MenuItem value={c.id} key={k}>{c.name}</MenuItem>:null) : <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
@@ -125,7 +125,8 @@ export class IncidentLocationDetailsForm extends Component {
                         }}
                     >
                         {this.props.policeStations.map((c, k) => (
-                            <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
+                            values.district_id ? ( c.district_id === values.district_id ? <MenuItem value={c.id} key={k}>{c.name}</MenuItem>:null) : <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
+                            // <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>

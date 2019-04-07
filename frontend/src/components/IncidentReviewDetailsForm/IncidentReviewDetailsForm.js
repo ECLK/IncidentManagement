@@ -34,7 +34,8 @@ class IncidentReviewDetailsForm extends Component {
             pollingStations,
             policeStations,
             wards,
-            incident
+            incident,
+            elections
          } = this.props;
          console.log(categorys)
         return (
@@ -65,10 +66,10 @@ class IncidentReviewDetailsForm extends Component {
                                             <ListItemText primary="Time" secondary={this.props.incident.time} />
                                         </ListItem>
                                         <ListItem className={classes.listItem}>
-                                            <ListItemText primary="Election" secondary={this.props.incident.election_id} />
+                                            <ListItemText primary="Election" secondary={incident.election_id && elections[incident.election_id]} />
                                         </ListItem>
                                         <ListItem className={classes.listItem}>
-                                            <ListItemText primary="Catagory" secondary={categorys[this.props.incident.category-1].sub_category} />
+                                            <ListItemText primary="Catagory" secondary={incident.category && categorys[incident.category-1].sub_category} />
                                         </ListItem>
                                     </List>
                                 </div>}
@@ -118,7 +119,7 @@ class IncidentReviewDetailsForm extends Component {
 
                                     <List disablePadding>
                                         <ListItem className={classes.listItem}>
-                                            <ListItemText primary="Location name/description" secondary={this.props.reporter.name} />
+                                            <ListItemText primary="Name" secondary={this.props.reporter.name} />
                                         </ListItem>
                                         <ListItem className={classes.listItem}>
                                             <ListItemText primary="Address" secondary={this.props.reporter.address} />

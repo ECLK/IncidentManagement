@@ -29,6 +29,7 @@ import { IncidentReviewDetailsForm } from '../../../components/IncidentReviewDet
 import { submitIncidentBasicData, stepBackwardIncidentStepper, stepForwardIncidentStepper, fetchUpdateReporter, fetchUpdateIncident, fetchIncidentData } from '../state/IncidentFiling.actions'
 import { fetchCatogories, fetchDistricts, fetchPoliceStations, fetchPollingStations, fetchWards, fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 
+import Snackbar from '@material-ui/core/Snackbar';
 
 const styles = theme => ({
     root: {
@@ -103,22 +104,22 @@ const styles = theme => ({
 function getSteps() {
     return [
         {
-            id:'eclk.incident.management.filing.guest.form.steps.basic.details',
-            description:'Submit Incident Details',
-            defaultMessage:'Submit Incident Details'
+            id: 'eclk.incident.management.filing.guest.form.steps.basic.details',
+            description: 'Submit Incident Details',
+            defaultMessage: 'Submit Incident Details'
         },
         {
-            id:'eclk.incident.management.filing.guest.form.steps.location.details',
-            description:'Submit Incident Location Details',
-            defaultMessage:'Submit Incident Location Details'
-        },{
-            id:'eclk.incident.management.filing.guest.form.steps.contact.details',
-            description:'Submit Contact Details',
-            defaultMessage:'Submit Contact Details'
-        },{
-            id:'eclk.incident.management.filing.guest.form.steps.review.details',
-            description:'Add additoinal details',
-            defaultMessage:'Add additoinal details'
+            id: 'eclk.incident.management.filing.guest.form.steps.location.details',
+            description: 'Submit Incident Location Details',
+            defaultMessage: 'Submit Incident Location Details'
+        }, {
+            id: 'eclk.incident.management.filing.guest.form.steps.contact.details',
+            description: 'Submit Contact Details',
+            defaultMessage: 'Submit Contact Details'
+        }, {
+            id: 'eclk.incident.management.filing.guest.form.steps.review.details',
+            description: 'Add additoinal details',
+            defaultMessage: 'Add additoinal details'
         }];
 }
 
@@ -131,17 +132,18 @@ function getStepContent(step, props, formikProps, state) {
         case 2:
             return (<IncidentContactDetailsForm {...props} {...formikProps} initialValues={state.incidentContactDetails} />);
         case 3:
-            return (<IncidentReviewDetailsForm 
-                        incident={props.incident} 
-                        reporter={props.reporter}
+            return (<IncidentReviewDetailsForm
+                incident={props.incident}
+                reporter={props.reporter}
 
-                        categorys={props.categorys}
-                        districts= {props.districts}
-                        provinces = {props.provinces}
-                        pollingStations = {props.pollingStations}
-                        policeStations = {props.policeStations}
-                        wards={props.wards}
-                    />);
+                categorys={props.categorys}
+                districts={props.districts}
+                provinces={props.provinces}
+                pollingStations={props.pollingStations}
+                policeStations={props.policeStations}
+                wards={props.wards}
+                elections={props.elections}
+            />);
         default:
             return 'Unknown step';
     }
@@ -156,7 +158,8 @@ class IndicdentForm extends Component {
         incidentContactDetails: {},
         incidentAdvancedDetails: {},
 
-        formInitData: null
+        formInitData: null,
+        submitSuccessMessage:false
     };
 
     componentDidMount() {
@@ -166,7 +169,7 @@ class IndicdentForm extends Component {
         this.props.getPollingStations();
         this.props.getWards();
 
-        if(this.props.paramIncidentId){
+        if (this.props.paramIncidentId) {
             this.props.getIncident(this.props.paramIncidentId);
         }
     }
@@ -213,7 +216,7 @@ class IndicdentForm extends Component {
             };
         });
 
-        this.props.stepForward();   
+        this.props.stepForward();
 
     };
 
@@ -254,7 +257,7 @@ class IndicdentForm extends Component {
         var initData = { ...this.props.incident };
         const reporter = this.props.reporter;
 
-        if(reporter){
+        if (reporter) {
             Object.assign(initData, {
                 "reporter_name": reporter.name,
                 "reporter_type": reporter.reporter_type,
@@ -298,12 +301,20 @@ class IndicdentForm extends Component {
         }
     }
 
+    handleSuccessMessageClose = () => {
+        this.setState({ submitSuccessMessage: false });
+    };
+
+    handleFinish = () => {
+        this.setState({ submitSuccessMessage: true });
+    };
+
     render() {
         const { classes } = this.props;
         const steps = getSteps();
         const activeStep = this.props.incidentFormActiveStep;
 
-        if(this.props.isIncidentLoading){
+        if (this.props.isIncidentLoading) {
             return (
                 <div>Loading</div>
             )
@@ -372,6 +383,17 @@ class IndicdentForm extends Component {
                                                                     Skip
                                                         </Button>
                                                             )}
+                                                            {activeStep === steps.length - 1 ?  
+                                                            <Button
+                                                                variant="contained"
+                                                                color="primary"
+                                                                className={classes.button}
+                                                                disabled={this.props.isIncidentBasicDetailsSubmitting}
+                                                                onClick={this.handleFinish}
+                                                            >
+                                                               Finish 
+                                                            </Button>
+                                                            :
                                                             <Button
                                                                 variant="contained"
                                                                 color="primary"
@@ -379,8 +401,9 @@ class IndicdentForm extends Component {
                                                                 className={classes.button}
                                                                 disabled={this.props.isIncidentBasicDetailsSubmitting}
                                                             >
-                                                                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                                            </Button>
+                                                               Next 
+                                                            </Button>}
+
                                                             {this.props.isIncidentBasicDetailsSubmitting && <CircularProgress size={24} className={classes.buttonProgress} />}
 
                                                         </div>
@@ -405,6 +428,16 @@ class IndicdentForm extends Component {
                     }
                 >
                 </Formik>
+
+                <Snackbar
+                    anchorOrigin={{ vertical:'bottom', horizontal:'right' }}
+                    open={this.state.submitSuccessMessage}
+                    onClose={this.handleSuccessMessageClose}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">Incident submitted sucessfully!</span>}
+                />
             </div>
         );
     }
@@ -433,6 +466,7 @@ const mapStateToProps = (state, ownProps) => {
         pollingStations: state.sharedReducer.pollingStations,
         policeStations: state.sharedReducer.policeStations,
         wards: state.sharedReducer.wards,
+        elections: state.sharedReducer.elections,
 
         ...ownProps
     }
