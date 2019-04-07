@@ -26,7 +26,17 @@ const styles = theme => ({
 
 class IncidentReviewDetailsForm extends Component {
     render() {
-        const { classes } = this.props;
+        const { 
+            classes,
+            categorys,
+            districts,
+            provinces,
+            pollingStations,
+            policeStations,
+            wards,
+            incident
+         } = this.props;
+         console.log(categorys)
         return (
             <div>
                 <Paper className={classes.root} elevation={1}>
@@ -46,7 +56,7 @@ class IncidentReviewDetailsForm extends Component {
                                             <ListItemText primary="Description" secondary={this.props.incident.description} />
                                         </ListItem>
                                         <ListItem className={classes.listItem}>
-                                            <ListItemText primary="Status" secondary={this.props.incident.occurance} />
+                                            <ListItemText primary="Status" secondary={this.props.incident.occurence} />
                                         </ListItem>
                                         <ListItem className={classes.listItem}>
                                             <ListItemText primary="Date" secondary={this.props.incident.date} />
@@ -58,7 +68,7 @@ class IncidentReviewDetailsForm extends Component {
                                             <ListItemText primary="Election" secondary={this.props.incident.election_id} />
                                         </ListItem>
                                         <ListItem className={classes.listItem}>
-                                            <ListItemText primary="Catagory" secondary={this.props.incident.catogory} />
+                                            <ListItemText primary="Catagory" secondary={categorys[this.props.incident.category-1].sub_category} />
                                         </ListItem>
                                     </List>
                                 </div>}
@@ -81,19 +91,19 @@ class IncidentReviewDetailsForm extends Component {
                                             <ListItemText primary="Coordinates" secondary={this.props.incident.coordinates} />
                                         </ListItem>
                                         <ListItem className={classes.listItem}>
-                                            <ListItemText primary="Province" secondary={this.props.incident.district_id} />
+                                            <ListItemText primary="Province" secondary={incident.district_id && districts[incident.district_id-1].province} />
                                         </ListItem>
                                         <ListItem className={classes.listItem}>
-                                            <ListItemText primary="District" secondary={this.props.incident.district_id} />
+                                            <ListItemText primary="District" secondary={incident.district_id && districts[incident.district_id-1].name} />
                                         </ListItem>
                                         <ListItem className={classes.listItem}>
-                                            <ListItemText primary="Polling division" secondary={this.props.incident.polling_station_id} />
+                                            <ListItemText primary="Polling division" secondary={incident.polling_station_id && pollingStations[incident.polling_station_id-1].name} />
                                         </ListItem>
                                         <ListItem className={classes.listItem}>
-                                            <ListItemText primary="Ward" secondary={this.props.incident.ward_id} />
+                                            <ListItemText primary="Ward" secondary={incident.ward_id && wards[incident.ward_id-1].name} />
                                         </ListItem>
                                         <ListItem className={classes.listItem}>
-                                            <ListItemText primary="Police Station" secondary={this.props.incident.police_station_id} />
+                                            <ListItemText primary="Police Station" secondary={incident.police_station_id && policeStations[incident.police_station_id-1].name} />
                                         </ListItem>
                                     </List>
                                 </div>}

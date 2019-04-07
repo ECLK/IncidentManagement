@@ -131,7 +131,17 @@ function getStepContent(step, props, formikProps, state) {
         case 2:
             return (<IncidentContactDetailsForm {...props} {...formikProps} initialValues={state.incidentContactDetails} />);
         case 3:
-            return (<IncidentReviewDetailsForm incident={props.incident} reporter={props.reporter} />);
+            return (<IncidentReviewDetailsForm 
+                        incident={props.incident} 
+                        reporter={props.reporter}
+
+                        categorys={props.categorys}
+                        districts= {props.districts}
+                        provinces = {props.provinces}
+                        pollingStations = {props.pollingStations}
+                        policeStations = {props.policeStations}
+                        wards={props.wards}
+                    />);
         default:
             return 'Unknown step';
     }
