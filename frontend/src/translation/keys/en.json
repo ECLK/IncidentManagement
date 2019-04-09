@@ -1,9 +1,9 @@
 {
   "eclk.incident.management.incidents": "Incidents",
-  "eclk.incident.management.incidents.reporting.system": "Election Violation Incidents Reporting System",
+  "eclk.incident.management.incidents.reporting.system": "Election Incidents Reporting System",
   "eclk.incident.management.report.incidents":"Report an Incident",
-  "eclk.incident.management.ongoing.incidents": "Ongoing Incidents",
-  "eclk.incident.management.historic.reports": "Historic Reports",
+  "eclk.incident.management.ongoing.incidents": "Manage an Incidents",
+  "eclk.incident.management.historic.reports": "Incident Reports",
   
   "eclk.incident.management.filing.guest.form.steps.basic.details":"Submit Incident Details",
   "eclk.incident.management.filing.guest.form.steps.location.details":"Submit Incident Location Details",

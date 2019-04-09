@@ -3,16 +3,34 @@ import Typography from '@material-ui/core/Typography';
 import './LandingPage.css'
 import CardGrid from "../../components/CardGrid";
 import { Icon } from "@material-ui/core";
+import { withStyles } from '@material-ui/core/styles';
 
-import {FormattedMessage} from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import Link from "react-router-dom/Link";
 import LanguageSelector from "../../components/LanguageSelector";
 import Logo from "../../components/Logo";
 
+import Create from "@material-ui/icons/Create";
+import Loop from "@material-ui/icons/Loop";
+import BarChart from "@material-ui/icons/BarChart";
+
+
+const styles = theme => ({
+    root: {
+        color: theme.palette.text.primary,
+    },
+    icon: {
+        margin: theme.spacing.unit+20,
+        fontSize: 32,
+    },
+});
+
 function LandingPage(props) {
 
-    const getCardContents = ()=>{
-        return([
+    const { classes } = props;
+
+    const getCardContents = () => {
+        return ([
             <Link to='/report'>
                 <Typography variant="h5" component="h2">
                     <FormattedMessage
@@ -21,27 +39,27 @@ function LandingPage(props) {
                         defaultMessage='Report an Incident'
                     />
                 </Typography>
-                <Icon fontSize="large">call</Icon>
+                <Create className={classes.icon} />
             </Link>,
             <Link to='/ongoing'>
-                <Typography variant="h5" component="h2">                
+                <Typography variant="h5" component="h2">
                     <FormattedMessage
                         id='eclk.incident.management.ongoing.incidents'
-                        description='Ongoing Incidents'
-                        defaultMessage='Ongoing Incidents'
+                        description='Manage an Incident'
+                        defaultMessage='Manage an Incident'
                     />
                 </Typography>
-                <Icon fontSize="large">autorenew</Icon>
+                <Loop className={classes.icon} />
             </Link>,
             <Link to='/historic'>
                 <Typography variant="h5" component="h2">
-                <FormattedMessage
-                    id='eclk.incident.management.historic.reports'
-                    description='Historic Reports'
-                    defaultMessage='Historic Reports'
-                />
+                    <FormattedMessage
+                        id='eclk.incident.management.historic.reports'
+                        description='Incident Reports'
+                        defaultMessage='Incident Reports'
+                    />
                 </Typography>
-                <Icon fontSize="large">assessment</Icon>
+                <BarChart className={classes.icon} />
             </Link>,
         ]);
     }
@@ -49,10 +67,10 @@ function LandingPage(props) {
         <div className='landing-page'>
             <div className='landing-header'>
                 <div>
-                    <Logo maxWidth='300px'/>
+                    <Logo maxWidth='300px' />
                 </div>
                 <div>
-                    <LanguageSelector/>
+                    <LanguageSelector />
                 </div>
             </div>
             <div className="title-container">
@@ -60,7 +78,7 @@ function LandingPage(props) {
                     <FormattedMessage
                         id='eclk.incident.management.incidents.reporting.system'
                         description='Title for the landing page'
-                        defaultMessage='Election Violation Incidents Reporting System'
+                        defaultMessage='Election Incidents Reporting System'
                     />
                 </Typography>
             </div>
@@ -68,9 +86,9 @@ function LandingPage(props) {
                 <CardGrid cardContents={getCardContents()} />
             </div>
         </div>
-        
-        
+
+
     );
-  
+
 }
-export default LandingPage;
+export default withStyles(styles)(LandingPage);
