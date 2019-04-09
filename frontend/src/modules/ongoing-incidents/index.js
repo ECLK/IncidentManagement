@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
+import { Link } from 'react-router-dom';
 import DomainContainer from '../../components/DomainContainer';
 import IncidentView from './containers/IncidentView';
 
@@ -11,7 +12,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import AssignmentLateIcon from '@material-ui/icons/AssignmentLate';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HomeIcon from '@material-ui/icons/Home';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -57,17 +58,17 @@ class Ongoing extends Component {
                 <div className={classes.toolbar} />
                 <Divider />
                 <List>
-                    <ListItem button >
+                    <ListItem button component={Link} to='/'>
+                        <ListItemIcon><HomeIcon /></ListItemIcon>
+                        <ListItemText primary='Home' />
+                    </ListItem>
+                    <ListItem button component={Link} to='/report'>
                         <ListItemIcon><AssignmentLateIcon /></ListItemIcon>
                         <ListItemText primary='Report Incident' />
                     </ListItem>
-                    <ListItem button >
+                    <ListItem button component={Link} to='/ongoing'>
                         <ListItemIcon><AssignmentIcon /></ListItemIcon>
                         <ListItemText primary='View Incident' />
-                    </ListItem>
-                    <ListItem button >
-                        <ListItemIcon><CheckCircleIcon /></ListItemIcon>
-                        <ListItemText primary='Approve Incident' />
                     </ListItem>
                 </List>
 
@@ -83,10 +84,10 @@ class Ongoing extends Component {
                 />
             </Typography>
         }
-        content={()=>(
-            <IncidentView />
-        )}
-        drawer={drawer}
+            content={() => (
+                <IncidentView />
+            )}
+            drawer={drawer}
         />)
     }
 }
