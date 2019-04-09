@@ -45,9 +45,9 @@ export class IncidentBasicDetailsForm extends Component {
                     margin="normal"
                     value={values.title}
                     className={classes.textField}
-                    
-                    error = {errors.title && touched.title}
-                    helperText={(errors.title && touched.title)? errors.title : null}
+
+                    error={errors.title && touched.title}
+                    helperText={(errors.title && touched.title) ? errors.title : null}
                 />
                 <TextField
                     type="text"
@@ -60,8 +60,8 @@ export class IncidentBasicDetailsForm extends Component {
                     value={values.description}
                     className={classes.description}
                     required
-                    error = {errors.description && touched.description}
-                    helperText={(errors.description && touched.description)? errors.description : null}
+                    error={errors.description && touched.description}
+                    helperText={(errors.description && touched.description) ? errors.description : null}
                 />
 
                 <FormControl component="fieldset" className={classes.formControl}>
@@ -115,9 +115,9 @@ export class IncidentBasicDetailsForm extends Component {
                         <MenuItem value="">
                             <em>None</em>
                         </MenuItem>
-                        <MenuItem value={1}>General Election 2020 </MenuItem>
-                        <MenuItem value={2}>Presedential Election 2020</MenuItem>
-                        <MenuItem value={3}>Presedential Election 2008</MenuItem>
+                        <MenuItem value={1}>Parliamentary Election 2020 </MenuItem>
+                        <MenuItem value={2}>Presedential Election 2021</MenuItem>
+                        <MenuItem value={3}>Provincial Election 2020</MenuItem>
                     </Select>
                 </FormControl>
 
@@ -133,12 +133,11 @@ export class IncidentBasicDetailsForm extends Component {
                             id: 'category',
                         }}
                     >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
                         {this.props.categorys.map((c, k) => (
                             <MenuItem value={c.id} key={k}>{c.sub_category}</MenuItem>
                         ))}
+
+                        <MenuItem value="Other"> Other </MenuItem>
                     </Select>
                 </FormControl>
 
