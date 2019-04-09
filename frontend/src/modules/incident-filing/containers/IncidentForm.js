@@ -307,6 +307,11 @@ class IndicdentForm extends Component {
 
     handleFinish = () => {
         this.setState({ submitSuccessMessage: true });
+
+        // delayed redirection
+        setTimeout( function(){
+            this.props.history.push('/');
+        }.bind(this), 2000);
     };
 
     render() {
@@ -391,7 +396,7 @@ class IndicdentForm extends Component {
                                                                 disabled={this.props.isIncidentBasicDetailsSubmitting}
                                                                 onClick={this.handleFinish}
                                                             >
-                                                               Finish 
+                                                               Review and Submit 
                                                             </Button>
                                                             :
                                                             <Button
