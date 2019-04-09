@@ -29,7 +29,7 @@ export class IncidentLocationDetailsForm extends Component {
                 <TextField
                     type="text"
                     name="location"
-                    label="Name/Description"
+                    label="Location Name/Description"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     margin="normal"

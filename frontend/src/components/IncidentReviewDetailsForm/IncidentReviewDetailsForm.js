@@ -83,7 +83,7 @@ class IncidentReviewDetailsForm extends Component {
 
                                     <List disablePadding>
                                         <ListItem className={classes.listItem}>
-                                            <ListItemText primary="Location name/description" secondary={this.props.incident.location} />
+                                            <ListItemText primary="Location Name/Description" secondary={this.props.incident.location} />
                                         </ListItem>
                                         <ListItem className={classes.listItem}>
                                             <ListItemText primary="Address:" secondary={this.props.incident.address} />
@@ -98,7 +98,7 @@ class IncidentReviewDetailsForm extends Component {
                                             <ListItemText primary="District" secondary={incident.district_id && districts[incident.district_id-1].name} />
                                         </ListItem>
                                         <ListItem className={classes.listItem}>
-                                            <ListItemText primary="Polling division" secondary={incident.polling_station_id && pollingStations[incident.polling_station_id-1].name} />
+                                            <ListItemText primary="Polling Division" secondary={incident.polling_station_id && pollingStations[incident.polling_station_id-1].name} />
                                         </ListItem>
                                         <ListItem className={classes.listItem}>
                                             <ListItemText primary="Ward" secondary={incident.ward_id && wards[incident.ward_id-1].name} />
