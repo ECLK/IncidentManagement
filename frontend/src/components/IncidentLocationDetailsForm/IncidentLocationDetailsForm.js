@@ -67,7 +67,7 @@ export class IncidentLocationDetailsForm extends Component {
                 </FormControl>
 
                 <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="district_id">Distric</InputLabel>
+                    <InputLabel htmlFor="district_id">District</InputLabel>
                     <Select
                         value={values.district_id}
                         onChange={handleChange}

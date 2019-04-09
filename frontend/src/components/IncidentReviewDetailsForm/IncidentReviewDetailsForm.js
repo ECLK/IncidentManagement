@@ -47,7 +47,7 @@ class IncidentReviewDetailsForm extends Component {
                             {this.props.incident &&
                                 <div>
                                     <Typography variant="h6" component="h3" className={classes.subTitle} gutterBottom>
-                                        Incident Details.
+                                        Incident Details
                             </Typography>
                                     <List disablePadding>
                                         <ListItem className={classes.listItem}>
@@ -78,7 +78,7 @@ class IncidentReviewDetailsForm extends Component {
                             {this.props.incident &&
                                 <div>
                                     <Typography variant="h6" component="h3" className={classes.subTitle}>
-                                        Location Details.
+                                        Location Details
                             </Typography>
 
                                     <List disablePadding>
@@ -114,7 +114,7 @@ class IncidentReviewDetailsForm extends Component {
                             {this.props.reporter &&
                                 <div>
                                     <Typography variant="h6" component="h3" className={classes.subTitle}>
-                                        Contact Details.
+                                        Contact Details
                             </Typography>
 
                                     <List disablePadding>
