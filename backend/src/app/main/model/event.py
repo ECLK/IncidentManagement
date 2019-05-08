@@ -12,6 +12,11 @@ class EventAction(enum.Enum):
     COMMENTED = 6
     MEDIA_ATTACHED = 7
 
+class AffectedAttribute(enum.Enum):
+    STATUS = 1  
+    SEVERITY = 2
+    OUTCOME = 3
+
 class Event(db.Model):
     """ Event model represents an auditable action done by a system user """
     __tablename__ = "event"
@@ -40,10 +45,23 @@ class Event(db.Model):
     incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'))
 
     # attribute changed by the current event action
-    affected_attribute = db.Column(db.String(1024))
+    affected_attribute = db.Column(db.Enum(AffectedAttribute))
 
     created_date = db.Column(db.Integer, default=int(time.time()))
     approved_date = db.Column(db.Integer, default=int(time.time()))
+
+    def to_dict(self):
+        d = {}
+        for column in self.__table__.columns:
+            value = getattr(self, column.name)
+            
+            if value is not None:
+                if column.name in ["action", "affected_attribute"]:
+                    value = value.name
+
+            d[column.name] = value
+
+        return d
     
     def __repr__(self):
         return "<Event '{}'>".format(self.id)
