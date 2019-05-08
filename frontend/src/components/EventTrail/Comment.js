@@ -29,7 +29,7 @@ class Comment extends Component {
     constructor(props){
         super(props)
         this.state = {
-            comment : ""
+            comment : "",
         }
     }
 
@@ -51,10 +51,17 @@ class Comment extends Component {
             comment:""
         })
     }
+
+    hideCommentInput = () => {
+        this.setState({
+            comment:""
+        })
+        this.props.hideCommentInput()
+    }
     
     render(){
 
-        const { classes, postComment } = this.props;
+        const { classes, hideCommentInput } = this.props;
         return(
             <div>
                 <TextField
@@ -67,11 +74,14 @@ class Comment extends Component {
                     onChange = {this.onTextInputChange}
                 />
                 <div className={classes.buttonContainer}>
-                    <Button variant="contained" className={classes.button} onClick={postComment}>
-                        Post
+                    <Button variant="contained" className={classes.button} onClick={this.hideCommentInput}>
+                        Cancel
                     </Button>
                     <Button variant="contained" className={classes.button} onClick={this.clearComment}>
                         Clear
+                    </Button>
+                    <Button variant="contained" className={classes.button} onClick={this.postComment}>
+                        Post
                     </Button>
                 </div>
             </div>
