@@ -11,6 +11,12 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Moment from 'react-moment';
 
+import EventTrail from '../../../components/EventTrail';
+import { fetchIncidentEventTrail } from '../state/OngoingIncidents.actions';
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+
+
 
 function TabContainer(props) {
     return (
@@ -56,6 +62,10 @@ class BasicDetailTab extends Component {
             election: props.election,
             category: props.category,
         };
+    }
+
+    componentDidMount(){
+
     }
 
     render() {
@@ -142,7 +152,7 @@ class BasicDetailTab extends Component {
                         </Paper>
                     </Grid>
                 </Grid>
-
+                <EventTrail />
 
 
             </div>
@@ -443,10 +453,14 @@ class NavTabs extends Component {
         this.setState({ value });
     };
 
+    componentDidMount(){
+        this.props.getEvents();
+    }
+
     render() {
         const { classes } = this.props;
         const { value } = this.state;
-
+        
         return (
             <NoSsr>
                 <div className={classes.root}>
@@ -472,4 +486,21 @@ NavTabs.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(NavTabs);
+const mapStateToProps = (state, ownProps) => {
+    return {
+        events: state.ongoingIncidentReducer.events,
+        ...ownProps
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getEvents: () => {
+            dispatch(fetchIncidentEventTrail());
+        }
+    }
+}
+
+export default compose(
+    connect(mapStateToProps, mapDispatchToProps),
+    withStyles(styles))(NavTabs);

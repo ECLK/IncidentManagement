@@ -1,18 +1,20 @@
 import produce from "immer"
 
 import { 
-    REQUEST_INCIDENT_COMMENT_TRAIL, 
-    REQUEST_INCIDENT_COMMENT_TRAIL_SUCCESS, 
-    REQUEST_INCIDENT_COMMENT_TRAIL_FAILURE
+    REQUEST_INCIDENT_EVENT_TRAIL, 
+    REQUEST_INCIDENT_EVENT_TRAIL_SUCCESS, 
+    REQUEST_INCIDENT_EVENT_TRAIL_FAILURE
 } from './OngoingIncidents.types'
 
+import { events } from '../../../data/events';
+
 const initialState = {
-    commentTrail: {
+    eventTrail: {
         data: [],
         isLoading:false,
         error: false,
-    }
-
+    },
+    events: []
 }
 
 export default function OngoingIncidentsReducer(state, action) {
@@ -21,13 +23,13 @@ export default function OngoingIncidentsReducer(state, action) {
     }
     return produce(state, draft => {
         switch (action.type) {
-            case REQUEST_INCIDENT_COMMENT_TRAIL:
-                draft.commentTrail.isLoading = true;
+            case REQUEST_INCIDENT_EVENT_TRAIL:
+                draft.eventTrail.isLoading = true;
                 return draft;
-            case REQUEST_INCIDENT_COMMENT_TRAIL_SUCCESS:
-                draft.commentTrail.data = action.data;
-            case REQUEST_INCIDENT_COMMENT_TRAIL_FAILURE:
-                draft.commentTrail.error = action.error;
+            case REQUEST_INCIDENT_EVENT_TRAIL_SUCCESS:
+                draft.events = action.data;
+            case REQUEST_INCIDENT_EVENT_TRAIL_FAILURE:
+                draft.eventTrail.error = action.error;
         }
     })
 }
