@@ -8,8 +8,7 @@ export var events = [
         },
         action: "GENERIC_UPDATE",
         incidentId: 1,
-        created_date: Date(),
-        approved_date: Date()
+        created_date: Date()
     },
     {
         initiator: {
@@ -26,8 +25,7 @@ export var events = [
                 status_type: "ACTION_TAKEN"
             }
         },
-        created_date: Date(),
-        approved_date: Date()
+        created_date: Date()
     },
     {
         initiator: {
@@ -43,8 +41,7 @@ export var events = [
                 body: "This is a smol comment"
             }
         },
-        created_date: Date(),
-        approved_date: Date()
+        created_date: Date()
     },
     {
         initiator: {
@@ -62,7 +59,6 @@ export var events = [
                 url: "http://example.com"
             }
         },
-        created_date: Date(),
-        approved_date: Date()
+        created_date: Date()
     },
 ];

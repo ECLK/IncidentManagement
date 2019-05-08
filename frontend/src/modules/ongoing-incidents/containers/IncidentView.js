@@ -12,6 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import Moment from 'react-moment';
 
 import EventTrail from '../../../components/EventTrail';
+import EventList from '../../../components/EventTrail/EventList';
 import { fetchIncidentEventTrail } from '../state/OngoingIncidents.actions';
 import { compose } from 'redux'
 import { connect } from 'react-redux'
@@ -152,7 +153,6 @@ class BasicDetailTab extends Component {
                         </Paper>
                     </Grid>
                 </Grid>
-                <EventTrail />
 
 
             </div>
@@ -460,7 +460,7 @@ class NavTabs extends Component {
     render() {
         const { classes } = this.props;
         const { value } = this.state;
-        
+
         return (
             <NoSsr>
                 <div className={classes.root}>
@@ -476,6 +476,9 @@ class NavTabs extends Component {
                     {value === 1 && <TabContainer> <LocationTab classes={classes} incident={this.state.incident} /> </TabContainer>}
                     {value === 2 && <TabContainer> <ContactTab classes={classes} reporter={this.state.reporter} /> </TabContainer>}
                     {value === 3 && <TabContainer> <ReviewTab classes={classes} incident={this.state.incident} /> </TabContainer>}
+                </div>
+                <div>
+                    <EventList events={this.props.events} />
                 </div>
             </NoSsr>
         );
