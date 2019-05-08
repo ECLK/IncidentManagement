@@ -1,43 +1,43 @@
 
 import { 
-    REQUEST_INCIDENT_COMMENT_TRAIL, 
-    REQUEST_INCIDENT_COMMENT_TRAIL_SUCCESS, 
-    REQUEST_INCIDENT_COMMENT_TRAIL_FAILURE
+    REQUEST_INCIDENT_EVENT_TRAIL, 
+    REQUEST_INCIDENT_EVENT_TRAIL_SUCCESS, 
+    REQUEST_INCIDENT_EVENT_TRAIL_FAILURE
 } from './OngoingIncidents.types'
 
-import { getComments } from '../../../api/comments'
+import { getEvents } from '../../../api/events'
 
 
-export function requestIncidentCommentTrail() {
+export function requestIncidentEventTrail() {
     return {
-        type: REQUEST_INCIDENT_COMMENT_TRAIL,
+        type: REQUEST_INCIDENT_EVENT_TRAIL,
     }
 }
 
-export function requestIncidentCommentTrailSuccess(response) {
+export function requestIncidentEventTrailSuccess(response) {
     return {
-        type: REQUEST_INCIDENT_COMMENT_TRAIL_SUCCESS,
+        type: REQUEST_INCIDENT_EVENT_TRAIL_SUCCESS,
         data: response,
         error: null
     }
 }
 
-export function requestIncidentCommentTrailError(errorResponse) {
+export function requestIncidentEventTrailError(errorResponse) {
     return {
-        type: REQUEST_INCIDENT_COMMENT_TRAIL_FAILURE,
+        type: REQUEST_INCIDENT_EVENT_TRAIL_FAILURE,
         data: null,
         error: errorResponse
     }
 }
 
-export function fetchIncidentCommentTrail(incidentData) {
+export function fetchIncidentEventTrail() {
     return async function(dispatch) {
-        dispatch(requestIncidentCommentTrail());
+        dispatch(requestIncidentEventTrail());
         try{
-            const response = await getComments(incidentData);
-            await dispatch(requestIncidentCommentTrailSuccess(response.data));
+            const response = await getEvents();
+            await dispatch(requestIncidentEventTrailSuccess(response.data));
         }catch(error){
-            await dispatch(requestIncidentCommentTrailError(error));
+            await dispatch(requestIncidentEventTrailError(error));
         }
     }
 }
