@@ -47,9 +47,7 @@ class Comment extends Component {
 
     postComment = () => {
         this.props.postComment(this.state.comment)
-        this.setState({
-            comment:""
-        })
+        this.hideCommentInput()
     }
 
     hideCommentInput = () => {
