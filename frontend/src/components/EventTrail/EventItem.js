@@ -14,6 +14,40 @@ const styles = {
     },
 };
 
+function getActionText(event){
+    switch(event.action){
+        case "GENERIC_UPDATE":
+            return "edited incident information";
+        case "ATTRIBUTE_CHANGED":
+            switch(event.affected_attribute){
+                case "STATUS":
+                    return `changed the status to ${event.data.status.status_type}`;
+                case "SEVERITY":
+                    return `changed the status to ${event.data.severity.severity_type}`;
+            }
+        case "COMMENTED":
+            return "commented on the incident";
+        case "MEDIA_ATTACHED":
+            return "attached media";
+    }
+}
+
+function getSecondaryItem(event){
+    if(event.action === "COMMENTED"){
+        return (
+            <div>
+                {event.data.comment.body}
+            </div>
+        )
+    }
+
+    return (<></>);
+}
+
+function getDateDiff(event){
+    
+}
+
 const EventItemView = ({ event, classes }) => (
     <ListItem>
         <ListItemAvatar>
@@ -23,12 +57,12 @@ const EventItemView = ({ event, classes }) => (
             primary={
                 <div className={classes.truncate}>
                     <strong>
-                        {event.author ? event.author.name : 'Anonymous'}
+                        {event.initiator ? event.initiator.displayname : 'Anonymous'}
                     </strong>{' '}
-                    {event.label}
+                    {getActionText(event)}
                 </div>
             }
-            secondary={new Date(event.createdAt).toLocaleString()}
+            secondary={getSecondaryItem(event)}
         />
     </ListItem>
 );
