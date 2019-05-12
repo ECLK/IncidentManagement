@@ -24,7 +24,7 @@ class MainRouter extends Component {
         <Router history={history}>
           <React.Fragment>
             <Route exact path="/" component={LandingPage} />
-            <Route path="/report/:paramIncidentId?" component={Report} />        
+            <Route path="/report" component={Report} />        
             <Route path="/ongoing" component={Ongoing}/>
             <Route path="/historic" component={Historic}/>
             <Route exact path="/home" component={HomePage} />
