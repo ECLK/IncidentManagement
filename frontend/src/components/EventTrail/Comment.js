@@ -46,7 +46,11 @@ class Comment extends Component {
     }
 
     postComment = () => {
-        this.props.postComment(this.state.comment)
+        let commentObj = {
+            incidentId : this.props.activeIncident ? this.props.activeIncident.id : null,
+            comment : this.state.comment
+        }
+        this.props.postComment(commentObj);
         this.hideCommentInput()
     }
 
@@ -59,7 +63,7 @@ class Comment extends Component {
     
     render(){
 
-        const { classes, hideCommentInput } = this.props;
+        const { classes  } = this.props;
         return(
             <div>
                 <TextField

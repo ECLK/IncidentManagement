@@ -241,12 +241,12 @@ export function fetchActiveIncidentData(incidentId) {
         try{
             const responseIncident = await getIncident(incidentId);
             const responseReporter = await getReporter(responseIncident.data.reporter_id);
-            await dispatch(getActiveIncidentDataSuccess({
+            dispatch(getActiveIncidentDataSuccess({
                 "incident": responseIncident.data,
                 "reporter": responseReporter.data
             }));
         }catch(error){
-            await dispatch(getActiveIncidentDataError(error));
+            dispatch(getActiveIncidentDataError(error));
         }
     }
 }

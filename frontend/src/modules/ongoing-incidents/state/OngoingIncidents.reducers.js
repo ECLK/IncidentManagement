@@ -3,7 +3,11 @@ import produce from "immer"
 import { 
     REQUEST_INCIDENT_EVENT_TRAIL, 
     REQUEST_INCIDENT_EVENT_TRAIL_SUCCESS, 
-    REQUEST_INCIDENT_EVENT_TRAIL_FAILURE
+    REQUEST_INCIDENT_EVENT_TRAIL_ERROR,
+
+    POST_INCIDENT_COMMENT,
+    POST_INCIDENT_COMMENT_SUCCESS,
+    POST_INCIDENT_COMMENT_ERROR,
 } from './OngoingIncidents.types'
 
 import { events } from '../../../data/events';
@@ -28,7 +32,7 @@ export default function OngoingIncidentsReducer(state, action) {
                 return draft;
             case REQUEST_INCIDENT_EVENT_TRAIL_SUCCESS:
                 draft.events = action.data;
-            case REQUEST_INCIDENT_EVENT_TRAIL_FAILURE:
+            case REQUEST_INCIDENT_EVENT_TRAIL_ERROR:
                 draft.eventTrail.error = action.error;
         }
     })

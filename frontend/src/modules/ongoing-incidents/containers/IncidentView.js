@@ -6,16 +6,19 @@ import Tabs from '@material-ui/core/Tabs';
 import NoSsr from '@material-ui/core/NoSsr';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
+import { compose } from 'redux'
+import { connect } from 'react-redux'
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Moment from 'react-moment';
+import Button from '@material-ui/core/Button';
 
 import EventTrail from '../../../components/EventTrail';
 import EventList from '../../../components/EventTrail/EventList';
-import { fetchIncidentEventTrail } from '../state/OngoingIncidents.actions';
-import { compose } from 'redux'
-import { connect } from 'react-redux'
+import Comment from '../../../components/EventTrail/Comment';
+import { fetchIncidentEventTrail, submitIncidentComment } from '../state/OngoingIncidents.actions';
+
 
 
 
@@ -446,7 +449,8 @@ class NavTabs extends Component {
             name: "Jagath Mallawaarchichi",
             contact: "jagathm@gamil.com",
             address: "33/3, Church road, Battaramulla."
-        }
+        },
+        isCommentVisible: false,
     };
 
     handleChange = (event, value) => {
@@ -457,8 +461,16 @@ class NavTabs extends Component {
         this.props.getEvents();
     }
 
+    showCommentInput = () => {
+        this.setState({isCommentVisible:true})
+    }
+
+    hideCommentInput = () =>{
+        this.setState({isCommentVisible:false})
+    }
+
     render() {
-        const { classes } = this.props;
+        const { classes, postComment, activeIncident } = this.props;
         const { value } = this.state;
 
         return (
@@ -480,6 +492,14 @@ class NavTabs extends Component {
                 <div>
                     <EventList events={this.props.events} />
                 </div>
+                {this.state.isCommentVisible ? 
+                (<Comment 
+                    hideCommentInput={this.hideCommentInput} 
+                    postComment = {postComment}
+                    activeIncident = { activeIncident }
+                />) 
+                : 
+                (<Button onClick={this.showCommentInput} >Add Comment</Button>)}
             </NoSsr>
         );
     }
@@ -492,6 +512,7 @@ NavTabs.propTypes = {
 const mapStateToProps = (state, ownProps) => {
     return {
         events: state.ongoingIncidentReducer.events,
+        activeIncident : state.sharedReducer.activeIncident.data,
         ...ownProps
     }
 }
@@ -500,6 +521,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getEvents: () => {
             dispatch(fetchIncidentEventTrail());
+        },
+        postComment: (commentData) => {
+            dispatch(submitIncidentComment(commentData));
         }
     }
 }

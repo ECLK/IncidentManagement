@@ -18,7 +18,7 @@ export function addComment(commentObj){
         incidentId: 1,
         data: {
             comment: {
-                body: "This is a smol comment"
+                body: commentObj.comment
             }
         },
         created_date: Date(),

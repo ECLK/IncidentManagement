@@ -2,11 +2,11 @@
 import { 
     REQUEST_INCIDENT_EVENT_TRAIL, 
     REQUEST_INCIDENT_EVENT_TRAIL_SUCCESS, 
-    REQUEST_INCIDENT_EVENT_TRAIL_FAILURE,
+    REQUEST_INCIDENT_EVENT_TRAIL_ERROR,
 
-    POST_INCIDENT_EVENT_TRAIL,
-    POST_INCIDENT_EVENT_TRAIL_SUCCESS,
-    POST_INCIDENT_EVENT_TRAIL_ERROR,
+    POST_INCIDENT_COMMENT,
+    POST_INCIDENT_COMMENT_SUCCESS,
+    POST_INCIDENT_COMMENT_ERROR,
 } from './OngoingIncidents.types'
 
 import { getEvents } from '../../../api/events'
@@ -29,7 +29,7 @@ export function requestIncidentEventTrailSuccess(response) {
 
 export function requestIncidentEventTrailError(errorResponse) {
     return {
-        type: REQUEST_INCIDENT_EVENT_TRAIL_FAILURE,
+        type: REQUEST_INCIDENT_EVENT_TRAIL_ERROR,
         data: null,
         error: errorResponse
     }
@@ -50,13 +50,13 @@ export function fetchIncidentEventTrail() {
 
 export function postIncidentComment() {
     return {
-        type: POST_INCIDENT_EVENT_TRAIL,
+        type: POST_INCIDENT_COMMENT,
     }
 }
 
 export function postIncidentCommentSuccess(response) {
     return {
-        type: POST_INCIDENT_EVENT_TRAIL_SUCCESS,
+        type: POST_INCIDENT_COMMENT_SUCCESS,
         data: response,
         error: null
     }
@@ -64,21 +64,21 @@ export function postIncidentCommentSuccess(response) {
 
 export function postIncidentCommentError(errorResponse) {
     return {
-        type: POST_INCIDENT_EVENT_TRAIL_ERROR,
+        type: POST_INCIDENT_COMMENT_ERROR,
         data: null,
         error: errorResponse
     }
 }
 
-export function submitIncidentCommentTrail() {
+export function submitIncidentComment(commentData) {
     return async function(dispatch) {
         dispatch(postIncidentComment());
         try{
-            const response = await postComment();
-            await dispatch(postIncidentCommentSuccess(response.data));
-            await dispatch(fetchIncidentEventTrail());
+            const response = await postComment(commentData);
+            dispatch(postIncidentCommentSuccess(response.data));
+            dispatch(fetchIncidentEventTrail());
         }catch(error){
-            await dispatch(postIncidentCommentError(error));
+            dispatch(postIncidentCommentError(error));
         }
     }
 }
