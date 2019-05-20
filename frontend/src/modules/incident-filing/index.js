@@ -3,7 +3,7 @@ import { Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import DomainContainer from '../../components/DomainContainer';
-import IncidentForm from '../../components/IncidentForm';
+import IncidentForm from './containers/IncidentForm';
 import { Route, BrowserRouter as Router } from "react-router-dom";
 
 import Divider from '@material-ui/core/Divider';
