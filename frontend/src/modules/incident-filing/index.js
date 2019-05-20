@@ -71,17 +71,13 @@ class Report extends Component {
                     </ListItem>
                 ))} */}
 
-                    <ListItem button component={Link} to='/'>
-                        <ListItemIcon><HomeIcon /></ListItemIcon>
-                        <ListItemText primary='Home' />
-                    </ListItem>
-                    <ListItem button component={Link} to='/report'>
+                    <ListItem button component={Link} to={`${match.url}`}>
                         <ListItemIcon><AssignmentLateIcon /></ListItemIcon>
                         <ListItemText primary='Report Incident' />
                     </ListItem>
-                    <ListItem button component={Link} to='/ongoing'>
+                    <ListItem button component={Link} to={`${match.url}/review`}>
                         <ListItemIcon><AssignmentIcon /></ListItemIcon>
-                        <ListItemText primary='View Incident' />
+                        <ListItemText primary='Review Incident' />
                     </ListItem>
                 </List>
 
@@ -108,7 +104,16 @@ class Report extends Component {
                     </Typography>
                 }
                 content={() => (
-                    <IncidentForm user={user} paramIncidentId={this.props.match.params.paramIncidentId} />
+                  <React.Fragment>
+                    <Route exact 
+                      path={`${match.url}`} 
+                      component={()=> 
+                        <IncidentForm user={user} paramIncidentId={this.props.match.params.paramIncidentId} />
+                      }
+                    />
+                    <Route exact path={`${match.url}/review`} component={ReviewIncidentListView} />
+
+                  </React.Fragment>
                 )}
                 drawer={drawer}
 
