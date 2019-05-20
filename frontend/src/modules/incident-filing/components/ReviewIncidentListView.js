@@ -8,6 +8,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import { Formik, withFormik } from 'formik';
+import TextField from '@material-ui/core/TextField';
 
 
 
@@ -32,6 +34,9 @@ import Paper from '@material-ui/core/Paper';
       },
       cursor: 'pointer',
     },
+    textField: {
+      width: 200,
+    },
   });
   
   let id = 0;
@@ -55,6 +60,72 @@ function ReviewListView(props){
 
     return(
         <Paper className={classes.root}>
+            <Formik
+              initialValues={{ email: '' }}
+              onSubmit={(values, { setSubmitting }) => {
+                setTimeout(() => {
+                  alert(JSON.stringify(values, null, 2));
+                  setSubmitting(false);
+                }, 500);
+              }}
+            >
+              {props => {
+                const {
+                  values,
+                  touched,
+                  errors,
+                  dirty,
+                  isSubmitting,
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  handleReset,
+                } = props;
+                return (
+                  <form onSubmit={handleSubmit}>
+
+                    <TextField
+                        id="email"
+                        label="Email"
+                        className={classes.textField}
+                        type="password"
+                        autoComplete="current-password"
+                        margin="normal"
+                        variant="outlined"
+                        value={values.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    <input
+                      id="email"
+                      placeholder="Enter your email"
+                      type="text"
+                      value={values.email}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={
+                        errors.email && touched.email ? 'text-input error' : 'text-input'
+                      }
+                    />
+                    {errors.email && touched.email && (
+                      <div className="input-feedback">{errors.email}</div>
+                    )}
+
+                    <button
+                      type="button"
+                      className="outline"
+                      onClick={handleReset}
+                      disabled={!dirty || isSubmitting}
+                    >
+                      Reset
+                    </button>
+                    <button type="submit" disabled={isSubmitting}>
+                      Submit
+                    </button>
+                  </form>
+                );
+              }}
+            </Formik>
             <Table className={classes.table}>
                 <TableHead>
                     <TableRow>
