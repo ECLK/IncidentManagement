@@ -4,9 +4,9 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import DomainContainer from '../../components/DomainContainer';
 import IncidentForm from './containers/IncidentForm';
+import { Route, BrowserRouter as Router } from "react-router-dom";
 
 import Divider from '@material-ui/core/Divider';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -18,7 +18,8 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HomeIcon from '@material-ui/icons/Home';
 
 import { withStyles } from '@material-ui/core/styles';
-
+import ReviewIncidentListView from './ReviewIncidentListView';
+import ReviewIncidentView from './ReviewIncidentView';
 
 const drawerWidth = 240;
 const styles = theme => ({
@@ -57,12 +58,10 @@ const styles = theme => ({
 class Report extends Component {
 
 
-
-    render() {
-        const { classes, theme } = this.props;
+    render(){
+        const { classes, theme, match } = this.props;
         const drawer = (
             <div>
-                <div className={classes.toolbar} />
                 <Divider />
                 <List>
                     {/* {['Home','Report Incident', 'View Incidents', 'Approve Incident'].map((text, index) => (
@@ -72,17 +71,13 @@ class Report extends Component {
                     </ListItem>
                 ))} */}
 
-                    <ListItem button component={Link} to='/'>
-                        <ListItemIcon><HomeIcon /></ListItemIcon>
-                        <ListItemText primary='Home' />
-                    </ListItem>
-                    <ListItem button component={Link} to='/report'>
+                    <ListItem button component={Link} to={`${match.url}`}>
                         <ListItemIcon><AssignmentLateIcon /></ListItemIcon>
                         <ListItemText primary='Report Incident' />
                     </ListItem>
-                    <ListItem button component={Link} to='/ongoing'>
+                    <ListItem button component={Link} to={`${match.url}/review`}>
                         <ListItemIcon><AssignmentIcon /></ListItemIcon>
-                        <ListItemText primary='View Incident' />
+                        <ListItemText primary='Review Incident' />
                     </ListItem>
                 </List>
 
@@ -109,7 +104,16 @@ class Report extends Component {
                     </Typography>
                 }
                 content={() => (
-                    <IncidentForm user={user} paramIncidentId={this.props.match.params.paramIncidentId} />
+                  <React.Fragment>
+                    <Route exact 
+                      path={`${match.url}`} 
+                      component={()=> 
+                        <IncidentForm user={user} paramIncidentId={this.props.match.params.paramIncidentId} />
+                      }
+                    />
+                    <Route exact path={`${match.url}/review`} component={ReviewIncidentListView} />
+
+                  </React.Fragment>
                 )}
                 drawer={drawer}
 
