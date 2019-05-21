@@ -24,7 +24,11 @@ import {
 
     ACTIVE_INCIDENT_GET_DATA_REQUEST,
     ACTIVE_INCIDENT_GET_DATA_SUCCESS,
-    ACTIVE_INCIDENT_GET_DATA_ERROR
+    ACTIVE_INCIDENT_GET_DATA_ERROR,
+
+    SIGN_IN_REQUEST,
+    SIGN_IN_REQUEST_SUCCESS,
+    SIGN_IN_REQUEST_ERROR,
 } from './Shared.types'
 
 const initialState = {
@@ -44,6 +48,12 @@ const initialState = {
         1:"General Election 2020",
         2:"Presedential Election 2020",
         3:"Presedential Election 2008"
+    },
+    signedInUser:{
+        isLoading:false,
+        isSignedIn:false,
+        data:null,
+        error:null
     }
 }
 
@@ -105,6 +115,18 @@ export default function sharedReducer(state, action) {
             case ACTIVE_INCIDENT_GET_DATA_ERROR:
                 draft.activeIncident.error = action.error
                 return draft
+            case SIGN_IN_REQUEST:
+                draft.signedInUser.isLoading = true;
+                return draft
+            case SIGN_IN_REQUEST_SUCCESS:
+                if(action.data.authenticated){
+                    draft.signedInUser.data = action.data.user
+                    draft.signedInUser.isSignedIn = true;
+                }
+                draft.signedInUser.isLoading = false;
+                return draft;
+            case SIGN_IN_REQUEST_ERROR:
+                draft.signedInUser.error = action.error;
         }
     })
 }
