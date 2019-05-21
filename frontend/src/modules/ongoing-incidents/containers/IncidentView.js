@@ -18,6 +18,7 @@ import EventTrail from '../../../components/EventTrail';
 import EventList from '../../../components/EventTrail/EventList';
 import Comment from '../../../components/EventTrail/Comment';
 import { fetchIncidentEventTrail, submitIncidentComment } from '../state/OngoingIncidents.actions';
+import {EventActions} from '../../../components/EventTrail'
 
 
 
@@ -40,7 +41,6 @@ function LinkTab(props) {
 
 const styles = theme => ({
     root: {
-        flexGrow: 1,
         backgroundColor: theme.palette.background.paper,
     },
     paper: {
@@ -68,7 +68,7 @@ class BasicDetailTab extends Component {
         };
     }
 
-    componentDidMount(){
+    componentDidMount() {
 
     }
 
@@ -386,7 +386,7 @@ class ReviewTab extends Component {
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
-                                    
+
                                 </Grid>
                             </Grid>
 
@@ -457,16 +457,16 @@ class NavTabs extends Component {
         this.setState({ value });
     };
 
-    componentDidMount(){
+    componentDidMount() {
         this.props.getEvents();
     }
 
     showCommentInput = () => {
-        this.setState({isCommentVisible:true})
+        this.setState({ isCommentVisible: true })
     }
 
-    hideCommentInput = () =>{
-        this.setState({isCommentVisible:false})
+    hideCommentInput = () => {
+        this.setState({ isCommentVisible: false })
     }
 
     render() {
@@ -475,31 +475,40 @@ class NavTabs extends Component {
 
         return (
             <NoSsr>
-                <div className={classes.root}>
-                    <AppBar position="static">
-                        <Tabs variant="fullWidth" value={value} onChange={this.handleChange} >
-                            <LinkTab label="Basic Information" href="page1" />
-                            <LinkTab label="Location Information" href="page2" />
-                            <LinkTab label="Contact Information" href="page3" />
-                            <LinkTab label="Review Summary" href="page4" />
-                        </Tabs>
-                    </AppBar>
-                    {value === 0 && <TabContainer> <BasicDetailTab classes={classes} incident={this.state.incident} election={this.state.election} category={this.state.category} /> </TabContainer>}
-                    {value === 1 && <TabContainer> <LocationTab classes={classes} incident={this.state.incident} /> </TabContainer>}
-                    {value === 2 && <TabContainer> <ContactTab classes={classes} reporter={this.state.reporter} /> </TabContainer>}
-                    {value === 3 && <TabContainer> <ReviewTab classes={classes} incident={this.state.incident} /> </TabContainer>}
-                </div>
-                <div>
-                    <EventList events={this.props.events} />
-                </div>
-                {this.state.isCommentVisible ? 
-                (<Comment 
-                    hideCommentInput={this.hideCommentInput} 
-                    postComment = {postComment}
-                    activeIncident = { activeIncident }
-                />) 
-                : 
-                (<Button onClick={this.showCommentInput} >Add Comment</Button>)}
+                <Grid container spacing={24}>
+                    <Grid item xs={8}>
+                        <div className={classes.root}>
+                            <AppBar position="static">
+                                <Tabs variant="fullWidth" value={value} onChange={this.handleChange} >
+                                    <LinkTab label="Basic Information" href="page1" />
+                                    <LinkTab label="Location Information" href="page2" />
+                                    <LinkTab label="Contact Information" href="page3" />
+                                    <LinkTab label="Review Summary" href="page4" />
+                                </Tabs>
+                            </AppBar>
+                            {value === 0 && <TabContainer> <BasicDetailTab classes={classes} incident={this.state.incident} election={this.state.election} category={this.state.category} /> </TabContainer>}
+                            {value === 1 && <TabContainer> <LocationTab classes={classes} incident={this.state.incident} /> </TabContainer>}
+                            {value === 2 && <TabContainer> <ContactTab classes={classes} reporter={this.state.reporter} /> </TabContainer>}
+                            {value === 3 && <TabContainer> <ReviewTab classes={classes} incident={this.state.incident} /> </TabContainer>}
+                        </div>
+                        <div>
+                            <EventList events={this.props.events} />
+                        </div>
+                        {this.state.isCommentVisible ?
+                            (<Comment
+                                hideCommentInput={this.hideCommentInput}
+                                postComment={postComment}
+                                activeIncident={activeIncident}
+                            />)
+                            :
+                            (<Button onClick={this.showCommentInput} >Add Comment</Button>)}
+
+                    </Grid>
+                    <Grid item xs={4}>
+                        <EventActions/>
+                    </Grid>
+                </Grid>
+
             </NoSsr>
         );
     }
@@ -512,7 +521,7 @@ NavTabs.propTypes = {
 const mapStateToProps = (state, ownProps) => {
     return {
         events: state.ongoingIncidentReducer.events,
-        activeIncident : state.sharedReducer.activeIncident.data,
+        activeIncident: state.sharedReducer.activeIncident.data,
         ...ownProps
     }
 }
