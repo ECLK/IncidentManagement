@@ -7,10 +7,15 @@ import {
     POST_INCIDENT_COMMENT,
     POST_INCIDENT_COMMENT_SUCCESS,
     POST_INCIDENT_COMMENT_ERROR,
+
+    CHANGE_INCIDENT_STATUS,
+    CHANGE_INCIDENT_STATUS_SUCCESS,
+    CHANGE_INCIDENT_STATUS_ERROR,
 } from './OngoingIncidents.types'
 
 import { getEvents } from '../../../api/events'
 import { postComment } from '../../../api/comments'
+import { changeStatus } from '../../../api/incident';
 
 
 export function requestIncidentEventTrail() {
@@ -79,6 +84,45 @@ export function submitIncidentComment(commentData) {
             dispatch(fetchIncidentEventTrail());
         }catch(error){
             dispatch(postIncidentCommentError(error));
+        }
+    }
+}
+
+
+export function changeIncidentStatus() {
+    return {
+        type: CHANGE_INCIDENT_STATUS,
+    }
+}
+
+export function changeIncidentStatusSuccess(response) {
+    return {
+        type: CHANGE_INCIDENT_STATUS_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function changeIncidentStatusError(errorResponse) {
+    return {
+        type: CHANGE_INCIDENT_STATUS_ERROR,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function setIncidentStatus(incidentId, status) {
+    return async function(dispatch) {
+        dispatch(changeIncidentStatus());
+        try{
+            const response = await changeStatus(incidentId, status);
+            dispatch(changeIncidentStatusSuccess(response.data));
+            dispatch(fetchIncidentEventTrail());
+            /**
+             * Todo: refresh the incident 
+             */
+        }catch(error){
+            dispatch(changeIncidentStatusError(error));
         }
     }
 }

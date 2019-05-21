@@ -1,3 +1,4 @@
+import handler from './apiHandler'
 // import handler from './apiHandler'
 
 // export const createIncident = async (incidentData) => {
@@ -52,4 +53,9 @@ export const getReporter = async (reporterId) => {
 export const updateReporter = async (reporterId, reporterData) => {
     await mockapi.updateReporter(reporterId, reporterData);
     return true;
-};
+}
+
+
+export const changeStatus = async (incidentId, status) => {
+    return mockapi.changeStatus(incidentId, status);
+}

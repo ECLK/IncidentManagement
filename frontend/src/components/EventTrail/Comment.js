@@ -5,19 +5,17 @@ import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
     container: {
-        display: 'flex',
-        flexWrap: 'wrap',
+        
     },
     buttonContainer: {
         display: 'flex',
         flexWrap: 'wrap',
-        justifyContent: 'flex-end',
-        width: 700
+        justifyContent: 'flex-end'
     },
-    textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 700,
+    textarea: {
+        width: "100%",
+        border: "1px solid #ccc",
+        height: "100px"
     },
     button: {
         margin: theme.spacing.unit,
@@ -65,23 +63,20 @@ class Comment extends Component {
 
         const { classes  } = this.props;
         return(
-            <div>
-                <TextField
-                    id="newComment"
-                    label="Add comment"
-                    multiline
-                    className={classes.textField}
-                    margin="normal"
-                    value = {this.state.comment}
+            <div className={classes.container}>
+                <textarea 
+                    value = {this.state.comment} 
                     onChange = {this.onTextInputChange}
-                />
+                    className={classes.textarea}
+                    />
+    
                 <div className={classes.buttonContainer}>
-                    <Button variant="contained" className={classes.button} onClick={this.hideCommentInput}>
+                    {/* <Button variant="contained" className={classes.button} onClick={this.hideCommentInput}>
                         Cancel
                     </Button>
                     <Button variant="contained" className={classes.button} onClick={this.clearComment}>
                         Clear
-                    </Button>
+                    </Button> */}
                     <Button variant="contained" className={classes.button} onClick={this.postComment}>
                         Post
                     </Button>

@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 export var events = [
     {
         initiator: {
@@ -8,40 +10,7 @@ export var events = [
         },
         action: "GENERIC_UPDATE",
         incidentId: 1,
-        created_date: Date()
-    },
-    {
-        initiator: {
-            isAnonymous: false,
-            avatar: "",
-            userId: 2,
-            displayname: "Lahiru de Alwis"
-        },
-        action: "ATTRIBUTE_CHANGED",
-        affected_attribute: "STATUS",
-        incidentId: 1,
-        data: {
-            status: {
-                status_type: "ACTION_TAKEN"
-            }
-        },
-        created_date: Date()
-    },
-    {
-        initiator: {
-            isAnonymous: false,
-            avatar: "",
-            userId: 3,
-            displayname: "Achala Dissanayake"
-        },
-        action: "COMMENTED",
-        incidentId: 1,
-        data: {
-            comment: {
-                body: "This is a smol comment"
-            }
-        },
-        created_date: Date()
+        createdDate: moment(Date()).subtract(10, 'y')
     },
     {
         initiator: {
@@ -59,6 +28,58 @@ export var events = [
                 url: "http://example.com"
             }
         },
-        created_date: Date()
+        createdDate: moment(Date()).subtract(8, 'y')
+    },
+    {
+        initiator: {
+            isAnonymous: false,
+            avatar: "",
+            userId: 3,
+            displayname: "Achala Dissanayake"
+        },
+        action: "COMMENTED",
+        incidentId: 1,
+        data: {
+            comment: {
+                body: "This is a smol comment"
+            }
+        },
+        createdDate: moment(Date()).subtract(4, 'months')
+    },
+    {
+        initiator: {
+            isAnonymous: false,
+            avatar: "",
+            userId: 2,
+            displayname: "Lahiru de Alwis"
+        },
+        action: "ATTRIBUTE_CHANGED",
+        affected_attribute: "SEVERITY",
+        incidentId: 1,
+        data: {
+            severity: {
+                from_severity_type: "CRITICAL",
+                to_severity_type: "MAJOR"
+            }
+        },
+        createdDate: moment(Date()).subtract(2, 'd')
+    },
+    {
+        initiator: {
+            isAnonymous: false,
+            avatar: "",
+            userId: 2,
+            displayname: "Lahiru de Alwis"
+        },
+        action: "ATTRIBUTE_CHANGED",
+        affected_attribute: "STATUS",
+        incidentId: 1,
+        data: {
+            status: {
+                from_status_type: "NEW",
+                to_status_type: "ACTION_TAKEN"
+            }
+        },
+        createdDate: moment(Date()).subtract(1, 'h')
     },
 ];
