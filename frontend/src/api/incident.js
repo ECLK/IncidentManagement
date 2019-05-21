@@ -28,7 +28,7 @@
 import * as mockapi from '../data/mockapi';
 
 export const createIncident = async (incidentData) => {
-    await mockapi.addIncident(incidentData);
+    await mockapi.createIncident(incidentData);
     return true;
 };
 
@@ -41,11 +41,15 @@ export const getIncidents = async () => {
 };
 
 export const updateIncident = async (incidentId, incidentData) => {
-    return mockapi.updateIncident(incidentId, incidentData);
+    await mockapi.updateIncident(incidentId, incidentData);
+    return true;
 };
 
 export const getReporter = async (reporterId) => {
-    return {reporter: "Dummy Reporter"};
+    return mockapi.getReporter(reporterId);
 };
 
-export const updateReporter = async (reporterId, reporterData) => {};
+export const updateReporter = async (reporterId, reporterData) => {
+    await mockapi.updateReporter(reporterId, reporterData);
+    return true;
+};

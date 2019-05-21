@@ -1,9 +1,11 @@
 import { events } from './events';
 import { incidents } from './incidents';
+import { reporters } from './reporters';
 
 const uuidv4 = require('uuid/v4');
 
 export function getEvents(){
+    
     return {
         data: events
     };
@@ -33,6 +35,7 @@ export function getIncident(incidentID){
     let incident = incidents.find(inc => {
         return inc.id === incidentID;
     })
+
     return {
         status : 200,
         data: incident
@@ -40,14 +43,21 @@ export function getIncident(incidentID){
 }
 
 export function getIncidents(){
+
     return {
         status : 200,
         data: incidents
     };
 };
 
-export function addIncident(incidentData){
+export function createIncident(incidentData){
     const incident_id = uuidv4();
+    const new_reporter_id = reporters[reporters.length -1].id + 1;
+    reporters.push({
+        id: new_reporter_id,
+        name: "Anonymous"
+    });
+
     incidents.push({
         id: incident_id,
         ref_ID: incidentData.ref_ID,
@@ -59,7 +69,8 @@ export function addIncident(incidentData){
         category: incidentData.category,
         sub_category: incidentData.sub_category,
         info_channel: incidentData.info_channel,
-        date: incidentData.date
+        date: incidentData.date,
+        reporter_id: new_reporter_id
     });
 
     events.push({
@@ -71,7 +82,13 @@ export function addIncident(incidentData){
         created_date: Date()
     });
 
-    return { status: 200 }
+    return { 
+        status: 200,
+        data: {
+            incident_id: incident_id,
+            reporter_id: new_reporter_id
+        }
+    }
 };
 
 export function updateIncident(incidentId, incidentData){
@@ -86,6 +103,24 @@ export function updateIncident(incidentId, incidentData){
         incidentId: incidentData.id,
         created_date: Date()
     });
+
+    return { status: 200 }
+};
+
+export function getReporter(reporterID){
+    let reporter = reporters.find(rep => {
+        return rep.id === reporterID;
+    })
+
+    return {
+        status : 200,
+        data: reporter
+    };
+};
+
+export function updateReporter(reporterID, reporterData){
+    const reporterIndex = reporters.findIndex(rep => rep.id === reporterID);
+    reporters[reporterIndex] = reporterData;
 
     return { status: 200 }
 };

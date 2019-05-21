@@ -10,6 +10,7 @@ export var incidents = [
         sub_category: "Attack",
         info_channel: "Social Media",
         date: Date(),
+        reporter_id: 1,
     },
     {   
         id: "ed4fb628-618c-4ff8-94b3-906336354bec",
@@ -21,7 +22,8 @@ export var incidents = [
         category: "Violence",
         sub_category: "Interrupting propaganda",
         info_channel: "Call Center",
-        date: Date()
+        date: Date(),
+        reporter_id: 1,
     },
     {   
         id: "41071ede-bad9-4933-a037-b140b86cf0e4",
@@ -33,7 +35,8 @@ export var incidents = [
         category: "Violence",
         sub_category: "Threat",
         info_channel: "Police",
-        date: Date()
+        date: Date(),
+        reporter_id: 2,
     },
     {   
         id: "08e83c67-4f97-40b7-8df9-9551ec79e397",
@@ -45,7 +48,8 @@ export var incidents = [
         category: "Misuse",
         sub_category: "Misuse of Public Property",
         info_channel: "Police",
-        date: Date()
+        date: Date(),
+        reporter_id: 4,
     },
     {   
         id: "d200f322-b297-4014-bff7-2b12ebb11045",
@@ -57,6 +61,7 @@ export var incidents = [
         category: "Misuse",
         sub_category: "Posters/Cutouts",
         info_channel: "Social Media",
-        date: Date()
+        date: Date(),
+        reporter_id: 3,
     }
 ];
