@@ -2,7 +2,8 @@ import { events } from './events';
 
 export function getEvents(){
     return {
-        data: events
+        status: "SUCCESS",
+        data: [...events]
     };
 }
 
@@ -21,7 +22,42 @@ export function addComment(commentObj){
                 body: commentObj.comment
             }
         },
-        created_date: Date(),
-        approved_date: Date()
+        createdDate: Date()
     });
+    return {
+        status: "SUCCESS",
+        message: "Commented",
+        data: {
+            
+        }
+    }
+}
+
+export function changeStatus(incidentId, status){
+    events.push({
+        initiator: {
+            isAnonymous: false,
+            avatar: "",
+            userId: 1,
+            displayname: "Manujith Pallewatte"
+        },
+        action: "ATTRIBUTE_CHANGED",
+        affected_attribute: "STATUS",
+        incidentId: incidentId,
+        data: {
+            status: {
+                from_status_type: "NEW",
+                to_status_type: status
+            }
+        },
+        createdDate: Date()
+    });
+    console.log(events);
+    return {
+        status: "SUCCESS",
+        message: "Status updated",
+        data: {
+            
+        }
+    }
 }

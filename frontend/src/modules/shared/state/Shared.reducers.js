@@ -36,7 +36,9 @@ const initialState = {
     wards: [],
     activeIncident:{
         isLoading:false,
-        data:null,
+        data: {
+            id: 1
+        },
         error:null
     },
     activeIncidentReporter:null,

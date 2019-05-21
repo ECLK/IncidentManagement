@@ -6,7 +6,10 @@ import EventItem from './EventItem';
 
 const styles = {
     root: {
-        width: 600,
+        width: "100%",
+        boxShadow: "none",
+        backgroundColor: "transparent",
+        paddingTop: "15px"
     },
 };
 

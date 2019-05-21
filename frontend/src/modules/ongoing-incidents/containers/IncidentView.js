@@ -17,7 +17,7 @@ import Button from '@material-ui/core/Button';
 import EventTrail from '../../../components/EventTrail';
 import EventList from '../../../components/EventTrail/EventList';
 import Comment from '../../../components/EventTrail/Comment';
-import { fetchIncidentEventTrail, submitIncidentComment } from '../state/OngoingIncidents.actions';
+import { fetchIncidentEventTrail, submitIncidentComment, setIncidentStatus } from '../state/OngoingIncidents.actions';
 import {EventActions} from '../../../components/EventTrail'
 
 
@@ -42,6 +42,7 @@ function LinkTab(props) {
 const styles = theme => ({
     root: {
         backgroundColor: theme.palette.background.paper,
+        boxShadow: "0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12)"
     },
     paper: {
         ...theme.mixins.gutters(),
@@ -76,7 +77,7 @@ class BasicDetailTab extends Component {
         const { classes } = this.props;
 
         return (
-            <div className={classes.root}>
+            <div>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <Paper elevation={1} className={classes.paper}>
@@ -179,7 +180,7 @@ class LocationTab extends Component {
         const { classes } = this.props;
 
         return (
-            <div className={classes.root}>
+            <div>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <Paper elevation={1} className={classes.paper}>
@@ -274,7 +275,7 @@ class ContactTab extends Component {
         const { classes } = this.props;
 
         return (
-            <div className={classes.root}>
+            <div>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <Paper elevation={1} className={classes.paper}>
@@ -323,7 +324,7 @@ class ReviewTab extends Component {
         const { classes } = this.props;
 
         return (
-            <div className={classes.root}>
+            <div>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <Paper elevation={1} className={classes.paper}>
@@ -470,7 +471,7 @@ class NavTabs extends Component {
     }
 
     render() {
-        const { classes, postComment, activeIncident } = this.props;
+        const { classes, postComment, activeIncident, changeStatus } = this.props;
         const { value } = this.state;
 
         return (
@@ -493,19 +494,19 @@ class NavTabs extends Component {
                         </div>
                         <div>
                             <EventList events={this.props.events} />
-                        </div>
-                        {this.state.isCommentVisible ?
-                            (<Comment
+                            <Comment
                                 hideCommentInput={this.hideCommentInput}
                                 postComment={postComment}
                                 activeIncident={activeIncident}
-                            />)
-                            :
-                            (<Button onClick={this.showCommentInput} >Add Comment</Button>)}
+                            />
+                        </div>
 
                     </Grid>
                     <Grid item xs={4}>
-                        <EventActions/>
+                        <EventActions
+                            activeIncident={activeIncident}
+                            onStatusChange={changeStatus}
+                        />
                     </Grid>
                 </Grid>
 
@@ -533,6 +534,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         postComment: (commentData) => {
             dispatch(submitIncidentComment(commentData));
+        },
+        changeStatus: (incidentId, status) => {
+            dispatch(setIncidentStatus(incidentId, status))
         }
     }
 }
