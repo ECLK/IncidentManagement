@@ -18,7 +18,8 @@ import EventTrail from '../../../components/EventTrail';
 import EventList from '../../../components/EventTrail/EventList';
 import Comment from '../../../components/EventTrail/Comment';
 import { fetchIncidentEventTrail, submitIncidentComment, setIncidentStatus } from '../state/OngoingIncidents.actions';
-import {EventActions} from '../../../components/EventTrail'
+import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
+import { EventActions } from '../../../components/EventTrail'
 
 
 
@@ -74,7 +75,7 @@ class BasicDetailTab extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, incident } = this.props;
 
         return (
             <div>
@@ -459,6 +460,7 @@ class NavTabs extends Component {
     };
 
     componentDidMount() {
+        this.props.getIncident("9ba6c369-ee8c-49ca-9bab-ac50dc678570");
         this.props.getEvents();
     }
 
@@ -471,13 +473,13 @@ class NavTabs extends Component {
     }
 
     render() {
-        const { classes, postComment, activeIncident, changeStatus } = this.props;
+        const { classes, postComment, activeIncident, reporter, changeStatus } = this.props;
         const { value } = this.state;
 
         return (
             <NoSsr>
                 <Grid container spacing={24}>
-                    <Grid item xs={8}>
+                    <Grid item xs={9}>
                         <div className={classes.root}>
                             <AppBar position="static">
                                 <Tabs variant="fullWidth" value={value} onChange={this.handleChange} >
@@ -487,10 +489,10 @@ class NavTabs extends Component {
                                     <LinkTab label="Review Summary" href="page4" />
                                 </Tabs>
                             </AppBar>
-                            {value === 0 && <TabContainer> <BasicDetailTab classes={classes} incident={this.state.incident} election={this.state.election} category={this.state.category} /> </TabContainer>}
-                            {value === 1 && <TabContainer> <LocationTab classes={classes} incident={this.state.incident} /> </TabContainer>}
-                            {value === 2 && <TabContainer> <ContactTab classes={classes} reporter={this.state.reporter} /> </TabContainer>}
-                            {value === 3 && <TabContainer> <ReviewTab classes={classes} incident={this.state.incident} /> </TabContainer>}
+                            {value === 0 && <TabContainer> <BasicDetailTab classes={classes} incident={activeIncident} election={this.state.election} category={this.state.category} /> </TabContainer>}
+                            {value === 1 && <TabContainer> <LocationTab classes={classes} incident={activeIncident} /> </TabContainer>}
+                            {value === 2 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
+                            {value === 3 && <TabContainer> <ReviewTab classes={classes} incident={activeIncident} /> </TabContainer>}
                         </div>
                         <div>
                             <EventList events={this.props.events} />
@@ -502,7 +504,7 @@ class NavTabs extends Component {
                         </div>
 
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={3} p>
                         <EventActions
                             activeIncident={activeIncident}
                             onStatusChange={changeStatus}
@@ -523,12 +525,16 @@ const mapStateToProps = (state, ownProps) => {
     return {
         events: state.ongoingIncidentReducer.events,
         activeIncident: state.sharedReducer.activeIncident.data,
+        reporter: state.sharedReducer.activeIncidentReporter,
         ...ownProps
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        getIncident: (incidentId) => {
+            dispatch(fetchActiveIncidentData(incidentId));
+        },
         getEvents: () => {
             dispatch(fetchIncidentEventTrail());
         },

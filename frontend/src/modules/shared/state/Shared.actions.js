@@ -240,7 +240,7 @@ export function fetchActiveIncidentData(incidentId) {
         dispatch(requestActiveIncidentData(incidentId));
         try{
             const responseIncident = await getIncident(incidentId);
-            const responseReporter = await getReporter(responseIncident.data.reporter_id);
+            const responseReporter = await getReporter(responseIncident.data.reporterId);
             dispatch(getActiveIncidentDataSuccess({
                 "incident": responseIncident.data,
                 "reporter": responseReporter.data
