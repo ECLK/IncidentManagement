@@ -8,6 +8,7 @@ FROM python:3.6-stretch
 # ENV requirements="build-essential python3-dev libevent-dev python-setuptools mysql-server mysql-client libmysqlclient-dev gcc"  
 
 # RUN apt-get install $requirements -y && rm -rf /var/lib/apt/lists/*
+# RUN apt-get install build-essential python3-dev libffi-dev libssl-dev libpq-dev -y
 
 ENV DB_USER=root
 ENV DB_PASSWD=toor

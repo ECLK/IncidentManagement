@@ -4,6 +4,10 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import DomainContainer from '../../components/DomainContainer';
 import IncidentView from './containers/IncidentView';
+import { Route } from "react-router-dom";
+import { withRouter } from "react-router";
+
+import { compose } from 'redux'
 
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
@@ -52,21 +56,13 @@ class Ongoing extends Component {
 
     render() {
 
-        const { classes, theme } = this.props;
+        const { classes, theme, match } = this.props;
         const drawer = (
             <div>
                 <div className={classes.toolbar} />
                 <Divider />
                 <List>
-                    <ListItem button component={Link} to='/'>
-                        <ListItemIcon><HomeIcon /></ListItemIcon>
-                        <ListItemText primary='Home' />
-                    </ListItem>
-                    <ListItem button component={Link} to='/report'>
-                        <ListItemIcon><AssignmentLateIcon /></ListItemIcon>
-                        <ListItemText primary='Report Incident' />
-                    </ListItem>
-                    <ListItem button component={Link} to='/ongoing'>
+                    <ListItem button component={Link} to={`${match.url}`}>
                         <ListItemIcon><AssignmentIcon /></ListItemIcon>
                         <ListItemText primary='View Incident' />
                     </ListItem>
@@ -85,11 +81,16 @@ class Ongoing extends Component {
             </Typography>
         }
             content={() => (
-                <IncidentView />
+                <Route exact 
+                      path={`${match.url}`} 
+                      component={()=> 
+                        <IncidentView />
+                        }
+                    />
             )}
             drawer={drawer}
         />)
     }
 }
 
-export default withStyles(styles, { withTheme: true })(Ongoing);
+export default withRouter(withStyles(styles, { withTheme: true })(Ongoing));
