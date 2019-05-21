@@ -21,12 +21,18 @@ import {
 
     ACTIVE_INCIDENT_GET_DATA_REQUEST,
     ACTIVE_INCIDENT_GET_DATA_SUCCESS,
-    ACTIVE_INCIDENT_GET_DATA_ERROR
+    ACTIVE_INCIDENT_GET_DATA_ERROR,
+
+    SIGN_IN_REQUEST, 
+    SIGN_IN_REQUEST_SUCCESS,
+    SIGN_IN_REQUEST_ERROR,
 } from './Shared.types'
 
 import { getIncident, getReporter  } from '../../../api/incident';
 import { getDistricts, getPoliceStations, getPollingStations, getWards } from '../../../api/shared';
-import {getCategories} from '../../../api/category'
+import { getCategories } from '../../../api/category';
+import { signIn } from '../../../data/mockapi';
+import { read, write } from '../../../utils/localStorage';
 
 // Get Catogories
 
@@ -245,6 +251,48 @@ export function fetchActiveIncidentData(incidentId) {
                 "incident": responseIncident.data,
                 "reporter": responseReporter.data
             }));
+        }catch(error){
+            dispatch(getActiveIncidentDataError(error));
+        }
+    }
+}
+
+
+// SIGN IN
+
+export function requestSignIn() {
+    return {
+        type: SIGN_IN_REQUEST,
+    }
+}
+
+export function requestSignInSuccess(response) {
+    return {
+        type: SIGN_IN_REQUEST_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function requestSignInError(errorResponse) {
+    return {
+        type: SIGN_IN_REQUEST_ERROR,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchSignIn(userName, password) {
+    return async function (dispatch) {
+        dispatch(requestSignIn());
+        try{
+            let signInData = null;
+            signInData = read('ECIncidentManagementUser');
+            if(!signInData){
+                signInData = await signIn(userName, password);
+                write('ECIncidentMangementUser', signInData);
+            }    
+            dispatch(requestSignInSuccess(signInData));
         }catch(error){
             dispatch(getActiveIncidentDataError(error));
         }

@@ -1,15 +1,16 @@
 import React, { Component } from "react";
-import { Route, BrowserRouter as Router, Redirect } from "react-router-dom";
+import { Route, BrowserRouter as Router, Redirect, Switch } from "react-router-dom";
 import { connect } from "react-redux";
-import history from './history'
+import history from './history';
 
-import HomePage from "../modules/landing/homePage";
 import { IntlProvider } from "react-intl";
 import i18n from "../translation/i18n.js";
 import LandingPage from "../modules/landing/LandingPage";
 import Historic from "../modules/reporting";
 import Report from "../modules/incident-filing";
 import Ongoing from "../modules/ongoing-incidents";
+import {SignInPage} from "../modules/shared";
+import PrivateRoute from "./PrivateRoute";
 
 class MainRouter extends Component {
 
@@ -22,13 +23,14 @@ class MainRouter extends Component {
         messages={i18n.translationMessages[selectedLanguage]}
       > 
         <Router history={history}>
-          <React.Fragment>
-            <Route exact path="/" component={LandingPage} />
-            <Route path="/report" component={Report} />        
-            <Route path="/ongoing" component={Ongoing}/>
-            <Route path="/historic" component={Historic}/>
-            <Route exact path="/home" component={HomePage} />
-          </React.Fragment>
+          <Switch>
+            <Route exact path="/" component={SignInPage} />
+            <Route exact path="/sign-in" component={SignInPage} />
+            <PrivateRoute path="/report" component={Report} />        
+            <PrivateRoute path="/ongoing" component={Ongoing}/>
+            <PrivateRoute path="/historic" component={Historic}/>
+            <PrivateRoute path="/home" component={LandingPage}/>
+          </Switch>
         </Router>
       </IntlProvider>
     );
@@ -37,11 +39,12 @@ class MainRouter extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    selectedLanguage: state.rootReducer.selectedLanguage
+    selectedLanguage: state.rootReducer.selectedLanguage,
+    ...ownProps
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {};
 };
 
