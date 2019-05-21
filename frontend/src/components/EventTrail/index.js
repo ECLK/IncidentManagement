@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import EventList from './EventList';
 import groupByDay from './groupByDay';
+import EventActions from './EventActions'
 
 const styles = {
     root: {
@@ -59,3 +60,5 @@ const TimelineLoadedView = ({
 const TimelineLoaded = withStyles(styles)(TimelineLoadedView);
 
 export default TimelineLoaded;
+
+export {EventActions}
