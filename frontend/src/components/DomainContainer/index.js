@@ -75,9 +75,7 @@ class DomainContainer extends Component {
                 <AppBar>
                     <div className='header-bar'>
                         <div className='header-icon-container'>
-                            <Link to='/'>
-                                <Logo maxWidth={'220px'}/>
-                            </Link>
+                            
                         </div>
                         <div className='header-title-container'>
                             {this.props.header? this.props.header() : ''}
@@ -89,6 +87,7 @@ class DomainContainer extends Component {
                 </AppBar>
                 <nav className={classes.drawer}>
                     {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+                    
                     <Hidden smUp implementation="css">
                         <Drawer
                         container={this.props.container}
@@ -111,6 +110,11 @@ class DomainContainer extends Component {
                         variant="permanent"
                         open
                         >
+                        <div className='logo-contain'>
+                            <Link to='/'>
+                                <Logo maxWidth={'100%'}/>
+                            </Link>
+                        </div>
                         {drawer}
                         </Drawer>
                     </Hidden>
