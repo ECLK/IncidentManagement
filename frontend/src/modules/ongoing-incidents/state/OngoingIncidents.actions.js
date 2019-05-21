@@ -16,6 +16,7 @@ import {
 import { getEvents } from '../../../api/events'
 import { postComment } from '../../../api/comments'
 import { changeStatus } from '../../../api/incident';
+import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 
 
 export function requestIncidentEventTrail() {
@@ -117,6 +118,7 @@ export function setIncidentStatus(incidentId, status) {
         try{
             const response = await changeStatus(incidentId, status);
             dispatch(changeIncidentStatusSuccess(response.data));
+            dispatch(fetchActiveIncidentData(incidentId));
             dispatch(fetchIncidentEventTrail());
             /**
              * Todo: refresh the incident 

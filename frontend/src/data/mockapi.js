@@ -39,6 +39,21 @@ export function addComment(commentObj){
 }
 
 export function changeStatus(incidentId, status){
+    const incidentIndex = incidents.findIndex(inc => inc.id === incidentId);
+    const oldStatus = incidents[incidentIndex].status;
+
+    if(oldStatus === status){
+        return {
+            status: "SUCCESS",
+            message: "Status updated",
+            data: {
+                
+            }
+        };
+    }
+    
+    incidents[incidentIndex].status = status;
+
     events.push({
         initiator: {
             isAnonymous: false,
@@ -51,13 +66,13 @@ export function changeStatus(incidentId, status){
         incidentId: incidentId,
         data: {
             status: {
-                from_status_type: "NEW",
+                from_status_type: oldStatus,
                 to_status_type: status
             }
         },
         createdDate: Date()
     });
-    console.log(events);
+
     return {
         status: "SUCCESS",
         message: "Status updated",

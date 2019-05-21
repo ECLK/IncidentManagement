@@ -39,7 +39,9 @@ class StatusChange extends React.Component{
         const { activeIncident, onStatusChange} = this.props;
 
         onStatusChange(activeIncident.id, statusValue);
-        console.log(statusValue)
+        this.setState({
+            anchorEl: null,
+        });
     }
 
     render(){
@@ -66,7 +68,7 @@ class StatusChange extends React.Component{
         return (
             <div>
                 <Chip 
-                    label="NEW"
+                    label={statusMap[activeIncident.status]}
                     color="primary"
                     onClick={this.props.onClick}
                     onDelete={this.handleSettingClick}
