@@ -1,6 +1,7 @@
 import { events } from './events';
 import { incidents } from './incidents';
 import { reporters } from './reporters';
+import { users } from './users';
 
 const uuidv4 = require('uuid/v4');
 
@@ -160,3 +161,17 @@ export function updateReporter(reporterID, reporterData){
 
     return { status: 200 }
 };
+
+export async function signIn(userName, password){
+    if(users[userName]){
+        return {
+            user:users[userName],
+            authenticated:true
+        };
+    }else{
+        return {
+            user:null,
+            authenticated:false
+        }
+    }
+}
