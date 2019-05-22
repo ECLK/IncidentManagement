@@ -270,32 +270,45 @@ export function getIncidents(){
 };
 
 export function createIncident(incidentData){
+    const user = getCurrentUser();
     const incident_id = uuidv4();
+
     const new_reporter_id = reporters[reporters.length -1].id + 1;
-    reporters.push({
+
+    var reporter = {
         id: new_reporter_id,
         name: "Anonymous"
-    });
+    };
 
-    incidents.push({
+    reporters.push(reporter);
+
+    var incident = {
         id: incident_id,
-        ref_ID: incidentData.ref_ID,
-        user_ID: 0,
+        refId: "00000",
+        userId: user.uid,
         title: incidentData.title,
         description: incidentData.description,
         occurrence: incidentData.occurrence,
         election: incidentData.election,
         category: incidentData.category,
-        sub_category: incidentData.sub_category,
-        info_channel: incidentData.info_channel,
+        subCategory: incidentData.sub_category,
+        infoChannel: incidentData.info_channel,
         date: incidentData.date,
-        reporter_id: new_reporter_id
-    });
+        reporterId: new_reporter_id,
+        status: "NEW",
+        severity: "DEFAULT"
+    };
+    incidents.push(incident);
+    
+    console.log(incidents);
 
     events.push({
         id: uuidv4(),
         initiator: {
-            isAnonymous: true
+            isAnonymous: false,
+            avatar: "",
+            userId: user.uid,
+            displayname: user.displayName
         },
         action: "CREATED",
         incidentId: incident_id,
@@ -305,20 +318,24 @@ export function createIncident(incidentData){
     return { 
         status: 200,
         data: {
-            incident_id: incident_id,
-            reporter_id: new_reporter_id
+            incident: incident_id,
+            reporter: new_reporter_id
         }
     }
 };
 
 export function updateIncident(incidentId, incidentData){
+    const user = getCurrentUser();
     const incidentIndex = incidents.findIndex(inc => inc.id === incidentId);
     incidents[incidentIndex] = incidentData;
 
     events.push({
         id: uuidv4(),
         initiator: {
-            isAnonymous: true
+            isAnonymous: false,
+            avatar: "",
+            userId: user.uid,
+            displayname: user.displayName
         },
         action: "GENERIC_UPDATE",
         incidentId: incidentData.id,

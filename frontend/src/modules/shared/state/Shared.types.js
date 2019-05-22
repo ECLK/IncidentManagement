@@ -32,3 +32,5 @@ export const SIGN_OUT = 'SIGN_OUT';
 export const SIGN_OUT_ERROR = 'SIGN_OUT_ERROR';
 
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';
+
+export const RESET_ACTIVE_INCIDENT = "RESET_ACTIVE_INCIDENT";

@@ -33,6 +33,8 @@ import {
 
     CHANGE_LANGUAGE,
 
+    RESET_ACTIVE_INCIDENT
+
 } from './Shared.types'
 
 import { getIncident, getReporter  } from '../../../api/incident';
@@ -349,5 +351,11 @@ export function changeLanguage(selectedLanguage) {
     return {
         type: CHANGE_LANGUAGE,
         selectedLanguage
+    }
+}
+
+export function resetActiveIncident(){
+    return {
+        type: RESET_ACTIVE_INCIDENT
     }
 }

@@ -474,7 +474,7 @@ class NavTabs extends Component {
     componentDidMount() {
         if(this.props.paramIncidentId){
             this.props.getIncident(this.props.paramIncidentId);
-            this.props.getEvents(this.props.paramIncidentId);
+            this.props.getEvents();
         }
     }
 

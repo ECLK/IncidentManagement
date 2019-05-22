@@ -42,13 +42,18 @@ export default function OngoingIncidentsReducer(state, action) {
         switch (action.type) {
             case REQUEST_INCIDENT_EVENT_TRAIL:
                 draft.eventTrail.isLoading = true;
+                return draft;
             case REQUEST_INCIDENT_EVENT_TRAIL_SUCCESS:
                 draft.events = action.data;
+                return draft;
             case REQUEST_INCIDENT_EVENT_TRAIL_ERROR:
                 draft.eventTrail.error = action.error;
+                return draft;
             
             case REQUEST_ALL_INCIDENTS_SUCCESS:
+                console.log("sdsdss");
                 draft.incidents = action.data;
+                return draft;
 
         }
     })

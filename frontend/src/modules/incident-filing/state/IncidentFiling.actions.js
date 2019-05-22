@@ -70,6 +70,7 @@ export function submitIncidentBasicData(incidentData) {
             await dispatch(recieveIncidentSubmitSuccess(response.data));
             await dispatch(stepForwardIncidentStepper());
         }catch(error){
+            console.log(error);
             await dispatch(recieveIncidentSubmitError(error));
         }
     }

@@ -38,7 +38,8 @@ import {
     fetchPoliceStations, 
     fetchPollingStations, 
     fetchWards, 
-    fetchActiveIncidentData } from '../../shared/state/Shared.actions';
+    fetchActiveIncidentData,
+    resetActiveIncident } from '../../shared/state/Shared.actions';
 
 import Snackbar from '@material-ui/core/Snackbar';
 
@@ -191,6 +192,8 @@ class IndicdentForm extends Component {
 
         if (this.props.paramIncidentId) {
             this.props.getIncident(this.props.paramIncidentId);
+        }else{
+            this.props.resetActiveIncident();
         }
     }
 
@@ -534,6 +537,10 @@ const mapDispatchToProps = (dispatch) => {
 
         getIncident: (incidentId) => {
             dispatch(fetchActiveIncidentData(incidentId))
+        },
+
+        resetActiveIncident: () => {
+            dispatch(resetActiveIncident())
         }
     }
 }

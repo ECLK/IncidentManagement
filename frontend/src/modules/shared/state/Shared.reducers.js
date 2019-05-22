@@ -37,6 +37,8 @@ import {
 
     CHANGE_LANGUAGE,
 
+    RESET_ACTIVE_INCIDENT
+
 } from './Shared.types'
 
 const initialState = {
@@ -160,6 +162,10 @@ export default function sharedReducer(state, action) {
                 return draft;
             case CHANGE_LANGUAGE:
                 draft.selectedLanguage = action.selectedLanguage;
+
+            case RESET_ACTIVE_INCIDENT:
+                draft.activeIncident.data = {};
+                return draft;
         }
     })
 }
