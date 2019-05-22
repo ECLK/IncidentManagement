@@ -64,7 +64,7 @@ class SignInPage extends Component {
 
     render() {
         const { classes, isSignedIn, location, rememberMe, toggleRememberMe } = this.props;
-        let { from } = location.state || { from: { pathname: "/home" } };
+        let { from } = location.state || { from: { pathname: "/app/home" } };
     
 
         if(isSignedIn){

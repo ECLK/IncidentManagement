@@ -71,25 +71,29 @@ class Ongoing extends Component {
             </div>
         );
 
-        return (<DomainContainer header={() =>
-            <Typography variant="h5" color='inherit' noWrap className='line-height-fix'>
-                <FormattedMessage
-                    id='eclk.incident.management.ongoing.incidents'
-                    description='Ongoing Incidents'
-                    defaultMessage='Ongoing Incidents'
-                />
-            </Typography>
-        }
-            content={() => (
-                <Route exact 
-                      path={`${match.url}`} 
-                      component={()=> 
-                        <IncidentView />
-                        }
-                    />
-            )}
-            drawer={drawer}
-        />)
+        // return (<DomainContainer header={() =>
+        //     <Typography variant="h5" color='inherit' noWrap className='line-height-fix'>
+        //         <FormattedMessage
+        //             id='eclk.incident.management.ongoing.incidents'
+        //             description='Ongoing Incidents'
+        //             defaultMessage='Ongoing Incidents'
+        //         />
+        //     </Typography>
+        // }
+        //     content={() => (
+                
+        //     )}
+        //     drawer={drawer}
+        // />)
+
+        return (
+            <Route exact 
+                path={`${match.url}`} 
+                component={()=> 
+                <IncidentView />
+                }
+            />
+        )
     }
 }
 

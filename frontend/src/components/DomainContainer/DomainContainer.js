@@ -26,6 +26,10 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
+import { Link } from 'react-router-dom';
+import AssignmentLateIcon from '@material-ui/icons/AssignmentLate';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+
 import {initiateSignOut} from '../../modules/shared/state/Shared.actions'
 
 const drawerWidth = 240;
@@ -92,7 +96,7 @@ const styles = theme => ({
 
 class DomainContainer extends React.Component {
   state = {
-    open: false,
+    open: true,
     anchorEl: null,
   };
 
@@ -123,7 +127,6 @@ class DomainContainer extends React.Component {
     const { classes, theme, drawer } = this.props;
     const { open, anchorEl } = this.state;
     const menuOpen = Boolean(anchorEl);
-
 
     return (
       <div className={classes.root}>
@@ -195,24 +198,26 @@ class DomainContainer extends React.Component {
             </IconButton>
           </div>
           <Divider />
-          {/* <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />drawer
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
+
           <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
+              <ListItem button component={Link} to={"/app/home"}>
+                  <ListItemIcon><AssignmentLateIcon /></ListItemIcon>
+                  <ListItemText primary='Home' />
               </ListItem>
-            ))}
-          </List> */}
-          {drawer}
+              <ListItem button component={Link} to={"/app/report"}>
+                  <ListItemIcon><AssignmentLateIcon /></ListItemIcon>
+                  <ListItemText primary='Report' />
+              </ListItem>
+              <ListItem button component={Link} to={"/app/review"}>
+                  <ListItemIcon><AssignmentLateIcon /></ListItemIcon>
+                  <ListItemText primary='Review Incidents' />
+              </ListItem>
+              <ListItem button component={Link} to={`/app/ongoing`}>
+                  <ListItemIcon><AssignmentIcon /></ListItemIcon>
+                  <ListItemText primary='[debug] Ongoing' />
+              </ListItem>
+          </List>
+
         </Drawer>
         <main
           className={classNames(classes.content, {
@@ -220,7 +225,7 @@ class DomainContainer extends React.Component {
           })}
         >
           <div className={classes.drawerHeader} />
-          {this.props.content ? this.props.content() : ''}
+          {this.props.content}
         </main>
       </div>
     );

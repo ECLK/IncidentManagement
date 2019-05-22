@@ -1,22 +1,22 @@
 import React from 'react';
 import { Route, Redirect } from "react-router-dom";
 import { connect } from 'react-redux'
+import { withRouter } from "react-router";
 
 
-function PrivateRouteComponent({ component: Component, isSignedIn, ...rest }) {
-
+function PrivateRouteComponent({ component: Component, isSignedIn, children, ...rest }) {
     return (
         <Route
             {...rest}
             render={(props) => {
                 return (
                     isSignedIn ? (
-                        <Component {...props} />
+                        <Component children={children} {...props} />
                     ) : (
                         <div>
                             <Redirect
                                 to={{
-                                    pathname: "/",
+                                    pathname: "/sign-in",
                                     state: { from: props.location }
                                 }}
                             />
@@ -36,4 +36,4 @@ const mapStateToProps = (state, ownProps) => {
     }
 }
 
-export default connect(mapStateToProps) (PrivateRouteComponent);
+export default withRouter(connect(mapStateToProps) (PrivateRouteComponent));
