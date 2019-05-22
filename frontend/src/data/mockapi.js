@@ -15,8 +15,8 @@ export function getEvents(){
     return {
         status: "SUCCESS",
         data: [...events]
-    };
-};
+    }
+}
 
 export function addComment(incidentId, commentObj){
     const user = getCurrentUser();

@@ -26,6 +26,8 @@ import {
     SIGN_IN_REQUEST, 
     SIGN_IN_REQUEST_SUCCESS,
     SIGN_IN_REQUEST_ERROR,
+
+    TOGGLE_REMEBER_USER
 } from './Shared.types'
 
 import { getIncident, getReporter  } from '../../../api/incident';
@@ -284,18 +286,30 @@ export function requestSignInError(errorResponse) {
 }
 
 export function fetchSignIn(userName, password) {
-    return async function (dispatch) {
+    return async function (dispatch, getState) {
         dispatch(requestSignIn());
         try{
             let signInData = null;
             signInData = read('ECIncidentManagementUser');
             if(!signInData){
                 signInData = await signIn(userName, password);
-                write('ECIncidentMangementUser', signInData);
+                if(getState().sharedReducer.signedInUser.rememberMe){
+                    write('ECIncidentMangementUser', signInData);
+                }
             }    
             dispatch(requestSignInSuccess(signInData));
         }catch(error){
             dispatch(getActiveIncidentDataError(error));
         }
+    }
+}
+
+//Remeber user
+
+export function toggleRememberUser(){
+    return {
+        type: TOGGLE_REMEBER_USER,
+        data:null,
+        error:null
     }
 }

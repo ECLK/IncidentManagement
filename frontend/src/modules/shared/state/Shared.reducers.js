@@ -1,5 +1,6 @@
 
-import produce from "immer"
+import produce from "immer";
+import * as localStorage from "../../../utils/localStorage"
 
 import {
     REQUEST_INCIDENT_CATAGORIES,
@@ -29,6 +30,8 @@ import {
     SIGN_IN_REQUEST,
     SIGN_IN_REQUEST_SUCCESS,
     SIGN_IN_REQUEST_ERROR,
+
+    TOGGLE_REMEBER_USER
 } from './Shared.types'
 
 const initialState = {
@@ -55,12 +58,18 @@ const initialState = {
         isLoading:false,
         isSignedIn:false,
         data:null,
-        error:null
+        error:null,
+        rememberMe:true,
     }
 }
 
 export default function sharedReducer(state, action) {
     if (typeof state === 'undefined') {
+        let userData = localStorage.read("ECIncidentMangementUser");
+        if(userData && userData.authenticated){
+            initialState.signedInUser.data = userData.user;
+            initialState.signedInUser.isSignedIn = true;
+        }
         return initialState
     }
     return produce(state, draft => {
@@ -129,6 +138,9 @@ export default function sharedReducer(state, action) {
                 return draft;
             case SIGN_IN_REQUEST_ERROR:
                 draft.signedInUser.error = action.error;
+            case TOGGLE_REMEBER_USER:
+                draft.signedInUser.rememberMe = !state.signedInUser.rememberMe
+                return draft;
         }
     })
 }

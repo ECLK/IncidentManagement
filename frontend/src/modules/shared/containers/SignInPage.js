@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import {  Redirect, withRouter } from "react-router-dom";
 
-import { fetchSignIn } from '../state/Shared.actions'
+import { fetchSignIn, toggleRememberUser } from '../state/Shared.actions'
 
 const styles = theme => ({
     main: {
@@ -63,7 +63,7 @@ class SignInPage extends Component {
     } 
 
     render() {
-        const { classes, isSignedIn, location } = this.props;
+        const { classes, isSignedIn, location, rememberMe, toggleRememberMe } = this.props;
         let { from } = location.state || { from: { pathname: "/home" } };
     
 
@@ -93,7 +93,7 @@ class SignInPage extends Component {
                                 onChange={(e)=>{this.setState({password:e.target.value})}} />
                         </FormControl>
                         <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
+                            control={<Checkbox checked={rememberMe} value="remember" color="primary" onChange={toggleRememberMe} />}
                             label="Remember me"
                         />
                         <Button
@@ -121,6 +121,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         signIn: (userName, password) => {
             dispatch(fetchSignIn(userName, password))
+        },
+        toggleRememberMe: () => {
+            dispatch(toggleRememberUser())
         }
     }
 }
@@ -128,6 +131,7 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state, ownProps) => {
     return {
         isSignedIn: state.sharedReducer.signedInUser.isSignedIn,
+        rememberMe: state.sharedReducer.signedInUser.rememberMe,
         ...ownProps
     }
 }
