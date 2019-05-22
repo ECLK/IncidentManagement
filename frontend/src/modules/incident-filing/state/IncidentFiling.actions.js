@@ -44,7 +44,7 @@ export function requestIncidentSubmit() {
 }
 
 export function recieveIncidentSubmitSuccess(submitResponse) {
-    history.replace({ ...history.location, pathname: `/report/?incidentId=${submitResponse.incident.id}`});
+    history.replace({ ...history.location, pathname: `/app/report/${submitResponse.incident.id}`});
 
     return {
         type: INCIDENT_BASIC_DATA_SUBMIT_SUCCESS,

@@ -97,7 +97,7 @@ function LandingPage(props) {
                 </Typography>
             </div>
             <div className='navigation-container'>
-                <CardGrid cardContents={getCardContents()} />
+                {/* <CardGrid cardContents={getCardContents()} /> */}
             </div>
         </div>
 

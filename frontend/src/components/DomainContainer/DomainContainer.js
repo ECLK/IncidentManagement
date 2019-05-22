@@ -16,7 +16,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
+import HomeIcon from '@material-ui/icons/Home';
 import MailIcon from '@material-ui/icons/Mail';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -244,21 +244,21 @@ class DomainContainer extends React.Component {
 
           <List>
               <ListItem button component={Link} to={"/app/home"}>
-                  <ListItemIcon><AssignmentLateIcon /></ListItemIcon>
+                  <ListItemIcon><HomeIcon /></ListItemIcon>
                   <ListItemText primary='Home' />
               </ListItem>
               <ListItem button component={Link} to={"/app/report"}>
-                  <ListItemIcon><AssignmentLateIcon /></ListItemIcon>
-                  <ListItemText primary='Report' />
+                  <ListItemIcon><AssignmentIcon /></ListItemIcon>
+                  <ListItemText primary='Create Incident' />
               </ListItem>
               <ListItem button component={Link} to={"/app/review"}>
                   <ListItemIcon><AssignmentLateIcon /></ListItemIcon>
                   <ListItemText primary='Review Incidents' />
               </ListItem>
-              <ListItem button component={Link} to={`/app/ongoing`}>
+              {/* <ListItem button component={Link} to={`/app/ongoing`}>
                   <ListItemIcon><AssignmentIcon /></ListItemIcon>
                   <ListItemText primary='[debug] Ongoing' />
-              </ListItem>
+              </ListItem> */}
           </List>
 
         </Drawer>

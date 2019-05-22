@@ -51,7 +51,7 @@ const initialState = {
     activeIncident:{
         isLoading:false,
         data: {
-            id: 1
+            
         },
         error:null
     },

@@ -270,6 +270,7 @@ export function getIncidents(){
 };
 
 export function createIncident(incidentData){
+    console.log(incidentData);
     const user = getCurrentUser();
     const incident_id = uuidv4();
 
@@ -300,8 +301,6 @@ export function createIncident(incidentData){
     };
     incidents.push(incident);
     
-    console.log(incidents);
-
     events.push({
         id: uuidv4(),
         initiator: {
@@ -318,8 +317,8 @@ export function createIncident(incidentData){
     return { 
         status: 200,
         data: {
-            incident: incident_id,
-            reporter: new_reporter_id
+            incident: incident,
+            reporter: reporter
         }
     }
 };

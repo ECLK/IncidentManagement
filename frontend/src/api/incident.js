@@ -29,8 +29,7 @@ import handler from './apiHandler'
 import * as mockapi from '../data/mockapi';
 
 export const createIncident = async (incidentData) => {
-    await mockapi.createIncident(incidentData);
-    return true;
+    return mockapi.createIncident(incidentData);
 };
 
 export const getIncident = async (incidentId) => {
