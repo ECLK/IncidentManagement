@@ -48,15 +48,8 @@ class Comment extends Component {
             incidentId : this.props.activeIncident ? this.props.activeIncident.id : null,
             comment : this.state.comment
         }
-        this.props.postComment(commentObj);
-        this.hideCommentInput()
-    }
-
-    hideCommentInput = () => {
-        this.setState({
-            comment:""
-        })
-        this.props.hideCommentInput()
+        this.props.postComment(this.props.activeIncident.id, commentObj);
+        this.clearComment();
     }
     
     render(){

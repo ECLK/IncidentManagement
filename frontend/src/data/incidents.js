@@ -12,7 +12,8 @@ export var incidents = [
         createdDate: Date(),
         reporterId: 1,
         status: "NEW",
-        severity: "DEFAULT"
+        severity: "DEFAULT",
+        assignees: [1, 2]
     },
     {   
         id: "ed4fb628-618c-4ff8-94b3-906336354bec",

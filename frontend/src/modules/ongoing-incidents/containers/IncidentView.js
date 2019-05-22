@@ -17,7 +17,7 @@ import Button from '@material-ui/core/Button';
 import EventTrail from '../../../components/EventTrail';
 import EventList from '../../../components/EventTrail/EventList';
 import Comment from '../../../components/EventTrail/Comment';
-import { fetchIncidentEventTrail, submitIncidentComment, setIncidentStatus } from '../state/OngoingIncidents.actions';
+import { fetchIncidentEventTrail, submitIncidentComment, setIncidentStatus, setIncidentSeverity } from '../state/OngoingIncidents.actions';
 import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 import { EventActions } from '../../../components/EventTrail'
 
@@ -473,7 +473,7 @@ class NavTabs extends Component {
     }
 
     render() {
-        const { classes, postComment, activeIncident, reporter, changeStatus } = this.props;
+        const { classes, postComment, activeIncident, reporter, changeStatus, changeSeverity } = this.props;
         const { value } = this.state;
 
         return (
@@ -507,6 +507,7 @@ class NavTabs extends Component {
                         <EventActions
                             activeIncident={activeIncident}
                             onStatusChange={changeStatus}
+                            onSeverityChange={changeSeverity}
                         />
                     </Grid>
                 </Grid>
@@ -537,11 +538,14 @@ const mapDispatchToProps = (dispatch) => {
         getEvents: () => {
             dispatch(fetchIncidentEventTrail());
         },
-        postComment: (commentData) => {
-            dispatch(submitIncidentComment(commentData));
+        postComment: (incidentId, commentData) => {
+            dispatch(submitIncidentComment(incidentId, commentData));
         },
         changeStatus: (incidentId, status) => {
             dispatch(setIncidentStatus(incidentId, status))
+        },
+        changeSeverity: (incidentId, severity) => {
+            dispatch(setIncidentSeverity(incidentId, severity))
         }
     }
 }

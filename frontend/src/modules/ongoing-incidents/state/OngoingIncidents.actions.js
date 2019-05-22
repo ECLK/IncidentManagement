@@ -11,11 +11,15 @@ import {
     CHANGE_INCIDENT_STATUS,
     CHANGE_INCIDENT_STATUS_SUCCESS,
     CHANGE_INCIDENT_STATUS_ERROR,
+
+    CHANGE_INCIDENT_SEVERITY,
+    CHANGE_INCIDENT_SEVERITY_SUCCESS,
+    CHANGE_INCIDENT_SEVERITY_ERROR
 } from './OngoingIncidents.types'
 
 import { getEvents } from '../../../api/events'
 import { postComment } from '../../../api/comments'
-import { changeStatus } from '../../../api/incident';
+import { changeStatus, changeSeverity } from '../../../api/incident';
 import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 
 
@@ -76,11 +80,11 @@ export function postIncidentCommentError(errorResponse) {
     }
 }
 
-export function submitIncidentComment(commentData) {
+export function submitIncidentComment(incidentId, commentData) {
     return async function(dispatch) {
         dispatch(postIncidentComment());
         try{
-            const response = await postComment(commentData);
+            const response = await postComment(incidentId, commentData);
             dispatch(postIncidentCommentSuccess(response.data));
             dispatch(fetchIncidentEventTrail());
         }catch(error){
@@ -125,6 +129,46 @@ export function setIncidentStatus(incidentId, status) {
              */
         }catch(error){
             dispatch(changeIncidentStatusError(error));
+        }
+    }
+}
+
+
+export function changeIncidentSeverity() {
+    return {
+        type: CHANGE_INCIDENT_SEVERITY,
+    }
+}
+
+export function changeIncidentSeveritySuccess(response) {
+    return {
+        type: CHANGE_INCIDENT_SEVERITY_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function changeIncidentSeverityError(errorResponse) {
+    return {
+        type: CHANGE_INCIDENT_SEVERITY_ERROR,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function setIncidentSeverity(incidentId, severity) {
+    return async function(dispatch) {
+        dispatch(changeIncidentSeverity());
+        try{
+            const response = await changeSeverity(incidentId, severity);
+            dispatch(changeIncidentSeveritySuccess(response.data));
+            dispatch(fetchActiveIncidentData(incidentId));
+            dispatch(fetchIncidentEventTrail());
+            /**
+             * Todo: refresh the incident 
+             */
+        }catch(error){
+            dispatch(changeIncidentSeverityError(error));
         }
     }
 }

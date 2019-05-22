@@ -13,6 +13,7 @@ import Select from '@material-ui/core/Select';
 import Menu from "@material-ui/core/Menu";
 import MenuItem from '@material-ui/core/MenuItem';
 import StatusChange from './StatusChange';
+import Divider from '@material-ui/core/Divider';
 
 const styles = {
     card: {
@@ -37,7 +38,7 @@ class EventActions extends React.Component{
     };
 
     render(){
-        const { classes, activeIncident, onStatusChange } = this.props;
+        const { classes, activeIncident, onStatusChange, onSeverityChange } = this.props;
 
         return (
             <Card className={classes.card}>
@@ -47,8 +48,22 @@ class EventActions extends React.Component{
                     </Typography>
                     <Typography variant="body1  ">
                         <StatusChange 
-                            activeIncident={activeIncident} 
-                            onStatusChange={onStatusChange}
+                            activeIncident={activeIncident}
+                            currentValue={activeIncident.status} 
+                            onValueChange={onStatusChange}
+                            selectType="status"
+                        />
+                    </Typography>
+
+                    <Typography variant="h6" style={{marginTop:"20px"}}>
+                        Severity
+                    </Typography>
+                    <Typography variant="body1  ">
+                        <StatusChange 
+                            activeIncident={activeIncident}
+                            currentValue={activeIncident.severity} 
+                            onValueChange={onSeverityChange}
+                            selectType="severity"
                         />
                     </Typography>
                 </CardContent>

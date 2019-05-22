@@ -2,8 +2,13 @@ import { events } from './events';
 import { incidents } from './incidents';
 import { reporters } from './reporters';
 import { users } from './users';
+import * as storage from '../utils/localStorage';
 
 const uuidv4 = require('uuid/v4');
+
+function getCurrentUser(){
+    return storage.read("ECIncidentMangementUser").user;
+}
 
 export function getEvents(){
     
@@ -13,16 +18,18 @@ export function getEvents(){
     };
 };
 
-export function addComment(commentObj){
+export function addComment(incidentId, commentObj){
+    const user = getCurrentUser();
+
     events.push({
         initiator: {
             isAnonymous: false,
             avatar: "",
-            userId: 3,
-            displayname: "Achala Dissanayake"
+            userId: user.uid,
+            displayname: user.displayName
         },
         action: "COMMENTED",
-        incidentId: 1,
+        incidentId: incidentId,
         data: {
             comment: {
                 body: commentObj.comment
@@ -43,6 +50,8 @@ export function changeStatus(incidentId, status){
     const incidentIndex = incidents.findIndex(inc => inc.id === incidentId);
     const oldStatus = incidents[incidentIndex].status;
 
+    const user = getCurrentUser();
+
     if(oldStatus === status){
         return {
             status: "SUCCESS",
@@ -59,8 +68,8 @@ export function changeStatus(incidentId, status){
         initiator: {
             isAnonymous: false,
             avatar: "",
-            userId: 1,
-            displayname: "Manujith Pallewatte"
+            userId: user.uid,
+            displayname: user.displayName
         },
         action: "ATTRIBUTE_CHANGED",
         affected_attribute: "STATUS",
@@ -77,6 +86,52 @@ export function changeStatus(incidentId, status){
     return {
         status: "SUCCESS",
         message: "Status updated",
+        data: {
+            
+        }
+    }
+}
+
+export function changeSeverity(incidentId, severity){
+    const incidentIndex = incidents.findIndex(inc => inc.id === incidentId);
+    const oldSeverity = incidents[incidentIndex].severity;
+
+    const user = getCurrentUser();
+
+    if(oldSeverity === severity){
+        return {
+            status: "SUCCESS",
+            message: "Severity updated",
+            data: {
+                
+            }
+        };
+    }
+    
+    incidents[incidentIndex].severity = severity;
+
+    events.push({
+        initiator: {
+            isAnonymous: false,
+            avatar: "",
+            userId: user.uid,
+            displayname: user.displayName
+        },
+        action: "ATTRIBUTE_CHANGED",
+        affected_attribute: "SEVERITY",
+        incidentId: incidentId,
+        data: {
+            severity: {
+                from_severity_type: oldSeverity,
+                to_severity_type: severity
+            }
+        },
+        createdDate: Date()
+    });
+
+    return {
+        status: "SUCCESS",
+        message: "Severity updated",
         data: {
             
         }
