@@ -12,10 +12,37 @@ import Ongoing from "../modules/ongoing-incidents";
 import {SignInPage} from "../modules/shared";
 import PrivateRoute from "./PrivateRoute";
 
-class MainRouter extends Component {
+import ReviewIncidentListView from '../modules/incident-filing/ReviewIncidentListView';
+import DomainContainer from '../components/DomainContainer';
+import { withStyles } from '@material-ui/core/styles';
 
+import { Typography } from '@material-ui/core';
+import { FormattedMessage } from 'react-intl';
+
+class Layout extends React.Component{
+  
+  render () {    
+    return (
+      <DomainContainer
+          header={() =>
+              <Typography variant="h5" color='inherit' noWrap className='line-height-fix'>
+                  <FormattedMessage
+                      id='eclk.incident.management.report.incidents'
+                      description='Report an Incident'
+                      defaultMessage='Report an Incident'
+                  />
+              </Typography>
+          }
+          content={this.props.children}
+      />
+    )
+  }
+}
+
+class MainRouter extends Component {
   render() {
     let { selectedLanguage } = this.props;
+
     return (
       <IntlProvider
         locale={selectedLanguage}
@@ -23,14 +50,21 @@ class MainRouter extends Component {
         messages={i18n.translationMessages[selectedLanguage]}
       > 
         <Router history={history}>
-          <Switch>
-            <Route exact path="/" component={SignInPage} />
-            <Route exact path="/sign-in" component={SignInPage} />
-            <PrivateRoute path="/report" component={Report} />        
-            <PrivateRoute path="/ongoing" component={Ongoing}/>
-            <PrivateRoute path="/historic" component={Historic}/>
-            <PrivateRoute path="/home" component={LandingPage}/>
-          </Switch>
+          <div>
+            <PrivateRoute path="/app" component={Layout}>
+              <Switch>
+                <PrivateRoute exact path="/app/report" component={Report} />        
+                <PrivateRoute exact path="/app/ongoing" component={Ongoing}/>
+                <PrivateRoute exact path="/app/historic" component={Historic}/>
+                <PrivateRoute exact path="/app/home" component={LandingPage}/>
+
+                <PrivateRoute exact path="/app/review" component={ReviewIncidentListView} />
+              </Switch>
+            </PrivateRoute>
+
+          <Route exact path="/" component={SignInPage} />
+          <Route path="/sign-in" component={SignInPage} />
+          </div>
         </Router>
       </IntlProvider>
     );
