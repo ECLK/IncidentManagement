@@ -499,7 +499,7 @@ class NavTabs extends Component {
 
         const { value } = this.state;
 
-        const EditIncidentLink = props => <Link to="/incident/edit" {...props} />
+        const EditIncidentLink = props => <Link to={`/app/review/${activeIncident.id}/edit`} {...props} />
 
         return (
             <NoSsr>

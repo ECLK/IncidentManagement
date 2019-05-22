@@ -37,11 +37,12 @@ import {
 
 } from './Shared.types'
 
-import { getIncident, getReporter  } from '../../../api/incident';
+// import { getIncident, getReporter  } from '../../../api/incident';
 import { getDistricts, getPoliceStations, getPollingStations, getWards } from '../../../api/shared';
 import { getCategories } from '../../../api/category';
 import { signIn } from '../../../data/mockapi';
 import * as localStorage from '../../../utils/localStorage';
+import { getIncident, getReporter } from '../../../data/mockapi'
 
 // Get Catogories
 
@@ -255,6 +256,7 @@ export function fetchActiveIncidentData(incidentId) {
         dispatch(requestActiveIncidentData(incidentId));
         try{
             const responseIncident = await getIncident(incidentId);
+            console.log(responseIncident)
             const responseReporter = await getReporter(responseIncident.data.reporterId);
             dispatch(getActiveIncidentDataSuccess({
                 "incident": responseIncident.data,
