@@ -2,6 +2,8 @@ import React from "react";
 import Typography from '@material-ui/core/Typography';
 import './LandingPage.css'
 import CardGrid from "../../components/CardGrid";
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 import { Icon } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
 
@@ -20,7 +22,7 @@ const styles = theme => ({
         color: theme.palette.text.primary,
     },
     icon: {
-        margin: theme.spacing.unit+20,
+        margin: theme.spacing.unit + 20,
         fontSize: 32,
     },
 });
@@ -31,36 +33,48 @@ function LandingPage(props) {
 
     const getCardContents = () => {
         return ([
-            <Link to='/report'>
-                <Typography variant="h5" component="h2">
-                    <FormattedMessage
-                        id='eclk.incident.management.report.incidents'
-                        description='Report an Incident'
-                        defaultMessage='Report an Incident'
-                    />
-                </Typography>
-                <Create className={classes.icon} />
-            </Link>,
-            <Link to='/ongoing'>
-                <Typography variant="h5" component="h2">
-                    <FormattedMessage
-                        id='eclk.incident.management.ongoing.incidents'
-                        description='Manage an Incident'
-                        defaultMessage='Manage an Incident'
-                    />
-                </Typography>
-                <Loop className={classes.icon} />
-            </Link>,
-            <Link to='/historic'>
-                <Typography variant="h5" component="h2">
-                    <FormattedMessage
-                        id='eclk.incident.management.historic.reports'
-                        description='Incident Reports'
-                        defaultMessage='Incident Reports'
-                    />
-                </Typography>
-                <BarChart className={classes.icon} />
-            </Link>,
+            <Card className='card'>
+                <Link to='/report'>
+                    <CardContent>
+                        <Typography variant="h5" component="h2">
+                            <FormattedMessage
+                                id='eclk.incident.management.report.incidents'
+                                description='Report an Incident'
+                                defaultMessage='Report an Incident'
+                            />
+                        </Typography>
+                        <Create className={classes.icon} />
+                    </CardContent>
+                </Link>
+            </Card>,
+            <Card className='card'>
+                <Link to='/ongoing'>
+                    <CardContent>
+                        <Typography variant="h5" component="h2">
+                            <FormattedMessage
+                                id='eclk.incident.management.ongoing.incidents'
+                                description='Manage an Incident'
+                                defaultMessage='Manage an Incident'
+                            />
+                        </Typography>
+                        <Loop className={classes.icon} />
+                    </CardContent>
+                </Link>
+            </Card>,
+            <Card className='card'>
+                <Link to='/historic'>
+                    <CardContent>
+                        <Typography variant="h5" component="h2">
+                            <FormattedMessage
+                                id='eclk.incident.management.historic.reports'
+                                description='Incident Reports'
+                                defaultMessage='Incident Reports'
+                            />
+                        </Typography>
+                        <BarChart className={classes.icon} />
+                    </CardContent>
+                </Link>
+            </Card>,
         ]);
     }
     return (

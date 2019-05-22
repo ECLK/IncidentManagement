@@ -31,6 +31,8 @@ import {
     SIGN_OUT,
     SIGN_OUT_ERROR,
 
+    CHANGE_LANGUAGE,
+
 } from './Shared.types'
 
 import { getIncident, getReporter  } from '../../../api/incident';
@@ -339,5 +341,13 @@ export function initiateSignOut() {
         }catch(error){
             dispatch(signOutError(error));
         }
+    }
+}
+
+//change langguage
+export function changeLanguage(selectedLanguage) {
+    return {
+        type: CHANGE_LANGUAGE,
+        selectedLanguage
     }
 }

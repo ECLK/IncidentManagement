@@ -12,7 +12,6 @@ import sharedReducer from '../modules/shared/state/Shared.reducers';
 
 const reducer = combineReducers({
     landingReducer,
-    rootReducer,
     incidentReducer,
     sharedReducer,
     ongoingIncidentReducer

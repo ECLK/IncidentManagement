@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react';
 import { withRouter } from "react-router";
 
-import { Formik, withFormik } from 'formik';
+import { Formik } from 'formik';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { FormattedMessage } from 'react-intl';
@@ -26,8 +26,19 @@ import { IncidentContactDetailsForm } from '../../../components/IncidentContactD
 import { IncidentReviewDetailsForm } from '../../../components/IncidentReviewDetailsForm';
 
 
-import { submitIncidentBasicData, stepBackwardIncidentStepper, stepForwardIncidentStepper, fetchUpdateReporter, fetchUpdateIncident, fetchIncidentData } from '../state/IncidentFiling.actions'
-import { fetchCatogories, fetchDistricts, fetchPoliceStations, fetchPollingStations, fetchWards, fetchActiveIncidentData } from '../../shared/state/Shared.actions';
+import { 
+    submitIncidentBasicData, 
+    stepBackwardIncidentStepper, 
+    stepForwardIncidentStepper, 
+    fetchUpdateReporter, 
+    fetchUpdateIncident } from '../state/IncidentFiling.actions'
+import { 
+    fetchCatogories, 
+    fetchDistricts, 
+    fetchPoliceStations, 
+    fetchPollingStations, 
+    fetchWards, 
+    fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 
 import Snackbar from '@material-ui/core/Snackbar';
 
@@ -66,9 +77,18 @@ const styles = theme => ({
     formControl: {
         marginTop: 4 * theme.spacing.unit,
         marginLeft: 4 * theme.spacing.unit,
-        minWidth: 120,
+        minWidth: 140,
     },
-
+    formControl_ds: {
+        marginTop: 4 * theme.spacing.unit,
+        marginLeft: 4 * theme.spacing.unit,
+        minWidth: 250,
+    },
+    formControl_pol: {
+        marginTop: 4 * theme.spacing.unit,
+        marginLeft: 4 * theme.spacing.unit,
+        minWidth: 140,
+    },
     //stepper styling
     actionsContainer: {
         marginBottom: theme.spacing.unit * 2,
@@ -89,7 +109,7 @@ const styles = theme => ({
 
     // calander
     dataTimePickers: {
-        width: '50%',
+        width: '25%',
         marginLeft: 4 * theme.spacing.unit,
     },
 
@@ -177,6 +197,7 @@ class IndicdentForm extends Component {
     isStepOptional = step => step === 1 || step === 2;
 
     handleNext = (onSubmit, values) => {
+        console.log(values);
         this.saveStepValues(values);
         onSubmit();
         const { activeStep } = this.state;
@@ -521,4 +542,3 @@ export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     withStyles(styles)
 )(withRouter(IndicdentForm));
-
