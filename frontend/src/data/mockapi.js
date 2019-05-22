@@ -2,7 +2,8 @@ import { events } from './events';
 import { incidents } from './incidents';
 import { reporters } from './reporters';
 import { users } from './users';
-
+import { ds_sections } from './ds_sections';
+import { polling_divisions } from './polling_divisions';
 const uuidv4 = require('uuid/v4');
 
 export function getEvents(){
@@ -190,3 +191,19 @@ export async function signIn(userName, password){
         }
     }
 }
+
+export function getDSDivisions(){
+
+    return {
+        status : 200,
+        data: ds_sections
+    };
+};
+
+export function getPollingDivisions(){
+
+    return {
+        status : 200,
+        data: polling_divisions
+    };
+};

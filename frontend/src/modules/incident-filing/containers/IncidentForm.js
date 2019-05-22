@@ -66,9 +66,18 @@ const styles = theme => ({
     formControl: {
         marginTop: 4 * theme.spacing.unit,
         marginLeft: 4 * theme.spacing.unit,
-        minWidth: 120,
+        minWidth: 140,
     },
-
+    formControl_ds: {
+        marginTop: 4 * theme.spacing.unit,
+        marginLeft: 4 * theme.spacing.unit,
+        minWidth: 250,
+    },
+    formControl_pol: {
+        marginTop: 4 * theme.spacing.unit,
+        marginLeft: 4 * theme.spacing.unit,
+        minWidth: 140,
+    },
     //stepper styling
     actionsContainer: {
         marginBottom: theme.spacing.unit * 2,
@@ -521,4 +530,3 @@ export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     withStyles(styles)
 )(withRouter(IndicdentForm));
-
