@@ -8,6 +8,7 @@ import SettingIcon from '@material-ui/icons/Settings';
 import Select from '@material-ui/core/Select';
 import Menu from "@material-ui/core/Menu";
 import MenuItem from '@material-ui/core/MenuItem';
+import * as auth from '../../utils/authorization';
 
 const styles = {
     statusChip: {
@@ -65,7 +66,7 @@ class StatusChange extends React.Component{
     }
 
     render(){
-        const { classes, currentValue, selectType } = this.props;
+        const { classes, currentValue, selectType, activeUser, activeIncident } = this.props;
         const open = Boolean(this.state.anchorEl);
 
         const valueMap = selectType === "status" ? statusMap : severityMap;
@@ -78,16 +79,37 @@ class StatusChange extends React.Component{
                                 className={classes.chipIcon}
                             />
         
+        var actionChip = <Chip 
+                            label={valueMap[currentValue]}
+                            color="primary"
+                            onDelete={this.handleSettingClick}
+                            className={classes.statusChip}
+                            deleteIcon={settingIcon}
+                        />;
+        if(selectType === "status"){
+            if(auth.canChangeStatus(activeUser) === "CANT"){
+                actionChip = <Chip 
+                                label={valueMap[currentValue]}
+                                color="primary"
+                                onClick={this.props.onClick}
+                                className={classes.statusChip}
+                            />;
+            }else if(activeIncident.hasPendingStatusChange){
+                actionChip = <Chip 
+                                label={valueMap[currentValue]}
+                                color="primary"
+                                onClick={this.props.onClick}
+                                className={classes.statusChip}
+                                variant="outlined"
+                            />;
+            }
+        }
+
+
         return (
             <div>
-                <Chip 
-                    label={valueMap[currentValue]}
-                    color="primary"
-                    onClick={this.props.onClick}
-                    onDelete={this.handleSettingClick}
-                    className={classes.statusChip}
-                    deleteIcon={settingIcon}
-                /> 
+
+                {actionChip}
 
                 <Menu
                     id={popoverId}

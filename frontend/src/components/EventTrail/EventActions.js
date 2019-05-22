@@ -38,7 +38,7 @@ class EventActions extends React.Component{
     };
 
     render(){
-        const { classes, activeIncident, onStatusChange, onSeverityChange } = this.props;
+        const { classes, activeIncident, onStatusChange, onSeverityChange, activeUser } = this.props;
 
         return (
             <Card className={classes.card}>
@@ -52,6 +52,8 @@ class EventActions extends React.Component{
                             currentValue={activeIncident.status} 
                             onValueChange={onStatusChange}
                             selectType="status"
+                            activeUser={activeUser}
+                            activeIncident={activeIncident}
                         />
                     </Typography>
 
@@ -64,6 +66,8 @@ class EventActions extends React.Component{
                             currentValue={activeIncident.severity} 
                             onValueChange={onSeverityChange}
                             selectType="severity"
+                            activeUser={activeUser}
+                            activeIncident={activeIncident}
                         />
                     </Typography>
                 </CardContent>

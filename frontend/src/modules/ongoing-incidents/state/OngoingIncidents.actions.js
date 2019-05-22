@@ -14,10 +14,14 @@ import {
 
     CHANGE_INCIDENT_SEVERITY,
     CHANGE_INCIDENT_SEVERITY_SUCCESS,
-    CHANGE_INCIDENT_SEVERITY_ERROR
+    CHANGE_INCIDENT_SEVERITY_ERROR,
+
+    RESOLVE_EVENT_APPROVAL,
+    RESOLVE_EVENT_APPROVAL_SUCCESS,
+    RESOLVE_EVENT_APPROVAL_ERROR,
 } from './OngoingIncidents.types'
 
-import { getEvents } from '../../../api/events'
+import { getEvents, updateEventApproval } from '../../../api/events'
 import { postComment } from '../../../api/comments'
 import { changeStatus, changeSeverity } from '../../../api/incident';
 import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
@@ -169,6 +173,48 @@ export function setIncidentSeverity(incidentId, severity) {
              */
         }catch(error){
             dispatch(changeIncidentSeverityError(error));
+        }
+    }
+}
+
+
+export function resolveEventApproval() {
+    return {
+        type: RESOLVE_EVENT_APPROVAL,
+    }
+}
+
+export function resolveEventApprovalSuccess(response) {
+    return {
+        type: RESOLVE_EVENT_APPROVAL_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function resolveEventApprovalError(errorResponse) {
+    return {
+        type: RESOLVE_EVENT_APPROVAL_ERROR,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function resolveEvent(incidentId, eventId, decision) {
+    console.log(incidentId, eventId, decision);
+    return async function(dispatch) {
+        dispatch(resolveEventApproval());
+        try{
+            const response = await updateEventApproval(eventId, decision);
+            dispatch(resolveEventApprovalSuccess(response.data));
+            dispatch(fetchActiveIncidentData(incidentId));
+            dispatch(fetchIncidentEventTrail());
+            /**
+             * Todo: refresh the incident 
+             */
+        }catch(error){
+            console.log(error);
+            dispatch(resolveEventApprovalError(error));
         }
     }
 }

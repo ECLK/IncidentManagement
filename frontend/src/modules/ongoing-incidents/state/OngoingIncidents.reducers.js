@@ -12,6 +12,10 @@ import {
     CHANGE_INCIDENT_STATUS,
     CHANGE_INCIDENT_STATUS_SUCCESS,
     CHANGE_INCIDENT_STATUS_ERROR,
+
+    RESOLVE_EVENT_APPROVAL,
+    RESOLVE_EVENT_APPROVAL_SUCCESS,
+    RESOLVE_EVENT_APPROVAL_ERROR,
 } from './OngoingIncidents.types'
 
 import { events } from '../../../data/events';

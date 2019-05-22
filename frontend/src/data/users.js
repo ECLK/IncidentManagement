@@ -23,9 +23,9 @@ export const users = {
     'user4': {
         uid: 4,
         userName:"user4",
-        displayName:"Complaint Coordinator Two",
+        displayName:"Junior Member",
         password:"12345",
-        role:"COMPLAINT_COORDINATOR"
+        role:"EC_MEMBER"
     }
 
 }
