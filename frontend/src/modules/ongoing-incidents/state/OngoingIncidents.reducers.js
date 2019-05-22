@@ -16,6 +16,10 @@ import {
     RESOLVE_EVENT_APPROVAL,
     RESOLVE_EVENT_APPROVAL_SUCCESS,
     RESOLVE_EVENT_APPROVAL_ERROR,
+
+    REQUEST_ALL_INCIDENTS, 
+    REQUEST_ALL_INCIDENTS_SUCCESS, 
+    REQUEST_ALL_INCIDENTS_ERROR,
 } from './OngoingIncidents.types'
 
 import { events } from '../../../data/events';
@@ -26,7 +30,8 @@ const initialState = {
         isLoading:false,
         error: false,
     },
-    events: []
+    events: [],
+    incidents: []
 }
 
 export default function OngoingIncidentsReducer(state, action) {
@@ -41,6 +46,10 @@ export default function OngoingIncidentsReducer(state, action) {
                 draft.events = action.data;
             case REQUEST_INCIDENT_EVENT_TRAIL_ERROR:
                 draft.eventTrail.error = action.error;
+            
+            case REQUEST_ALL_INCIDENTS_SUCCESS:
+                draft.incidents = action.data;
+
         }
     })
 }

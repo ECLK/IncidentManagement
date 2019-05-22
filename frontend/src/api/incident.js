@@ -37,7 +37,7 @@ export const getIncident = async (incidentId) => {
     return mockapi.getIncident(incidentId);
 };
 
-export const getIncidents = async () => {
+export const getIncidents = async (filters) => {
     return mockapi.getIncidents();
 };
 
