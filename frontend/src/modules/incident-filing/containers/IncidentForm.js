@@ -197,7 +197,6 @@ class IndicdentForm extends Component {
     isStepOptional = step => step === 1 || step === 2;
 
     handleNext = (onSubmit, values) => {
-        console.log(values);
         this.saveStepValues(values);
         onSubmit();
         const { activeStep } = this.state;
