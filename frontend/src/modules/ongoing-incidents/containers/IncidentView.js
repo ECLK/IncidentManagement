@@ -18,7 +18,7 @@ import Button from '@material-ui/core/Button';
 import EventTrail from '../../../components/EventTrail';
 import EventList from '../../../components/EventTrail/EventList';
 import Comment from '../../../components/EventTrail/Comment';
-import { fetchIncidentEventTrail, submitIncidentComment, setIncidentStatus } from '../state/OngoingIncidents.actions';
+import { fetchIncidentEventTrail, submitIncidentComment, setIncidentStatus, setIncidentSeverity, resolveEvent } from '../state/OngoingIncidents.actions';
 import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 import { EventActions } from '../../../components/EventTrail'
 
@@ -57,13 +57,13 @@ const styles = theme => ({
     },
     editButtonWrapper: {
         marginBottom: theme.spacing.unit * 2,
-        display:'flex',
-        justifyContent:'center'
-        
+        display: 'flex',
+        justifyContent: 'center'
+
     },
-    editButton:{
-        paddingLeft:'155px',
-        paddingRight:'155px'
+    editButton: {
+        paddingLeft: '155px',
+        paddingRight: '155px'
     }
 });
 
@@ -337,7 +337,7 @@ class ReviewTab extends Component {
 
         return (
             <div>
-                <Grid container spacing={24}>
+                <Grid container spacing={24} >
                     <Grid item xs={12}>
                         <Paper elevation={1} className={classes.paper}>
 
@@ -483,8 +483,17 @@ class NavTabs extends Component {
         this.setState({ isCommentVisible: false })
     }
 
+    onResolveEvent = (eventId, decision) => {
+        const { activeIncident } = this.props;
+
+        this.props.resolveEventApproval(activeIncident.id, eventId, decision);
+    }
+
     render() {
-        const { classes, postComment, activeIncident, reporter, changeStatus } = this.props;
+        const { classes, postComment, activeIncident, 
+                reporter, changeStatus, changeSeverity, 
+                activeUser } = this.props;
+
         const { value } = this.state;
 
         const EditIncidentLink = props => <Link to="/incident/edit" {...props} />
@@ -492,7 +501,7 @@ class NavTabs extends Component {
         return (
             <NoSsr>
                 <Grid container spacing={24}>
-                    <Grid item xs={9}>
+                    <Grid item xs={8}>
                         <div className={classes.root}>
                             <AppBar position="static">
                                 <Tabs variant="fullWidth" value={value} onChange={this.handleChange} >
@@ -508,7 +517,10 @@ class NavTabs extends Component {
                             {value === 3 && <TabContainer> <ReviewTab classes={classes} incident={activeIncident} /> </TabContainer>}
                         </div>
                         <div>
-                            <EventList events={this.props.events} />
+                            <EventList 
+                                events={this.props.events}
+                                resolveEvent={this.onResolveEvent} 
+                            />
                             <Comment
                                 postComment={postComment}
                                 activeIncident={activeIncident}
@@ -525,6 +537,8 @@ class NavTabs extends Component {
                         <EventActions
                             activeIncident={activeIncident}
                             onStatusChange={changeStatus}
+                            onSeverityChange={changeSeverity}
+                            activeUser={activeUser}
                         />
                     </Grid>
                 </Grid>
@@ -543,6 +557,7 @@ const mapStateToProps = (state, ownProps) => {
         events: state.ongoingIncidentReducer.events,
         activeIncident: state.sharedReducer.activeIncident.data,
         reporter: state.sharedReducer.activeIncidentReporter,
+        activeUser: state.sharedReducer.signedInUser.data,
         ...ownProps
     }
 }
@@ -555,11 +570,17 @@ const mapDispatchToProps = (dispatch) => {
         getEvents: () => {
             dispatch(fetchIncidentEventTrail());
         },
-        postComment: (commentData) => {
-            dispatch(submitIncidentComment(commentData));
+        postComment: (incidentId, commentData) => {
+            dispatch(submitIncidentComment(incidentId, commentData));
         },
         changeStatus: (incidentId, status) => {
             dispatch(setIncidentStatus(incidentId, status))
+        },
+        changeSeverity: (incidentId, severity) => {
+            dispatch(setIncidentSeverity(incidentId, severity))
+        },
+        resolveEventApproval: (incidentId, eventId, decision) => {
+            dispatch(resolveEvent(incidentId, eventId, decision));
         }
     }
 }

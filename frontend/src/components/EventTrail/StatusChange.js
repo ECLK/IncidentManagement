@@ -8,6 +8,7 @@ import SettingIcon from '@material-ui/icons/Settings';
 import Select from '@material-ui/core/Select';
 import Menu from "@material-ui/core/Menu";
 import MenuItem from '@material-ui/core/MenuItem';
+import * as auth from '../../utils/authorization';
 
 const styles = {
     statusChip: {
@@ -17,6 +18,25 @@ const styles = {
         marginLeft: "auto"
     }
 };
+
+const statusMap = {
+    "NEW": "New",
+    "VERIFIED": "Verified",
+    "ACTION_TAKEN": "Action Taken",
+    "ACTION_PENDING": "Action Pending",
+    "ADVICE_REQESTED": "Advice Requested",
+    "ADVICE_PROVIDED": "Advice Provided",
+    "CLOSED": "Closed"
+}
+
+const severityMap = {
+    "CRITICAL": "Critical",
+    "MAJOR": "Major",
+    "MODERATE": "Moderate",
+    "MINOR": "Minor",
+    "INSIGNIFICANT": "Insignificant",
+    "DEFAULT": "Default"
+}
 
 class StatusChange extends React.Component{
     state = {
@@ -35,49 +55,64 @@ class StatusChange extends React.Component{
         });
     };
 
-    handleItemChange = (statusValue) => {
-        const { activeIncident, onStatusChange} = this.props;
+    handleItemChange = (value) => {
+        const { activeIncident, onValueChange} = this.props;
 
-        onStatusChange(activeIncident.id, statusValue);
+        onValueChange(activeIncident.id, value);
+
         this.setState({
             anchorEl: null,
         });
     }
 
     render(){
-        const { classes, activeIncident } = this.props;
+        const { classes, currentValue, selectType, activeUser, activeIncident } = this.props;
         const open = Boolean(this.state.anchorEl);
+
+        const valueMap = selectType === "status" ? statusMap : severityMap;
+        const popoverId = selectType === "status" ? 'status-popover' : 'severity-popover';
         
         const settingIcon = <SettingIcon
-                                aria-owns={open ? 'setting-popover' : undefined}
+                                aria-owns={open ? popoverId : undefined}
                                 aria-haspopup="true"
                                 variant="contained"
                                 className={classes.chipIcon}
                             />
         
-        const statusMap = {
-            "NEW": "New",
-            "VERIFIED": "Verified",
-            "ACTION_TAKEN": "Action Taken",
-            "ACTION_PENDING": "Action Pending",
-            "ADVICE_REQESTED": "Advice Requested",
-            "ADVICE_PROVIDED": "Advice Provided",
-            "CLOSED": "Closed"
+        var actionChip = <Chip 
+                            label={valueMap[currentValue]}
+                            color="primary"
+                            onDelete={this.handleSettingClick}
+                            className={classes.statusChip}
+                            deleteIcon={settingIcon}
+                        />;
+        if(selectType === "status"){
+            if(auth.canChangeStatus(activeUser) === "CANT"){
+                actionChip = <Chip 
+                                label={valueMap[currentValue]}
+                                color="primary"
+                                onClick={this.props.onClick}
+                                className={classes.statusChip}
+                            />;
+            }else if(activeIncident.hasPendingStatusChange){
+                actionChip = <Chip 
+                                label={valueMap[currentValue]}
+                                color="primary"
+                                onClick={this.props.onClick}
+                                className={classes.statusChip}
+                                variant="outlined"
+                            />;
+            }
         }
+
 
         return (
             <div>
-                <Chip 
-                    label={statusMap[activeIncident.status]}
-                    color="primary"
-                    onClick={this.props.onClick}
-                    onDelete={this.handleSettingClick}
-                    className={classes.statusChip}
-                    deleteIcon={settingIcon}
-                /> 
+
+                {actionChip}
 
                 <Menu
-                    id="setting-popover"
+                    id={popoverId}
                     open={open}
                     anchorEl={this.state.anchorEl}
                     onClose={this.handlePopOverClose}
@@ -92,12 +127,12 @@ class StatusChange extends React.Component{
                     }}
                     getContentAnchorEl={null}
                 >   
-                    {Object.keys(statusMap).map((val, ind) => (
+                    {Object.keys(valueMap).map((val, ind) => (
                         <MenuItem 
                             value={val} 
                             key={ind}
                             onClick={() => this.handleItemChange(val)}
-                        >{statusMap[val]}
+                        >{valueMap[val]}
                         </MenuItem>
                     ))}
                 </Menu>

@@ -5,6 +5,8 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from './Avatar';
 import * as moment from 'moment';
+import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
+import Button from '@material-ui/core/Button';
 
 const styles = {
     truncate: {
@@ -37,6 +39,9 @@ const styles = {
         width: "100%",
         padding: "10px 10px 10px 10px",
         borderTop: "1px solid #ccc"
+    },
+    eventItemActions: {
+        marginLeft: 'auto'
     }
 };
 
@@ -53,8 +58,20 @@ function getActionText(event){
                     return `changed the severity from ${event.data.severity.from_severity_type} 
                                 to ${event.data.severity.to_severity_type}`;
             }
+        case "ATTRIBUTE_CHANGE_REQUESTED":
+            switch(event.affected_attribute){
+                case "STATUS":
+                    return `requested to change the status from ${event.data.status.from_status_type} 
+                                to ${event.data.status.to_status_type}`;
+            }
+        case "ATTRIBUTE_CHANGE_APPROVED":
+            return "approved requested change";
+        case "ATTRIBUTE_CHANGE_REJECTED":
+            return "rejected requested change";
         case "COMMENTED":
             return "commented on the incident";
+        case "OUTCOME_ADDED":
+            return "added new outcome for the incident";
         case "MEDIA_ATTACHED":
             return "attached media";
     }
@@ -64,15 +81,20 @@ function hasEventBody(event){
     if(event.action === "COMMENTED"){
         return true;
     }
+    if(event.action === "OUTCOME_ADDED"){
+        return true;
+    }
 
     return false;
 }
 
 function getSecondaryItem(event){
-    if(event.action === "COMMENTED"){
+    if(event.action === "COMMENTED" || event.action === "OUTCOME_ADDED"){
         return (
             <div>
-                {event.data.comment.body}
+                <FroalaEditorView
+                    model={event.data.comment.body}
+                />
             </div>
         )
     }
@@ -100,7 +122,7 @@ function getDateDiff(event){
     }
 }
 
-const EventItemView = ({ event, classes }) => (
+const EventItemView = ({ event, eventAction, classes }) => (
     <li className={classes.eventItem}>
         <div className={classes.eventItemDetails}>
             <div className={classes.eventItemAvatar}>
@@ -114,6 +136,26 @@ const EventItemView = ({ event, classes }) => (
                      {getActionText(event)}
                     <span> ({getDateDiff(event)})</span>
                 </div>
+                {event.action=== "ATTRIBUTE_CHANGE_REQUESTED" &&
+                    !event.isResolved && 
+                 (
+                    <div className={classes.eventItemActions}>
+                        <Button 
+                            color="primary" 
+                            className={classes.button} 
+                            onClick={() => eventAction(event.id, "APPROVE")}
+                        >
+                            Approve
+                        </Button>
+                        <Button 
+                            color="secondary" 
+                            className={classes.button} 
+                            onClick={() => eventAction(event.id, "REJECT")}
+                        >
+                            Reject
+                        </Button>
+                    </div>
+                )}
             </div>
         </div>
         { hasEventBody(event) && (

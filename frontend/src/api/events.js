@@ -5,3 +5,7 @@ export const getEvents = async () => {
     return mockapi.getEvents();
 }
 
+export const updateEventApproval = async (eventId, decision) => {
+    return mockapi.resolveEvent(eventId, decision);
+}
+

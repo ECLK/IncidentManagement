@@ -59,3 +59,7 @@ export const updateReporter = async (reporterId, reporterData) => {
 export const changeStatus = async (incidentId, status) => {
     return mockapi.changeStatus(incidentId, status);
 }
+
+export const changeSeverity = async (incidentId, severity) => {
+    return mockapi.changeSeverity(incidentId, severity);
+}

@@ -257,6 +257,7 @@ export function fetchActiveIncidentData(incidentId) {
                 "reporter": responseReporter.data
             }));
         }catch(error){
+            console.log(error);
             dispatch(getActiveIncidentDataError(error));
         }
     }
