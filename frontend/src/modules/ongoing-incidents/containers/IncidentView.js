@@ -53,6 +53,16 @@ const styles = theme => ({
     },
     label: {
         // color: '#757575'
+    },
+    editButtonWrapper: {
+        marginBottom: theme.spacing.unit * 2,
+        display:'flex',
+        justifyContent:'center'
+        
+    },
+    editButton:{
+        paddingLeft:'155px',
+        paddingRight:'155px'
     }
 });
 
@@ -505,6 +515,11 @@ class NavTabs extends Component {
 
                     </Grid>
                     <Grid item xs={3} p>
+                        <div className={classes.editButtonWrapper}>
+                            <Button variant="outlined" size="large" color="primary" className={classes.editButton} >
+                                Edit
+                            </Button>
+                        </div>
                         <EventActions
                             activeIncident={activeIncident}
                             onStatusChange={changeStatus}

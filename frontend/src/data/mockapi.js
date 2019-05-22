@@ -10,8 +10,8 @@ export function getEvents(){
     return {
         status: "SUCCESS",
         data: [...events]
-    };
-};
+    }
+}
 
 export function addComment(commentObj){
     events.push({
