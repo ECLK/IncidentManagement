@@ -2,14 +2,11 @@ import { events } from './events';
 import { incidents } from './incidents';
 import { reporters } from './reporters';
 import { users } from './users';
-<<<<<<< HEAD
 import { ds_sections } from './ds_sections';
 import { polling_divisions } from './polling_divisions';
-=======
 import * as storage from '../utils/localStorage';
 import * as auth from '../utils/authorization';
 
->>>>>>> a2217e44da7c1b03d2235ae13340591e925bc47b
 const uuidv4 = require('uuid/v4');
 
 function getCurrentUser(){
