@@ -61,6 +61,7 @@ class MainRouter extends Component {
                 <PrivateRoute exact path="/app/home" component={LandingPage}/>
 
                 <PrivateRoute exact path="/app/review" component={ReviewIncidentListView} />
+                <PrivateRoute exact path="/app/review/:paramIncidentId" component={Ongoing} />
                 <PrivateRoute exact path="/app/review/:paramIncidentId/edit" component={Report} />
               </Switch>
             </PrivateRoute>
