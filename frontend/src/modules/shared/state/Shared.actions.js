@@ -27,14 +27,17 @@ import {
     SIGN_IN_REQUEST_SUCCESS,
     SIGN_IN_REQUEST_ERROR,
 
-    TOGGLE_REMEBER_USER
+    TOGGLE_REMEBER_USER,
+    SIGN_OUT,
+    SIGN_OUT_ERROR,
+
 } from './Shared.types'
 
 import { getIncident, getReporter  } from '../../../api/incident';
 import { getDistricts, getPoliceStations, getPollingStations, getWards } from '../../../api/shared';
 import { getCategories } from '../../../api/category';
 import { signIn } from '../../../data/mockapi';
-import { read, write } from '../../../utils/localStorage';
+import * as localStorage from '../../../utils/localStorage';
 
 // Get Catogories
 
@@ -289,11 +292,11 @@ export function fetchSignIn(userName, password) {
         dispatch(requestSignIn());
         try{
             let signInData = null;
-            signInData = read('ECIncidentManagementUser');
+            signInData = localStorage.read('ECIncidentManagementUser');
             if(!signInData){
                 signInData = await signIn(userName, password);
                 if(getState().sharedReducer.signedInUser.rememberMe){
-                    write('ECIncidentMangementUser', signInData);
+                    localStorage.write('ECIncidentMangementUser', signInData);
                 }
             }    
             dispatch(requestSignInSuccess(signInData));
@@ -304,11 +307,36 @@ export function fetchSignIn(userName, password) {
 }
 
 //Remeber user
-
 export function toggleRememberUser(){
     return {
         type: TOGGLE_REMEBER_USER,
         data:null,
         error:null
+    }
+}
+
+//sign out
+
+export function signOut() {
+    return {
+        type: SIGN_OUT
+    }
+}
+
+export function signOutError(error) {
+    return {
+        type: SIGN_OUT_ERROR,
+        error: error
+    }
+}
+
+export function initiateSignOut() {
+    return async function (dispatch, getState) {
+        try{
+            localStorage.remove('ECIncidentMangementUser');
+            dispatch(signOut())
+        }catch(error){
+            dispatch(signOutError(error));
+        }
     }
 }

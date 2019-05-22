@@ -8,6 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import { compose } from 'redux'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -486,6 +487,8 @@ class NavTabs extends Component {
         const { classes, postComment, activeIncident, reporter, changeStatus } = this.props;
         const { value } = this.state;
 
+        const EditIncidentLink = props => <Link to="/incident/edit" {...props} />
+
         return (
             <NoSsr>
                 <Grid container spacing={24}>
@@ -515,7 +518,7 @@ class NavTabs extends Component {
                     </Grid>
                     <Grid item xs={3} p>
                         <div className={classes.editButtonWrapper}>
-                            <Button variant="outlined" size="large" color="primary" className={classes.editButton} >
+                            <Button component={EditIncidentLink} variant="outlined" size="large" color="primary" className={classes.editButton} >
                                 Edit
                             </Button>
                         </div>

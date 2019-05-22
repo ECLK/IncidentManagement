@@ -31,7 +31,10 @@ import {
     SIGN_IN_REQUEST_SUCCESS,
     SIGN_IN_REQUEST_ERROR,
 
-    TOGGLE_REMEBER_USER
+    TOGGLE_REMEBER_USER,
+    SIGN_OUT,
+    SIGN_OUT_ERROR,
+
 } from './Shared.types'
 
 const initialState = {
@@ -140,6 +143,17 @@ export default function sharedReducer(state, action) {
                 draft.signedInUser.error = action.error;
             case TOGGLE_REMEBER_USER:
                 draft.signedInUser.rememberMe = !state.signedInUser.rememberMe
+                return draft;
+            case SIGN_OUT:
+                draft.signedInUser = {
+                    isLoading:false,
+                    isSignedIn:false,
+                    data:null,
+                    error:null,
+                    rememberMe:true,
+                }
+                return draft;
+            case SIGN_OUT_ERROR:
                 return draft;
         }
     })
