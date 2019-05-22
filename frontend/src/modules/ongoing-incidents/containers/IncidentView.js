@@ -96,39 +96,39 @@ class BasicDetailTab extends Component {
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography className={classes.label}> Incident Ref ID </Typography>
-                                    <Typography variant="h4" gutterBottom> {this.state.incident.token} </Typography>
+                                    <Typography variant="h4" gutterBottom> {incident.refId} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Title </Typography>
-                                    <Typography gutterBottom> {this.state.incident.title} </Typography>
+                                    <Typography gutterBottom> {incident.title} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Description </Typography>
-                                    <Typography gutterBottom> {this.state.incident.description} </Typography>
+                                    <Typography gutterBottom> {incident.description} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Occurence </Typography>
-                                    <Typography gutterBottom> {this.state.incident.occurence} </Typography>
+                                    <Typography gutterBottom> {incident.occurence} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Date </Typography>
-                                    <Typography gutterBottom> <Moment format="YYYY/MM/DD" unix>{this.state.incident.created_date}</Moment> </Typography>
+                                    <Typography gutterBottom> <Moment format="YYYY/MM/DD" unix>{incident.createdDate}</Moment> </Typography>
                                 </Grid>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Time </Typography>
-                                    <Typography gutterBottom> <Moment format="HH:mm" unix>{this.state.incident.created_date}</Moment> </Typography>
+                                    <Typography gutterBottom> <Moment format="HH:mm" unix>{incident.createdDate}</Moment> </Typography>
                                 </Grid>
                             </Grid>
 
@@ -188,7 +188,7 @@ class LocationTab extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, incident } = this.props;
 
         return (
             <div>
@@ -283,7 +283,7 @@ class ContactTab extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, reporter } = this.props;
 
         return (
             <div>
@@ -294,21 +294,21 @@ class ContactTab extends Component {
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Name </Typography>
-                                    <Typography gutterBottom> {this.state.reporter.name} </Typography>
+                                    <Typography gutterBottom> {reporter.name} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Contact Number </Typography>
-                                    <Typography gutterBottom> {this.state.reporter.contact} </Typography>
+                                    <Typography gutterBottom> {reporter.contact} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Address </Typography>
-                                    <Typography gutterBottom> {this.state.reporter.address} </Typography>
+                                    <Typography gutterBottom> {reporter.address} </Typography>
                                 </Grid>
                             </Grid>
 
@@ -332,7 +332,7 @@ class ReviewTab extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, incident } = this.props;
 
         return (
             <div>
@@ -343,21 +343,21 @@ class ReviewTab extends Component {
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography className={classes.label}> Incident Ref ID </Typography>
-                                    <Typography variant="h4" gutterBottom> {this.state.incident.token} </Typography>
+                                    <Typography variant="h4" gutterBottom> {incident.refId} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Status </Typography>
-                                    <Typography gutterBottom> Verified </Typography>
+                                    <Typography gutterBottom> {incident.status} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Severity </Typography>
-                                    <Typography gutterBottom> Moderate </Typography>
+                                    <Typography gutterBottom> {incident.severity} </Typography>
                                 </Grid>
                             </Grid>
 
@@ -507,7 +507,6 @@ class NavTabs extends Component {
                         <div>
                             <EventList events={this.props.events} />
                             <Comment
-                                hideCommentInput={this.hideCommentInput}
                                 postComment={postComment}
                                 activeIncident={activeIncident}
                             />
