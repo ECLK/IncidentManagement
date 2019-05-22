@@ -8,14 +8,16 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { fetchAllIncidents } from '../state/OngoingIncidents.actions';
 
 
-
-  const CustomTableCell = withRouter(withStyles(theme => ({ 
-      body: {
-          fontSize: 14,
-      },
-  }))(TableCell));
+const CustomTableCell = withRouter(withStyles(theme => ({ 
+    body: {
+        fontSize: 14,
+    },
+}))(TableCell));
   
   const styles = theme => ({
     root: {
@@ -50,37 +52,60 @@ import Paper from '@material-ui/core/Paper';
   ];
   
 
-function ReviewListView(props){
-    const { classes } = props;
+class ReviewListView extends React.Component{
+    componentDidMount(){
+      this.props.getIncidents();
+    }
 
-    return(
-        <Paper className={classes.root}>
-            <Table className={classes.table}>
-                <TableHead>
-                    <TableRow>
-                        <CustomTableCell>Title</CustomTableCell>
-                        <CustomTableCell>Description</CustomTableCell>
-                        <CustomTableCell align="right">Status</CustomTableCell>
-                        <CustomTableCell align="right">Category</CustomTableCell>
-                        <CustomTableCell align="right">Location</CustomTableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                {rows.map(row => (
-                    <TableRow onClick={()=>{props.history.push('/report/reviews/'+row.id) }}hover className={classes.row} key={row.id}>
-                    <CustomTableCell scope="row">
-                        {row.title}
-                    </CustomTableCell>
-                    <CustomTableCell >{row.description}</CustomTableCell>
-                    <CustomTableCell align="right">{row.status}</CustomTableCell>
-                    <CustomTableCell align="right">{row.category}</CustomTableCell>
-                    <CustomTableCell align="right">{row.location}</CustomTableCell>
-                    </TableRow>
-                ))}
-                </TableBody>
-            </Table>
-        </Paper>
-    );
+    render(){
+      const { classes, incidents } = this.props;
+
+      return(
+          <Paper className={classes.root}>
+              <Table className={classes.table}>
+                  <TableHead>
+                      <TableRow>
+                          <CustomTableCell>Title</CustomTableCell>
+                          <CustomTableCell>Description</CustomTableCell>
+                          <CustomTableCell align="right">Status</CustomTableCell>
+                          <CustomTableCell align="right">Category</CustomTableCell>
+                          <CustomTableCell align="right">Location</CustomTableCell>
+                      </TableRow>
+                  </TableHead>
+                  <TableBody>
+                  {incidents.map(row => (
+                      <TableRow onClick={()=>{this.props.history.push(`/app/review/${row.id}`) }} hover className={classes.row} key={row.id}>
+                      <CustomTableCell scope="row">
+                          {row.title}
+                      </CustomTableCell>
+                      <CustomTableCell >{row.description}</CustomTableCell>
+                      <CustomTableCell align="right">{row.status}</CustomTableCell>
+                      <CustomTableCell align="right">{row.category}</CustomTableCell>
+                      <CustomTableCell align="right">{row.location}</CustomTableCell>
+                      </TableRow>
+                  ))}
+                  </TableBody>
+              </Table>
+          </Paper>
+      );
+  }
 }
 
-export default withStyles(styles)(ReviewListView);
+const mapStateToProps = (state, ownProps) => {
+  return {
+      incidents: state.ongoingIncidentReducer.incidents,
+      ...ownProps
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getIncidents: () => {
+        dispatch(fetchAllIncidents());
+    },
+  }
+}
+
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withStyles(styles))(ReviewListView);

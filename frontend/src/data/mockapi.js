@@ -265,7 +265,7 @@ export function getIncidents(){
 
     return {
         status : 200,
-        data: incidents
+        data: [...incidents]
     };
 };
 

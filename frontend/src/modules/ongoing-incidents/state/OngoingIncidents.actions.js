@@ -27,7 +27,7 @@ import {
 
 import { getEvents, updateEventApproval } from '../../../api/events'
 import { postComment } from '../../../api/comments'
-import { changeStatus, changeSeverity } from '../../../api/incident';
+import { changeStatus, changeSeverity, getIncidents } from '../../../api/incident';
 import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 
 
@@ -205,7 +205,6 @@ export function resolveEventApprovalError(errorResponse) {
 }
 
 export function resolveEvent(incidentId, eventId, decision) {
-    console.log(incidentId, eventId, decision);
     return async function(dispatch) {
         dispatch(resolveEventApproval());
         try{
@@ -219,6 +218,41 @@ export function resolveEvent(incidentId, eventId, decision) {
         }catch(error){
             console.log(error);
             dispatch(resolveEventApprovalError(error));
+        }
+    }
+}
+
+
+export function requestAllIncidents() {
+    return {
+        type: REQUEST_ALL_INCIDENTS,
+    }
+}
+
+export function requestAllIncidentsSuccess(response) {
+    return {
+        type: REQUEST_ALL_INCIDENTS_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function requestAllIncidentsError(errorResponse) {
+    return {
+        type: REQUEST_ALL_INCIDENTS_ERROR,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchAllIncidents(filters={}) {
+    return async function(dispatch) {
+        dispatch(requestAllIncidents());
+        try{
+            const response = await getIncidents(filters);
+            dispatch(requestAllIncidentsSuccess(response.data));
+        }catch(error){
+            dispatch(requestAllIncidentsError(error));
         }
     }
 }

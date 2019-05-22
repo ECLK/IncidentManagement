@@ -472,8 +472,10 @@ class NavTabs extends Component {
     };
 
     componentDidMount() {
-        this.props.getIncident("9ba6c369-ee8c-49ca-9bab-ac50dc678570");
-        this.props.getEvents();
+        if(this.props.paramIncidentId){
+            this.props.getIncident(this.props.paramIncidentId);
+            this.props.getEvents(this.props.paramIncidentId);
+        }
     }
 
     showCommentInput = () => {

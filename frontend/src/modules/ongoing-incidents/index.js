@@ -87,12 +87,7 @@ class Ongoing extends Component {
         // />)
 
         return (
-            <Route exact 
-                path={`${match.url}`} 
-                component={()=> 
-                <IncidentView />
-                }
-            />
+            <IncidentView paramIncidentId={this.props.match.params.paramIncidentId} />
         )
     }
 }
