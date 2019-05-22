@@ -9,7 +9,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { FormattedMessage } from 'react-intl';
 import Link from "react-router-dom/Link";
-import LanguageSelector from "../../components/LanguageSelector";
+// import LanguageSelector from "../../components/LanguageSelector";
 import Logo from "../../components/Logo";
 
 import Create from "@material-ui/icons/Create";
@@ -84,7 +84,7 @@ function LandingPage(props) {
                     <Logo maxWidth='300px' />
                 </div>
                 <div>
-                    <LanguageSelector />
+                    {/* <LanguageSelector /> */}
                 </div>
             </div>
             <div className="title-container">
