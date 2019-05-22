@@ -43,7 +43,7 @@ function LinkTab(props) {
 
 const styles = theme => ({
     root: {
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: "transparent",
         boxShadow: "0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12)"
     },
     paper: {
@@ -503,14 +503,13 @@ class NavTabs extends Component {
                 <Grid container spacing={24}>
                     <Grid item xs={8}>
                         <div className={classes.root}>
-                            <AppBar position="static">
-                                <Tabs variant="fullWidth" value={value} onChange={this.handleChange} >
+                            
+                                <Tabs variant="fullWidth" value={value} onChange={this.handleChange} indicatorColor="primary" >
                                     <LinkTab label="Basic Information" href="page1" />
                                     <LinkTab label="Location Information" href="page2" />
                                     <LinkTab label="Contact Information" href="page3" />
-                                    <LinkTab label="Review Summary" href="page4" />
                                 </Tabs>
-                            </AppBar>
+                            
                             {value === 0 && <TabContainer> <BasicDetailTab classes={classes} incident={activeIncident} election={this.state.election} category={this.state.category} /> </TabContainer>}
                             {value === 1 && <TabContainer> <LocationTab classes={classes} incident={activeIncident} /> </TabContainer>}
                             {value === 2 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}

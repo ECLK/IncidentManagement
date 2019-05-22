@@ -1,5 +1,6 @@
 
 import handler from './apiHandler'
+import * as mockapi from '../data/mockapi';
 
 export const getDistricts = async () => {
     return handler.get('/districts')
@@ -19,4 +20,13 @@ export const getWards = async () => {
 
 export const getElections = async () => {
     return handler.get('/elections')
+}
+
+// from mock data
+export const getDSDivisions = async () => {
+    return mockapi.getDSDivisions();
+}
+
+export const getPollingDivisions = async () => {
+    return mockapi.getPollingDivisions();
 }
