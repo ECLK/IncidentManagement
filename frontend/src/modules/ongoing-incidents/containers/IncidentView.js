@@ -8,6 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import { compose } from 'redux'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -17,7 +18,7 @@ import Button from '@material-ui/core/Button';
 import EventTrail from '../../../components/EventTrail';
 import EventList from '../../../components/EventTrail/EventList';
 import Comment from '../../../components/EventTrail/Comment';
-import { fetchIncidentEventTrail, submitIncidentComment, setIncidentStatus } from '../state/OngoingIncidents.actions';
+import { fetchIncidentEventTrail, submitIncidentComment, setIncidentStatus, setIncidentSeverity, resolveEvent } from '../state/OngoingIncidents.actions';
 import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 import { EventActions } from '../../../components/EventTrail'
 
@@ -42,7 +43,7 @@ function LinkTab(props) {
 
 const styles = theme => ({
     root: {
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: "transparent",
         boxShadow: "0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12)"
     },
     paper: {
@@ -56,13 +57,13 @@ const styles = theme => ({
     },
     editButtonWrapper: {
         marginBottom: theme.spacing.unit * 2,
-        display:'flex',
-        justifyContent:'center'
-        
+        display: 'flex',
+        justifyContent: 'center'
+
     },
-    editButton:{
-        paddingLeft:'155px',
-        paddingRight:'155px'
+    editButton: {
+        paddingLeft: '155px',
+        paddingRight: '155px'
     }
 });
 
@@ -336,7 +337,7 @@ class ReviewTab extends Component {
 
         return (
             <div>
-                <Grid container spacing={24}>
+                <Grid container spacing={24} >
                     <Grid item xs={12}>
                         <Paper elevation={1} className={classes.paper}>
 
@@ -482,30 +483,43 @@ class NavTabs extends Component {
         this.setState({ isCommentVisible: false })
     }
 
+    onResolveEvent = (eventId, decision) => {
+        const { activeIncident } = this.props;
+
+        this.props.resolveEventApproval(activeIncident.id, eventId, decision);
+    }
+
     render() {
-        const { classes, postComment, activeIncident, reporter, changeStatus } = this.props;
+        const { classes, postComment, activeIncident, 
+                reporter, changeStatus, changeSeverity, 
+                activeUser } = this.props;
+
         const { value } = this.state;
+
+        const EditIncidentLink = props => <Link to="/incident/edit" {...props} />
 
         return (
             <NoSsr>
                 <Grid container spacing={24}>
-                    <Grid item xs={9}>
+                    <Grid item xs={8}>
                         <div className={classes.root}>
-                            <AppBar position="static">
-                                <Tabs variant="fullWidth" value={value} onChange={this.handleChange} >
+                            
+                                <Tabs variant="fullWidth" value={value} onChange={this.handleChange} indicatorColor="primary" >
                                     <LinkTab label="Basic Information" href="page1" />
                                     <LinkTab label="Location Information" href="page2" />
                                     <LinkTab label="Contact Information" href="page3" />
-                                    <LinkTab label="Review Summary" href="page4" />
                                 </Tabs>
-                            </AppBar>
+                            
                             {value === 0 && <TabContainer> <BasicDetailTab classes={classes} incident={activeIncident} election={this.state.election} category={this.state.category} /> </TabContainer>}
                             {value === 1 && <TabContainer> <LocationTab classes={classes} incident={activeIncident} /> </TabContainer>}
                             {value === 2 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
                             {value === 3 && <TabContainer> <ReviewTab classes={classes} incident={activeIncident} /> </TabContainer>}
                         </div>
                         <div>
-                            <EventList events={this.props.events} />
+                            <EventList 
+                                events={this.props.events}
+                                resolveEvent={this.onResolveEvent} 
+                            />
                             <Comment
                                 postComment={postComment}
                                 activeIncident={activeIncident}
@@ -515,13 +529,15 @@ class NavTabs extends Component {
                     </Grid>
                     <Grid item xs={3} p>
                         <div className={classes.editButtonWrapper}>
-                            <Button variant="outlined" size="large" color="primary" className={classes.editButton} >
+                            <Button component={EditIncidentLink} variant="outlined" size="large" color="primary" className={classes.editButton} >
                                 Edit
                             </Button>
                         </div>
                         <EventActions
                             activeIncident={activeIncident}
                             onStatusChange={changeStatus}
+                            onSeverityChange={changeSeverity}
+                            activeUser={activeUser}
                         />
                     </Grid>
                 </Grid>
@@ -540,6 +556,7 @@ const mapStateToProps = (state, ownProps) => {
         events: state.ongoingIncidentReducer.events,
         activeIncident: state.sharedReducer.activeIncident.data,
         reporter: state.sharedReducer.activeIncidentReporter,
+        activeUser: state.sharedReducer.signedInUser.data,
         ...ownProps
     }
 }
@@ -552,11 +569,17 @@ const mapDispatchToProps = (dispatch) => {
         getEvents: () => {
             dispatch(fetchIncidentEventTrail());
         },
-        postComment: (commentData) => {
-            dispatch(submitIncidentComment(commentData));
+        postComment: (incidentId, commentData) => {
+            dispatch(submitIncidentComment(incidentId, commentData));
         },
         changeStatus: (incidentId, status) => {
             dispatch(setIncidentStatus(incidentId, status))
+        },
+        changeSeverity: (incidentId, severity) => {
+            dispatch(setIncidentSeverity(incidentId, severity))
+        },
+        resolveEventApproval: (incidentId, eventId, decision) => {
+            dispatch(resolveEvent(incidentId, eventId, decision));
         }
     }
 }

@@ -22,8 +22,6 @@ import {
 } from './IncidentFiling.types'
 
 const initialState = {
-    incident: {},
-    reporter: {},
 
     isIncidentLoading: false,
 

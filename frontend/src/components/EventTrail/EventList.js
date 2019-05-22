@@ -13,11 +13,11 @@ const styles = {
     },
 };
 
-const EventListView = ({ events = [], classes }) => (
+const EventListView = ({ events = [], classes, resolveEvent }) => (
     <Card className={classes.root}>
         <List>
             {events.map(event => (
-                <EventItem event={event} key={event.id} />
+                <EventItem event={event} eventAction={resolveEvent} key={event.id} />
             ))}
         </List>
     </Card>

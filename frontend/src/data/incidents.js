@@ -14,7 +14,9 @@ export var incidents = [
         createdDate: Date(),
         reporterId: 1,
         status: "NEW",
-        severity: "DEFAULT"
+        severity: "DEFAULT",
+        assignees: [1, 2],
+        hasPendingStatusChange: false
     },
     {   
         id: "ed4fb628-618c-4ff8-94b3-906336354bec",
@@ -31,7 +33,8 @@ export var incidents = [
         createdDate: Date(),
         reporterId: 1,
         status: "NEW",
-        severity: "DEFAULT"
+        severity: "DEFAULT",
+        hasPendingStatusChange: false
     },
     {   
         id: "41071ede-bad9-4933-a037-b140b86cf0e4",
@@ -48,7 +51,8 @@ export var incidents = [
         createdDate: Date(),
         reporterId: 2,
         status: "NEW",
-        severity: "DEFAULT"
+        severity: "DEFAULT",
+        hasPendingStatusChange: false
     },
     {   
         id: "08e83c67-4f97-40b7-8df9-9551ec79e397",
@@ -65,7 +69,8 @@ export var incidents = [
         createdDate: Date(),
         reporterId: 4,
         status: "NEW",
-        severity: "DEFAULT"
+        severity: "DEFAULT",
+        hasPendingStatusChange: false
     },
     {   
         id: "d200f322-b297-4014-bff7-2b12ebb11045",
@@ -82,6 +87,7 @@ export var incidents = [
         createdDate: Date(),
         reporterId: 3,
         status: "NEW",
-        severity: "DEFAULT"
+        severity: "DEFAULT",
+        hasPendingStatusChange: false
     }
 ];

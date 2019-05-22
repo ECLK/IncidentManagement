@@ -2,9 +2,19 @@ import { events } from './events';
 import { incidents } from './incidents';
 import { reporters } from './reporters';
 import { users } from './users';
+<<<<<<< HEAD
 import { ds_sections } from './ds_sections';
 import { polling_divisions } from './polling_divisions';
+=======
+import * as storage from '../utils/localStorage';
+import * as auth from '../utils/authorization';
+
+>>>>>>> a2217e44da7c1b03d2235ae13340591e925bc47b
 const uuidv4 = require('uuid/v4');
+
+function getCurrentUser(){
+    return storage.read("ECIncidentMangementUser").user;
+}
 
 export function getEvents(){
     
@@ -14,16 +24,24 @@ export function getEvents(){
     }
 }
 
-export function addComment(commentObj){
+export function addComment(incidentId, commentObj){
+    const user = getCurrentUser();
+
+    var action = "COMMENTED";
+    if(commentObj.isOutcome){
+        action = "OUTCOME_ADDED"
+    }
+
     events.push({
+        id: uuidv4(),
         initiator: {
             isAnonymous: false,
             avatar: "",
-            userId: 3,
-            displayname: "Achala Dissanayake"
+            userId: user.uid,
+            displayname: user.displayName
         },
-        action: "COMMENTED",
-        incidentId: 1,
+        action: action,
+        incidentId: incidentId,
         data: {
             comment: {
                 body: commentObj.comment
@@ -44,6 +62,8 @@ export function changeStatus(incidentId, status){
     const incidentIndex = incidents.findIndex(inc => inc.id === incidentId);
     const oldStatus = incidents[incidentIndex].status;
 
+    const user = getCurrentUser();
+
     if(oldStatus === status){
         return {
             status: "SUCCESS",
@@ -53,23 +73,95 @@ export function changeStatus(incidentId, status){
             }
         };
     }
+
+    if(auth.canChangeStatus(user) === "CAN_WITH_APPROVAL"){
+        incidents[incidentIndex].hasPendingStatusChange = true;
+
+        events.push({
+            id: uuidv4(),
+            initiator: {
+                isAnonymous: false,
+                avatar: "",
+                userId: user.uid,
+                displayname: user.displayName
+            },
+            action: "ATTRIBUTE_CHANGE_REQUESTED",
+            affected_attribute: "STATUS",
+            incidentId: incidentId,
+            data: {
+                status: {
+                    from_status_type: oldStatus,
+                    to_status_type: status
+                }
+            },
+            createdDate: Date()
+        });
+    }else if(auth.canChangeStatus(user) === "CAN"){
+        incidents[incidentIndex].status = status;
+
+        events.push({
+            id: uuidv4(),
+            initiator: {
+                isAnonymous: false,
+                avatar: "",
+                userId: user.uid,
+                displayname: user.displayName
+            },
+            action: "ATTRIBUTE_CHANGED",
+            affected_attribute: "STATUS",
+            incidentId: incidentId,
+            data: {
+                status: {
+                    from_status_type: oldStatus,
+                    to_status_type: status
+                }
+            },
+            createdDate: Date()
+        });
+    }
+
+    return {
+        status: "SUCCESS",
+        message: "Status updated",
+        data: {
+            
+        }
+    }
+}
+
+export function changeSeverity(incidentId, severity){
+    const incidentIndex = incidents.findIndex(inc => inc.id === incidentId);
+    const oldSeverity = incidents[incidentIndex].severity;
+
+    const user = getCurrentUser();
+
+    if(oldSeverity === severity){
+        return {
+            status: "SUCCESS",
+            message: "Severity updated",
+            data: {
+                
+            }
+        };
+    }
     
-    incidents[incidentIndex].status = status;
+    incidents[incidentIndex].severity = severity;
 
     events.push({
+        id: uuidv4(),
         initiator: {
             isAnonymous: false,
             avatar: "",
-            userId: 1,
-            displayname: "Manujith Pallewatte"
+            userId: user.uid,
+            displayname: user.displayName
         },
         action: "ATTRIBUTE_CHANGED",
-        affected_attribute: "STATUS",
+        affected_attribute: "SEVERITY",
         incidentId: incidentId,
         data: {
-            status: {
-                from_status_type: oldStatus,
-                to_status_type: status
+            severity: {
+                from_severity_type: oldSeverity,
+                to_severity_type: severity
             }
         },
         createdDate: Date()
@@ -77,7 +169,84 @@ export function changeStatus(incidentId, status){
 
     return {
         status: "SUCCESS",
-        message: "Status updated",
+        message: "Severity updated",
+        data: {
+            
+        }
+    }
+}
+
+export function resolveEvent(eventId, decision){
+    const user = getCurrentUser();
+    const eventIdx = events.findIndex(e => e.id === eventId);
+    const prevEvent = events[eventIdx];
+    const incidentId = prevEvent.incidentId;
+    const incidentIndex = incidents.findIndex(inc => inc.id === incidentId);
+
+    incidents[incidentIndex].hasPendingStatusChange = false;
+    prevEvent.isResolved = true;
+
+    if(decision === "APPROVE"){
+        incidents[incidentIndex].status = prevEvent.data.status.to_status_type;
+        
+        events.push({
+            id: uuidv4(),
+            initiator: {
+                isAnonymous: false,
+                avatar: "",
+                userId: user.uid,
+                displayname: user.displayName
+            },
+            action: "ATTRIBUTE_CHANGE_APPROVED",
+            affected_attribute: "STATUS",
+            incidentId: incidentId,
+            data: {
+            },
+            linked_event_id: eventId,
+            createdDate: Date()
+        });
+
+        events.push({
+            id: uuidv4(),
+            initiator: {
+                isAnonymous: false,
+                avatar: "",
+                userId: prevEvent.initiator.userId,
+                displayname: prevEvent.initiator.displayname
+            },
+            action: "ATTRIBUTE_CHANGED",
+            affected_attribute: "STATUS",
+            incidentId: incidentId,
+            data: {
+                status: {
+                    from_status_type: prevEvent.data.status.from_status_type,
+                    to_status_type: prevEvent.data.status.to_status_type
+                }
+            },
+            createdDate: Date()
+        });
+    }else if(decision = "REJECT"){
+        events.push({
+            id: uuidv4(),
+            initiator: {
+                isAnonymous: false,
+                avatar: "",
+                userId: user.uid,
+                displayname: user.displayName
+            },
+            action: "ATTRIBUTE_CHANGE_REJECTED",
+            affected_attribute: "STATUS",
+            incidentId: incidentId,
+            data: {
+            },
+            linked_event_id: eventId,
+            createdDate: Date()
+        });
+    }
+
+    return {
+        status: "SUCCESS",
+        message: "Event updated",
         data: {
             
         }
@@ -127,6 +296,7 @@ export function createIncident(incidentData){
     });
 
     events.push({
+        id: uuidv4(),
         initiator: {
             isAnonymous: true
         },
@@ -149,6 +319,7 @@ export function updateIncident(incidentId, incidentData){
     incidents[incidentIndex] = incidentData;
 
     events.push({
+        id: uuidv4(),
         initiator: {
             isAnonymous: true
         },
