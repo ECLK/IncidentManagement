@@ -38,14 +38,20 @@ class Assginee extends React.Component {
     }
 
     handleChange = (value, key) => {
-        let user = {
-            name: value,
-            avatar: <Avatar>{getAvatarLetters(value)}</Avatar>,
-            key: key,
-        };
-        this.setState({
-            users: this.state.users.concat(user),
-        });
+        // todo search on array elements to find similar ones.
+        const similar = this.state.users.filter( user => user.key == key);
+        if(similar == ""){
+            let user = {
+                name: value,
+                avatar: <Avatar>{getAvatarLetters(value)}</Avatar>,
+                key: key,
+            };
+            this.setState({
+                users: this.state.users.concat(user),
+            });
+        } else {
+            alert("user already assinged.");
+        }
     };
 
 
