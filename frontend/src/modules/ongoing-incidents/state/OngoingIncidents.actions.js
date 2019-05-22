@@ -19,6 +19,10 @@ import {
     RESOLVE_EVENT_APPROVAL,
     RESOLVE_EVENT_APPROVAL_SUCCESS,
     RESOLVE_EVENT_APPROVAL_ERROR,
+
+    REQUEST_ALL_INCIDENTS, 
+    REQUEST_ALL_INCIDENTS_SUCCESS, 
+    REQUEST_ALL_INCIDENTS_ERROR,
 } from './OngoingIncidents.types'
 
 import { getEvents, updateEventApproval } from '../../../api/events'

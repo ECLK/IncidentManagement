@@ -12,7 +12,7 @@ import Ongoing from "../modules/ongoing-incidents";
 import {SignInPage} from "../modules/shared";
 import PrivateRoute from "./PrivateRoute";
 
-import ReviewIncidentListView from '../modules/incident-filing/ReviewIncidentListView';
+import ReviewIncidentListView from '../modules/ongoing-incidents/containers/ReviewIncidentListView';
 import DomainContainer from '../components/DomainContainer';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -53,12 +53,15 @@ class MainRouter extends Component {
           <div>
             <PrivateRoute path="/app" component={Layout}>
               <Switch>
-                <PrivateRoute exact path="/app/report" component={Report} />        
+                <PrivateRoute exact path="/app/report" component={Report} /> 
+                <PrivateRoute exact path="/app/report/:paramIncidentId" component={Report} /> 
+
                 <PrivateRoute exact path="/app/ongoing" component={Ongoing}/>
                 <PrivateRoute exact path="/app/historic" component={Historic}/>
                 <PrivateRoute exact path="/app/home" component={LandingPage}/>
 
                 <PrivateRoute exact path="/app/review" component={ReviewIncidentListView} />
+                <PrivateRoute exact path="/app/review/:paramIncidentId/edit" component={Report} />
               </Switch>
             </PrivateRoute>
 
