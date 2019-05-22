@@ -35,6 +35,8 @@ import {
     SIGN_OUT,
     SIGN_OUT_ERROR,
 
+    CHANGE_LANGUAGE,
+
 } from './Shared.types'
 
 const initialState = {
@@ -63,7 +65,8 @@ const initialState = {
         data:null,
         error:null,
         rememberMe:true,
-    }
+    },
+    selectedLanguage: 'en',
 }
 
 export default function sharedReducer(state, action) {
@@ -155,6 +158,8 @@ export default function sharedReducer(state, action) {
                 return draft;
             case SIGN_OUT_ERROR:
                 return draft;
+            case CHANGE_LANGUAGE:
+                draft.selectedLanguage = action.selectedLanguage;
         }
     })
 }

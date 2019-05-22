@@ -21,12 +21,14 @@ import MailIcon from '@material-ui/icons/Mail';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router";
+import { Button } from '@material-ui/core';
 
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
-import {initiateSignOut} from '../../modules/shared/state/Shared.actions'
+import {initiateSignOut} from '../../modules/shared/state/Shared.actions';
+import {changeLanguage} from '../../modules/shared/state/Shared.actions';
 
 const drawerWidth = 240;
 
@@ -92,8 +94,9 @@ const styles = theme => ({
 
 class DomainContainer extends React.Component {
   state = {
-    open: false,
+    open: true,
     anchorEl: null,
+    anchorLang: null,
   };
 
   handleDrawerOpen = () => {
@@ -102,6 +105,14 @@ class DomainContainer extends React.Component {
 
   handleDrawerClose = () => {
     this.setState({ open: false });
+  };
+
+  handleLangMenu = event => {
+    this.setState({ anchorLang: event.currentTarget });
+  };
+
+  handleLangMenuClose = () => {
+    this.setState({ anchorLang: null });
   };
 
   handleMenu = event => {
@@ -113,16 +124,21 @@ class DomainContainer extends React.Component {
   };
 
   handleSignOut = () => {
-      console.log('here')
       const {signOut} = this.props;
       signOut();
+  }
 
+  handleLanguageChange = (lang) => {
+      console.log(lang)
+    const {changeLanguage} = this.props;
+    changeLanguage(lang);
   }
 
   render() {
-    const { classes, theme, drawer } = this.props;
-    const { open, anchorEl } = this.state;
+    const { classes, theme, drawer, selectedLanguage } = this.props;
+    const { open, anchorEl, anchorLang } = this.state;
     const menuOpen = Boolean(anchorEl);
+    const langMenuOpen = Boolean(anchorLang);
 
 
     return (
@@ -148,6 +164,33 @@ class DomainContainer extends React.Component {
             <Typography variant="h6" color="inherit" className={classes.grow}>
                 {this.props.header? this.props.header() : ''}
             </Typography>
+
+            <Button
+                  aria-owns={open ? 'menu-appbar' : undefined}
+                  aria-haspopup="true"
+                  onClick={this.handleLangMenu}
+                  color="inherit"
+                >
+            {selectedLanguage}
+            </Button>
+            <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorLang}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={langMenuOpen}
+                  onClose={this.handleLangMenuClose}
+                >
+                  <MenuItem onClick={()=>(this.handleLanguageChange('si'))}>Sinhala</MenuItem>
+                  <MenuItem onClick={()=>(this.handleLanguageChange('ta'))}>Tamil</MenuItem>
+                  <MenuItem onClick={()=>(this.handleLanguageChange('en'))}>English</MenuItem>
+            </Menu>
 
             <IconButton
                   aria-owns={open ? 'menu-appbar' : undefined}
@@ -235,13 +278,17 @@ DomainContainer.propTypes = {
 const mapStateToProps = (state, ownProps) => {
     return {
         isSignedIn:state.sharedReducer.signedInUser.isSignedIn,
+        selectedLanguage: state.sharedReducer.selectedLanguage
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        signOut:()=>{
+        signOut:() => {
             dispatch(initiateSignOut())
+        },
+        changeLanguage: (lang) => {
+            dispatch(changeLanguage(lang))
         }
     }
 }
