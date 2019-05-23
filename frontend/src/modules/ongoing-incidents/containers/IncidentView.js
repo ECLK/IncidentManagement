@@ -63,8 +63,7 @@ const styles = theme => ({
 
     },
     editButton: {
-        paddingLeft: '155px',
-        paddingRight: '155px'
+        flexGrow: 1
     }
 });
 
@@ -503,7 +502,7 @@ class NavTabs extends Component {
 
         return (
             <NoSsr>
-                <Grid container spacing={24}>
+                <Grid container spacing={24} className={classes.mainGrid}>
                     <Grid item xs={8}>
                         <div className={classes.root}>
                             

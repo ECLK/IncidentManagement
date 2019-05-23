@@ -58,7 +58,6 @@ const styles = theme => ({
     container: {
         display: 'flex',
         flexWrap: 'wrap',
-        marginBottom: 4 * theme.spacing.unit,
     },
     textField: {
         marginLeft: 4 * theme.spacing.unit,

@@ -12,7 +12,8 @@ import * as auth from '../../utils/authorization';
 
 const styles = {
     statusChip: {
-        minWidth: "300px"
+        minWidth: "270px",
+        flexGrow:1
     },
     chipIcon: {
         marginLeft: "auto"
