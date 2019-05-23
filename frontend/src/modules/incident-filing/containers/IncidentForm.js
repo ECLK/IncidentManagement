@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react';
 import { withRouter } from "react-router";
 
-import { Formik, withFormik } from 'formik';
+import { Formik } from 'formik';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { FormattedMessage } from 'react-intl';
@@ -26,8 +26,21 @@ import { IncidentContactDetailsForm } from '../../../components/IncidentContactD
 import { IncidentReviewDetailsForm } from '../../../components/IncidentReviewDetailsForm';
 
 
-import { submitIncidentBasicData, stepBackwardIncidentStepper, stepForwardIncidentStepper, fetchUpdateReporter, fetchUpdateIncident, fetchIncidentData } from '../state/IncidentFiling.actions'
-import { fetchCatogories, fetchDistricts, fetchPoliceStations, fetchPollingStations, fetchWards, fetchActiveIncidentData } from '../../shared/state/Shared.actions';
+import { 
+    submitIncidentBasicData, 
+    stepBackwardIncidentStepper, 
+    stepForwardIncidentStepper, 
+    fetchUpdateReporter, 
+    fetchUpdateIncident,
+    resetIncidentForm } from '../state/IncidentFiling.actions'
+import { 
+    fetchCatogories, 
+    fetchDistricts, 
+    fetchPoliceStations, 
+    fetchPollingStations, 
+    fetchWards, 
+    fetchActiveIncidentData,
+    resetActiveIncident } from '../../shared/state/Shared.actions';
 
 import Snackbar from '@material-ui/core/Snackbar';
 
@@ -66,9 +79,18 @@ const styles = theme => ({
     formControl: {
         marginTop: 4 * theme.spacing.unit,
         marginLeft: 4 * theme.spacing.unit,
-        minWidth: 120,
+        minWidth: 140,
     },
-
+    formControl_ds: {
+        marginTop: 4 * theme.spacing.unit,
+        marginLeft: 4 * theme.spacing.unit,
+        minWidth: 250,
+    },
+    formControl_pol: {
+        marginTop: 4 * theme.spacing.unit,
+        marginLeft: 4 * theme.spacing.unit,
+        minWidth: 140,
+    },
     //stepper styling
     actionsContainer: {
         marginBottom: theme.spacing.unit * 2,
@@ -169,8 +191,12 @@ class IndicdentForm extends Component {
         this.props.getPollingStations();
         this.props.getWards();
 
+        this.props.resetIncidentForm();
+
         if (this.props.paramIncidentId) {
             this.props.getIncident(this.props.paramIncidentId);
+        }else{
+            this.props.resetActiveIncident();
         }
     }
 
@@ -315,7 +341,7 @@ class IndicdentForm extends Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, incident } = this.props;
         const steps = getSteps();
         const activeStep = this.props.incidentFormActiveStep;
 
@@ -326,7 +352,7 @@ class IndicdentForm extends Component {
         }
 
         return (
-            <div className={classes.root}>
+            <div className={classes.root} key={incident.id}>
                 <Formik
                     initialValues={this.getInitialValues()}
                     validate={values => {
@@ -513,6 +539,14 @@ const mapDispatchToProps = (dispatch) => {
 
         getIncident: (incidentId) => {
             dispatch(fetchActiveIncidentData(incidentId))
+        },
+
+        resetActiveIncident: () => {
+            dispatch(resetActiveIncident())
+        },
+
+        resetIncidentForm: () => {
+            dispatch(resetIncidentForm())
         }
     }
 }
@@ -521,4 +555,3 @@ export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     withStyles(styles)
 )(withRouter(IndicdentForm));
-

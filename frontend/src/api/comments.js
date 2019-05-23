@@ -5,9 +5,8 @@ export const getComments = async () => {
     // return handler.get('/incident_comments');
 }
 
-export const postComment = async (commentData) => {
-    // return handler.post('/incident_comments', commentData);
-    mockapi.addComment(commentData);
+export const postComment = async (incidentId, commentData) => {
+    return mockapi.addComment(incidentId, commentData);
 }
 
 export const getComment = async (commentId) => {

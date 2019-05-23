@@ -21,12 +21,28 @@ import {
 
     ACTIVE_INCIDENT_GET_DATA_REQUEST,
     ACTIVE_INCIDENT_GET_DATA_SUCCESS,
-    ACTIVE_INCIDENT_GET_DATA_ERROR
+    ACTIVE_INCIDENT_GET_DATA_ERROR,
+
+    SIGN_IN_REQUEST, 
+    SIGN_IN_REQUEST_SUCCESS,
+    SIGN_IN_REQUEST_ERROR,
+
+    TOGGLE_REMEBER_USER,
+    SIGN_OUT,
+    SIGN_OUT_ERROR,
+
+    CHANGE_LANGUAGE,
+
+    RESET_ACTIVE_INCIDENT
+
 } from './Shared.types'
 
-import { getIncident, getReporter  } from '../../../api/incident';
+// import { getIncident, getReporter  } from '../../../api/incident';
 import { getDistricts, getPoliceStations, getPollingStations, getWards } from '../../../api/shared';
-import {getCategories} from '../../../api/category'
+import { getCategories } from '../../../api/category';
+import { signIn } from '../../../data/mockapi';
+import * as localStorage from '../../../utils/localStorage';
+import { getIncident, getReporter } from '../../../data/mockapi'
 
 // Get Catogories
 
@@ -240,13 +256,108 @@ export function fetchActiveIncidentData(incidentId) {
         dispatch(requestActiveIncidentData(incidentId));
         try{
             const responseIncident = await getIncident(incidentId);
-            const responseReporter = await getReporter(responseIncident.data.reporter_id);
+            console.log(responseIncident)
+            const responseReporter = await getReporter(responseIncident.data.reporterId);
             dispatch(getActiveIncidentDataSuccess({
                 "incident": responseIncident.data,
                 "reporter": responseReporter.data
             }));
         }catch(error){
+            console.log(error);
             dispatch(getActiveIncidentDataError(error));
         }
+    }
+}
+
+
+// SIGN IN
+
+export function requestSignIn() {
+    return {
+        type: SIGN_IN_REQUEST,
+    }
+}
+
+export function requestSignInSuccess(response) {
+    return {
+        type: SIGN_IN_REQUEST_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function requestSignInError(errorResponse) {
+    return {
+        type: SIGN_IN_REQUEST_ERROR,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchSignIn(userName, password) {
+    return async function (dispatch, getState) {
+        dispatch(requestSignIn());
+        try{
+            let signInData = null;
+            signInData = localStorage.read('ECIncidentManagementUser');
+            if(!signInData){
+                signInData = await signIn(userName, password);
+                if(getState().sharedReducer.signedInUser.rememberMe){
+                    localStorage.write('ECIncidentMangementUser', signInData);
+                }
+            }    
+            dispatch(requestSignInSuccess(signInData));
+        }catch(error){
+            dispatch(getActiveIncidentDataError(error));
+        }
+    }
+}
+
+//Remeber user
+export function toggleRememberUser(){
+    return {
+        type: TOGGLE_REMEBER_USER,
+        data:null,
+        error:null
+    }
+}
+
+//sign out
+
+export function signOut() {
+    return {
+        type: SIGN_OUT
+    }
+}
+
+export function signOutError(error) {
+    return {
+        type: SIGN_OUT_ERROR,
+        error: error
+    }
+}
+
+export function initiateSignOut() {
+    return async function (dispatch, getState) {
+        try{
+            localStorage.remove('ECIncidentMangementUser');
+            dispatch(signOut())
+        }catch(error){
+            dispatch(signOutError(error));
+        }
+    }
+}
+
+//change langguage
+export function changeLanguage(selectedLanguage) {
+    return {
+        type: CHANGE_LANGUAGE,
+        selectedLanguage
+    }
+}
+
+export function resetActiveIncident(){
+    return {
+        type: RESET_ACTIVE_INCIDENT
     }
 }

@@ -15,7 +15,6 @@ import FormLabel from '@material-ui/core/FormLabel';
 
 // date picker imports
 import Grid from '@material-ui/core/Grid';
-import { TimePicker, DatePicker } from 'material-ui-pickers';
 
 export class IncidentBasicDetailsForm extends Component {
     render() {
@@ -82,20 +81,30 @@ export class IncidentBasicDetailsForm extends Component {
 
 
                 <Grid container className={classes.dataTimePickers} justify="space-between">
-                    <DatePicker
+                    <TextField
                         margin="normal"
+                        id="date"
                         label="Date"
-                        name='date'
-                        id='date'
+                        type="date"
                         value={values.date}
-                        onChange={e => setFieldValue('date', e)}
+                        InputLabelProps={{
+                        shrink: true,
+                        }}
+                        onChange={handleChange}
                     />
-                    <TimePicker
-                        margin="normal"
+                    <TextField
+                        id="time"
                         label="Time"
-                        name='time'
+                        type="time"
                         value={values.time}
-                        onChange={e => setFieldValue('time', e)}
+                        margin="normal"
+                        InputLabelProps={{
+                        shrink: true,
+                        }}
+                        inputProps={{
+                        step: 300, // 5 min
+                        }}
+                        onChange={handleChange}
                     />
                 </Grid>
                 <Divider variant="middle" />

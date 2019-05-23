@@ -2,22 +2,28 @@ import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
+import 'froala-editor/css/froala_style.min.css';
+import 'froala-editor/css/froala_editor.pkgd.min.css';
+
+import FroalaEditor from 'react-froala-wysiwyg';
 
 const styles = theme => ({
     container: {
-        display: 'flex',
-        flexWrap: 'wrap',
+        
     },
     buttonContainer: {
         display: 'flex',
         flexWrap: 'wrap',
-        justifyContent: 'flex-end',
-        width: 700
+        justifyContent: 'flex-end'
     },
-    textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 700,
+    textarea: {
+        width: "100%",
+        border: "1px solid #ccc",
+        height: "100px"
     },
     button: {
         margin: theme.spacing.unit,
@@ -30,58 +36,61 @@ class Comment extends Component {
         super(props)
         this.state = {
             comment : "",
+            isOutcome: false
         }
     }
 
-    onTextInputChange = (e) => {
+    onTextInputChange = (comment) => {
         this.setState({
-            comment : e.target.value,
+            comment : comment
         })
     }
 
-    clearComment = () => {
+    onCheckBoxChange = (e) => {
         this.setState({
-            comment:""
+            isOutcome: e.target.checked
+        })
+    }
+
+    clearAll = () => {
+        this.setState({
+            comment: "",
+            isOutcome: false
         })
     }
 
     postComment = () => {
         let commentObj = {
-            incidentId : this.props.activeIncident ? this.props.activeIncident.id : null,
+            isOutcome: this.state.isOutcome,
             comment : this.state.comment
         }
-        this.props.postComment(commentObj);
-        this.hideCommentInput()
-    }
-
-    hideCommentInput = () => {
-        this.setState({
-            comment:""
-        })
-        this.props.hideCommentInput()
+        this.props.postComment(this.props.activeIncident.id, commentObj);
+        this.clearAll();
     }
     
     render(){
 
         const { classes  } = this.props;
         return(
-            <div>
-                <TextField
-                    id="newComment"
-                    label="Add comment"
-                    multiline
-                    className={classes.textField}
-                    margin="normal"
-                    value = {this.state.comment}
-                    onChange = {this.onTextInputChange}
+            <div className={classes.container}>
+                <FroalaEditor
+                    tag='textarea'
+                    model={this.state.comment}
+                    onModelChange={this.onTextInputChange}
                 />
+                <FormGroup row>
+                    <FormControlLabel
+                    control={
+                        <Checkbox
+                        checked={this.state.isOutcome}
+                        onChange={this.onCheckBoxChange}
+                        value="checkedA"
+                        />
+                    }
+                    label="Mark as outcome"
+                    />
+                </FormGroup>
                 <div className={classes.buttonContainer}>
-                    <Button variant="contained" className={classes.button} onClick={this.hideCommentInput}>
-                        Cancel
-                    </Button>
-                    <Button variant="contained" className={classes.button} onClick={this.clearComment}>
-                        Clear
-                    </Button>
                     <Button variant="contained" className={classes.button} onClick={this.postComment}>
                         Post
                     </Button>

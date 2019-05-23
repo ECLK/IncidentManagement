@@ -15,7 +15,9 @@ import {
 
     INCIDENT_GET_DATA_REQUEST,
     INCIDENT_GET_DATA_SUCCESS,
-    INCIDENT_GET_DATA_ERROR
+    INCIDENT_GET_DATA_ERROR,
+
+    RESET_INCIDENT_FORM
 } from './IncidentFiling.types'
 import { createIncident, updateIncident, updateReporter, getIncident, getReporter } from '../../../api/incident';
 
@@ -44,7 +46,7 @@ export function requestIncidentSubmit() {
 }
 
 export function recieveIncidentSubmitSuccess(submitResponse) {
-    history.replace({ ...history.location, pathname: `/report/?incidentId=${submitResponse.incident.id}`});
+    history.replace({ ...history.location, pathname: `/app/report/${submitResponse.incident.id}`});
 
     return {
         type: INCIDENT_BASIC_DATA_SUBMIT_SUCCESS,
@@ -70,6 +72,7 @@ export function submitIncidentBasicData(incidentData) {
             await dispatch(recieveIncidentSubmitSuccess(response.data));
             await dispatch(stepForwardIncidentStepper());
         }catch(error){
+            console.log(error);
             await dispatch(recieveIncidentSubmitError(error));
         }
     }
@@ -187,6 +190,15 @@ export function fetchIncidentData(incidentId) {
         }catch(error){
             await dispatch(getIncidentDataError(error));
         }
+    }
+}
+
+
+export function resetIncidentForm() {
+    return {
+        type: RESET_INCIDENT_FORM,
+        data: null,
+        error: null
     }
 }
 

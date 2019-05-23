@@ -8,6 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import { compose } from 'redux'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -17,8 +18,9 @@ import Button from '@material-ui/core/Button';
 import EventTrail from '../../../components/EventTrail';
 import EventList from '../../../components/EventTrail/EventList';
 import Comment from '../../../components/EventTrail/Comment';
-import { fetchIncidentEventTrail, submitIncidentComment } from '../state/OngoingIncidents.actions';
-import {EventActions} from '../../../components/EventTrail'
+import { fetchIncidentEventTrail, submitIncidentComment, setIncidentStatus, setIncidentSeverity, resolveEvent } from '../state/OngoingIncidents.actions';
+import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
+import { EventActions } from '../../../components/EventTrail'
 
 
 
@@ -41,7 +43,9 @@ function LinkTab(props) {
 
 const styles = theme => ({
     root: {
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: "transparent",
+        boxShadow: "0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12)",
+        border: "1px solid #ccc"
     },
     paper: {
         ...theme.mixins.gutters(),
@@ -51,6 +55,16 @@ const styles = theme => ({
     },
     label: {
         // color: '#757575'
+    },
+    editButtonWrapper: {
+        marginBottom: theme.spacing.unit * 2,
+        display: 'flex',
+        justifyContent: 'center'
+
+    },
+    editButton: {
+        paddingLeft: '155px',
+        paddingRight: '155px'
     }
 });
 
@@ -73,10 +87,10 @@ class BasicDetailTab extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, incident } = this.props;
 
         return (
-            <div className={classes.root}>
+            <div>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <Paper elevation={1} className={classes.paper}>
@@ -84,39 +98,39 @@ class BasicDetailTab extends Component {
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography className={classes.label}> Incident Ref ID </Typography>
-                                    <Typography variant="h4" gutterBottom> {this.state.incident.token} </Typography>
+                                    <Typography variant="h4" gutterBottom> {incident.refId} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Title </Typography>
-                                    <Typography gutterBottom> {this.state.incident.title} </Typography>
+                                    <Typography gutterBottom> {incident.title} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Description </Typography>
-                                    <Typography gutterBottom> {this.state.incident.description} </Typography>
+                                    <Typography gutterBottom> {incident.description} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Occurence </Typography>
-                                    <Typography gutterBottom> {this.state.incident.occurence} </Typography>
+                                    <Typography gutterBottom> {incident.occurence} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Date </Typography>
-                                    <Typography gutterBottom> <Moment format="YYYY/MM/DD" unix>{this.state.incident.created_date}</Moment> </Typography>
+                                    <Typography gutterBottom> <Moment format="YYYY/MM/DD" unix>{incident.createdDate}</Moment> </Typography>
                                 </Grid>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Time </Typography>
-                                    <Typography gutterBottom> <Moment format="HH:mm" unix>{this.state.incident.created_date}</Moment> </Typography>
+                                    <Typography gutterBottom> <Moment format="HH:mm" unix>{incident.createdDate}</Moment> </Typography>
                                 </Grid>
                             </Grid>
 
@@ -176,10 +190,10 @@ class LocationTab extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, incident } = this.props;
 
         return (
-            <div className={classes.root}>
+            <div>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <Paper elevation={1} className={classes.paper}>
@@ -271,10 +285,10 @@ class ContactTab extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, reporter } = this.props;
 
         return (
-            <div className={classes.root}>
+            <div>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <Paper elevation={1} className={classes.paper}>
@@ -282,21 +296,21 @@ class ContactTab extends Component {
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Name </Typography>
-                                    <Typography gutterBottom> {this.state.reporter.name} </Typography>
+                                    <Typography gutterBottom> {reporter.name} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Contact Number </Typography>
-                                    <Typography gutterBottom> {this.state.reporter.contact} </Typography>
+                                    <Typography gutterBottom> {reporter.contact} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Address </Typography>
-                                    <Typography gutterBottom> {this.state.reporter.address} </Typography>
+                                    <Typography gutterBottom> {reporter.address} </Typography>
                                 </Grid>
                             </Grid>
 
@@ -320,32 +334,32 @@ class ReviewTab extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, incident } = this.props;
 
         return (
-            <div className={classes.root}>
-                <Grid container spacing={24}>
+            <div>
+                <Grid container spacing={24} >
                     <Grid item xs={12}>
                         <Paper elevation={1} className={classes.paper}>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography className={classes.label}> Incident Ref ID </Typography>
-                                    <Typography variant="h4" gutterBottom> {this.state.incident.token} </Typography>
+                                    <Typography variant="h4" gutterBottom> {incident.refId} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Status </Typography>
-                                    <Typography gutterBottom> Verified </Typography>
+                                    <Typography gutterBottom> {incident.status} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Severity </Typography>
-                                    <Typography gutterBottom> Moderate </Typography>
+                                    <Typography gutterBottom> {incident.severity} </Typography>
                                 </Grid>
                             </Grid>
 
@@ -458,7 +472,10 @@ class NavTabs extends Component {
     };
 
     componentDidMount() {
-        this.props.getEvents();
+        if(this.props.paramIncidentId){
+            this.props.getIncident(this.props.paramIncidentId);
+            this.props.getEvents();
+        }
     }
 
     showCommentInput = () => {
@@ -469,43 +486,62 @@ class NavTabs extends Component {
         this.setState({ isCommentVisible: false })
     }
 
+    onResolveEvent = (eventId, decision) => {
+        const { activeIncident } = this.props;
+
+        this.props.resolveEventApproval(activeIncident.id, eventId, decision);
+    }
+
     render() {
-        const { classes, postComment, activeIncident } = this.props;
+        const { classes, postComment, activeIncident, 
+                reporter, changeStatus, changeSeverity, 
+                activeUser } = this.props;
+
         const { value } = this.state;
+
+        const EditIncidentLink = props => <Link to={`/app/review/${activeIncident.id}/edit`} {...props} />
 
         return (
             <NoSsr>
                 <Grid container spacing={24}>
                     <Grid item xs={8}>
                         <div className={classes.root}>
-                            <AppBar position="static">
-                                <Tabs variant="fullWidth" value={value} onChange={this.handleChange} >
+                            
+                                <Tabs variant="fullWidth" value={value} onChange={this.handleChange} indicatorColor="primary" >
                                     <LinkTab label="Basic Information" href="page1" />
                                     <LinkTab label="Location Information" href="page2" />
                                     <LinkTab label="Contact Information" href="page3" />
-                                    <LinkTab label="Review Summary" href="page4" />
                                 </Tabs>
-                            </AppBar>
-                            {value === 0 && <TabContainer> <BasicDetailTab classes={classes} incident={this.state.incident} election={this.state.election} category={this.state.category} /> </TabContainer>}
-                            {value === 1 && <TabContainer> <LocationTab classes={classes} incident={this.state.incident} /> </TabContainer>}
-                            {value === 2 && <TabContainer> <ContactTab classes={classes} reporter={this.state.reporter} /> </TabContainer>}
-                            {value === 3 && <TabContainer> <ReviewTab classes={classes} incident={this.state.incident} /> </TabContainer>}
+                            
+                            {value === 0 && <TabContainer> <BasicDetailTab classes={classes} incident={activeIncident} election={this.state.election} category={this.state.category} /> </TabContainer>}
+                            {value === 1 && <TabContainer> <LocationTab classes={classes} incident={activeIncident} /> </TabContainer>}
+                            {value === 2 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
+                            {value === 3 && <TabContainer> <ReviewTab classes={classes} incident={activeIncident} /> </TabContainer>}
                         </div>
                         <div>
-                            <EventList events={this.props.events} />
-                        </div>
-                        {this.state.isCommentVisible ?
-                            (<Comment
-                                hideCommentInput={this.hideCommentInput}
+                            <EventList 
+                                events={this.props.events}
+                                resolveEvent={this.onResolveEvent} 
+                            />
+                            <Comment
                                 postComment={postComment}
                                 activeIncident={activeIncident}
-                            />)
-                            :
-                            (<Button onClick={this.showCommentInput} >Add Comment</Button>)}
+                            />
+                        </div>
 
                     </Grid>
-                    <Grid item xs={4}>
-                        <EventActions/>
+                    <Grid item xs={3} p>
+                        <div className={classes.editButtonWrapper}>
+                            <Button component={EditIncidentLink} variant="outlined" size="large" color="primary" className={classes.editButton} >
+                                Edit
+                            </Button>
+                        </div>
+                        <EventActions
+                            activeIncident={activeIncident}
+                            onStatusChange={changeStatus}
+                            onSeverityChange={changeSeverity}
+                            activeUser={activeUser}
+                        />
                     </Grid>
                 </Grid>
 
@@ -522,17 +558,31 @@ const mapStateToProps = (state, ownProps) => {
     return {
         events: state.ongoingIncidentReducer.events,
         activeIncident: state.sharedReducer.activeIncident.data,
+        reporter: state.sharedReducer.activeIncidentReporter,
+        activeUser: state.sharedReducer.signedInUser.data,
         ...ownProps
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        getIncident: (incidentId) => {
+            dispatch(fetchActiveIncidentData(incidentId));
+        },
         getEvents: () => {
             dispatch(fetchIncidentEventTrail());
         },
-        postComment: (commentData) => {
-            dispatch(submitIncidentComment(commentData));
+        postComment: (incidentId, commentData) => {
+            dispatch(submitIncidentComment(incidentId, commentData));
+        },
+        changeStatus: (incidentId, status) => {
+            dispatch(setIncidentStatus(incidentId, status))
+        },
+        changeSeverity: (incidentId, severity) => {
+            dispatch(setIncidentSeverity(incidentId, severity))
+        },
+        resolveEventApproval: (incidentId, eventId, decision) => {
+            dispatch(resolveEvent(incidentId, eventId, decision));
         }
     }
 }

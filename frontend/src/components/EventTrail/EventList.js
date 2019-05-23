@@ -6,15 +6,18 @@ import EventItem from './EventItem';
 
 const styles = {
     root: {
-        width: 600,
+        width: "100%",
+        boxShadow: "none",
+        backgroundColor: "transparent",
+        paddingTop: "15px"
     },
 };
 
-const EventListView = ({ events = [], classes }) => (
+const EventListView = ({ events = [], classes, resolveEvent }) => (
     <Card className={classes.root}>
         <List>
             {events.map(event => (
-                <EventItem event={event} key={event.id} />
+                <EventItem event={event} eventAction={resolveEvent} key={event.id} />
             ))}
         </List>
     </Card>

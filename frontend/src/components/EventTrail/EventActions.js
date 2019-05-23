@@ -6,55 +6,74 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { Chip } from '@material-ui/core';
+import SettingIcon from '@material-ui/icons/Settings';
+import Popover from '@material-ui/core/Popover';
+import Select from '@material-ui/core/Select';
+import Menu from "@material-ui/core/Menu";
+import MenuItem from '@material-ui/core/MenuItem';
+import StatusChange from './StatusChange';
+import Divider from '@material-ui/core/Divider';
 
 const styles = {
     card: {
         minWidth: 275,
-    },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
-    },
-    title: {
-        fontSize: 14,
-    },
-    pos: {
-        marginBottom: 12,
-    },
+        boxShadow: "none",
+        border: "1px solid #ccc"
+    }
 };
 
-function EventActions(props) {
-    const { classes } = props;
-    const bull = <span className={classes.bullet}>•</span>;
+class EventActions extends React.Component{
 
-    return (
-        <Card className={classes.card}>
-            <CardContent>
-                <Typography className={classes.title} color="textSecondary" gutterBottom>
-                    Word of the Day
-        </Typography>
-                <Typography variant="h5" component="h2">
-                    be
-          {bull}
-                    nev
-          {bull}o{bull}
-                    lent
-        </Typography>
-                <Typography className={classes.pos} color="textSecondary">
-                    adjective
-        </Typography>
-                <Typography component="p">
-                    well meaning and kindly.
-          <br />
-                    {'"a benevolent smile"'}
-                </Typography>
-            </CardContent>
-            <CardActions>
-                <Button size="small">Learn More</Button>
-            </CardActions>
-        </Card>
-    );
+    handleSettingClick = event => {
+        this.setState({
+          anchorEl: event.currentTarget,
+        });
+    };
+
+    handlePopOverClose = () => {
+        this.setState({
+          anchorEl: null,
+        });
+    };
+
+    render(){
+        const { classes, activeIncident, onStatusChange, onSeverityChange, activeUser } = this.props;
+
+        return (
+            <Card className={classes.card}>
+                <CardContent>
+                    <Typography variant="h6">
+                        Status
+                    </Typography>
+                    <Typography variant="body1  ">
+                        <StatusChange 
+                            activeIncident={activeIncident}
+                            currentValue={activeIncident.status} 
+                            onValueChange={onStatusChange}
+                            selectType="status"
+                            activeUser={activeUser}
+                            activeIncident={activeIncident}
+                        />
+                    </Typography>
+
+                    <Typography variant="h6" style={{marginTop:"20px"}}>
+                        Severity
+                    </Typography>
+                    <Typography variant="body1  ">
+                        <StatusChange 
+                            activeIncident={activeIncident}
+                            currentValue={activeIncident.severity} 
+                            onValueChange={onSeverityChange}
+                            selectType="severity"
+                            activeUser={activeUser}
+                            activeIncident={activeIncident}
+                        />
+                    </Typography>
+                </CardContent>
+            </Card>
+        );
+    }
 }
 
 EventActions.propTypes = {
