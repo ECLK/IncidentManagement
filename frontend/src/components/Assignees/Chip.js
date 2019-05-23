@@ -14,32 +14,40 @@ const styles = theme => ({
     },
 });
 
-function handleDelete() {
-    console.log('You clicked the delete icon.'); // eslint-disable-line no-alert
-}
+class Chips extends React.Component {
 
-function handleClick() {
-    console.log('You clicked the Chip.'); // eslint-disable-line no-alert
-}
+    constructor(props){
+        super(props);
+        // this.handleDelete = this.handleDelete.bind(this);
+    }
 
-function Chips(props) {
-    const { classes, users } = props;
-    return (
-        <div className={classes.root}>
-            {users.map(user => (
-                <Grid>
-                    <Chip
-                        label={user.name}
-                        avatar={user.avatar}
-                        key={user.value}
-                        onClick={handleClick}
-                        onDelete={handleDelete}
-                        className={classes.chip}
-                    />
-                </Grid>
-            ))}
-        </div>
-    );
+    handleDelete = value => {
+        this.props.handleDelete(value);
+    }
+    
+    handleClick = () => {
+        console.log('You clicked the Chip.'); // eslint-disable-line no-alert
+    }
+
+    render() {
+        const { classes, users } = this.props;
+        return (
+            <div className={classes.root}>
+                {users.map(user => (
+                    <Grid>
+                        <Chip
+                            label={user.name}
+                            avatar={user.avatar}
+                            key={user.key}
+                            onClick={this.handleClick}
+                            onDelete={() => this.handleDelete(user.key)}
+                            className={classes.chip}
+                        />
+                    </Grid>
+                ))}
+            </div>
+        );
+    }
 }
 
 Chips.propTypes = {

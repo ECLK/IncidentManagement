@@ -8,9 +8,9 @@ import CustomChip from './Chip';
 import Avatar from '@material-ui/core/Avatar';
 
 import AlertSnackbar from './AlertSnackbar';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+// import Snackbar from '@material-ui/core/Snackbar';
+// import IconButton from '@material-ui/core/IconButton';
+// import CloseIcon from '@material-ui/icons/Close';
 
 const suggestions = [
     { label: 'Clement', value: 1001, },
@@ -72,7 +72,7 @@ class Assginee extends React.Component {
                 // open: true,
             });
         }
-    };
+    }
 
     handleClose = () => {
         this.setState({
@@ -82,7 +82,14 @@ class Assginee extends React.Component {
                 open: false,
             }
         });
-    };
+    }
+
+    handleDelete = (value) => {
+        const updatedUsers = this.state.users.filter( user => user.key != value);
+        this.setState({
+            users: updatedUsers,
+        });
+    }
 
 
     render() {
@@ -92,7 +99,7 @@ class Assginee extends React.Component {
             <div className={classes.root}>
                 <Grid container spacing={24}>
                     <Grid item xs={6} sm={3}>
-                        <CustomChip users={this.state.users} />
+                        <CustomChip users={this.state.users} handleDelete={this.handleDelete}/>
                         <CustomAutocomplete suggestions={suggestions} handleChange={this.handleChange} />
                     </Grid>
                 </Grid>
