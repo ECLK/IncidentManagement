@@ -7,6 +7,11 @@ import CustomAutocomplete from './Autocomplete';
 import CustomChip from './Chip';
 import Avatar from '@material-ui/core/Avatar';
 
+import AlertSnackbar from './AlertSnackbar';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
 const suggestions = [
     { label: 'Clement', value: 1001, },
     { label: 'Elon Musk', value: 1002, },
@@ -17,30 +22,38 @@ const styles = theme => ({
     root: {
         flexGrow: 1,
     },
+    errorSnackbar: {
+        backgroundColor: theme.palette.error.dark,
+    }
 });
 
 function getAvatarLetters(name) {
     let splitWord = name.split(' ');
-    if (splitWord.length == 1){
-        return splitWord[0].charAt(0)+splitWord[0].charAt(1).toUpperCase();
+    if (splitWord.length == 1) {
+        return splitWord[0].charAt(0) + splitWord[0].charAt(1).toUpperCase();
     } else {
-        return splitWord[0].charAt(0)+splitWord[1].charAt(0);
+        return splitWord[0].charAt(0) + splitWord[1].charAt(0);
     }
 }
 
 class Assginee extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = ({
-            users: []
+            users: [],
+            // open: false,
+            alert: {
+                variant: "error",
+                message: "This user assigned already!",
+                open: false,    
+            },
         });
     }
 
     handleChange = (value, key) => {
-        // todo search on array elements to find similar ones.
-        const similar = this.state.users.filter( user => user.key == key);
-        if(similar == ""){
+        const similar = this.state.users.filter(user => user.key == key);
+        if (similar == "") {
             let user = {
                 name: value,
                 avatar: <Avatar>{getAvatarLetters(value)}</Avatar>,
@@ -50,8 +63,25 @@ class Assginee extends React.Component {
                 users: this.state.users.concat(user),
             });
         } else {
-            alert("user already assinged.");
+            this.setState({
+                alert: {
+                    variant: "error",
+                    message: "This user assigned already!",
+                    open: true,
+                }
+                // open: true,
+            });
         }
+    };
+
+    handleClose = () => {
+        this.setState({
+            alert: {
+                variant: "error",
+                message: "This user assigned already!",
+                open: false,
+            }
+        });
     };
 
 
@@ -62,10 +92,38 @@ class Assginee extends React.Component {
             <div className={classes.root}>
                 <Grid container spacing={24}>
                     <Grid item xs={6} sm={3}>
-                        <CustomChip users={this.state.users}/>
-                        <CustomAutocomplete suggestions={suggestions} handleChange={this.handleChange}/>
+                        <CustomChip users={this.state.users} />
+                        <CustomAutocomplete suggestions={suggestions} handleChange={this.handleChange} />
                     </Grid>
                 </Grid>
+
+                <AlertSnackbar alert={this.state.alert} handleClose={this.handleClose}/>
+
+                {/* <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.open}
+                    autoHideDuration={6000}
+                    onClose={this.handleClose}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">Selected user assigned already!</span>}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            className={classes.close}
+                            onClick={this.handleClose}
+                        >
+                            <CloseIcon />
+                        </IconButton>,
+                    ]}
+                /> */}
+
             </div>
         );
     }

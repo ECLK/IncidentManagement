@@ -5,6 +5,7 @@ import AutoComplete from '../components/Assignees/Autocomplete';
 import Avatar from '@material-ui/core/Avatar';
 import FaceIcon from '@material-ui/icons/Face';
 import Assignees from '../components/Assignees';
+import AlertSnackbar, { CustomizedSnackbars } from '../components/Assignees/AlertSnackbar';
 
 const users = [
     {
@@ -56,18 +57,27 @@ const suggestions = [
     { label: 'Brazil' },
     { label: 'British Indian Ocean Territory' },
     { label: 'Brunei Darussalam' },
-  ].map(suggestion => ({
+].map(suggestion => ({
     value: suggestion.label,
     label: suggestion.label,
-  }));
+}));
+
+const alert = {
+    variant: "error",
+    message: "This user assigned already!",
+    open: true,
+}
 
 storiesOf('Assignees', module)
     .add('Chip', () => (
         <AssigneeChip users={users} />
     ))
     .add('AutoComplete', () => (
-        <AutoComplete suggestions={suggestions}/>
+        <AutoComplete suggestions={suggestions} />
     ))
     .add('Assginee', () => (
-        <Assignees value="clem"/>
+        <Assignees />
     ))
+    .add('AlertSnackbar', () => (
+        <AlertSnackbar alert={alert} />
+    ));
