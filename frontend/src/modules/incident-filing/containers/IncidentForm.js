@@ -31,7 +31,8 @@ import {
     stepBackwardIncidentStepper, 
     stepForwardIncidentStepper, 
     fetchUpdateReporter, 
-    fetchUpdateIncident } from '../state/IncidentFiling.actions'
+    fetchUpdateIncident,
+    resetIncidentForm } from '../state/IncidentFiling.actions'
 import { 
     fetchCatogories, 
     fetchDistricts, 
@@ -110,7 +111,7 @@ const styles = theme => ({
 
     // calander
     dataTimePickers: {
-        width: '25%',
+        width: '50%',
         marginLeft: 4 * theme.spacing.unit,
     },
 
@@ -189,6 +190,8 @@ class IndicdentForm extends Component {
         this.props.getPoliceStations();
         this.props.getPollingStations();
         this.props.getWards();
+
+        this.props.resetIncidentForm();
 
         if (this.props.paramIncidentId) {
             this.props.getIncident(this.props.paramIncidentId);
@@ -338,7 +341,7 @@ class IndicdentForm extends Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, incident } = this.props;
         const steps = getSteps();
         const activeStep = this.props.incidentFormActiveStep;
 
@@ -349,7 +352,7 @@ class IndicdentForm extends Component {
         }
 
         return (
-            <div className={classes.root}>
+            <div className={classes.root} key={incident.id}>
                 <Formik
                     initialValues={this.getInitialValues()}
                     validate={values => {
@@ -540,6 +543,10 @@ const mapDispatchToProps = (dispatch) => {
 
         resetActiveIncident: () => {
             dispatch(resetActiveIncident())
+        },
+
+        resetIncidentForm: () => {
+            dispatch(resetIncidentForm())
         }
     }
 }

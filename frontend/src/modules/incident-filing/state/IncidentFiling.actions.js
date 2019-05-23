@@ -15,7 +15,9 @@ import {
 
     INCIDENT_GET_DATA_REQUEST,
     INCIDENT_GET_DATA_SUCCESS,
-    INCIDENT_GET_DATA_ERROR
+    INCIDENT_GET_DATA_ERROR,
+
+    RESET_INCIDENT_FORM
 } from './IncidentFiling.types'
 import { createIncident, updateIncident, updateReporter, getIncident, getReporter } from '../../../api/incident';
 
@@ -188,6 +190,15 @@ export function fetchIncidentData(incidentId) {
         }catch(error){
             await dispatch(getIncidentDataError(error));
         }
+    }
+}
+
+
+export function resetIncidentForm() {
+    return {
+        type: RESET_INCIDENT_FORM,
+        data: null,
+        error: null
     }
 }
 

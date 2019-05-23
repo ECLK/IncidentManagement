@@ -78,7 +78,7 @@ export default function sharedReducer(state, action) {
             initialState.signedInUser.data = userData.user;
             initialState.signedInUser.isSignedIn = true;
         }
-        return initialState
+        return initialState;
     }
     return produce(state, draft => {
         switch (action.type) {            
@@ -165,6 +165,7 @@ export default function sharedReducer(state, action) {
 
             case RESET_ACTIVE_INCIDENT:
                 draft.activeIncident.data = {};
+                draft.activeIncidentReporter = null;
                 return draft;
         }
     })
