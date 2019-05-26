@@ -6,7 +6,7 @@ export var reporters = [
         tm_name : "",
         reporter_type : "",
         email : "dehan@gmail.com",
-        telephone : "",
+        telephone : "0772537495",
         address : "",
         created_date : "",
         updated_date : ""
@@ -18,7 +18,7 @@ export var reporters = [
         tm_name : "",
         reporter_type : "",
         email : "clement@gmail.com",
-        telephone : "",
+        telephone : "0779465768",
         address : "",
         created_date : "",
         updated_date : ""
@@ -30,7 +30,7 @@ export var reporters = [
         tm_name : "",
         reporter_type : "",
         email : "lahiru@gmail.com",
-        telephone : "",
+        telephone : "0714856365",
         address : "",
         created_date : "",
         updated_date : ""
@@ -42,7 +42,7 @@ export var reporters = [
         tm_name : "",
         reporter_type : "",
         email : "manujith@gmail.com",
-        telephone : "",
+        telephone : "0773548596",
         address : "",
         created_date : "",
         updated_date : ""
@@ -54,7 +54,7 @@ export var reporters = [
         tm_name : "",
         reporter_type : "",
         email : "achala@gmail.com",
-        telephone : "",
+        telephone : "0758374653",
         address : "",
         created_date : "",
         updated_date : ""
