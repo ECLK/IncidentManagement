@@ -33,12 +33,16 @@ import {
 
     CHANGE_LANGUAGE,
 
-    RESET_ACTIVE_INCIDENT
+    RESET_ACTIVE_INCIDENT,
+
+    REQUEST_INCIDENT_DS_DIVISIONS,
+    REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS,
+    REQUEST_INCIDENT_DS_DIVISIONS_FAILURE,
 
 } from './Shared.types'
 
 import { getIncident, getReporter  } from '../../../api/incident';
-import { getDistricts, getPoliceStations, getPollingStations, getWards } from '../../../api/shared';
+import { getDistricts, getPoliceStations, getPollingStations, getWards, getDSDivisions } from '../../../api/shared';
 import { getCategories } from '../../../api/category';
 import { signIn } from '../../../data/mockapi';
 import * as localStorage from '../../../utils/localStorage';
@@ -189,6 +193,41 @@ export function fetchPollingStations(){
     }
 }
 
+// Get DS Divisions
+
+export function requestDSDivisions() {
+    return {
+        type: REQUEST_INCIDENT_DS_DIVISIONS,
+    }
+}
+
+export function receiveDSDivisions(response) {
+    return {
+        type: REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function receiveDSDivisionsError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_DS_DIVISIONS_FAILURE,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchDSDivisions(){
+    return async function(dispatch){
+        dispatch(requestDSDivisions());
+        try{
+            const response = await getDSDivisions();
+            await dispatch(receiveDSDivisions(response.data));
+        }catch(error){
+            await dispatch(receiveDSDivisionsError(error));
+        }
+    }
+}
 
 // Get Wards
 

@@ -40,7 +40,8 @@ import {
     fetchPollingStations, 
     fetchWards, 
     fetchActiveIncidentData,
-    resetActiveIncident } from '../../shared/state/Shared.actions';
+    resetActiveIncident,
+    fetchDSDivisions } from '../../shared/state/Shared.actions';
 
 import Snackbar from '@material-ui/core/Snackbar';
 
@@ -546,6 +547,9 @@ const mapDispatchToProps = (dispatch) => {
 
         resetIncidentForm: () => {
             dispatch(resetIncidentForm())
+        },
+        getDSDivisions: () => {
+            dispatch(fetchDSDivisions());
         }
     }
 }
