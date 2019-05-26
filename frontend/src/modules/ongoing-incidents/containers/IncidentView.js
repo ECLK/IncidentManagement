@@ -302,7 +302,14 @@ class ContactTab extends Component {
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Contact Number </Typography>
-                                    <Typography gutterBottom> {reporter.contact} </Typography>
+                                    <Typography gutterBottom> {reporter.telephone} </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Email </Typography>
+                                    <Typography gutterBottom> {reporter.email} </Typography>
                                 </Grid>
                             </Grid>
 
