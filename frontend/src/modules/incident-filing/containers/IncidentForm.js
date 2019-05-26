@@ -190,6 +190,7 @@ class IndicdentForm extends Component {
         this.props.getPoliceStations();
         this.props.getPollingStations();
         this.props.getWards();
+        this.props.getDSDivisions();
 
         this.props.resetIncidentForm();
 
@@ -498,6 +499,7 @@ const mapStateToProps = (state, ownProps) => {
         policeStations: state.sharedReducer.policeStations,
         wards: state.sharedReducer.wards,
         elections: state.sharedReducer.elections,
+        dsDivisions: state.sharedReducer.dsDivisions,
 
         ...ownProps
     }
