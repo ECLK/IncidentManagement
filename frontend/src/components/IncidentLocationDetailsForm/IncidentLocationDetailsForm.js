@@ -86,15 +86,18 @@ export class IncidentLocationDetailsForm extends Component {
                     <InputLabel htmlFor="ds_division_id">District Secretariat (DS) Division</InputLabel>
                     <Select
                         value={values.polling_station_id}
-                        onChange={handleChange}
+                        // onChange={handleChange}
                         inputProps={{
                             name: 'ds_division_id',
                             id: 'ds_division_id',
                         }}
                     >
-                        {this.props.pollingStations.map((c, k) => (
+                        {/* {this.props.pollingStations.map((c, k) => (
                             values.district_id ? ( c.district_id === values.district_id ? <MenuItem value={c.id} key={k}>{c.name}</MenuItem>:null) : <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
-                        ))}
+                        ))} */}
+                        <MenuItem value="sample1" key="sample1">Sample DSD1</MenuItem>
+                        <MenuItem value="sample2" key="sample2">Sample DSD2</MenuItem>
+                        <MenuItem value="sample3" key="sample3">Sample DSD3</MenuItem>
                     </Select>
                 </FormControl>
 
@@ -121,15 +124,18 @@ export class IncidentLocationDetailsForm extends Component {
                     <InputLabel htmlFor="polling_division_id">Polling division</InputLabel>
                     <Select
                         value={values.polling_station_id}
-                        onChange={handleChange}
+                        // onChange={handleChange}
                         inputProps={{
                             name: 'polling_division_id',
                             id: 'polling_division_id',
                         }}
-                    >
-                        {this.props.pollingStations.map((c, k) => (
+                    >   
+                        <MenuItem value="sample1" key="sample1">Sample PD1</MenuItem>
+                        <MenuItem value="sample2" key="sample2">Sample PD2</MenuItem>
+                        <MenuItem value="sample3" key="sample3">Sample PD3</MenuItem>
+                        {/* {this.props.pollingStations.map((c, k) => (
                             values.district_id ? ( c.district_id === values.district_id ? <MenuItem value={c.id} key={k}>{c.name}</MenuItem>:null) : <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
-                        ))}
+                        ))} */}
                     </Select>
                 </FormControl>
 
@@ -164,6 +170,8 @@ export class IncidentLocationDetailsForm extends Component {
                         ))}
                     </Select>
                 </FormControl>
+                
+                <div style={{ 'width': '100%' }}></div>
 
             </form>
         );
