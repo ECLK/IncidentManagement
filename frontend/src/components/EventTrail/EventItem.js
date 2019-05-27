@@ -74,6 +74,10 @@ function getActionText(event){
             return "added new outcome for the incident";
         case "MEDIA_ATTACHED":
             return "attached media";
+        case "ENTITY_ASSIGNED":
+            return `assigned ${event.data.user.displayName} to the incident`;
+        case "ENTITY_REMOVED":
+            return `removed ${event.data.user.displayName} from the incident`
     }
 }
 

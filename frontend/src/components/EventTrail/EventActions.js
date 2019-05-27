@@ -14,6 +14,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from '@material-ui/core/MenuItem';
 import StatusChange from './StatusChange';
 import Divider from '@material-ui/core/Divider';
+import Assignees from '../Assignees';
 
 const styles = {
     card: {
@@ -38,7 +39,9 @@ class EventActions extends React.Component{
     };
 
     render(){
-        const { classes, activeIncident, onStatusChange, onSeverityChange, activeUser } = this.props;
+        const { classes, activeIncident, onStatusChange, 
+                onSeverityChange, activeUser, getUsers, 
+                setIncidentAssignee,users } = this.props;
 
         return (
             <Card className={classes.card}>
@@ -46,7 +49,7 @@ class EventActions extends React.Component{
                     <Typography variant="h6">
                         Status
                     </Typography>
-                    <Typography variant="body1  ">
+                    <Typography variant="body1">
                         <StatusChange 
                             activeIncident={activeIncident}
                             currentValue={activeIncident.status} 
@@ -60,7 +63,7 @@ class EventActions extends React.Component{
                     <Typography variant="h6" style={{marginTop:"20px"}}>
                         Severity
                     </Typography>
-                    <Typography variant="body1  ">
+                    <Typography variant="body1">
                         <StatusChange 
                             activeIncident={activeIncident}
                             currentValue={activeIncident.severity} 
@@ -70,6 +73,16 @@ class EventActions extends React.Component{
                             activeIncident={activeIncident}
                         />
                     </Typography>
+
+                    <Typography variant="h6" style={{marginTop:"20px"}}>
+                        Assignees
+                    </Typography>
+                    <Assignees 
+                        activeIncident={activeIncident}
+                        getUsers={getUsers}
+                        setIncidentAssignee={setIncidentAssignee}
+                        users={users}
+                    />
                 </CardContent>
             </Card>
         );

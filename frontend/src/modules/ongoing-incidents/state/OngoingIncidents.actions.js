@@ -23,11 +23,21 @@ import {
     REQUEST_ALL_INCIDENTS, 
     REQUEST_ALL_INCIDENTS_SUCCESS, 
     REQUEST_ALL_INCIDENTS_ERROR,
+
+    REQUEST_ALL_USERS,
+    REQUEST_ALL_USERS_SUCCESS,
+    REQUEST_ALL_USERS_ERROR,
+
+    UPDATE_INCIDENT_ASSIGNEE,
+    UPDATE_INCIDENT_ASSIGNEE_SUCCESS,
+    UPDATE_INCIDENT_ASSIGNEE_ERROR
 } from './OngoingIncidents.types'
 
 import { getEvents, updateEventApproval } from '../../../api/events'
 import { postComment } from '../../../api/comments'
-import { changeStatus, changeSeverity, getIncidents } from '../../../api/incident';
+import { changeStatus, changeSeverity, getIncidents, assignToIncident, removeFromIncident } from '../../../api/incident';
+import { getAllUsers } from '../../../api/user';
+
 import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 
 
@@ -253,6 +263,85 @@ export function fetchAllIncidents(filters={}) {
             dispatch(requestAllIncidentsSuccess(response.data));
         }catch(error){
             dispatch(requestAllIncidentsError(error));
+        }
+    }
+}
+
+
+export function requestAllUsers() {
+    return {
+        type: REQUEST_ALL_USERS,
+    }
+}
+
+export function requestAllUsersSuccess(response) {
+    return {
+        type: REQUEST_ALL_USERS_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function requestAllUsersError(errorResponse) {
+    return {
+        type: REQUEST_ALL_USERS_ERROR,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchAllUsers() {
+    return async function(dispatch) {
+        dispatch(requestAllUsers());
+        try{
+            const response = await getAllUsers();
+            dispatch(requestAllUsersSuccess(response.data));
+        }catch(error){
+            dispatch(requestAllUsersError(error));
+        }
+    }
+}
+
+
+export function updateIncidentAssignee() {
+    return {
+        type: UPDATE_INCIDENT_ASSIGNEE,
+    }
+}
+
+export function updateIncidentAssigneeSuccess(response) {
+    return {
+        type: UPDATE_INCIDENT_ASSIGNEE_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function updateIncidentAssigneeError(errorResponse) {
+    return {
+        type: UPDATE_INCIDENT_ASSIGNEE_ERROR,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function setIncidentAssignee(incidentId, uid, actionType) {
+    return async function(dispatch) {
+        dispatch(updateIncidentAssignee());
+        try{
+            let response;
+            if(actionType === "ADD"){
+                response = await assignToIncident(incidentId, uid);
+            }else if(actionType === "REMOVE"){
+                response = await removeFromIncident(incidentId, uid);
+            }else{
+                throw "Invalid action";
+            }
+            dispatch(updateIncidentAssigneeSuccess(response.data));
+            dispatch(fetchActiveIncidentData(incidentId));
+            dispatch(fetchIncidentEventTrail());
+        }catch(error){
+            dispatch(updateIncidentAssigneeError(error));
         }
     }
 }

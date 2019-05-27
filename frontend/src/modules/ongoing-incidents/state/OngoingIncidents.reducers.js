@@ -20,6 +20,8 @@ import {
     REQUEST_ALL_INCIDENTS, 
     REQUEST_ALL_INCIDENTS_SUCCESS, 
     REQUEST_ALL_INCIDENTS_ERROR,
+
+    REQUEST_ALL_USERS_SUCCESS
 } from './OngoingIncidents.types'
 
 import { events } from '../../../data/events';
@@ -31,7 +33,8 @@ const initialState = {
         error: false,
     },
     events: [],
-    incidents: []
+    incidents: [],
+    users: []
 }
 
 export default function OngoingIncidentsReducer(state, action) {
@@ -43,16 +46,21 @@ export default function OngoingIncidentsReducer(state, action) {
             case REQUEST_INCIDENT_EVENT_TRAIL:
                 draft.eventTrail.isLoading = true;
                 return draft;
+                
             case REQUEST_INCIDENT_EVENT_TRAIL_SUCCESS:
                 draft.events = action.data;
                 return draft;
+
             case REQUEST_INCIDENT_EVENT_TRAIL_ERROR:
                 draft.eventTrail.error = action.error;
                 return draft;
             
             case REQUEST_ALL_INCIDENTS_SUCCESS:
-                console.log("sdsdss");
                 draft.incidents = action.data;
+                return draft;
+
+            case REQUEST_ALL_USERS_SUCCESS:
+                draft.users = action.data;
                 return draft;
 
         }

@@ -18,7 +18,14 @@ import Button from '@material-ui/core/Button';
 import EventTrail from '../../../components/EventTrail';
 import EventList from '../../../components/EventTrail/EventList';
 import Comment from '../../../components/EventTrail/Comment';
-import { fetchIncidentEventTrail, submitIncidentComment, setIncidentStatus, setIncidentSeverity, resolveEvent } from '../state/OngoingIncidents.actions';
+import { fetchIncidentEventTrail, 
+         submitIncidentComment, 
+         setIncidentStatus, 
+         setIncidentSeverity, 
+         resolveEvent,
+         fetchAllUsers,
+         setIncidentAssignee
+        } from '../state/OngoingIncidents.actions';
 import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 import { EventActions } from '../../../components/EventTrail'
 
@@ -501,7 +508,9 @@ class NavTabs extends Component {
     render() {
         const { classes, postComment, activeIncident, 
                 reporter, changeStatus, changeSeverity, 
-                activeUser } = this.props;
+                activeUser, users, getUsers,
+                setIncidentAssignee
+             } = this.props;
 
         const { value } = this.state;
 
@@ -547,6 +556,9 @@ class NavTabs extends Component {
                             onStatusChange={changeStatus}
                             onSeverityChange={changeSeverity}
                             activeUser={activeUser}
+                            users={users}
+                            getUsers={getUsers}
+                            setIncidentAssignee={setIncidentAssignee}
                         />
                     </Grid>
                 </Grid>
@@ -566,6 +578,7 @@ const mapStateToProps = (state, ownProps) => {
         activeIncident: state.sharedReducer.activeIncident.data,
         reporter: state.sharedReducer.activeIncidentReporter,
         activeUser: state.sharedReducer.signedInUser.data,
+        users: state.ongoingIncidentReducer.users,
         ...ownProps
     }
 }
@@ -589,6 +602,12 @@ const mapDispatchToProps = (dispatch) => {
         },
         resolveEventApproval: (incidentId, eventId, decision) => {
             dispatch(resolveEvent(incidentId, eventId, decision));
+        },
+        getUsers: () => {
+            dispatch(fetchAllUsers());
+        },
+        setIncidentAssignee: (incidentId, uid, actionType) => {
+            dispatch(setIncidentAssignee(incidentId, uid, actionType));
         }
     }
 }

@@ -14,7 +14,6 @@ function getCurrentUser(){
 }
 
 export function getEvents(){
-    
     return {
         status: "SUCCESS",
         data: [...events]
@@ -270,7 +269,6 @@ export function getIncidents(){
 };
 
 export function createIncident(incidentData){
-    console.log(incidentData);
     const user = getCurrentUser();
     const incident_id = uuidv4();
 
@@ -359,21 +357,26 @@ export function updateReporter(reporterID, reporterData){
     const reporterIndex = reporters.findIndex(rep => rep.id === reporterID);
     reporters[reporterIndex] = reporterData;
 
-    return { status: 200 }
+    return { 
+        status: 200,
+        data: {}
+    }
 };
 
 export async function signIn(userName, password){
-    if(users[userName]){
-        return {
-            user:users[userName],
-            authenticated:true
-        };
-    }else{
+    const user = users.findIndex(user => user.userName === userName);
+
+    if(user === -1){
         return {
             user:null,
             authenticated:false
         }
     }
+
+    return {
+        user: users[user],
+        authenticated:true
+    };
 }
 
 export function getDSDivisions(){
@@ -391,3 +394,73 @@ export function getPollingDivisions(){
         data: polling_divisions
     };
 };
+
+export function assignToIncident(incidentId, uid){
+    const user = getCurrentUser();
+    const incidentIndex = incidents.findIndex(inc => inc.id === incidentId);
+    const assignee = users.findIndex(user => user.uid === uid);
+    
+    incidents[incidentIndex].assignees.push({
+        "displayName": users[assignee].displayName,
+        "uid": users[assignee].uid
+    });
+
+    events.push({
+        id: uuidv4(),
+        initiator: {
+            isAnonymous: false,
+            avatar: "",
+            userId: user.uid,
+            displayname: user.displayName
+        },
+        action: "ENTITY_ASSIGNED",
+        incidentId: incidentId,
+        data: {
+            user: users[assignee]
+        },
+        createdDate: Date()
+    });
+
+    return { 
+        status: 200,
+        data: {
+        }
+    }
+}
+
+export function removeFromIncident(incidentId, uid){
+    const user = getCurrentUser();
+    const incidentIndex = incidents.findIndex(inc => inc.id === incidentId);
+    const assignee = users.findIndex(user => user.uid === uid);
+    
+    incidents[incidentIndex].assignees = incidents[incidentIndex].assignees.filter( user => user.uid != uid);
+
+    events.push({
+        id: uuidv4(),
+        initiator: {
+            isAnonymous: false,
+            avatar: "",
+            userId: user.uid,
+            displayname: user.displayName
+        },
+        action: "ENTITY_REMOVED",
+        incidentId: incidentId,
+        data: {
+            user: users[assignee]
+        },
+        createdDate: Date()
+    });
+
+    return { 
+        status: 200,
+        data: {
+        }
+    }
+}
+
+export function getUsers(){
+    return {
+        status: "SUCCESS",
+        data: [...users]
+    }
+}

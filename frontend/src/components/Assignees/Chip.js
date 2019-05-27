@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
+import Avatar from '@material-ui/core/Avatar';
 
 const styles = theme => ({
     root: {
@@ -21,6 +22,15 @@ class Chips extends React.Component {
         // this.handleDelete = this.handleDelete.bind(this);
     }
 
+    getAvatarLetters(name) {
+        let splitWord = name.split(' ');
+        if (splitWord.length == 1) {
+            return splitWord[0].charAt(0) + splitWord[0].charAt(1).toUpperCase();
+        } else {
+            return splitWord[0].charAt(0) + splitWord[1].charAt(0);
+        }
+    }
+
     handleDelete = value => {
         this.props.handleDelete(value);
     }
@@ -34,13 +44,13 @@ class Chips extends React.Component {
         return (
             <div className={classes.root}>
                 {users.map(user => (
-                    <Grid>
+                    <Grid key={user.key}>
                         <Chip
-                            label={user.name}
-                            avatar={user.avatar}
-                            key={user.key}
+                            label={user.displayName}
+                            avatar={<Avatar>{this.getAvatarLetters(user.displayName)}</Avatar>}
+                            key={user.uid}
                             onClick={this.handleClick}
-                            onDelete={() => this.handleDelete(user.key)}
+                            onDelete={() => this.handleDelete(user.uid)}
                             className={classes.chip}
                         />
                     </Grid>

@@ -50,8 +50,7 @@ export const getReporter = async (reporterId) => {
 };
 
 export const updateReporter = async (reporterId, reporterData) => {
-    await mockapi.updateReporter(reporterId, reporterData);
-    return true;
+    return mockapi.updateReporter(reporterId, reporterData);
 }
 
 
@@ -61,4 +60,12 @@ export const changeStatus = async (incidentId, status) => {
 
 export const changeSeverity = async (incidentId, severity) => {
     return mockapi.changeSeverity(incidentId, severity);
+}
+
+export const assignToIncident = async (incidentId, uid) => {
+    return mockapi.assignToIncident(incidentId, uid);
+}
+
+export const removeFromIncident = async (incidentId, uid) => {
+    return mockapi.removeFromIncident(incidentId, uid);
 }

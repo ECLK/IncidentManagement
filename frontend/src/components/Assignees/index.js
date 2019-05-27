@@ -12,12 +12,6 @@ import AlertSnackbar from './AlertSnackbar';
 // import IconButton from '@material-ui/core/IconButton';
 // import CloseIcon from '@material-ui/icons/Close';
 
-const suggestions = [
-    { label: 'Clement', value: 1001, },
-    { label: 'Elon Musk', value: 1002, },
-    { label: 'Richard Branson', value: 1003, },
-]
-
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -26,15 +20,6 @@ const styles = theme => ({
         backgroundColor: theme.palette.error.dark,
     }
 });
-
-function getAvatarLetters(name) {
-    let splitWord = name.split(' ');
-    if (splitWord.length == 1) {
-        return splitWord[0].charAt(0) + splitWord[0].charAt(1).toUpperCase();
-    } else {
-        return splitWord[0].charAt(0) + splitWord[1].charAt(0);
-    }
-}
 
 class Assginee extends React.Component {
 
@@ -51,17 +36,17 @@ class Assginee extends React.Component {
         });
     }
 
+    componentDidMount(){
+        this.props.getUsers();
+    }
+
     handleChange = (value, key) => {
-        const similar = this.state.users.filter(user => user.key == key);
+        const { id, assignees } = this.props.activeIncident;
+        const { setIncidentAssignee } = this.props;
+
+        const similar = assignees.filter(user => user.uid == key);
         if (similar == "") {
-            let user = {
-                name: value,
-                avatar: <Avatar>{getAvatarLetters(value)}</Avatar>,
-                key: key,
-            };
-            this.setState({
-                users: this.state.users.concat(user),
-            });
+            setIncidentAssignee(id, key, "ADD");
         } else {
             this.setState({
                 alert: {
@@ -85,22 +70,27 @@ class Assginee extends React.Component {
     }
 
     handleDelete = (value) => {
-        const updatedUsers = this.state.users.filter( user => user.key != value);
-        this.setState({
-            users: updatedUsers,
-        });
+        const { id, assignees } = this.props.activeIncident;
+        const { setIncidentAssignee } = this.props;
+
+        setIncidentAssignee(id, value, "REMOVE");
     }
 
 
     render() {
-        const { classes, theme } = this.props;
-
+        const { classes, theme, activeIncident, users } = this.props;
+        const suggestions = users.map((o) => ( {label: o.displayName, value: o.uid }) ); 
+        
         return (
             <div className={classes.root}>
                 <Grid container spacing={24}>
-                    <Grid item xs={6} sm={3}>
-                        <CustomChip users={this.state.users} handleDelete={this.handleDelete}/>
-                        <CustomAutocomplete suggestions={suggestions} handleChange={this.handleChange} />
+                    <Grid item xs={12}>
+                        { activeIncident && activeIncident.assignees && (
+                            <>
+                                <CustomChip users={activeIncident.assignees} handleDelete={this.handleDelete}/>
+                                <CustomAutocomplete suggestions={suggestions} handleChange={this.handleChange} />
+                            </>
+                        )}
                     </Grid>
                 </Grid>
 
