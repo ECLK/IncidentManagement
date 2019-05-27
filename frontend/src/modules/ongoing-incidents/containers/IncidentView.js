@@ -487,7 +487,7 @@ class NavTabs extends Component {
     componentDidMount() {
         if(this.props.paramIncidentId){
             this.props.getIncident(this.props.paramIncidentId);
-            this.props.getEvents();
+            this.props.getEvents(this.props.paramIncidentId);
         }
     }
 
@@ -589,8 +589,8 @@ const mapDispatchToProps = (dispatch) => {
         getIncident: (incidentId) => {
             dispatch(fetchActiveIncidentData(incidentId));
         },
-        getEvents: () => {
-            dispatch(fetchIncidentEventTrail());
+        getEvents: (incidentId) => {
+            dispatch(fetchIncidentEventTrail(incidentId));
         },
         postComment: (incidentId, commentData) => {
             dispatch(submitIncidentComment(incidentId, commentData));

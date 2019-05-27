@@ -13,10 +13,11 @@ function getCurrentUser(){
     return storage.read("ECIncidentMangementUser").user;
 }
 
-export function getEvents(){
+export function getEvents(incidentId=1){
+    const incidentEvents = events.filter((e) => e.incidentId === incidentId);
     return {
         status: "SUCCESS",
-        data: [...events]
+        data: [...incidentEvents]
     }
 }
 
@@ -295,7 +296,8 @@ export function createIncident(incidentData){
         date: incidentData.date,
         reporterId: new_reporter_id,
         status: "NEW",
-        severity: "DEFAULT"
+        severity: "DEFAULT",
+        assignees: []
     };
     incidents.push(incident);
     

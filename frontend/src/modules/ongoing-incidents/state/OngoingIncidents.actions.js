@@ -63,11 +63,11 @@ export function requestIncidentEventTrailError(errorResponse) {
     }
 }
 
-export function fetchIncidentEventTrail() {
+export function fetchIncidentEventTrail(incidentId) {
     return async function(dispatch) {
         dispatch(requestIncidentEventTrail());
         try{
-            const response = await getEvents();
+            const response = await getEvents(incidentId);
             await dispatch(requestIncidentEventTrailSuccess(response.data));
         }catch(error){
             await dispatch(requestIncidentEventTrailError(error));
@@ -104,7 +104,7 @@ export function submitIncidentComment(incidentId, commentData) {
         try{
             const response = await postComment(incidentId, commentData);
             dispatch(postIncidentCommentSuccess(response.data));
-            dispatch(fetchIncidentEventTrail());
+            dispatch(fetchIncidentEventTrail(incidentId));
         }catch(error){
             dispatch(postIncidentCommentError(error));
         }
@@ -141,7 +141,7 @@ export function setIncidentStatus(incidentId, status) {
             const response = await changeStatus(incidentId, status);
             dispatch(changeIncidentStatusSuccess(response.data));
             dispatch(fetchActiveIncidentData(incidentId));
-            dispatch(fetchIncidentEventTrail());
+            dispatch(fetchIncidentEventTrail(incidentId));
             /**
              * Todo: refresh the incident 
              */
@@ -181,7 +181,7 @@ export function setIncidentSeverity(incidentId, severity) {
             const response = await changeSeverity(incidentId, severity);
             dispatch(changeIncidentSeveritySuccess(response.data));
             dispatch(fetchActiveIncidentData(incidentId));
-            dispatch(fetchIncidentEventTrail());
+            dispatch(fetchIncidentEventTrail(incidentId));
             /**
              * Todo: refresh the incident 
              */
@@ -221,7 +221,7 @@ export function resolveEvent(incidentId, eventId, decision) {
             const response = await updateEventApproval(eventId, decision);
             dispatch(resolveEventApprovalSuccess(response.data));
             dispatch(fetchActiveIncidentData(incidentId));
-            dispatch(fetchIncidentEventTrail());
+            dispatch(fetchIncidentEventTrail(incidentId));
             /**
              * Todo: refresh the incident 
              */
@@ -339,7 +339,7 @@ export function setIncidentAssignee(incidentId, uid, actionType) {
             }
             dispatch(updateIncidentAssigneeSuccess(response.data));
             dispatch(fetchActiveIncidentData(incidentId));
-            dispatch(fetchIncidentEventTrail());
+            dispatch(fetchIncidentEventTrail(incidentId));
         }catch(error){
             dispatch(updateIncidentAssigneeError(error));
         }
