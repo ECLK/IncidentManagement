@@ -16,6 +16,9 @@ import StatusChange from './StatusChange';
 import Divider from '@material-ui/core/Divider';
 import Assignees from '../Assignees';
 
+import Moment from 'react-moment';
+import { getDateDiff } from './utils';
+
 const styles = {
     card: {
         minWidth: 275,
@@ -38,6 +41,16 @@ class EventActions extends React.Component{
         });
     };
 
+    getLastActionTime = () => {
+        const  { events } = this.props;
+        
+        if(events.length === 0){
+            return "No action taken yet";
+        }
+
+        return getDateDiff(events[0].createdDate);
+    }
+
     render(){
         const { classes, activeIncident, onStatusChange, 
                 onSeverityChange, activeUser, getUsers, 
@@ -47,32 +60,56 @@ class EventActions extends React.Component{
             <Card className={classes.card}>
                 <CardContent>
                     <Typography variant="h6">
+                        RefId
+                    </Typography>
+                    <Typography variant="h7">
+                        {activeIncident.refId}
+                    </Typography>
+
+                    <Typography variant="h6" style={{marginTop:"20px"}}>
+                        Logged Date and Time
+                    </Typography>
+                    <Typography variant="h7">
+                        <Moment>{activeIncident.createdDate}</Moment>
+                    </Typography>
+
+                    <Typography variant="h6" style={{marginTop:"20px"}}>
+                        Time from last action
+                    </Typography>
+                    <Typography variant="h7">
+                        {this.getLastActionTime()}
+                    </Typography>
+
+                    <Typography variant="h6" style={{marginTop:"20px"}}>
+                        Required response time
+                    </Typography>
+                    <Typography variant="h7">
+                        6 hours
+                    </Typography>
+
+                    <Typography variant="h6" style={{marginTop:"20px"}}>
                         Status
                     </Typography>
-                    <Typography variant="body1">
-                        <StatusChange 
-                            activeIncident={activeIncident}
-                            currentValue={activeIncident.status} 
-                            onValueChange={onStatusChange}
-                            selectType="status"
-                            activeUser={activeUser}
-                            activeIncident={activeIncident}
-                        />
-                    </Typography>
+                    <StatusChange 
+                        activeIncident={activeIncident}
+                        currentValue={activeIncident.status} 
+                        onValueChange={onStatusChange}
+                        selectType="status"
+                        activeUser={activeUser}
+                        activeIncident={activeIncident}
+                    />
 
                     <Typography variant="h6" style={{marginTop:"20px"}}>
                         Severity
                     </Typography>
-                    <Typography variant="body1">
-                        <StatusChange 
-                            activeIncident={activeIncident}
-                            currentValue={activeIncident.severity} 
-                            onValueChange={onSeverityChange}
-                            selectType="severity"
-                            activeUser={activeUser}
-                            activeIncident={activeIncident}
-                        />
-                    </Typography>
+                    <StatusChange 
+                        activeIncident={activeIncident}
+                        currentValue={activeIncident.severity} 
+                        onValueChange={onSeverityChange}
+                        selectType="severity"
+                        activeUser={activeUser}
+                        activeIncident={activeIncident}
+                    />
 
                     <Typography variant="h6" style={{marginTop:"20px"}}>
                         Assignees

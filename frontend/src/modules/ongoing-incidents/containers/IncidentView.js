@@ -559,6 +559,7 @@ class NavTabs extends Component {
                             users={users}
                             getUsers={getUsers}
                             setIncidentAssignee={setIncidentAssignee}
+                            events={this.props.events}
                         />
                     </Grid>
                 </Grid>
