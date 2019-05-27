@@ -16,14 +16,7 @@ export var incidents = [
         status: "NEW",
         severity: "DEFAULT",
         assignees: [
-            {
-                displayName: "Clement",
-                uid: 5,
-            },
-            {
-                displayName: "Elon Musk",
-                uid: 6,
-            }
+
         ],
         hasPendingStatusChange: false
     },
