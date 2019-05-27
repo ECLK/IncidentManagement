@@ -40,7 +40,8 @@ import {
     fetchPollingStations, 
     fetchWards, 
     fetchActiveIncidentData,
-    resetActiveIncident } from '../../shared/state/Shared.actions';
+    resetActiveIncident,
+    fetchDSDivisions } from '../../shared/state/Shared.actions';
 
 import Snackbar from '@material-ui/core/Snackbar';
 
@@ -189,6 +190,7 @@ class IndicdentForm extends Component {
         this.props.getPoliceStations();
         this.props.getPollingStations();
         this.props.getWards();
+        this.props.getDSDivisions();
 
         this.props.resetIncidentForm();
 
@@ -497,6 +499,7 @@ const mapStateToProps = (state, ownProps) => {
         policeStations: state.sharedReducer.policeStations,
         wards: state.sharedReducer.wards,
         elections: state.sharedReducer.elections,
+        dsDivisions: state.sharedReducer.dsDivisions,
 
         ...ownProps
     }
@@ -546,6 +549,9 @@ const mapDispatchToProps = (dispatch) => {
 
         resetIncidentForm: () => {
             dispatch(resetIncidentForm())
+        },
+        getDSDivisions: () => {
+            dispatch(fetchDSDivisions());
         }
     }
 }

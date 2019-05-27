@@ -133,7 +133,7 @@ export class IncidentBasicDetailsForm extends Component {
                 <div style={{ 'width': '100%' }}></div>
 
                 <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="category">Catagory</InputLabel>
+                    <InputLabel htmlFor="category">Category</InputLabel>
                     <Select
                         value={values.category}
                         onChange={handleChange}

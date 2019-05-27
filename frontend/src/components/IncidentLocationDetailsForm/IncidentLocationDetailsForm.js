@@ -60,6 +60,7 @@ export class IncidentLocationDetailsForm extends Component {
                             id: 'province',
                         }}
                     >
+                        {console.log(this.props.provinces)}
                         {this.props.provinces.map((c, k) => (
                             <MenuItem value={k} key={k}>{c}</MenuItem>
                         ))}
@@ -85,16 +86,17 @@ export class IncidentLocationDetailsForm extends Component {
                 <FormControl className={classes.formControl_ds}>
                     <InputLabel htmlFor="ds_division_id">District Secretariat (DS) Division</InputLabel>
                     <Select
-                        value={values.polling_station_id}
+                        value={values.ds_division_id}
                         onChange={handleChange}
                         inputProps={{
                             name: 'ds_division_id',
                             id: 'ds_division_id',
                         }}
                     >
-                        {this.props.pollingStations.map((c, k) => (
-                            values.district_id ? ( c.district_id === values.district_id ? <MenuItem value={c.id} key={k}>{c.name}</MenuItem>:null) : <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
+                        {this.props.dsDivisions.map((c, k) => (
+                            <MenuItem value={k} key={k}>{c}</MenuItem>
                         ))}
+                        {console.log(this.props.dsDivisions)}
                     </Select>
                 </FormControl>
 
@@ -120,16 +122,19 @@ export class IncidentLocationDetailsForm extends Component {
                 <FormControl className={classes.formControl_pol}>
                     <InputLabel htmlFor="polling_division_id">Polling division</InputLabel>
                     <Select
-                        value={values.polling_station_id}
+                        value={values.polling_division_id}
                         onChange={handleChange}
                         inputProps={{
                             name: 'polling_division_id',
                             id: 'polling_division_id',
                         }}
-                    >
-                        {this.props.pollingStations.map((c, k) => (
+                    >   
+                        <MenuItem value="sample1" key="sample1">Sample PD1</MenuItem>
+                        <MenuItem value="sample2" key="sample2">Sample PD2</MenuItem>
+                        <MenuItem value="sample3" key="sample3">Sample PD3</MenuItem>
+                        {/* {this.props.pollingStations.map((c, k) => (
                             values.district_id ? ( c.district_id === values.district_id ? <MenuItem value={c.id} key={k}>{c.name}</MenuItem>:null) : <MenuItem value={c.id} key={k}>{c.name}</MenuItem>
-                        ))}
+                        ))} */}
                     </Select>
                 </FormControl>
 
@@ -164,6 +169,8 @@ export class IncidentLocationDetailsForm extends Component {
                         ))}
                     </Select>
                 </FormControl>
+                
+                <div style={{ 'width': '100%' }}></div>
 
             </form>
         );

@@ -37,7 +37,11 @@ import {
 
     CHANGE_LANGUAGE,
 
-    RESET_ACTIVE_INCIDENT
+    RESET_ACTIVE_INCIDENT,
+
+    REQUEST_INCIDENT_DS_DIVISIONS,
+    REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS,
+    REQUEST_INCIDENT_DS_DIVISIONS_FAILURE,
 
 } from './Shared.types'
 
@@ -47,7 +51,9 @@ const initialState = {
     districts: [],
     pollingStations: [],
     policeStations: [],
+    dsDivisions: [],
     wards: [],
+
     activeIncident:{
         isLoading:false,
         data: {
@@ -167,6 +173,14 @@ export default function sharedReducer(state, action) {
                 draft.activeIncident.data = {};
                 draft.activeIncidentReporter = null;
                 return draft;
+
+            case REQUEST_INCIDENT_DS_DIVISIONS:
+                return draft
+            case REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS:
+                draft.dsDivisions = action.data;
+                return draft
+            case REQUEST_INCIDENT_DS_DIVISIONS_FAILURE:
+                return draft
         }
     })
 }

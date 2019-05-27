@@ -2,7 +2,7 @@ import { events } from './events';
 import { incidents } from './incidents';
 import { reporters } from './reporters';
 import { users } from './users';
-import { ds_sections } from './ds_sections';
+import { ds_divisions } from './ds_divisions';
 import { polling_divisions } from './polling_divisions';
 import * as storage from '../utils/localStorage';
 import * as auth from '../utils/authorization';
@@ -383,7 +383,7 @@ export function getDSDivisions(){
 
     return {
         status : 200,
-        data: ds_sections
+        data: ds_divisions
     };
 };
 
