@@ -16,11 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from .common import views
+from .common import views as common_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('categories/', views.CategoryList.as_view()),
-    path('categories/<int:pk>/', views.CategoryDetail.as_view()),
+    path('categories/', common_views.CategoryList.as_view()),
+    path('categories/<int:pk>/', common_views.CategoryDetail.as_view()),
 ]
