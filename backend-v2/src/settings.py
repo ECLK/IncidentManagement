@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'src.common',
-    'src.auth',
+    'src.custom_auth',
     'src.incidents',
     'src.events'
 ]
