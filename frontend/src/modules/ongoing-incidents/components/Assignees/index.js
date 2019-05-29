@@ -43,8 +43,8 @@ class Assginee extends React.Component {
         const { id, assignees } = this.props.activeIncident;
         const { setIncidentAssignee } = this.props;
 
-        const similar = assignees.filter(user => user.uid === key);
-        if (similar === "") {
+        const similar = assignees.filter(user => user.uid == key);
+        if (similar == "") {
             setIncidentAssignee(id, key, "ADD");
         } else {
             this.setState({
