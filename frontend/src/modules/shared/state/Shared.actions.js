@@ -46,7 +46,6 @@ import { getDistricts, getPoliceStations, getPollingStations, getWards, getDSDiv
 import { getCategories } from '../../../api/category';
 import { signIn } from '../../../data/mockapi';
 import * as localStorage from '../../../utils/localStorage';
-// import { getIncident, getReporter } from '../../../data/mockapi'
 
 // Get Catogories
 
