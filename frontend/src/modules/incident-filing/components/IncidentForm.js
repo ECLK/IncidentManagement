@@ -20,10 +20,10 @@ import Paper from '@material-ui/core/Paper';
 import StepContent from '@material-ui/core/StepContent';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { IncidentBasicDetailsForm } from '../../../components/IncidentBasicDetailsForm';
-import { IncidentLocationDetailsForm } from '../../../components/IncidentLocationDetailsForm';
-import { IncidentContactDetailsForm } from '../../../components/IncidentContactDetailsForm';
-import { IncidentReviewDetailsForm } from '../../../components/IncidentReviewDetailsForm';
+import IncidentBasicDetailsForm  from '../../shared/components/IncidentBasicDetailsForm';
+import IncidentLocationDetailsForm  from '../../shared/components/IncidentLocationDetailsForm';
+import IncidentContactDetailsForm  from '../../shared/components/IncidentContactDetailsForm';
+import IncidentReviewDetailsForm  from '../../shared/components/IncidentReviewDetailsForm';
 
 
 import { 
@@ -194,8 +194,10 @@ class IndicdentForm extends Component {
 
         this.props.resetIncidentForm();
 
-        if (this.props.paramIncidentId) {
-            this.props.getIncident(this.props.paramIncidentId);
+        const {paramIncidentId} = this.props.match.params
+
+        if (paramIncidentId) {
+            this.props.getIncident(paramIncidentId);
         }else{
             this.props.resetActiveIncident();
         }

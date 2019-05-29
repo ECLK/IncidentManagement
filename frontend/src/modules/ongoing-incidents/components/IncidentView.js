@@ -15,9 +15,9 @@ import Grid from '@material-ui/core/Grid';
 import Moment from 'react-moment';
 import Button from '@material-ui/core/Button';
 
-import EventTrail from '../../../components/EventTrail';
-import EventList from '../../../components/EventTrail/EventList';
-import Comment from '../../../components/EventTrail/Comment';
+import EventTrail from '../../shared/components/EventTrail';
+import EventList from '../../shared/components/EventTrail/EventList';
+import Comment from '../../shared/components/EventTrail/Comment';
 import { fetchIncidentEventTrail, 
          submitIncidentComment, 
          setIncidentStatus, 
@@ -27,7 +27,7 @@ import { fetchIncidentEventTrail,
          setIncidentAssignee
         } from '../state/OngoingIncidents.actions';
 import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
-import { EventActions } from '../../../components/EventTrail'
+import { EventActions } from '../../shared/components/EventTrail'
 
 
 

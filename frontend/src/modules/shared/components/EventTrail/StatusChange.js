@@ -8,7 +8,7 @@ import SettingIcon from '@material-ui/icons/Settings';
 import Select from '@material-ui/core/Select';
 import Menu from "@material-ui/core/Menu";
 import MenuItem from '@material-ui/core/MenuItem';
-import * as auth from '../../utils/authorization';
+import * as auth from '../../../../utils/authorization';
 
 const styles = {
     statusChip: {

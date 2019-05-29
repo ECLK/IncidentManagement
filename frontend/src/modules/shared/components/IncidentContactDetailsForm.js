@@ -100,3 +100,5 @@ export class IncidentContactDetailsForm extends Component {
         );
     };
 }
+
+export default IncidentContactDetailsForm;

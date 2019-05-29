@@ -31,8 +31,9 @@ import { Link } from 'react-router-dom';
 import AssignmentLateIcon from '@material-ui/icons/AssignmentLate';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 
-import {initiateSignOut} from '../../modules/shared/state/Shared.actions'
-import {changeLanguage} from '../../modules/shared/state/Shared.actions';
+import {initiateSignOut} from '../../state/Shared.actions'
+import {changeLanguage} from '../../state/Shared.actions';
+
 
 const drawerWidth = 240;
 

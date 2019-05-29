@@ -168,3 +168,5 @@ export class IncidentBasicDetailsForm extends Component {
         );
     };
 }
+
+export default IncidentBasicDetailsForm

@@ -8,7 +8,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 
-export class IncidentLocationDetailsForm extends Component {
+class IncidentLocationDetailsForm extends Component {
     render() {
         const { user, onClose, classes, } = this.props;
 
@@ -176,3 +176,5 @@ export class IncidentLocationDetailsForm extends Component {
         );
     };
 }
+
+export default IncidentLocationDetailsForm;
