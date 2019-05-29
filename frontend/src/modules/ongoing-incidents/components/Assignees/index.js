@@ -5,7 +5,6 @@ import Grid from '@material-ui/core/Grid';
 
 import CustomAutocomplete from './Autocomplete';
 import CustomChip from './Chip';
-import Avatar from '@material-ui/core/Avatar';
 
 import AlertSnackbar from './AlertSnackbar';
 // import Snackbar from '@material-ui/core/Snackbar';
@@ -44,8 +43,8 @@ class Assginee extends React.Component {
         const { id, assignees } = this.props.activeIncident;
         const { setIncidentAssignee } = this.props;
 
-        const similar = assignees.filter(user => user.uid == key);
-        if (similar == "") {
+        const similar = assignees.filter(user => user.uid === key);
+        if (similar === "") {
             setIncidentAssignee(id, key, "ADD");
         } else {
             this.setState({
@@ -70,7 +69,7 @@ class Assginee extends React.Component {
     }
 
     handleDelete = (value) => {
-        const { id, assignees } = this.props.activeIncident;
+        const { id } = this.props.activeIncident;
         const { setIncidentAssignee } = this.props;
 
         setIncidentAssignee(id, value, "REMOVE");
@@ -78,7 +77,7 @@ class Assginee extends React.Component {
 
 
     render() {
-        const { classes, theme, activeIncident, users } = this.props;
+        const { classes, activeIncident, users } = this.props;
         const suggestions = users.map((o) => ( {label: o.displayName, value: o.uid }) ); 
         
         return (

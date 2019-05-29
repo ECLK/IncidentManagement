@@ -2,18 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { Chip } from '@material-ui/core';
-import SettingIcon from '@material-ui/icons/Settings';
-import Popover from '@material-ui/core/Popover';
-import Select from '@material-ui/core/Select';
-import Menu from "@material-ui/core/Menu";
-import MenuItem from '@material-ui/core/MenuItem';
 import StatusChange from './StatusChange';
-import Divider from '@material-ui/core/Divider';
 import Assignees from '../Assignees';
 
 import Moment from 'react-moment';
@@ -96,7 +87,6 @@ class EventActions extends React.Component{
                         onValueChange={onStatusChange}
                         selectType="status"
                         activeUser={activeUser}
-                        activeIncident={activeIncident}
                     />
 
                     <Typography variant="h6" style={{marginTop:"20px"}}>
@@ -108,7 +98,6 @@ class EventActions extends React.Component{
                         onValueChange={onSeverityChange}
                         selectType="severity"
                         activeUser={activeUser}
-                        activeIncident={activeIncident}
                     />
 
                     <Typography variant="h6" style={{marginTop:"20px"}}>

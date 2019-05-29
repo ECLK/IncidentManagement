@@ -1,7 +1,6 @@
 import React, { Component, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import NoSsr from '@material-ui/core/NoSsr';
 import Tab from '@material-ui/core/Tab';
@@ -15,7 +14,6 @@ import Grid from '@material-ui/core/Grid';
 import Moment from 'react-moment';
 import Button from '@material-ui/core/Button';
 
-import EventTrail from './EventTrail';
 import EventList from './EventTrail/EventList';
 import Comment from './EventTrail/Comment';
 import { fetchIncidentEventTrail, 
@@ -196,7 +194,7 @@ class LocationTab extends Component {
     }
 
     render() {
-        const { classes, incident } = this.props;
+        const { classes } = this.props;
 
         return (
             <div>

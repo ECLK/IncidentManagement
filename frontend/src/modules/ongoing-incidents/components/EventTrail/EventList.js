@@ -2,6 +2,7 @@ import React from 'react';
 import Card from '@material-ui/core/Card';
 import List from '@material-ui/core/List';
 import { withStyles } from '@material-ui/core/styles';
+
 import EventItem from './EventItem';
 
 const styles = {

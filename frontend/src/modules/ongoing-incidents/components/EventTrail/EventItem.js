@@ -54,12 +54,16 @@ function getActionText(event){
                 case "SEVERITY":
                     return `changed the severity from ${event.data.severity.from_severity_type} 
                                 to ${event.data.severity.to_severity_type}`;
+                default:
+                    return 'unknown attribute change'
             }
         case "ATTRIBUTE_CHANGE_REQUESTED":
             switch(event.affected_attribute){
                 case "STATUS":
                     return `requested to change the status from ${event.data.status.from_status_type} 
                                 to ${event.data.status.to_status_type}`;
+                default:
+                        return 'unknown attribute change request'
             }
         case "ATTRIBUTE_CHANGE_APPROVED":
             return "approved requested change";
@@ -75,6 +79,8 @@ function getActionText(event){
             return `assigned ${event.data.user.displayName} to the incident`;
         case "ENTITY_REMOVED":
             return `removed ${event.data.user.displayName} from the incident`
+        default:
+            return "unknown action"
     }
 }
 
