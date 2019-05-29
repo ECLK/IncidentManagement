@@ -23,4 +23,10 @@ urlpatterns = [
 
     path('categories/', common_views.CategoryList.as_view()),
     path('categories/<int:pk>/', common_views.CategoryDetail.as_view()),
+
+    path('channels/', common_views.ChannelList.as_view()),
+    path('channels/<int:pk>/', common_views.ChannelDetail.as_view()),
+
+    path('districts/', common_views.DistrictList.as_view()),
+    path('districts/<int:pk>/', common_views.DistrictDetail.as_view()),
 ]

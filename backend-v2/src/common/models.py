@@ -16,6 +16,9 @@ class Category(models.Model):
 class Channel(models.Model):
     name = models.CharField(max_length=200)
     created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('id',)
     
 class District(models.Model):
     name = models.CharField(max_length=200)
