@@ -40,6 +40,9 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'src.common',
+    'src.auth',
+    'src.incidents',
+    'src.events'
 ]
 
 MIDDLEWARE = [
