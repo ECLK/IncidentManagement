@@ -39,3 +39,30 @@ class PoliceStation(models.Model):
     class Meta:
         ordering = ('id',)
     
+class PolllingStation(models.Model):
+    name = models.CharField(max_length=200)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('id',)
+
+class DSDivision(models.Model):
+    name = models.CharField(max_length=200)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('id',)
+
+class Reporter(models.Model):
+    name = models.CharField(max_length=200)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('id',)
+
+class Ward(models.Model):
+    name = models.CharField(max_length=200)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('id',)
