@@ -22,6 +22,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'cand2hjv-k500wm#nni_+xbsr$pza0or)rw-6!zf6ljs)i63*k'
 
+def env_var(key, default=None):
+    """Retrieves env vars and makes Python boolean replacements"""
+    val = os.environ.get(key, default)
+    print("val")
+    print(val)
+    if val == 'True':
+        val = True
+    elif val == 'False':
+        val = False
+    return val
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -83,8 +94,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'mysql.connector.django', 
         'NAME': 'lsf',
-        'USER': 'root',
-        'PASSWORD': 'toor',
+        'USER': env_var('DATABASE_USER'),
+        'PASSWORD': env_var('DATABASE_PWD'),
         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
