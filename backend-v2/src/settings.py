@@ -25,8 +25,6 @@ SECRET_KEY = 'cand2hjv-k500wm#nni_+xbsr$pza0or)rw-6!zf6ljs)i63*k'
 def env_var(key, default=None):
     """Retrieves env vars and makes Python boolean replacements"""
     val = os.environ.get(key, default)
-    print("val")
-    print(val)
     if val == 'True':
         val = True
     elif val == 'False':

@@ -13,7 +13,6 @@ def read_env():
     try:
         with open('.env') as f:
             content = f.read()
-            print(content)
     except IOError:
         content = ''
 
