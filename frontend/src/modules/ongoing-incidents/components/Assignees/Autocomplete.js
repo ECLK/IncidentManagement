@@ -13,7 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: 250,
+    height: 50,
   },
   input: {
     display: 'flex',
@@ -43,6 +43,9 @@ const styles = theme => ({
     marginTop: theme.spacing.unit,
     left: 0,
     right: 0,
+  },
+  select: {
+    zIndex:10000
   }
 });
 
@@ -161,6 +164,11 @@ class IntegrationReactSelect extends React.Component {
           font: 'inherit',
         },
       }),
+
+      menuList: (provided, state)=>({
+        ...provided,
+        zIndex:100000
+      })
     };
 
     return (

@@ -16,16 +16,23 @@ import Button from '@material-ui/core/Button';
 
 import EventList from './EventTrail/EventList';
 import Comment from './EventTrail/Comment';
-import { fetchIncidentEventTrail, 
-         submitIncidentComment, 
-         setIncidentStatus, 
-         setIncidentSeverity, 
-         resolveEvent,
-         fetchAllUsers,
-         setIncidentAssignee
-        } from '../state/OngoingIncidents.actions';
+import {
+    fetchIncidentEventTrail,
+    submitIncidentComment,
+    setIncidentStatus,
+    setIncidentSeverity,
+    resolveEvent,
+    fetchAllUsers,
+    setIncidentAssignee
+} from '../state/OngoingIncidents.actions';
 import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 import { EventActions } from './EventTrail'
+
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import Popper from '@material-ui/core/Popper';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList'
 
 
 
@@ -64,11 +71,21 @@ const styles = theme => ({
     editButtonWrapper: {
         marginBottom: theme.spacing.unit * 2,
         display: 'flex',
-        justifyContent: 'center'
+        justifyContent: 'space-around',
+        flexGrow: 1
 
     },
     editButton: {
-        flexGrow: 1
+        flexGrow: 0
+    },
+    sidePane: {
+        width: 300,
+        position: 'fixed',
+        top: theme.spacing.unit * 13,
+        right: theme.spacing.unit * 10,
+    },
+    mainArea: {
+        marginLeft: theme.spacing.unit * 4
     }
 });
 
@@ -476,6 +493,7 @@ class NavTabs extends Component {
             address: "33/3, Church road, Battaramulla."
         },
         isCommentVisible: false,
+        open: false
     };
 
     handleChange = (event, value) => {
@@ -483,7 +501,7 @@ class NavTabs extends Component {
     };
 
     componentDidMount() {
-        if(this.props.paramIncidentId){
+        if (this.props.paramIncidentId) {
             this.props.getIncident(this.props.paramIncidentId);
             this.props.getEvents(this.props.paramIncidentId);
         }
@@ -503,64 +521,114 @@ class NavTabs extends Component {
         this.props.resolveEventApproval(activeIncident.id, eventId, decision);
     }
 
-    render() {
-        const { classes, postComment, activeIncident, 
-                reporter, changeStatus, changeSeverity, 
-                activeUser, users, getUsers,
-                setIncidentAssignee
-             } = this.props;
+    handleToggle = () => {
+        this.setState(state => ({ open: !state.open }));
+    };
 
-        const { value } = this.state;
+    handleClose = event => {
+        if (this.anchorEl.contains(event.target)) {
+            return;
+        }
+
+        this.setState({ open: false });
+    };
+
+    handleMouseLeave = event => {
+        this.setState({open:false})
+    }
+
+    render() {
+        const { classes, postComment, activeIncident,
+            reporter, changeStatus, changeSeverity,
+            activeUser, users, getUsers,
+            setIncidentAssignee
+        } = this.props;
+
+        const { value, open } = this.state;
 
         const EditIncidentLink = props => <Link to={`/app/review/${activeIncident.id}/edit`} {...props} />
 
         return (
             <NoSsr>
-                <Grid container spacing={24} className={classes.mainGrid}>
-                    <Grid item xs={8}>
+                <Grid container spacing={24}>
+                    <Grid item xs={8} className={classes.mainArea}>
                         <div className={classes.root}>
-                            
-                                <Tabs variant="fullWidth" value={value} onChange={this.handleChange} indicatorColor="primary" >
-                                    <LinkTab label="Basic Information" href="page1" />
-                                    <LinkTab label="Location Information" href="page2" />
-                                    <LinkTab label="Contact Information" href="page3" />
-                                </Tabs>
-                            
+
+                            <Tabs variant="fullWidth" value={value} onChange={this.handleChange} indicatorColor="primary" >
+                                <LinkTab label="Basic Information" href="page1" />
+                                <LinkTab label="Location Information" href="page2" />
+                                <LinkTab label="Contact Information" href="page3" />
+                            </Tabs>
+
                             {value === 0 && <TabContainer> <BasicDetailTab classes={classes} incident={activeIncident} election={this.state.election} category={this.state.category} /> </TabContainer>}
                             {value === 1 && <TabContainer> <LocationTab classes={classes} incident={activeIncident} /> </TabContainer>}
                             {value === 2 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
                             {value === 3 && <TabContainer> <ReviewTab classes={classes} incident={activeIncident} /> </TabContainer>}
                         </div>
                         <div>
-                            <EventList 
+                            <EventList
                                 events={this.props.events}
-                                resolveEvent={this.onResolveEvent} 
+                                resolveEvent={this.onResolveEvent}
                             />
                             <Comment
                                 postComment={postComment}
                                 activeIncident={activeIncident}
                             />
                         </div>
-
-                    </Grid>
-                    <Grid item xs={3} p>
-                        <div className={classes.editButtonWrapper}>
-                            <Button component={EditIncidentLink} variant="outlined" size="large" color="primary" className={classes.editButton} >
-                                Edit
-                            </Button>
-                        </div>
-                        <EventActions
-                            activeIncident={activeIncident}
-                            onStatusChange={changeStatus}
-                            onSeverityChange={changeSeverity}
-                            activeUser={activeUser}
-                            users={users}
-                            getUsers={getUsers}
-                            setIncidentAssignee={setIncidentAssignee}
-                            events={this.props.events}
-                        />
                     </Grid>
                 </Grid>
+
+                <div className={classes.sidePane}>
+                    <div className={classes.editButtonWrapper}>
+                        <Button variant="outlined" size="large" color="secondary" onClick={()=>{changeStatus( activeIncident.id,'VERIFIED')}}>
+                            Verify
+                        </Button>
+                        <Button component={EditIncidentLink} variant="outlined" size="large" color="primary" className={classes.editButton} >
+                            Edit
+                        </Button>
+                        <Button
+                            variant="outlined" size="large" color="primary"
+                            buttonRef={node => {
+                                this.anchorEl = node;
+                            }}
+                            aria-owns={open ? 'menu-list-grow' : undefined}
+                            aria-haspopup="true"
+                            onClick={this.handleToggle}
+                            onMouseEnter={this.handleToggle}
+                            // onMouseLeave={this.handleMouseLeave}
+                        >
+                            More
+                        </Button>
+                        <Popper open={open} anchorEl={this.anchorEl} transition disablePortal>
+                            {({ TransitionProps, placement }) => (
+                                <Grow
+                                    {...TransitionProps}
+                                    id="menu-list-grow"
+                                    style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                                >
+                                    <Paper>
+                                        <ClickAwayListener onClickAway={this.handleClose}>
+                                            <MenuList>
+                                                <MenuItem onClick={this.handleClose}>Request for Advice</MenuItem>
+                                                <MenuItem onClick={this.handleClose}>Auto Escalate</MenuItem>
+                                            </MenuList>
+                                        </ClickAwayListener>
+                                    </Paper>
+                                </Grow>
+                            )}
+                        </Popper>
+                    </div>
+                    <EventActions
+                        activeIncident={activeIncident}
+                        onStatusChange={changeStatus}
+                        onSeverityChange={changeSeverity}
+                        activeUser={activeUser}
+                        users={users}
+                        getUsers={getUsers}
+                        setIncidentAssignee={setIncidentAssignee}
+                        events={this.props.events}
+                    />
+                </div>
 
             </NoSsr>
         );
