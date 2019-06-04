@@ -45,7 +45,7 @@ class Incident(models.Model):
     # category = models.ForeignKey("common.Category", on_delete=models.DO_NOTHING, null=True, blank=True)
 
     # the medium through which the incident was reported
-    infoChannel = models.CharField(max_length=200)
+    infoChannel = models.CharField(max_length=200, null=True, blank=True)
 
     # the person who reported the incident, not ncessarily the one 
     # that entered it to the system
@@ -58,9 +58,9 @@ class Incident(models.Model):
     assignees =  models.ManyToManyField(User)
     hasPendingStatusChange = models.BooleanField()
 
-    location = models.CharField(max_length=200)
-    address = models.CharField(max_length=200)
-    coordinates = models.CharField(max_length=200)
+    location = models.CharField(max_length=200, null=True, blank=True)
+    address = models.CharField(max_length=200, null=True, blank=True)
+    coordinates = models.CharField(max_length=200, null=True, blank=True)
 
     created_date = models.DateTimeField(auto_now_add=True)
 

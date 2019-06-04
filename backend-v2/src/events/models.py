@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 import enum
 import uuid
 
@@ -27,6 +29,8 @@ class Event(models.Model):
 
     # refers to an external entity, ex: comment, media, outcome
     reference_id = models.IntegerField(null=True, blank=True)
+    refered_model_type = models.ForeignKey(ContentType, on_delete=models.DO_NOTHING, null=True, blank=True)
+    refered_model = GenericForeignKey('refered_model_type', 'reference_id')
 
     # refers to an event linked to the current event i.e for an ATTRIBUTE_CHANGED 
     # event or an ATTRIBUTE_CHANGE_REJECTED event previously occured 

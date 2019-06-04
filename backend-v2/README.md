@@ -1,10 +1,10 @@
 ## Installation
 
-1. Configure database at settings.py
+1. Configure database at settings.py / .env
 2. `pip install -r requirements.txt`
-3. python manage.py migrate
-4. python manage.py createsuperuser --email admin@example.com --username admin
-5. python manage.py runserver
+3. `python manage.py migrate`
+4. `python manage.py createsuperuser --email admin@example.com --username admin`
+5. `python manage.py runserver`
 
 
 ## Model writing guidelines
@@ -12,6 +12,11 @@
 1. django inserts an auto-increment 'id' field by default. Unless you want to change it to something more meaninful or different, keep it
 
 2. for small strings use, models.CharField
+
+3. Foreign key referencing -> name the FK field as the object  
+    ex: Book refering to Author ir Book.author (not Book.author_id)
+
+4. Can have one FK to refer to multiple models, check Event model for example
 
 
 ## Serializers
@@ -26,9 +31,40 @@
 
 5. Best would be to write custom serializers tho kek
 
+6. Make sure the serializer output is camelCase (as opposed to snake_case used in the database). This is for better compatibility with the frontend. For this, if a certain field name needs to be converted it can be done. Refer EventSerializer (affectedAttribute field) for an example
+
+7. Can have additional fields with serializers as well
+
 
 ## Errors
 
->django.core.exceptions.ImproperlyConfigured: The included URLconf 'src.urls' does not appear to have any patterns in it. If you see valid patterns in the file then the issue is probably caused by a circular import.
+1. >django.core.exceptions.ImproperlyConfigured: The included URLconf 'src.urls' does not appear to have any patterns in it. If you see valid patterns in the file then the issue is probably caused by a circular import.
 
-This usually means your file being imported has some error, type or something
+This usually means your file being imported has some error, type or something.
+It can literally mean an error somewhere in the code, don't know why it pops up.
+
+2. Exceptions are handled centrally. So bubble up exceptions if needed.
+
+### Response
+
+All responses have the same structure. This is enforced centrally, no need to change anything. Make sure to use the `Response` object to return responses than sending out manual ones.
+
+```js
+{
+    message: str,
+    data: Object,
+    errors: [],
+    status: str
+}
+```
+
+
+### Services
+
+1. Services contain the domain model / business logic
+
+2. Paradigm is thin view, thin model but fat service
+
+3. If there's a reusable logic that involves more than one query to models, send it out to a service method.
+
+4. **Different apps should ONLY communicate through services. Donot invoke view methods of other apps directly**
