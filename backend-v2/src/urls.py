@@ -18,6 +18,8 @@ from django.urls import path
 
 from .common import views as common_views
 
+from .events import views as event_views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
@@ -29,4 +31,6 @@ urlpatterns = [
 
     path('districts/', common_views.DistrictList.as_view()),
     path('districts/<int:pk>/', common_views.DistrictDetail.as_view()),
+
+    path('incidents/<uuid:incident_id>/events', event_views.get_event_trail)
 ]

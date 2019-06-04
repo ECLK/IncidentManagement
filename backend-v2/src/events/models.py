@@ -23,27 +23,27 @@ class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     # action type for the event, refer enums
-    action = models.CharField(max_length=50, choices=[(tag, tag.value) for tag in EventAction])
+    action = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in EventAction])
 
     # refers to an external entity, ex: comment, media, outcome
-    reference_id = models.IntegerField()
+    reference_id = models.IntegerField(null=True, blank=True)
 
     # refers to an event linked to the current event i.e for an ATTRIBUTE_CHANGED 
     # event or an ATTRIBUTE_CHANGE_REJECTED event previously occured 
     # ATTRIBUTE_CHANGE_REQUESTED event's id
-    linked_event_id = models.ForeignKey("Event", on_delete=models.DO_NOTHING)
+    linked_event = models.ForeignKey("Event", on_delete=models.DO_NOTHING, null=True, blank=True)
 
     # specifies additional details
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, null=True, blank=True)
 
     # event intiator - should be a user
     intiator = models.IntegerField()
 
     # incident related to the event
-    incident_id = models.ForeignKey("incidents.Incident", on_delete=models.DO_NOTHING)
+    incident = models.ForeignKey("incidents.Incident", on_delete=models.DO_NOTHING)
 
     # attribute changed by the current event action
-    affected_attribute = models.CharField(max_length=50, choices=[(tag, tag.value) for tag in AffectedAttribute])
+    affected_attribute = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in AffectedAttribute], null=True, blank=True)
 
     created_date = models.DateTimeField(auto_now_add=True)
 
