@@ -37,7 +37,7 @@ class Event(models.Model):
     description = models.CharField(max_length=200, null=True, blank=True)
 
     # event intiator - should be a user
-    intiator = models.IntegerField()
+    initiator = models.IntegerField()
 
     # incident related to the event
     incident = models.ForeignKey("incidents.Incident", on_delete=models.DO_NOTHING)
