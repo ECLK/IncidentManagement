@@ -20,3 +20,4 @@ def get_event_trail(request, incident_id):
         return Response("Invalid incident id", status=status.HTTP_400_BAD_REQUEST)
     
     return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+

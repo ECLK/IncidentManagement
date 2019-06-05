@@ -40,14 +40,41 @@ def update_incident_event(initiator, incident):
                     incident
                 )
 
-def update_incident_status_event(initiator, incident, status):
-    create_event(
-                    EventAction.ATTRIBUTE_CHANGED,
-                    initiator, 
-                    incident,
-                    affected_attribute = AffectedAttribute.STATUS,
-                    refered_model=status                    
-                )
+def update_incident_status_event(initiator, incident, status, is_approved):
+    if is_approved:
+        create_event(
+                        EventAction.ATTRIBUTE_CHANGED,
+                        initiator, 
+                        incident,
+                        affected_attribute = AffectedAttribute.STATUS,
+                        refered_model=status                    
+                    )
+    else:
+        create_event(
+                        EventAction.ATTRIBUTE_CHANGE_REQUESTED,
+                        initiator, 
+                        incident,
+                        affected_attribute = AffectedAttribute.STATUS,
+                        refered_model=status                    
+                    )
+
+def update_incident_severity_event(initiator, incident, severity, is_approved):
+    if is_approved:
+        create_event(
+                        EventAction.ATTRIBUTE_CHANGED,
+                        initiator, 
+                        incident,
+                        affected_attribute = AffectedAttribute.SEVERITY,
+                        refered_model=severity                    
+                    )
+    else:
+        create_event(
+                        EventAction.ATTRIBUTE_CHANGE_REQUESTED,
+                        initiator, 
+                        incident,
+                        affected_attribute = AffectedAttribute.SEVERITY,
+                        refered_model=severity                    
+                    )
 
 def create_comment_event(initiator, incident, comment):
     create_event(

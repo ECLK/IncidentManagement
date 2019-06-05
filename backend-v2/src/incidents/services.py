@@ -50,23 +50,77 @@ def update_incident_postscript(incident: Incident, user: User) -> None:
 
 
 def update_incident_status(
-    incident: Incident, user: User, status_type: StatusType
+    incident: Incident, user: User, status_type_str: str
 ) -> None:
+
+    if incident.hasPendingStatusChange:
+        return ("error", "Incident status is locked for pending changes")
 
     try:
         # check for valid status type
-        status_type = StatusType[status_type]
+        status_type = StatusType[status_type_str]
     except:
         return ("error", "Invalid status type")
 
-    status = IncidentStatus(
-        current_status=status_type,
-        previous_status=incident.current_status,
-        incident=incident,
-    )
-    status.save()
+    if user.has_perm("incidents.can_request_status_change"):
+        # if user can't directly change the status
+        # only a pending change is added
+        status = IncidentStatus(
+            current_status=status_type,
+            previous_status=incident.current_status,
+            incident=incident,
+            approved=False
+        )
+        status.save()
+        incident.hasPendingStatusChange = True
+        event_services.update_incident_status_event(user, incident, status, False)
 
-    event_services.update_incident_status_event(user, incident, status)
+    elif user.has_perm("incidents.can_change_status"):
+        status = IncidentStatus(
+            current_status=status_type,
+            previous_status=incident.current_status,
+            incident=incident,
+            approved=True
+        )
+        status.save()
+        event_services.update_incident_status_event(user, incident, status, True)
 
     return ("success", "Status updated")
+
+
+def update_incident_severity(
+    incident: Incident, user: User, severity_type_str: str
+) -> None:
+
+    if incident.hasPendingSeverityChange:
+        return ("error", "Incident severity is locked for pending changes")
+
+    try:
+        # check for valid severity type
+        severity_type = SeverityType[severity_type_str]
+    except:
+        return ("error", "Invalid severity type")
+
+    if user.has_perm("incidents.can_request_severity_change"):
+        severity = IncidentSeverity(
+            current_severity=severity_type,
+            previous_severity=incident.current_severity,
+            incident=incident,
+            approved=False
+        )
+        severity.save()
+        incident.hasPendingSeverityChange = True
+        event_services.update_incident_severity_event(user, incident, severity, False)
+    
+    elif user.has_perm("incidents.can_change_severity"):
+        severity = IncidentSeverity(
+            current_severity=severity_type,
+            previous_severity=incident.current_severity,
+            incident=incident,
+            approved=True
+        )
+        severity.save()
+        event_services.update_incident_severity_event(user, incident, severity, True)
+
+    return ("success", "Severity updated")
 
