@@ -25,6 +25,29 @@ class SeverityType(enum.Enum):
     INSIGNIFICANT = "Insignificant"
     DEFAULT = "Default"
 
+class Reporter(models.Model):
+    name = models.CharField(max_length=200)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('id',)
+
+class IncidentStatus(models.Model):
+    previous_status = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in StatusType])
+    current_status = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in StatusType])
+    created_date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ('id',)
+
+class IncidentSeverity(models.Model):
+    previous_severity = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in SeverityType])
+    current_severity = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in SeverityType])
+    created_date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ('id',)
+
 class Incident(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -39,25 +62,27 @@ class Incident(models.Model):
 
     # getting the elections from a separate service
     election = models.CharField(max_length=200)
-    # polling_station = models.ForeignKey("common.PolllingStation", on_delete=models.DO_NOTHING, null=True, blank=True)
-    # ds_division = models.ForeignKey("common.DSDivision", on_delete=models.DO_NOTHING, null=True, blank=True)
-    # ward = models.ForeignKey("common.Ward", on_delete=models.DO_NOTHING, null=True, blank=True)
-    # category = models.ForeignKey("common.Category", on_delete=models.DO_NOTHING, null=True, blank=True)
+    polling_station = models.ForeignKey("common.PolllingStation", on_delete=models.DO_NOTHING, null=True, blank=True)
+    ds_division = models.ForeignKey("common.DSDivision", on_delete=models.DO_NOTHING, null=True, blank=True)
+    ward = models.ForeignKey("common.Ward", on_delete=models.DO_NOTHING, null=True, blank=True)
+    category = models.ForeignKey("common.Category", on_delete=models.DO_NOTHING, null=True, blank=True)
 
     # the medium through which the incident was reported
     infoChannel = models.CharField(max_length=200, null=True, blank=True)
 
     # the person who reported the incident, not ncessarily the one 
     # that entered it to the system
-    # reporter = models.ForeignKey("common.Reporter", on_delete=models.DO_NOTHING, null=True, blank=True)
+    reporter = models.ForeignKey("Reporter", on_delete=models.DO_NOTHING, null=True, blank=True)
 
-    current_status = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in StatusType], null=True, blank=True)
-    previous_status = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in StatusType], null=True, blank=True)
-    current_severity = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in SeverityType], null=True, blank=True)
-    previous_severity = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in SeverityType], null=True, blank=True)
+    current_status = models.ForeignKey("IncidentStatus", on_delete=models.DO_NOTHING, null=True)
+    current_severity = models.ForeignKey("IncidentSeverity", on_delete=models.DO_NOTHING, null=True)
+    
+    hasPendingStatusChange = models.BooleanField(default=False)
+    hasPendingSeverityChange = models.BooleanField(default=False)
+
     assignees =  models.ManyToManyField(User)
-    hasPendingStatusChange = models.BooleanField()
 
+    # location related details
     location = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
     coordinates = models.CharField(max_length=200, null=True, blank=True)
