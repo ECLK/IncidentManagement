@@ -85,7 +85,8 @@ const styles = theme => ({
         right: theme.spacing.unit * 10,
     },
     mainArea: {
-        marginLeft: theme.spacing.unit * 4
+        marginLeft: theme.spacing.unit * 4,
+        maxWidth: 'calc(100% - 450px)'
     }
 });
 
@@ -551,7 +552,7 @@ class NavTabs extends Component {
         return (
             <NoSsr>
                 <Grid container spacing={24}>
-                    <Grid item xs={8} className={classes.mainArea}>
+                    <div className={classes.mainArea}>
                         <div className={classes.root}>
 
                             <Tabs variant="fullWidth" value={value} onChange={this.handleChange} indicatorColor="primary" >
@@ -575,7 +576,7 @@ class NavTabs extends Component {
                                 activeIncident={activeIncident}
                             />
                         </div>
-                    </Grid>
+                    </div>
                 </Grid>
 
                 <div className={classes.sidePane}>
