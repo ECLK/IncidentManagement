@@ -33,16 +33,18 @@ class Reporter(models.Model):
         ordering = ('id',)
 
 class IncidentStatus(models.Model):
-    previous_status = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in StatusType])
+    previous_status = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in StatusType], blank=True)
     current_status = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in StatusType])
+    incident = models.ForeignKey('Incident', on_delete=models.DO_NOTHING)
     created_date = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         ordering = ('id',)
 
 class IncidentSeverity(models.Model):
-    previous_severity = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in SeverityType])
+    previous_severity = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in SeverityType], blank=True)
     current_severity = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in SeverityType])
+    incident = models.ForeignKey('Incident', on_delete=models.DO_NOTHING)
     created_date = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -74,13 +76,10 @@ class Incident(models.Model):
     # that entered it to the system
     reporter = models.ForeignKey("Reporter", on_delete=models.DO_NOTHING, null=True, blank=True)
 
-    current_status = models.ForeignKey("IncidentStatus", on_delete=models.DO_NOTHING, null=True)
-    current_severity = models.ForeignKey("IncidentSeverity", on_delete=models.DO_NOTHING, null=True)
-    
     hasPendingStatusChange = models.BooleanField(default=False)
     hasPendingSeverityChange = models.BooleanField(default=False)
 
-    assignees =  models.ManyToManyField(User)
+    assignees =  models.ManyToManyField(User, blank=True)
 
     # location related details
     location = models.CharField(max_length=200, null=True, blank=True)
@@ -88,6 +87,10 @@ class Incident(models.Model):
     coordinates = models.CharField(max_length=200, null=True, blank=True)
 
     created_date = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def current_status(self):
+        return IncidentStatus.objects.filter(incident=self).order_by("-created_date").first()
 
     class Meta:
         ordering = ('created_date',)
