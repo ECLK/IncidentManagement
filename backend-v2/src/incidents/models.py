@@ -26,7 +26,13 @@ class SeverityType(enum.Enum):
     DEFAULT = "Default"
 
 class Reporter(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, null=True, blank=True)
+    sn_name = models.CharField(max_length=200, null=True, blank=True)
+    tm_name = models.CharField(max_length=200, null=True, blank=True)
+    reporter_type = models.CharField(max_length=200, null=True, blank=True)
+    email = models.CharField(max_length=200, null=True, blank=True)
+    telephone = models.CharField(max_length=200, null=True, blank=True)
+    address = models.CharField(max_length=200, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -45,6 +51,19 @@ class IncidentSeverity(models.Model):
     previous_severity = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in SeverityType], blank=True)
     current_severity = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in SeverityType])
     incident = models.ForeignKey('Incident', on_delete=models.DO_NOTHING)
+    created_date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ('id',)
+
+class IncidentComment(models.Model):
+    body = models.CharField(max_length=200)
+    incident = models.ForeignKey('Incident', on_delete=models.DO_NOTHING)
+    is_active = models.BooleanField(default=True)
+    is_outcome = models.BooleanField(default=False)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True)
+    sn_body = models.CharField(max_length=200)
+    tm_body = models.CharField(max_length=200)
     created_date = models.DateTimeField(auto_now_add=True)
     
     class Meta:
