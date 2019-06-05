@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Incident, IncidentStatus, IncidentSeverity, Reporter
+from .models import Incident, IncidentStatus, IncidentSeverity, Reporter, IncidentComment
 from rest_framework import serializers
 
 class IncidentStatusSerializer(serializers.ModelSerializer):
@@ -26,3 +26,7 @@ class IncidentSerializer(serializers.ModelSerializer):
         model = Incident
         fields = "__all__"
 
+class IncidentCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IncidentComment
+        fields = "__all__"
