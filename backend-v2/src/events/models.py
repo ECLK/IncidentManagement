@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
 import enum
 import uuid
 
@@ -16,10 +17,16 @@ class EventAction(enum.Enum):
     ENTITY_ASSIGNED = "Entity assigned"
     ENTITY_REMOVED = "Entity removed"
 
+    def __str__(self):
+        return self.name
+
 class AffectedAttribute(enum.Enum):
     STATUS = "Status"
     SEVERITY = "Severity"
     OUTCOME = "Outcome"
+
+    def __str__(self):
+        return self.name
 
 class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -41,7 +48,7 @@ class Event(models.Model):
     description = models.CharField(max_length=200, null=True, blank=True)
 
     # event intiator - should be a user
-    initiator = models.IntegerField()
+    initiator = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
     # incident related to the event
     incident = models.ForeignKey("incidents.Incident", on_delete=models.DO_NOTHING)

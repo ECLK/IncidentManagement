@@ -8,6 +8,9 @@ class Occurrence(enum.Enum):
     OCCURRING = "Occurring"
     WILL_OCCUR = "Will Occur"
 
+    def __str__(self):
+        return self.name
+
 class StatusType(enum.Enum):
     NEW = "New"
     CLOSED = "Closed"
@@ -17,6 +20,9 @@ class StatusType(enum.Enum):
     ADVICE_REQESTED = "Advice Requested"
     VERIFIED = "Verified"
 
+    def __str__(self):
+        return self.name
+
 class SeverityType(enum.Enum):
     CRITICAL = "Critical"
     MAJOR = "Major"
@@ -24,6 +30,9 @@ class SeverityType(enum.Enum):
     MINOR = "Minor"
     INSIGNIFICANT = "Insignificant"
     DEFAULT = "Default"
+
+    def __str__(self):
+        return self.name
 
 class Reporter(models.Model):
     name = models.CharField(max_length=200)
@@ -87,10 +96,20 @@ class Incident(models.Model):
     coordinates = models.CharField(max_length=200, null=True, blank=True)
 
     created_date = models.DateTimeField(auto_now_add=True)
-
+    
     @property
     def current_status(self):
-        return IncidentStatus.objects.filter(incident=self).order_by("-created_date").first()
+        status = IncidentStatus.objects.filter(incident=self).order_by("-created_date").first()
+        if status is not None:
+            return status.current_status
+        return None
+
+    @property
+    def current_severity(self):
+        severity =  IncidentSeverity.objects.filter(incident=self).order_by("-created_date").first()
+        if severity is not None:
+            return severity.current_severity
+        return None
 
     class Meta:
         ordering = ('created_date',)

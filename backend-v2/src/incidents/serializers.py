@@ -1,13 +1,22 @@
 from rest_framework import serializers
-from .models import Incident
+from .models import Incident, IncidentStatus, IncidentSeverity
 from rest_framework import serializers
 
+class IncidentStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IncidentStatus
+        fields = "__all__"
+
+class IncidentSeveritySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IncidentSeverity
+        fields = "__all__"
 
 class IncidentSerializer(serializers.ModelSerializer):
+    current_status = serializers.ReadOnlyField()
+    current_severity = serializers.ReadOnlyField()
 
     class Meta:
         model = Incident
-        fields = (
-            "id",
-        )
+        fields = "__all__"
 

@@ -20,6 +20,8 @@ from .common import views as common_views
 
 from .events import views as event_views
 
+from .incidents import views as incident_views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
@@ -32,5 +34,10 @@ urlpatterns = [
     path('districts/', common_views.DistrictList.as_view()),
     path('districts/<int:pk>/', common_views.DistrictDetail.as_view()),
 
-    path('incidents/<uuid:incident_id>/events', event_views.get_event_trail)
+    path('incidents/', incident_views.IncidentList.as_view()),
+    path('incidents/<uuid:incident_id>', incident_views.IncidentDetail.as_view()),
+    
+    path('incidents/<uuid:incident_id>/events', event_views.get_event_trail),
+
+    path('incidents/<uuid:incident_id>/status', incident_views.IncidentStatusView.as_view())
 ]
