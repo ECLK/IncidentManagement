@@ -35,7 +35,13 @@ class SeverityType(enum.Enum):
         return self.name
 
 class Reporter(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, null=True, blank=True)
+    sn_name = models.CharField(max_length=200, null=True, blank=True)
+    tm_name = models.CharField(max_length=200, null=True, blank=True)
+    reporter_type = models.CharField(max_length=200, null=True, blank=True)
+    email = models.CharField(max_length=200, null=True, blank=True)
+    telephone = models.CharField(max_length=200, null=True, blank=True)
+    address = models.CharField(max_length=200, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -59,6 +65,19 @@ class IncidentSeverity(models.Model):
     class Meta:
         ordering = ('id',)
 
+class IncidentComment(models.Model):
+    body = models.CharField(max_length=200)
+    incident = models.ForeignKey('Incident', on_delete=models.DO_NOTHING)
+    is_active = models.BooleanField(default=True)
+    is_outcome = models.BooleanField(default=False)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True)
+    sn_body = models.CharField(max_length=200)
+    tm_body = models.CharField(max_length=200)
+    created_date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ('id',)
+
 class Incident(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -73,7 +92,7 @@ class Incident(models.Model):
 
     # getting the elections from a separate service
     election = models.CharField(max_length=200)
-    polling_station = models.ForeignKey("common.PolllingStation", on_delete=models.DO_NOTHING, null=True, blank=True)
+    polling_station = models.ForeignKey("common.PollingStation", on_delete=models.DO_NOTHING, null=True, blank=True)
     ds_division = models.ForeignKey("common.DSDivision", on_delete=models.DO_NOTHING, null=True, blank=True)
     ward = models.ForeignKey("common.Ward", on_delete=models.DO_NOTHING, null=True, blank=True)
     category = models.ForeignKey("common.Category", on_delete=models.DO_NOTHING, null=True, blank=True)

@@ -34,20 +34,32 @@ class District(models.Model):
 
 class PoliceStation(models.Model):
     name = models.CharField(max_length=200)
+    district = models.ForeignKey("District", on_delete=models.DO_NOTHING, null=True, blank=True)
+    sn_name = models.CharField(max_length=200, null=True, blank=True)
+    tm_name = models.CharField(max_length=200, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ('id',)
     
-class PolllingStation(models.Model):
+class PollingStation(models.Model):
     name = models.CharField(max_length=200)
+    division = models.CharField(max_length=200, null=True, blank=True)
+    district = models.ForeignKey("District", on_delete=models.DO_NOTHING, null=True, blank=True)
+    sn_name = models.CharField(max_length=200, null=True, blank=True)
+    tm_name = models.CharField(max_length=200, null=True, blank=True)
+    sn_division = models.CharField(max_length=200, null=True, blank=True)
+    tm_division = models.CharField(max_length=200, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
-
+    
     class Meta:
         ordering = ('id',)
 
 class DSDivision(models.Model):
     name = models.CharField(max_length=200)
+    district = models.ForeignKey("District", on_delete=models.DO_NOTHING, null=True, blank=True)
+    sn_name = models.CharField(max_length=200, null=True, blank=True)
+    tm_name = models.CharField(max_length=200, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -55,6 +67,9 @@ class DSDivision(models.Model):
 
 class Ward(models.Model):
     name = models.CharField(max_length=200)
+    district = models.ForeignKey("District", on_delete=models.DO_NOTHING, null=True, blank=True)
+    sn_name = models.CharField(max_length=200, null=True, blank=True)
+    tm_name = models.CharField(max_length=200, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
