@@ -83,7 +83,7 @@ class Incident(models.Model):
 
     # getting the elections from a separate service
     election = models.CharField(max_length=200)
-    polling_station = models.ForeignKey("common.PolllingStation", on_delete=models.DO_NOTHING, null=True, blank=True)
+    polling_station = models.ForeignKey("common.PollingStation", on_delete=models.DO_NOTHING, null=True, blank=True)
     ds_division = models.ForeignKey("common.DSDivision", on_delete=models.DO_NOTHING, null=True, blank=True)
     ward = models.ForeignKey("common.Ward", on_delete=models.DO_NOTHING, null=True, blank=True)
     category = models.ForeignKey("common.Category", on_delete=models.DO_NOTHING, null=True, blank=True)

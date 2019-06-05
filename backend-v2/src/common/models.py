@@ -42,7 +42,7 @@ class PoliceStation(models.Model):
     class Meta:
         ordering = ('id',)
     
-class PolllingStation(models.Model):
+class PollingStation(models.Model):
     name = models.CharField(max_length=200)
     division = models.CharField(max_length=200, null=True, blank=True)
     district = models.ForeignKey("District", on_delete=models.DO_NOTHING, null=True, blank=True)
