@@ -104,7 +104,9 @@ class EventActions extends React.Component{
                         Assignees
                     </Typography>
                     <Assignees 
-                        activeIncident={activeIncident}
+                        // activeIncident={activeIncident}
+                        assignees = {activeIncident.assignees}
+                        id = {activeIncident.id}
                         getUsers={getUsers}
                         setIncidentAssignee={setIncidentAssignee}
                         users={users}

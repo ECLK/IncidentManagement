@@ -5,10 +5,10 @@ import Tabs from '@material-ui/core/Tabs';
 import NoSsr from '@material-ui/core/NoSsr';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import { compose } from 'redux'
-import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import Modal from '@material-ui/core/Modal';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Moment from 'react-moment';
@@ -32,9 +32,8 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList'
-
-
+import MenuList from '@material-ui/core/MenuList';
+import VerifyIncidentConfirm from './IncidentActions/VerifyIncidentConfirm';
 
 
 function TabContainer(props) {
@@ -86,7 +85,15 @@ const styles = theme => ({
     },
     mainArea: {
         marginLeft: theme.spacing.unit * 4,
-        maxWidth: 'calc(100% - 450px)'
+        width: 'calc(100% - 450px)'
+    },
+    verifyIncidentDialog: {
+        position: 'absolute',
+        width: theme.spacing.unit * 50,
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing.unit * 4,
+        outline: 'none',
     }
 });
 
@@ -494,7 +501,8 @@ class NavTabs extends Component {
             address: "33/3, Church road, Battaramulla."
         },
         isCommentVisible: false,
-        open: false
+        open: false,
+        verifyIncidentDialogOpen:false,
     };
 
     handleChange = (event, value) => {
@@ -538,6 +546,16 @@ class NavTabs extends Component {
         this.setState({open:false})
     }
 
+    onVerifyClick = () => {
+        this.setState((state)=>(
+            {verifyIncidentDialogOpen:!state.verifyIncidentDialogOpen}
+        ))
+    }
+
+    handleVerifyIncidentDialogClose = () => {
+        this.setState({verifyIncidentDialogOpen:false})
+    }
+
     render() {
         const { classes, postComment, activeIncident,
             reporter, changeStatus, changeSeverity,
@@ -545,7 +563,7 @@ class NavTabs extends Component {
             setIncidentAssignee
         } = this.props;
 
-        const { value, open } = this.state;
+        const { value, open, verifyIncidentDialogOpen } = this.state;
 
         const EditIncidentLink = props => <Link to={`/app/review/${activeIncident.id}/edit`} {...props} />
 
@@ -581,7 +599,7 @@ class NavTabs extends Component {
 
                 <div className={classes.sidePane}>
                     <div className={classes.editButtonWrapper}>
-                        <Button variant="outlined" size="large" color="secondary" onClick={()=>{changeStatus( activeIncident.id,'VERIFIED')}}>
+                        <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick}>
                             Verify
                         </Button>
                         <Button component={EditIncidentLink} variant="outlined" size="large" color="primary" className={classes.editButton} >
@@ -611,7 +629,8 @@ class NavTabs extends Component {
                                         <ClickAwayListener onClickAway={this.handleClose}>
                                             <MenuList>
                                                 <MenuItem onClick={this.handleClose}>Request for Advice</MenuItem>
-                                                <MenuItem onClick={this.handleClose}>Auto Escalate</MenuItem>
+                                                <MenuItem onClick={this.handleClose}>Escalate</MenuItem>
+                                                <MenuItem onClick={this.handleClose}>Escalate to outside entity</MenuItem>
                                             </MenuList>
                                         </ClickAwayListener>
                                     </Paper>
@@ -630,6 +649,9 @@ class NavTabs extends Component {
                         events={this.props.events}
                     />
                 </div>
+
+                <VerifyIncidentConfirm open={verifyIncidentDialogOpen} handleClose={this.handleVerifyIncidentDialogClose}/>
+
 
             </NoSsr>
         );

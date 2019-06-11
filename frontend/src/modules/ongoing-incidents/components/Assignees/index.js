@@ -40,7 +40,7 @@ class Assginee extends React.Component {
     }
 
     handleChange = (value, key) => {
-        const { id, assignees } = this.props.activeIncident;
+        const { id, assignees } = this.props;
         const { setIncidentAssignee } = this.props;
 
         const similar = assignees.filter(user => user.uid == key);
@@ -69,7 +69,7 @@ class Assginee extends React.Component {
     }
 
     handleDelete = (value) => {
-        const { id } = this.props.activeIncident;
+        const { id } = this.props;
         const { setIncidentAssignee } = this.props;
 
         setIncidentAssignee(id, value, "REMOVE");
@@ -77,16 +77,16 @@ class Assginee extends React.Component {
 
 
     render() {
-        const { classes, activeIncident, users } = this.props;
+        const { classes, assignees, users } = this.props;
         const suggestions = users.map((o) => ( {label: o.displayName, value: o.uid }) ); 
         
         return (
             <div className={classes.root}>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
-                        { activeIncident && activeIncident.assignees && (
+                        {assignees && (
                             <>
-                                <CustomChip users={activeIncident.assignees} handleDelete={this.handleDelete}/>
+                                <CustomChip users={assignees} handleDelete={this.handleDelete}/>
                                 <CustomAutocomplete suggestions={suggestions} handleChange={this.handleChange} />
                             </>
                         )}
@@ -127,6 +127,9 @@ class Assginee extends React.Component {
 
 Assginee.propTypes = {
     classes: PropTypes.object.isRequired,
+    assignees: PropTypes.array.isRequired , 
+    users: PropTypes.array.isRequired,
+    id: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(Assginee);
