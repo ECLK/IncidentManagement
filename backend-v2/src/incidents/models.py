@@ -160,7 +160,12 @@ class Incident(models.Model):
     hasPendingStatusChange = models.BooleanField(default=False)
     hasPendingSeverityChange = models.BooleanField(default=False)
 
-    assignees = models.ManyToManyField(User, blank=True)
+    # assignees = models.ManyToManyField(User, blank=True)
+
+    # assignee is the current responsible personnel for the current incident from the EC
+    assignee = models.ForeignKey(User, related_name='incident_asignees', on_delete=models.DO_NOTHING, null=True, blank=True)
+    # All the relavant parties such as police,lawyer,NGO etc.
+    linked_individuals =  models.ManyToManyField(User, related_name='incident_linked_individuals', blank=True)
 
     # location related details
     location = models.CharField(max_length=200, null=True, blank=True)
