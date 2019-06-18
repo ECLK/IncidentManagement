@@ -25,6 +25,12 @@ def get_incident_by_id(incident_id: str) -> Incident:
     except Exception as e:
         return None
 
+def get_reporter_by_id(reporter_id: str) -> Incident:
+    try:
+        return Reporter.objects.get(id=reporter_id)
+    except Exception as e:
+        return None
+
 
 def create_incident_postscript(incident: Incident, user: User) -> None:
     """Function to take care of event, status and severity creation"""

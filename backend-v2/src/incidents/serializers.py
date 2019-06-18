@@ -18,8 +18,9 @@ class ReporterSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class IncidentSerializer(serializers.ModelSerializer):
-    current_status = serializers.ReadOnlyField()
-    current_severity = serializers.ReadOnlyField()
+    currentStatus = serializers.ReadOnlyField(source="current_status")
+    currentSeverity = serializers.ReadOnlyField(source="current_severity")
+    createdDate = serializers.ReadOnlyField(source="created_date")
     reporter = ReporterSerializer()
 
     class Meta:

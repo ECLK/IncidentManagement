@@ -6,18 +6,24 @@ from rest_framework.renderers import (
     JSONRenderer,
     HTMLFormRenderer,
 )
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from .models import Incident
-from .serializers import IncidentSerializer
+from .serializers import IncidentSerializer, ReporterSerializer
 from .services import (
     get_incident_by_id,
     create_incident_postscript,
     update_incident_status,
-    update_incident_severity
+    update_incident_severity,
+    get_reporter_by_id
 )
 
 
 class IncidentList(APIView):
+    authentication_classes = (JSONWebTokenAuthentication, )
+    permission_classes = (IsAuthenticated,)
+
     serializer_class = IncidentSerializer
 
     def get(self, request, format=None):
@@ -108,3 +114,23 @@ class IncidentSeverityView(APIView):
 
             return Response("Invalid action", status=status.HTTP_400_BAD_REQUEST)
         return Response("No action defined", status=status.HTTP_400_BAD_REQUEST)
+
+class ReporterDetail(APIView):
+    serializer_class = ReporterSerializer
+
+    def get(self, request, reporter_id, format=None):
+        reporter = get_reporter_by_id(reporter_id)
+
+        if reporter is None:
+            return Response("Invalid reporter id", status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ReporterSerializer(reporter)
+        return Response(serializer.data)
+
+    def put(self, request, reporter_id, format=None):
+        snippet = get_reporter_by_id(reporter_id)
+        serializer = ReporterSerializer(snippet, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -45,4 +45,5 @@ urlpatterns = [
         "incidents/<uuid:incident_id>/severity",
         incident_views.IncidentSeverityView.as_view(),
     ),
+    path("reporters/<int:reporter_id>", incident_views.ReporterDetail.as_view()),
 ]
