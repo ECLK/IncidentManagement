@@ -79,13 +79,13 @@ class VerifyIncidentConfirm extends Component {
                     Assign a user and a status to the incident
                 </Typography>
 
-                <Assignees 
+                {/* <Assignees 
                     assignees = {activeIncident.assignees}
                     id = {activeIncident.id}
                     getUsers={getUsers}
                     setIncidentAssignee={setIncidentAssignee}
                     users={users}
-                />
+                /> */}
 
                 <Button >Cancel</Button>
                 <Button >Confirm</Button>
