@@ -142,7 +142,7 @@ export class IncidentBasicDetailsForm extends Component {
                             id: 'category',
                         }}
                     >
-                        {this.props.categorys.map((c, k) => (
+                        {this.props.categories.map((c, k) => (
                             <MenuItem value={c.id} key={k}>{c.sub_category}</MenuItem>
                         ))}
 

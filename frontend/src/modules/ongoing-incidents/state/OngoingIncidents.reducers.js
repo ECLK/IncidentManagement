@@ -41,6 +41,7 @@ const initialState = {
     status: "",
     maxResponseTime: "",
     severity: "",
+    category: "",
     startDate: moment(new Date())
       .subtract(1, "year")
       .format(moment.HTML5_FMT.DATE),

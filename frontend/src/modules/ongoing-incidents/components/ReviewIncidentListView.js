@@ -13,17 +13,11 @@ import {
   fetchIncidents,
   updateIncidentFilters
 } from "../state/OngoingIncidents.actions";
-import { Formik, withFormik } from "formik";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import moment from "moment";
 
+import { fetchCatogories } from "../../shared/state/Shared.actions";
+
+import moment from "moment";
+import SearchForm from "./SearchForm";
 const CustomTableCell = withRouter(
   withStyles(theme => ({
     body: {
@@ -38,7 +32,13 @@ const styles = theme => ({
     overflowX: "auto"
   },
   table: {
-    minWidth: 700
+    minWidth: 700,
+    tableCellStyles: {
+      padding: "10px 10px"
+    }
+  },
+  tableHeader: {
+    padding: "10px 10px"
   },
   row: {
     "&:nth-of-type(odd)": {
@@ -52,7 +52,8 @@ const styles = theme => ({
     overflowX: "auto"
   },
   table: {
-    minWidth: 700
+    minWidth: 700,
+    padding: "10px 10px"
   },
   row: {
     "&:nth-of-type(odd)": {
@@ -87,243 +88,25 @@ let id = 0;
 
 class ReviewIncidentListView extends React.Component {
   componentDidMount() {
-    this.filterIncidents();
+    this.props.getCategories();
   }
-
-  filterIncidents(values) {
-    this.props.getIncidents(values);
-  }
-
   render() {
-    const { classes, pagedIncidents } = this.props;
-    moment(new Date()).format(moment.HTML5_FMT.DATE);
+    const { classes, pagedIncidents, categories } = this.props;
+
     return (
       <Paper className={classes.root}>
-        <Formik
-          initialValues={this.props.incidentSearchFilter}
-          onSubmit={(values, { setSubmitting }) => {
-            let preparedValues = {
-              ...values,
-              startTime: moment(
-                values.startDate + " " + values.startTime
-              ).toDate(),
-              endTime: moment(values.endDate + " " + values.endTime).toDate()
-            };
-            delete preparedValues["startDate"];
-            delete preparedValues["endDate"];
-            this.filterIncidents(preparedValues);
-          }}
-          onReset={() => {
-            this.filterIncidents();
-          }}
-        >
-          {props => {
-            const {
-              values,
-              touched,
-              errors,
-              dirty,
-              isSubmitting,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              handleReset
-            } = props;
-            return (
-              <form onSubmit={handleSubmit}>
-                <Grid container spacing={8}>
-                  <Grid item xs={12}>
-                    <FormControl className={classes.formControl}>
-                      <InputLabel shrink htmlFor="status-label-placeholder">
-                        Status
-                      </InputLabel>
-                      <Select
-                        input={
-                          <Input name="status" id="status-label-placeholder" />
-                        }
-                        displayEmpty
-                        name="status"
-                        value={values.status}
-                        onChange={handleChange}
-                        className={classes.selectEmpty}
-                      >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={"NEW"}>New</MenuItem>
-                        <MenuItem value={"REQUEST_MORE_INFO"}>
-                          Request More Info
-                        </MenuItem>
-                      </Select>
-                    </FormControl>
-                    <FormControl className={classes.formControl}>
-                      <InputLabel
-                        shrink
-                        htmlFor="response-time-label-placeholder"
-                      >
-                        Maximum Reponse time
-                      </InputLabel>
-                      <Select
-                        input={
-                          <Input
-                            name="responseTime"
-                            id="response-time-label-placeholder"
-                          />
-                        }
-                        displayEmpty
-                        name="maxResponseTime"
-                        value={values.maxResponseTime}
-                        onChange={handleChange}
-                        className={classes.selectEmpty}
-                      >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={"1"}>1 hour</MenuItem>
-                        <MenuItem value={"2"}>2 hours</MenuItem>
-                        <MenuItem value={"3"}>3 hours</MenuItem>
-                        <MenuItem value={"4"}>4 hours</MenuItem>
-                        <MenuItem value={"5"}>5 hour</MenuItem>
-                        <MenuItem value={"6"}>6 hours</MenuItem>
-                        <MenuItem value={"7"}>7 hours</MenuItem>
-                        <MenuItem value={"8"}>8 hours</MenuItem>
-                        <MenuItem value={"9"}>9 hours</MenuItem>
-                        <MenuItem value={"10"}>10 hours</MenuItem>
-                        <MenuItem value={"12"}>12 hours</MenuItem>
-                        <MenuItem value={"13"}>13 hours</MenuItem>
-                        <MenuItem value={"14"}>14 hours</MenuItem>
-                        <MenuItem value={"15"}>15 hour</MenuItem>
-                        <MenuItem value={"16"}>16 hours</MenuItem>
-                        <MenuItem value={"17"}>17 hours</MenuItem>
-                        <MenuItem value={"18"}>18 hours</MenuItem>
-                        <MenuItem value={"19"}>19 hours</MenuItem>
-                      </Select>
-                    </FormControl>
-                    <FormControl className={classes.formControl}>
-                      <InputLabel shrink htmlFor="status-label-placeholder">
-                        Severity
-                      </InputLabel>
-                      <Select
-                        input={
-                          <Input
-                            name="severity"
-                            id="severity-label-placeholder"
-                          />
-                        }
-                        displayEmpty
-                        name="severity"
-                        value={values.severity}
-                        onChange={handleChange}
-                        className={classes.selectEmpty}
-                      >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={"insignificant"}>
-                          Insignificant
-                        </MenuItem>
-                        <MenuItem value={"MINOR"}>Minor</MenuItem>
-                        <MenuItem value={"MODERATE"}>Moderate</MenuItem>
-                        <MenuItem value={"MAJOR"}>Major</MenuItem>
-                        <MenuItem value={"CRITICAL"}>Critical</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormControl className={classes.formControl}>
-                      <TextField
-                        margin="normal"
-                        id="start-date"
-                        name="startDate"
-                        label="Date"
-                        type="date"
-                        value={values.startDate}
-                        InputLabelProps={{
-                          shrink: true
-                        }}
-                        onChange={handleChange}
-                      />
-                      <TextField
-                        id="time"
-                        label="Time"
-                        name="startTime"
-                        type="time"
-                        value={values.startTime}
-                        margin="normal"
-                        InputLabelProps={{
-                          shrink: true
-                        }}
-                        inputProps={{
-                          step: 300 // 5 min
-                        }}
-                        onChange={handleChange}
-                      />
-                    </FormControl>
-                    <FormControl className={classes.formControl}>
-                      <TextField
-                        margin="normal"
-                        id="date"
-                        label="Date"
-                        name="endDate"
-                        type="date"
-                        value={values.endDate}
-                        InputLabelProps={{
-                          shrink: true
-                        }}
-                        onChange={handleChange}
-                      />
-                      <TextField
-                        id="time"
-                        label="Time"
-                        type="time"
-                        name="endTime"
-                        value={values.endTime}
-                        margin="normal"
-                        InputLabelProps={{
-                          shrink: true
-                        }}
-                        inputProps={{
-                          step: 300 // 5 min
-                        }}
-                        onChange={handleChange}
-                      />
-                    </FormControl>
-                    <FormControl className={classes.buttonContainer}>
-                      {/* Reset workflow is pending
-                       <Button
-                        onClick={handleReset}
-                        variant="contained"
-                        size="large"
-                        color="primary"
-                      >
-                        Reset
-                      </Button> */}
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        size="large"
-                        color="primary"
-                      >
-                        Submit
-                      </Button>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-              </form>
-            );
-          }}
-        </Formik>
+        <SearchForm categories={categories} {...this.props} />
         <Table className={classes.table}>
           <colgroup>
             <col style={{ width: "20%" }} />
-            <col style={{ width: "30%" }} />
+            <col style={{ width: "50%" }} />
             <col style={{ width: "5%" }} />
             <col style={{ width: "15%" }} />
-            <col style={{ width: "5%" }} />
-            <col style={{ width: "5%" }} />
-            <col style={{ width: "5%" }} />
-            <col style={{ width: "5%" }} />
-            <col style={{ width: "5%" }} />
+            <col style={{ width: "2%" }} />
+            <col style={{ width: "2%" }} />
+            <col style={{ width: "2%" }} />
+            <col style={{ width: "2%" }} />
+            <col style={{ width: "2%" }} />
           </colgroup>
           <TableHead>
             <TableRow>
@@ -360,7 +143,9 @@ class ReviewIncidentListView extends React.Component {
                 <CustomTableCell align="center">
                   {row.responseTimeInHours}
                 </CustomTableCell>
-                <CustomTableCell align="center">{row.category}</CustomTableCell>
+                <CustomTableCell align="center">
+                  {row.subCategory}
+                </CustomTableCell>
                 <CustomTableCell align="center">{row.severity}</CustomTableCell>
                 <CustomTableCell align="center">
                   {row.locationName}
@@ -378,12 +163,17 @@ const mapStateToProps = (state, ownProps) => {
   return {
     pagedIncidents: state.ongoingIncidentReducer.pagedIncidents,
     incidentSearchFilter: state.ongoingIncidentReducer.incidentSearchFilter,
+    categories: state.sharedReducer.categories,
+
     ...ownProps
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    getCategories: () => {
+      dispatch(fetchCatogories());
+    },
     getIncidents: filters => {
       dispatch(fetchIncidents(filters));
       dispatch(updateIncidentFilters(filters));

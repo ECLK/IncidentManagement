@@ -46,7 +46,7 @@ import {
 } from './Shared.types'
 
 const initialState = {
-    categorys: [],
+    categories: [],
     provinces: [],
     districts: [],
     pollingStations: [],
@@ -91,7 +91,7 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_CATAGORIES:
                 return draft
             case REQUEST_INCIDENT_CATAGORIES_SUCCESS:
-                draft.categorys = action.data;
+                draft.categories = action.data;
                 return draft
             case REQUEST_INCIDENT_CATAGORIES_FAILURE:
                 return draft
