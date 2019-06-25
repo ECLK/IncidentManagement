@@ -76,7 +76,10 @@ const styles = theme => ({
 
     },
     editButton: {
-        flexGrow: 0
+        flexGrow: 1,
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit
+
     },
     sidePane: {
         marginLeft: theme.spacing.unit*4
@@ -92,7 +95,7 @@ const styles = theme => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing.unit * 4,
         outline: 'none',
-    }
+    },
 });
 
 /**
@@ -598,13 +601,13 @@ class NavTabs extends Component {
                     <Grid item xs={3}>
                     <div className={classes.sidePane}>
                     <div className={classes.editButtonWrapper}>
-                        <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick}>
+                        <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick} className={classes.editButton} >
                             Verify
                         </Button>
                         <Button component={EditIncidentLink} variant="outlined" size="large" color="primary" className={classes.editButton} >
                             Edit
                         </Button>
-                        <Button
+                        {/* <Button
                             variant="outlined" size="large" color="primary"
                             buttonRef={node => {
                                 this.anchorEl = node;
@@ -616,7 +619,7 @@ class NavTabs extends Component {
                             // onMouseLeave={this.handleMouseLeave}
                         >
                             More
-                        </Button>
+                        </Button> */}
                         <Popper open={open} anchorEl={this.anchorEl} transition disablePortal>
                             {({ TransitionProps, placement }) => (
                                 <Grow
@@ -626,7 +629,7 @@ class NavTabs extends Component {
                                 >
                                     <Paper>
                                         <ClickAwayListener onClickAway={this.handleClose}>
-                                            <MenuList>
+                                            <MenuList className={classes.moreActions}>
                                                 <MenuItem onClick={this.handleClose}>Request for Advice</MenuItem>
                                                 <MenuItem onClick={(e)=>{
                                                     this.handleClose(e)
@@ -649,6 +652,7 @@ class NavTabs extends Component {
                         getUsers={getUsers}
                         setIncidentAssignee={setIncidentAssignee}
                         events={this.props.events}
+                        escallateIncident = {()=>{this.props.escallateIncident(activeIncident.id, activeIncident.assignees[0] && activeIncident.assignees[0].uid || 0)}}
                     />
                 </div>
 
