@@ -7,6 +7,7 @@ import { polling_divisions } from "./polling_divisions";
 import * as storage from "../utils/localStorage";
 import * as auth from "../utils/authorization";
 import moment from "moment";
+import { func } from "prop-types";
 const uuidv4 = require("uuid/v4");
 
 function getCurrentUser() {
@@ -496,4 +497,10 @@ export function getUsers() {
     status: "SUCCESS",
     data: [...users]
   };
+}
+
+export function escallateIncident(incidentId, assigneeId ) {
+  assignToIncident(incidentId, assigneeId + 1)
+  var incident  = getIncident(incidentId)
+  return incident
 }

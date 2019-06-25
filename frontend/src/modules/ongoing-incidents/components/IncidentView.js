@@ -23,7 +23,8 @@ import {
     setIncidentSeverity,
     resolveEvent,
     fetchAllUsers,
-    setIncidentAssignee
+    setIncidentAssignee,
+    fetchEscallateIncident
 } from '../state/OngoingIncidents.actions';
 import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 import { EventActions } from './EventTrail'
@@ -629,7 +630,10 @@ class NavTabs extends Component {
                                         <ClickAwayListener onClickAway={this.handleClose}>
                                             <MenuList>
                                                 <MenuItem onClick={this.handleClose}>Request for Advice</MenuItem>
-                                                <MenuItem onClick={this.handleClose}>Escalate</MenuItem>
+                                                <MenuItem onClick={(e)=>{
+                                                    this.handleClose(e)
+                                                    this.props.escallateIncident(activeIncident.id, activeIncident.assignees[0] && activeIncident.assignees[0].uid || 0)
+                                                    }}>Escalate</MenuItem>
                                                 <MenuItem onClick={this.handleClose}>Escalate to outside entity</MenuItem>
                                             </MenuList>
                                         </ClickAwayListener>
@@ -698,6 +702,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         setIncidentAssignee: (incidentId, uid, actionType) => {
             dispatch(setIncidentAssignee(incidentId, uid, actionType));
+        },
+        escallateIncident: (incidentId, assigneeId) => {
+            dispatch(fetchEscallateIncident(incidentId, assigneeId))
         }
     }
 }
