@@ -18,6 +18,8 @@
 
 4. Can have one FK to refer to multiple models, check Event model for example
 
+5. Use `python manage.py makemigrations` to make the migrations after creating a model
+
 
 ## Serializers
 
