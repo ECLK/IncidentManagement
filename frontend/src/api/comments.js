@@ -1,11 +1,12 @@
-import handler from './apiHandler'
+import handler from './apiHandler';
+import * as mockapi from '../data/mockapi';
 
 export const getComments = async () => {
-    return handler.get('/incident_comments');
+    // return handler.get('/incident_comments');
 }
 
-export const createComment = async (commentData) => {
-    return handler.post('/incident_comments', commentData);
+export const postComment = async (incidentId, commentData) => {
+    return mockapi.addComment(incidentId, commentData);
 }
 
 export const getComment = async (commentId) => {

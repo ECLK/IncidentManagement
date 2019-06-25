@@ -1,20 +1,46 @@
 import React, { Component } from "react";
-import { Route, BrowserRouter as Router, Redirect } from "react-router-dom";
+import { Route, BrowserRouter as Router, Redirect, Switch } from "react-router-dom";
 import { connect } from "react-redux";
-import history from './history'
+import history from './history';
 
-import HomePage from "../modules/landing/homePage";
 import { IntlProvider } from "react-intl";
 import i18n from "../translation/i18n.js";
-import LandingPage from "../modules/landing/LandingPage";
 import Historic from "../modules/reporting";
-import Report from "../modules/incident-filing";
-import Ongoing from "../modules/ongoing-incidents";
+import {Report} from "../modules/incident-filing";
+import {Ongoing} from "../modules/ongoing-incidents";
+import {SignInPage} from "../modules/shared";
+import PrivateRoute from "./PrivateRoute";
+
+import {ReviewIncidentListView} from '../modules/ongoing-incidents';
+import DomainContainer from '../modules/shared/components/DomainContainer';
+
+import { Typography } from '@material-ui/core';
+import { FormattedMessage } from 'react-intl';
+
+class Layout extends React.Component{
+  
+  render () {    
+    return (
+      <DomainContainer
+          header={() =>
+              <Typography variant="h5" color='inherit' noWrap className='line-height-fix'>
+                  <FormattedMessage
+                      id='eclk.incident.management.report.incidents'
+                      description='Report an Incident'
+                      defaultMessage='Report an Incident'
+                  />
+              </Typography>
+          }
+          content={this.props.children}
+      />
+    )
+  }
+}
 
 class MainRouter extends Component {
-
   render() {
     let { selectedLanguage } = this.props;
+
     return (
       <IntlProvider
         locale={selectedLanguage}
@@ -22,13 +48,24 @@ class MainRouter extends Component {
         messages={i18n.translationMessages[selectedLanguage]}
       > 
         <Router history={history}>
-          <React.Fragment>
-            <Route exact path="/" component={LandingPage} />
-            <Route path="/report/:paramIncidentId?" component={Report} />        
-            <Route path="/ongoing" component={Ongoing}/>
-            <Route path="/historic" component={Historic}/>
-            <Route exact path="/home" component={HomePage} />
-          </React.Fragment>
+          <div>
+            <PrivateRoute path="/app" component={Layout}>
+              <Switch>
+                <PrivateRoute exact path="/app/report" component={Report} /> 
+                <PrivateRoute exact path="/app/report/:paramIncidentId" component={Report} /> 
+
+                <PrivateRoute exact path="/app/ongoing" component={Ongoing}/>
+                <PrivateRoute exact path="/app/historic" component={Historic}/>
+
+                <PrivateRoute exact path="/app/review" component={ReviewIncidentListView} />
+                <PrivateRoute exact path="/app/review/:paramIncidentId" component={Ongoing} />
+                <PrivateRoute exact path="/app/review/:paramIncidentId/edit" component={Report} />
+              </Switch>
+            </PrivateRoute>
+
+          <Route exact path="/" component={SignInPage} />
+          <Route path="/sign-in" component={SignInPage} />
+          </div>
         </Router>
       </IntlProvider>
     );
@@ -37,11 +74,12 @@ class MainRouter extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    selectedLanguage: state.rootReducer.selectedLanguage
+    selectedLanguage: state.sharedReducer.selectedLanguage,
+    ...ownProps
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {};
 };
 

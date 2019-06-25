@@ -11,7 +11,7 @@ from ..service.incident import (
     delete_a_incident,
 )
 from ..service.reporter import save_new_reporter
-from ..service.event import save_new_event, get_incident_events
+from ..service.event import save_new_event, get_incident_events, get_trail_events
 from ..service.incident_entity import get_incident_entities
 from ..service.incident_outcome import get_incident_outcomes
 from ..service.incident_status import save_new_incident_status
@@ -19,7 +19,7 @@ from ..service.incident_severity import save_new_incident_severity
 
 from .. import api
 
-from ..model.event import EventAction
+from ..model.event import EventAction, AffectedAttribute
 from ..model.incident_status import StatusType
 from ..model.incident_severity import SeverityLevel
 from ..model.occurence import Occurence
@@ -148,11 +148,25 @@ class Incident(Resource):
 
 
 @api.resource("/incident/<incident_id>/events")
-class Events(Resource):
-    @marshal_with(incident_fields)
+class IncidentEvents(Resource):
+    @marshal_with({
+        "id": fields.String,
+        "action": fields.String(default=None),
+        "reference_id": fields.Integer(default=None),
+        "linked_event": fields.String,
+        "description": fields.String,
+        "intiator": fields.String,
+        "incident_id": fields.Integer,
+        "affected_attribute": fields.String,
+        "created_date": fields.Integer,
+        "approved_date": fields.Integer(default=None),
+        "data": fields.Raw(default=None)
+    })
     def get(self, incident_id):
         """get all events of an incident in the chronological order"""
-        return get_incident_events(incident_id)
+        print(get_incident_events(incident_id)[0].__dict__)
+
+        return get_trail_events(incident_id)
 
 @api.resource("/incident/<incident_id>/entitys")
 class IncidentEntities(Resource):
@@ -195,6 +209,7 @@ class Status(Resource):
             "incident_id": incident_id,
             'reference_id': status.id,
             "intiator": "ANON",
+            "affected_attribute": AffectedAttribute.STATUS
         }
         save_new_event(event_data)
 
@@ -227,6 +242,7 @@ class Severity(Resource):
             "incident_id": incident_id,
             'reference_id': severity.id,
             "intiator": "ANON",
+            "affected_attribute": AffectedAttribute.SEVERITY
         }
         save_new_event(event_data)
 

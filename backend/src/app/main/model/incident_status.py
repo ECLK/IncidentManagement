@@ -24,5 +24,18 @@ class IncidentStatus(db.Model):
     incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'))
     created_at = db.Column(db.Integer, default=int(time.time()))
 
+    def to_dict(self):
+        d = {}
+        for column in self.__table__.columns:
+            value = getattr(self, column.name)
+            
+            if value is not None:
+                if column.name in ["status_type"]:
+                    value = value.name
+
+            d[column.name] = value
+
+        return d
+
     def __repr__(self):
         return "<IncidentStatus '{}'>".format(self.status_type)

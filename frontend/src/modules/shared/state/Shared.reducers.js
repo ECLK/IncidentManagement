@@ -1,5 +1,6 @@
 
-import produce from "immer"
+import produce from "immer";
+import * as localStorage from "../../../utils/localStorage"
 
 import {
     REQUEST_INCIDENT_CATAGORIES,
@@ -24,19 +25,40 @@ import {
 
     ACTIVE_INCIDENT_GET_DATA_REQUEST,
     ACTIVE_INCIDENT_GET_DATA_SUCCESS,
-    ACTIVE_INCIDENT_GET_DATA_ERROR
+    ACTIVE_INCIDENT_GET_DATA_ERROR,
+
+    SIGN_IN_REQUEST,
+    SIGN_IN_REQUEST_SUCCESS,
+    SIGN_IN_REQUEST_ERROR,
+
+    TOGGLE_REMEBER_USER,
+    SIGN_OUT,
+    SIGN_OUT_ERROR,
+
+    CHANGE_LANGUAGE,
+
+    RESET_ACTIVE_INCIDENT,
+
+    REQUEST_INCIDENT_DS_DIVISIONS,
+    REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS,
+    REQUEST_INCIDENT_DS_DIVISIONS_FAILURE,
+
 } from './Shared.types'
 
 const initialState = {
-    categorys: [],
+    categories: [],
     provinces: [],
     districts: [],
     pollingStations: [],
     policeStations: [],
+    dsDivisions: [],
     wards: [],
+
     activeIncident:{
         isLoading:false,
-        data:null,
+        data: {
+            
+        },
         error:null
     },
     activeIncidentReporter:null,
@@ -44,19 +66,32 @@ const initialState = {
         1:"General Election 2020",
         2:"Presedential Election 2020",
         3:"Presedential Election 2008"
-    }
+    },
+    signedInUser:{
+        isLoading:false,
+        isSignedIn:false,
+        data:null,
+        error:null,
+        rememberMe:true,
+    },
+    selectedLanguage: 'en',
 }
 
 export default function sharedReducer(state, action) {
     if (typeof state === 'undefined') {
-        return initialState
+        let userData = localStorage.read("ECIncidentMangementUser");
+        if(userData && userData.authenticated){
+            initialState.signedInUser.data = userData.user;
+            initialState.signedInUser.isSignedIn = true;
+        }
+        return initialState;
     }
     return produce(state, draft => {
         switch (action.type) {            
             case REQUEST_INCIDENT_CATAGORIES:
                 return draft
             case REQUEST_INCIDENT_CATAGORIES_SUCCESS:
-                draft.categorys = action.data;
+                draft.categories = action.data;
                 return draft
             case REQUEST_INCIDENT_CATAGORIES_FAILURE:
                 return draft
@@ -85,7 +120,6 @@ export default function sharedReducer(state, action) {
                 return draft
             case REQUEST_INCIDENT_POLLING_STATIONS_FAILURE:
                 return draft
-
             case REQUEST_INCIDENT_WARDS:
                 return draft
             case REQUEST_INCIDENT_WARDS_SUCCESS:
@@ -93,7 +127,6 @@ export default function sharedReducer(state, action) {
                 return draft
             case REQUEST_INCIDENT_WARDS_FAILURE:
                 return draft
-
             case ACTIVE_INCIDENT_GET_DATA_REQUEST:
                 draft.activeIncident.isLoading= true
                 return draft
@@ -104,6 +137,47 @@ export default function sharedReducer(state, action) {
                 return draft
             case ACTIVE_INCIDENT_GET_DATA_ERROR:
                 draft.activeIncident.error = action.error
+                return draft
+            case SIGN_IN_REQUEST:
+                draft.signedInUser.isLoading = true;
+                return draft
+            case SIGN_IN_REQUEST_SUCCESS:
+                if(action.data.authenticated){
+                    draft.signedInUser.data = action.data.user
+                    draft.signedInUser.isSignedIn = true;
+                }
+                draft.signedInUser.isLoading = false;
+                return draft;
+            case SIGN_IN_REQUEST_ERROR:
+                draft.signedInUser.error = action.error;
+                return draft;
+            case TOGGLE_REMEBER_USER:
+                draft.signedInUser.rememberMe = !state.signedInUser.rememberMe
+                return draft;
+            case SIGN_OUT:
+                draft.signedInUser = {
+                    isLoading:false,
+                    isSignedIn:false,
+                    data:null,
+                    error:null,
+                    rememberMe:true,
+                }
+                return draft;
+            case SIGN_OUT_ERROR:
+                return draft;
+            case CHANGE_LANGUAGE:
+                draft.selectedLanguage = action.selectedLanguage;
+                return draft;
+            case RESET_ACTIVE_INCIDENT:
+                draft.activeIncident.data = {};
+                draft.activeIncidentReporter = null;
+                return draft;
+            case REQUEST_INCIDENT_DS_DIVISIONS:
+                return draft
+            case REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS:
+                draft.dsDivisions = action.data;
+                return draft
+            case REQUEST_INCIDENT_DS_DIVISIONS_FAILURE:
                 return draft
         }
     })
