@@ -79,14 +79,11 @@ const styles = theme => ({
         flexGrow: 0
     },
     sidePane: {
-        width: 300,
-        position: 'fixed',
-        top: theme.spacing.unit * 13,
-        right: theme.spacing.unit * 10,
+        marginLeft: theme.spacing.unit*4
+
     },
     mainArea: {
         marginLeft: theme.spacing.unit * 4,
-        width: 'calc(100% - 450px)'
     },
     verifyIncidentDialog: {
         position: 'absolute',
@@ -571,34 +568,35 @@ class NavTabs extends Component {
         return (
             <NoSsr>
                 <Grid container spacing={24}>
-                    <div className={classes.mainArea}>
-                        <div className={classes.root}>
+                    <Grid item xs={9}>
+                        <div className={classes.mainArea}>
+                            <div className={classes.root}>
 
-                            <Tabs variant="fullWidth" value={value} onChange={this.handleChange} indicatorColor="primary" >
-                                <LinkTab label="Basic Information" href="page1" />
-                                <LinkTab label="Location Information" href="page2" />
-                                <LinkTab label="Contact Information" href="page3" />
-                            </Tabs>
+                                <Tabs variant="fullWidth" value={value} onChange={this.handleChange} indicatorColor="primary" >
+                                    <LinkTab label="Basic Information" href="page1" />
+                                    <LinkTab label="Location Information" href="page2" />
+                                    <LinkTab label="Contact Information" href="page3" />
+                                </Tabs>
 
-                            {value === 0 && <TabContainer> <BasicDetailTab classes={classes} incident={activeIncident} election={this.state.election} category={this.state.category} /> </TabContainer>}
-                            {value === 1 && <TabContainer> <LocationTab classes={classes} incident={activeIncident} /> </TabContainer>}
-                            {value === 2 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
-                            {value === 3 && <TabContainer> <ReviewTab classes={classes} incident={activeIncident} /> </TabContainer>}
+                                {value === 0 && <TabContainer> <BasicDetailTab classes={classes} incident={activeIncident} election={this.state.election} category={this.state.category} /> </TabContainer>}
+                                {value === 1 && <TabContainer> <LocationTab classes={classes} incident={activeIncident} /> </TabContainer>}
+                                {value === 2 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
+                                {value === 3 && <TabContainer> <ReviewTab classes={classes} incident={activeIncident} /> </TabContainer>}
+                            </div>
+                            <div>
+                                <EventList
+                                    events={this.props.events}
+                                    resolveEvent={this.onResolveEvent}
+                                />
+                                <Comment
+                                    postComment={postComment}
+                                    activeIncident={activeIncident}
+                                />
+                            </div>
                         </div>
-                        <div>
-                            <EventList
-                                events={this.props.events}
-                                resolveEvent={this.onResolveEvent}
-                            />
-                            <Comment
-                                postComment={postComment}
-                                activeIncident={activeIncident}
-                            />
-                        </div>
-                    </div>
-                </Grid>
-
-                <div className={classes.sidePane}>
+                    </Grid>
+                    <Grid item xs={3}>
+                    <div className={classes.sidePane}>
                     <div className={classes.editButtonWrapper}>
                         <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick}>
                             Verify
@@ -653,6 +651,11 @@ class NavTabs extends Component {
                         events={this.props.events}
                     />
                 </div>
+
+                    </Grid>
+                </Grid>
+
+               
 
                 <VerifyIncidentConfirm open={verifyIncidentDialogOpen} handleClose={this.handleVerifyIncidentDialogClose}/>
 
