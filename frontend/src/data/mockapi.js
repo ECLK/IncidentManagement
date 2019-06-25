@@ -262,6 +262,12 @@ export function getIncidents(filters, pageNumber = 1) {
     );
   }
 
+  if (filters.category) {
+    filteredIncidents = filteredIncidents.filter(
+      ({ subCategory }) => subCategory === filters.category
+    );
+  }
+
   if (filters.maxResponseTime) {
     filteredIncidents = filteredIncidents.filter(
       ({ responseTimeInHours }) =>

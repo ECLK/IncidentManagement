@@ -28,7 +28,7 @@ class IncidentReviewDetailsForm extends Component {
     render() {
         const { 
             classes,
-            categorys,
+            categories,
             districts,
             provinces,
             pollingStations,
@@ -37,7 +37,7 @@ class IncidentReviewDetailsForm extends Component {
             incident,
             elections
          } = this.props;
-         console.log("contogory",categorys)
+         console.log("contogory",categories)
         return (
             <div>
                 <Paper className={classes.root} elevation={1}>
@@ -69,7 +69,7 @@ class IncidentReviewDetailsForm extends Component {
                                             <ListItemText primary="Election" secondary={incident.election_id && elections[incident.election_id]} />
                                         </ListItem>
                                         <ListItem className={classes.listItem}>
-                                            <ListItemText primary="Catagory" secondary={incident.category && categorys[incident.category-1].sub_category} />
+                                            <ListItemText primary="Catagory" secondary={incident.category && categories[incident.category-1].sub_category} />
                                         </ListItem>
                                     </List>
                                 </div>}
