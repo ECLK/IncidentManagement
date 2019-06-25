@@ -14,7 +14,7 @@ const styles = {
     card: {
         minWidth: 275,
         boxShadow: "none",
-        border: "1px solid #ccc"
+        padding: 20
     }
 };
 
@@ -48,8 +48,7 @@ class EventActions extends React.Component{
                 setIncidentAssignee,users } = this.props;
 
         return (
-            <Card className={classes.card}>
-                <CardContent>
+            <div className={classes.card}>
                     <Typography variant="h6">
                         RefId
                     </Typography>
@@ -111,8 +110,7 @@ class EventActions extends React.Component{
                         setIncidentAssignee={setIncidentAssignee}
                         users={users}
                     />
-                </CardContent>
-            </Card>
+            </div>
         );
     }
 }

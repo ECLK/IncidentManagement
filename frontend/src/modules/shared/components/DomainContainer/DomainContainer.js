@@ -34,12 +34,20 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import {initiateSignOut} from '../../state/Shared.actions'
 import {changeLanguage} from '../../state/Shared.actions';
 
+const HomeLink = props => <Link to="/app/home" {...props} />
+const ReportLink = props => <Link to="/app/report" {...props} />
+const ReviewLink = props => <Link to="/app/review" {...props} />
+
 
 const drawerWidth = 240;
 
 const styles = theme => ({
   root: {
-    display: 'flex',
+    // display: 'flex',
+    flexGrow: 1
+  },
+  homeButton: {
+    marginLeft: theme.spacing.unit*4
   },
   appBar: {
     transition: theme.transitions.create(['margin', 'width'], {
@@ -78,13 +86,14 @@ const styles = theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing.unit * 3,
+    paddingTop: theme.spacing.unit * 3,
+    paddingLeft: theme.spacing.unit * 8,
+    paddingRight: theme.spacing.unit * 8,
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    marginLeft: -drawerWidth,
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing.unit*4
   },
   contentShift: {
     transition: theme.transitions.create('margin', {
@@ -135,7 +144,6 @@ class DomainContainer extends React.Component {
   }
 
   handleLanguageChange = (lang) => {
-      console.log(lang)
     const {changeLanguage} = this.props;
     changeLanguage(lang);
   }
@@ -152,22 +160,29 @@ class DomainContainer extends React.Component {
 
 
         <AppBar
-          position="fixed"
-          className={classNames(classes.appBar, {
-            [classes.appBarShift]: open,
-          })}
+          position="static"
+          // className={classNames(classes.appBar, {
+          //   [classes.appBarShift]: open,
+          // })}
         >
           <Toolbar disableGutters={!open}>
-            <IconButton
+            {/* <IconButton
               color="inherit"
               aria-label="Open drawer"
               onClick={this.handleDrawerOpen}
               className={classNames(classes.menuButton, open && classes.hide)}
             >
               <MenuIcon />
-            </IconButton>
+            </IconButton> */}
             <Typography variant="h6" color="inherit" className={classes.grow}>
-                {this.props.header? this.props.header() : ''}
+                {/* {this.props.header? this.props.header() : ''} */}
+                
+                Incident Management
+
+                <Button color="inherit" component={HomeLink} className={classes.homeButton}>Home</Button>
+                <Button color="inherit" component={ReportLink}>Create</Button>
+                <Button color="inherit" component={ReviewLink}>Review</Button>
+
             </Typography>
 
             <Button
@@ -228,7 +243,7 @@ class DomainContainer extends React.Component {
         </AppBar>
 
         
-        <Drawer
+        {/* <Drawer
           className={classes.drawer}
           variant="persistent"
           anchor="left"
@@ -257,19 +272,19 @@ class DomainContainer extends React.Component {
                   <ListItemIcon><AssignmentLateIcon /></ListItemIcon>
                   <ListItemText primary='Review Incidents' />
               </ListItem>
-              {/* <ListItem button component={Link} to={`/app/ongoing`}>
+              <ListItem button component={Link} to={`/app/ongoing`}>
                   <ListItemIcon><AssignmentIcon /></ListItemIcon>
                   <ListItemText primary='[debug] Ongoing' />
-              </ListItem> */}
+              </ListItem>
           </List>
 
-        </Drawer>
+        </Drawer> */}
         <main
           className={classNames(classes.content, {
             [classes.contentShift]: open,
           })}
         >
-          <div className={classes.drawerHeader} />
+          {/* <div className={classes.drawerHeader} /> */}
           {this.props.content}
         </main>
       </div>
