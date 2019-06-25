@@ -158,7 +158,7 @@ function getStepContent(step, props, formikProps, state) {
                 incident={props.incident}
                 reporter={props.reporter}
 
-                categorys={props.categorys}
+                categories={props.categories}
                 districts={props.districts}
                 provinces={props.provinces}
                 pollingStations={props.pollingStations}
@@ -185,7 +185,7 @@ class IndicdentForm extends Component {
     };
 
     componentDidMount() {
-        this.props.getCategorys();
+        this.props.getcategories();
         this.props.getDistricts();
         this.props.getPoliceStations();
         this.props.getPollingStations();
@@ -494,7 +494,7 @@ const mapStateToProps = (state, ownProps) => {
         incidentId: state.sharedReducer.activeIncident.data ? state.sharedReducer.activeIncident.data.id : null,
         reporterId: state.sharedReducer.activeIncidentReporter ? state.sharedReducer.activeIncidentReporter.id : null,
 
-        categorys: state.sharedReducer.categorys,
+        categories: state.sharedReducer.categories,
         districts: state.sharedReducer.districts,
         provinces: state.sharedReducer.provinces,
         pollingStations: state.sharedReducer.pollingStations,
@@ -525,7 +525,7 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(stepForwardIncidentStepper())
         },
 
-        getCategorys: () => {
+        getcategories: () => {
             dispatch(fetchCatogories())
         },
         getDistricts: () => {

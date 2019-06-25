@@ -12,7 +12,7 @@ export var incidents = [
     polling_station: "Kirulapone Temple",
     ds_division: "Colombo",
     category: "Violence",
-    subCategory: "Attack",
+    subCategory: "Mob Attack Station",
     infoChannel: "Social Media",
     createdDate: moment(new Date())
       .subtract(4, "hour")
@@ -36,7 +36,7 @@ export var incidents = [
     polling_station: "Matara College",
     ds_division: "Matara",
     category: "Violence",
-    subCategory: "Interrupting propaganda",
+    subCategory: "Misuse of public property",
     infoChannel: "Call Center",
     createdDate: moment(new Date())
       .subtract(3, "hour")
@@ -180,7 +180,7 @@ export var incidents = [
     polling_station: "Imaduwa School",
     ds_division: "Imaduwa",
     category: "Misuse",
-    subCategory: "Posters/Cutouts",
+    subCategory: "Misuse of public property",
     infoChannel: "Social Media",
     createdDate: moment(new Date())
       .subtract(3, "day")
