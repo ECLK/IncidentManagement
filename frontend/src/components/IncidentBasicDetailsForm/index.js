@@ -1,2 +1,0 @@
-
-export { IncidentBasicDetailsForm } from './IncidentBasicDetailsForm';

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import DomainContainer from '../../components/DomainContainer';
+import DomainContainer from '../shared/components/DomainContainer';
 import { Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 class Historic extends Component {
