@@ -6,6 +6,7 @@ from rest_framework.renderers import (
     JSONRenderer,
     HTMLFormRenderer,
 )
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
@@ -19,17 +20,29 @@ from .services import (
     get_reporter_by_id
 )
 
+class IncidentResultsSetPagination(PageNumberPagination):
+    page_size = 5
+    page_size_query_param = 'pageSize'
+    max_page_size = 100
 
-class IncidentList(APIView):
+class IncidentList(APIView, IncidentResultsSetPagination):
     # authentication_classes = (JSONWebTokenAuthentication, )
     # permission_classes = (IsAuthenticated,)
 
     serializer_class = IncidentSerializer
 
+    def get_paginated_response(self, data):
+        return Response(dict([
+            ('pages', self.page.paginator.count),
+            ('pageNumber', self.page.number),
+            ('incidents', data)
+        ]))
+
     def get(self, request, format=None):
-        incident = Incident.objects.all()
-        serializer = IncidentSerializer(incident, many=True)
-        return Response(serializer.data)
+        incidents = Incident.objects.all()
+        results = self.paginate_queryset(incidents, request, view=self)
+        serializer = IncidentSerializer(results, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def post(self, request, format=None):
         serializer = IncidentSerializer(data=request.data)

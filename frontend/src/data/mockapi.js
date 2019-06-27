@@ -248,7 +248,7 @@ export function getIncident(incidentID) {
   };
 }
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 2;
 export function getIncidents(filters, pageNumber = 1) {
   let filteredIncidents = [...incidents];
   if (filters.severity) {
