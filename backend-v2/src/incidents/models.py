@@ -147,6 +147,9 @@ class Incident(models.Model):
     category = models.ForeignKey(
         "common.Category", on_delete=models.DO_NOTHING, null=True, blank=True
     )
+    police_station = models.ForeignKey(
+        "common.PoliceStation", on_delete=models.DO_NOTHING, null=True, blank=True
+    )
 
     # the medium through which the incident was reported
     infoChannel = models.CharField(max_length=200, null=True, blank=True)
@@ -157,8 +160,8 @@ class Incident(models.Model):
         "Reporter", on_delete=models.DO_NOTHING, null=True, blank=True
     )
 
-    hasPendingStatusChange = models.BooleanField(default=False)
-    hasPendingSeverityChange = models.BooleanField(default=False)
+    hasPendingStatusChange = models.CharField(max_length=1, default='F', blank=True)
+    hasPendingSeverityChange = models.CharField(max_length=1, default='T', blank=True)
 
     # assignees = models.ManyToManyField(User, blank=True)
 
@@ -171,6 +174,9 @@ class Incident(models.Model):
     location = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
     coordinates = models.CharField(max_length=200, null=True, blank=True)
+    district = models.ForeignKey(
+        "common.District", on_delete=models.DO_NOTHING, null=True, blank=True
+    )
 
     created_date = models.DateTimeField(auto_now_add=True)
 

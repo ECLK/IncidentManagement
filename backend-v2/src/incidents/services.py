@@ -59,7 +59,7 @@ def update_incident_status(
     incident: Incident, user: User, status_type_str: str
 ) -> None:
 
-    if incident.hasPendingStatusChange:
+    if incident.hasPendingStatusChange == "T":
         return ("error", "Incident status is locked for pending changes")
 
     try:
@@ -78,7 +78,8 @@ def update_incident_status(
             approved=False
         )
         status.save()
-        incident.hasPendingStatusChange = True
+        incident.hasPendingStatusChange = "T"
+        incident.save()
         event_services.update_incident_status_event(user, incident, status, False)
 
     elif user.has_perm("incidents.can_change_status"):
@@ -89,6 +90,8 @@ def update_incident_status(
             approved=True
         )
         status.save()
+        incident.hasPendingStatusChange = "F"
+        incident.save()
         event_services.update_incident_status_event(user, incident, status, True)
 
     return ("success", "Status updated")
@@ -98,7 +101,7 @@ def update_incident_severity(
     incident: Incident, user: User, severity_type_str: str
 ) -> None:
 
-    if incident.hasPendingSeverityChange:
+    if incident.hasPendingSeverityChange == "T":
         return ("error", "Incident severity is locked for pending changes")
 
     try:
@@ -115,7 +118,8 @@ def update_incident_severity(
             approved=False
         )
         severity.save()
-        incident.hasPendingSeverityChange = True
+        incident.hasPendingSeverityChange = "T"
+        incident.save()
         event_services.update_incident_severity_event(user, incident, severity, False)
     
     elif user.has_perm("incidents.can_change_severity"):
@@ -126,6 +130,8 @@ def update_incident_severity(
             approved=True
         )
         severity.save()
+        incident.hasPendingSeverityChange = "F"
+        incident.save()
         event_services.update_incident_severity_event(user, incident, severity, True)
 
     return ("success", "Severity updated")

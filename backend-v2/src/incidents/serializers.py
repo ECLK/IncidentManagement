@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Incident, IncidentStatus, IncidentSeverity, Reporter, IncidentComment
+from ..common.serializers import DistrictSerializer
 from rest_framework import serializers
 
 class IncidentStatusSerializer(serializers.ModelSerializer):
@@ -18,10 +19,17 @@ class ReporterSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class IncidentSerializer(serializers.ModelSerializer):
+    hasPendingStatusChange = serializers.ReadOnlyField()
+    hasPendingSeverityChange = serializers.ReadOnlyField()
+    
     currentStatus = serializers.ReadOnlyField(source="current_status")
     currentSeverity = serializers.ReadOnlyField(source="current_severity")
+
+    policeStation = serializers.ReadOnlyField(source="police_station")
+    pollingStation = serializers.ReadOnlyField(source="polling_station")
     createdDate = serializers.ReadOnlyField(source="created_date")
-    reporter = ReporterSerializer()
+
+    # reporter = ReporterSerializer()
 
     class Meta:
         model = Incident

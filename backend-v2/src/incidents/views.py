@@ -21,8 +21,8 @@ from .services import (
 
 
 class IncidentList(APIView):
-    authentication_classes = (JSONWebTokenAuthentication, )
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (JSONWebTokenAuthentication, )
+    # permission_classes = (IsAuthenticated,)
 
     serializer_class = IncidentSerializer
 

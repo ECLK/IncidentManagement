@@ -28,12 +28,16 @@ from rest_framework_jwt.views import obtain_jwt_token
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth-jwt/", obtain_jwt_token),
+
     path("categories/", common_views.CategoryList.as_view()),
-    path("categories/<int:pk>/", common_views.CategoryDetail.as_view()),
     path("channels/", common_views.ChannelList.as_view()),
-    path("channels/<int:pk>/", common_views.ChannelDetail.as_view()),
     path("districts/", common_views.DistrictList.as_view()),
-    path("districts/<int:pk>/", common_views.DistrictDetail.as_view()),
+    path("wards/", common_views.WardList.as_view()),
+    path("pollingstations/", common_views.PollingStationList.as_view()),
+    path("policestations/", common_views.PoliceStationList.as_view()),
+    path("dsdivisions/", common_views.DSDivisionList.as_view()),
+
+
     path("incidents/", incident_views.IncidentList.as_view()),
     path("incidents/<uuid:incident_id>", incident_views.IncidentDetail.as_view()),
     path("incidents/<uuid:incident_id>/events", event_views.get_event_trail),
