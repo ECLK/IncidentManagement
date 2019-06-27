@@ -1,5 +1,6 @@
 
 import produce from "immer";
+import axios from 'axios';
 import * as localStorage from "../../../utils/localStorage"
 
 import {
@@ -83,6 +84,7 @@ export default function sharedReducer(state, action) {
         if(userData && userData.authenticated){
             initialState.signedInUser.data = userData.user;
             initialState.signedInUser.isSignedIn = true;
+            axios.defaults.headers.common['Authorization'] = "JWT " + userData.token;
         }
         return initialState;
     }

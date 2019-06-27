@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import {
     REQUEST_INCIDENT_CATAGORIES,
     REQUEST_INCIDENT_CATAGORIES_SUCCESS,
@@ -42,11 +44,9 @@ import {
 } from './Shared.types'
 
 import { getIncident, getReporter  } from '../../../api/incident';
-import { getDistricts, getPoliceStations, getPollingStations, getWards, getDSDivisions } from '../../../api/shared';
-import { getCategories } from '../../../api/category';
-import { signIn } from '../../../data/mockapi';
+import { getCategories, getDistricts, getPoliceStations, getPollingStations, getWards, getDSDivisions } from '../../../api/shared';
+import { signIn } from '../../../api/user';
 import * as localStorage from '../../../utils/localStorage';
-// import { getIncident, getReporter } from '../../../data/mockapi'
 
 // Get Catogories
 
@@ -295,7 +295,7 @@ export function fetchActiveIncidentData(incidentId) {
         dispatch(requestActiveIncidentData(incidentId));
         try{
             const responseIncident = await getIncident(incidentId);
-            const responseReporter = await getReporter(responseIncident.data.reporterId);
+            const responseReporter = await getReporter(responseIncident.data.reporter);
             dispatch(getActiveIncidentDataSuccess({
                 "incident": responseIncident.data,
                 "reporter": responseReporter.data
@@ -338,13 +338,25 @@ export function fetchSignIn(userName, password) {
         try{
             let signInData = null;
             signInData = localStorage.read('ECIncidentManagementUser');
+            let token = null;
+
             if(!signInData){
-                signInData = await signIn(userName, password);
-                if(getState().sharedReducer.signedInUser.rememberMe){
-                    localStorage.write('ECIncidentMangementUser', signInData);
+                signInData = (await signIn(userName, password)).data;
+                
+                if(signInData.status === "success"){
+                    if(getState().sharedReducer.signedInUser.rememberMe){
+                        localStorage.write('ECIncidentMangementUser', signInData.data);
+                        token = signInData.data.token;
+                    }
+                }else{
+                    dispatch(requestSignInError(signInData.message));
                 }
-            }    
-            dispatch(requestSignInSuccess(signInData));
+            }else{
+                token = signInData.token;
+            }   
+
+            axios.defaults.headers.common['Authorization'] = "JWT " + token;
+            dispatch(requestSignInSuccess(signInData.data));
         }catch(error){
             dispatch(getActiveIncidentDataError(error));
         }
@@ -379,6 +391,7 @@ export function initiateSignOut() {
     return async function (dispatch, getState) {
         try{
             localStorage.remove('ECIncidentMangementUser');
+            axios.defaults.headers.common['Authorization'] = null;
             dispatch(signOut())
         }catch(error){
             dispatch(signOutError(error));

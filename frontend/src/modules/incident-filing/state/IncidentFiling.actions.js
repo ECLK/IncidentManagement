@@ -106,7 +106,27 @@ export function fetchUpdateIncident(incidentId, incidentData) {
     return async function (dispatch) {
         dispatch(requestIncidentUpdate());
         try{
-            const response = await updateIncident(incidentId, incidentData);
+            const updatableFields = [
+                "address",
+                "category",
+                "coordinates",
+                "description",
+                "district",
+                "ds_division",
+                "infoChannel",
+                "location",
+                "occurrence",
+                "policeStation",
+                "pollingStation",
+                "title",
+                "ward",
+
+                "refId",
+                "election"
+            ];
+            const incidentUpdate = updatableFields.reduce((a, e) => (a[e] = incidentData[e], a), {});
+
+            const response = await updateIncident(incidentId, incidentUpdate);
             await dispatch(recieveIncidentUpdateSuccess(response.data));
             await dispatch(stepForwardIncidentStepper());
         }catch(error){
@@ -143,7 +163,14 @@ export function fetchUpdateReporter(incidentId, reporterId, reporterData) {
     return async function (dispatch) {
         dispatch(requestReporterUpdate());
         try{
-            const response = await updateReporter(reporterId, reporterData);
+            const reporterUpdate = {
+                "name": reporterData["reporter_name"],
+                "reporter_type": reporterData["reporter_type"],
+                "email": reporterData["reporter_email"],
+                "telephone": reporterData["reporter_telephone"],
+                "address": reporterData["reporter_address"],
+            }
+            const response = await updateReporter(reporterId, reporterUpdate);
             await dispatch(recieveReporterUpdateSuccess(response.data));
             await dispatch(fetchActiveIncidentData(incidentId));
             await dispatch(stepForwardIncidentStepper());

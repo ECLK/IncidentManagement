@@ -33,24 +33,29 @@ export const createIncident = async (incidentData) => {
 };
 
 export const getIncident = async (incidentId) => {
-    return mockapi.getIncident(incidentId);
+    // return mockapi.getIncident(incidentId);
+    return (await handler.get(`/incidents/${incidentId}`)).data;
 };
 
 export const getIncidents = async (filters) => {
-    return mockapi.getIncidents();
+    // return mockapi.getIncidents();
+    return (await handler.get('/incidents/')).data;
 };
 
 export const updateIncident = async (incidentId, incidentData) => {
-    await mockapi.updateIncident(incidentId, incidentData);
-    return true;
+    // await mockapi.updateIncident(incidentId, incidentData);
+    // return true;
+    return (await handler.put(`/incidents/${incidentId}`, incidentData)).data;
 };
 
 export const getReporter = async (reporterId) => {
-    return mockapi.getReporter(reporterId);
+    // return mockapi.getReporter(reporterId);
+    return (await handler.get(`/reporters/${reporterId}`)).data;
 };
 
 export const updateReporter = async (reporterId, reporterData) => {
-    return mockapi.updateReporter(reporterId, reporterData);
+    // return mockapi.updateReporter(reporterId, reporterData);
+    return (await handler.put(`/reporters/${reporterId}`, reporterData)).data;
 }
 
 

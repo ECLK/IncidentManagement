@@ -78,7 +78,7 @@ class ReviewListView extends React.Component{
                           {row.title}
                       </CustomTableCell>
                       <CustomTableCell >{row.description}</CustomTableCell>
-                      <CustomTableCell align="right">{row.status}</CustomTableCell>
+                      <CustomTableCell align="right">{row.currentStatus}</CustomTableCell>
                       <CustomTableCell align="right">{row.category}</CustomTableCell>
                       <CustomTableCell align="right">{row.location}</CustomTableCell>
                       </TableRow>
