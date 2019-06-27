@@ -5,16 +5,14 @@ import history from './history';
 
 import { IntlProvider } from "react-intl";
 import i18n from "../translation/i18n.js";
-import LandingPage from "../modules/landing/LandingPage";
 import Historic from "../modules/reporting";
-import Report from "../modules/incident-filing";
-import Ongoing from "../modules/ongoing-incidents";
+import {Report} from "../modules/incident-filing";
+import {Ongoing} from "../modules/ongoing-incidents";
 import {SignInPage} from "../modules/shared";
 import PrivateRoute from "./PrivateRoute";
 
-import ReviewIncidentListView from '../modules/ongoing-incidents/containers/ReviewIncidentListView';
-import DomainContainer from '../components/DomainContainer';
-import { withStyles } from '@material-ui/core/styles';
+import {ReviewIncidentListView} from '../modules/ongoing-incidents';
+import DomainContainer from '../modules/shared/components/DomainContainer';
 
 import { Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
@@ -58,7 +56,6 @@ class MainRouter extends Component {
 
                 <PrivateRoute exact path="/app/ongoing" component={Ongoing}/>
                 <PrivateRoute exact path="/app/historic" component={Historic}/>
-                <PrivateRoute exact path="/app/home" component={LandingPage}/>
 
                 <PrivateRoute exact path="/app/review" component={ReviewIncidentListView} />
                 <PrivateRoute exact path="/app/review/:paramIncidentId" component={Ongoing} />

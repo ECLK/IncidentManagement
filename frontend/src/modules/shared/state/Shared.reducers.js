@@ -47,7 +47,7 @@ import {
 } from './Shared.types'
 
 const initialState = {
-    categorys: [],
+    categories: [],
     provinces: [],
     districts: [],
     pollingStations: [],
@@ -93,7 +93,7 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_CATAGORIES:
                 return draft
             case REQUEST_INCIDENT_CATAGORIES_SUCCESS:
-                draft.categorys = action.data;
+                draft.categories = action.data;
                 return draft
             case REQUEST_INCIDENT_CATAGORIES_FAILURE:
                 return draft
@@ -122,7 +122,6 @@ export default function sharedReducer(state, action) {
                 return draft
             case REQUEST_INCIDENT_POLLING_STATIONS_FAILURE:
                 return draft
-
             case REQUEST_INCIDENT_WARDS:
                 return draft
             case REQUEST_INCIDENT_WARDS_SUCCESS:
@@ -130,7 +129,6 @@ export default function sharedReducer(state, action) {
                 return draft
             case REQUEST_INCIDENT_WARDS_FAILURE:
                 return draft
-
             case ACTIVE_INCIDENT_GET_DATA_REQUEST:
                 draft.activeIncident.isLoading= true
                 return draft
@@ -154,6 +152,7 @@ export default function sharedReducer(state, action) {
                 return draft;
             case SIGN_IN_REQUEST_ERROR:
                 draft.signedInUser.error = action.error;
+                return draft;
             case TOGGLE_REMEBER_USER:
                 draft.signedInUser.rememberMe = !state.signedInUser.rememberMe
                 return draft;
@@ -170,12 +169,11 @@ export default function sharedReducer(state, action) {
                 return draft;
             case CHANGE_LANGUAGE:
                 draft.selectedLanguage = action.selectedLanguage;
-
+                return draft;
             case RESET_ACTIVE_INCIDENT:
                 draft.activeIncident.data = {};
                 draft.activeIncidentReporter = null;
                 return draft;
-
             case REQUEST_INCIDENT_DS_DIVISIONS:
                 return draft
             case REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS:

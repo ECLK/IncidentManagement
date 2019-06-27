@@ -1,12 +1,5 @@
-import React, { Component } from 'react';
-import IncidentForm from './containers/IncidentForm';
 
-class Report extends Component {
-    render(){
-        return (
-            <IncidentForm paramIncidentId={this.props.match.params.paramIncidentId} />
-        )
-    }
-}
+import IncidentForm from './components/IncidentForm';
 
-export default Report;
+
+export { IncidentForm as Report };

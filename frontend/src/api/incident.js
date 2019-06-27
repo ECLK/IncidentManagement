@@ -1,4 +1,4 @@
-import handler from './apiHandler'
+import handler from "./apiHandler";
 // import handler from './apiHandler'
 
 // export const createIncident = async (incidentData) => {
@@ -21,15 +21,14 @@ import handler from './apiHandler'
 //     return handler.put(`/incidents/${incidentId}`, incidentData);
 // }
 
-
 /*
-* mock API for Incidents
-*/
+ * mock API for Incidents
+ */
 
-import * as mockapi from '../data/mockapi';
+import * as mockapi from "../data/mockapi";
 
-export const createIncident = async (incidentData) => {
-    return mockapi.createIncident(incidentData);
+export const createIncident = async incidentData => {
+  return mockapi.createIncident(incidentData);
 };
 
 export const getIncident = async (incidentId) => {
@@ -60,17 +59,21 @@ export const updateReporter = async (reporterId, reporterData) => {
 
 
 export const changeStatus = async (incidentId, status) => {
-    return mockapi.changeStatus(incidentId, status);
-}
+  return mockapi.changeStatus(incidentId, status);
+};
 
 export const changeSeverity = async (incidentId, severity) => {
-    return mockapi.changeSeverity(incidentId, severity);
-}
+  return mockapi.changeSeverity(incidentId, severity);
+};
 
 export const assignToIncident = async (incidentId, uid) => {
-    return mockapi.assignToIncident(incidentId, uid);
-}
+  return mockapi.assignToIncident(incidentId, uid);
+};
 
 export const removeFromIncident = async (incidentId, uid) => {
-    return mockapi.removeFromIncident(incidentId, uid);
-}
+  return mockapi.removeFromIncident(incidentId, uid);
+};
+
+export const escallateIncident = async (incidentId, assigneeId) => {
+  return mockapi.escallateIncident(incidentId, assigneeId);
+};
