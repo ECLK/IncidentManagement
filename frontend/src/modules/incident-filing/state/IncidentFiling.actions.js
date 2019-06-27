@@ -68,8 +68,15 @@ export function submitIncidentBasicData(incidentData) {
         dispatch(requestIncidentSubmit());
         try{
             const response = await createIncident(incidentData);
-            await dispatch(getActiveIncidentDataSuccess(response.data));
-            await dispatch(recieveIncidentSubmitSuccess(response.data));
+            const _transform = {
+                incident: response.data,
+                reporter: { 
+                    id:response.data.reporter
+                }
+            };
+
+            await dispatch(getActiveIncidentDataSuccess(_transform));
+            await dispatch(recieveIncidentSubmitSuccess(_transform));
             await dispatch(stepForwardIncidentStepper());
         }catch(error){
             console.log(error);

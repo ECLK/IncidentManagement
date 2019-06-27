@@ -120,7 +120,7 @@ class Incident(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    refId = models.CharField(max_length=200)
+    refId = models.CharField(max_length=200, blank=True)
 
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -134,7 +134,7 @@ class Incident(models.Model):
     )
 
     # getting the elections from a separate service
-    election = models.CharField(max_length=200)
+    election = models.CharField(max_length=200, blank=True)
     polling_station = models.ForeignKey(
         "common.PollingStation", on_delete=models.DO_NOTHING, null=True, blank=True
     )

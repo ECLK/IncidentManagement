@@ -29,6 +29,10 @@ class IncidentSerializer(serializers.ModelSerializer):
     pollingStation = serializers.ReadOnlyField(source="polling_station")
     createdDate = serializers.ReadOnlyField(source="created_date")
 
+    # refId = serializers.CharField(required=False)
+    # election = serializers.CharField(required=False)
+
+
     # reporter = ReporterSerializer()
 
     class Meta:

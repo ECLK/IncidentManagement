@@ -55,8 +55,10 @@ export default function incidentReducer(state, action) {
             case INCIDENT_BASIC_DATA_SUBMIT_SUCCESS:
                 draft.guestIncidentForm.isSubmitting = false;
 
-                draft.incident = action.data.incident;
-                draft.reporter = action.data.reporter;
+                // draft.incident = action.incident;
+                // draft.reporter = {
+                //     id: action.data.reporter
+                // }
 
                 return draft
             case INCIDENT_BASIC_DATA_SUBMIT_ERROR:

@@ -221,6 +221,7 @@ class LocationTab extends Component {
 
     render() {
         const { classes } = this.props;
+        const { incident } = this.state;
 
         return (
             <div>
