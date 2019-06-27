@@ -562,8 +562,10 @@ class NavTabs extends Component {
         const { classes, postComment, activeIncident,
             reporter, changeStatus, changeSeverity,
             activeUser, users, getUsers,
-            setIncidentAssignee
+            setIncidentAssignee, events
         } = this.props;
+
+        console.log(this.props.events);
 
         const { value, open, verifyIncidentDialogOpen } = this.state;
 
@@ -644,17 +646,19 @@ class NavTabs extends Component {
                             )}
                         </Popper>
                     </div>
-                    <EventActions
-                        activeIncident={activeIncident}
-                        onStatusChange={changeStatus}
-                        onSeverityChange={changeSeverity}
-                        activeUser={activeUser}
-                        users={users}
-                        getUsers={getUsers}
-                        setIncidentAssignee={setIncidentAssignee}
-                        events={this.props.events}
-                        escallateIncident = {()=>{this.props.escallateIncident(activeIncident.id, activeIncident.assignees[0] && activeIncident.assignees[0].uid || 0)}}
-                    />
+                    {events && events.length > 0 && (
+                        <EventActions
+                            activeIncident={activeIncident}
+                            onStatusChange={changeStatus}
+                            onSeverityChange={changeSeverity}
+                            activeUser={activeUser}
+                            users={users}
+                            getUsers={getUsers}
+                            setIncidentAssignee={setIncidentAssignee}
+                            events={events}
+                            escallateIncident = {()=>{this.props.escallateIncident(activeIncident.id, activeIncident.assignees[0] && activeIncident.assignees[0].uid || 0)}}
+                        />
+                    )}
                 </div>
 
                     </Grid>

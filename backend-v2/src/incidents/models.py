@@ -103,13 +103,13 @@ class IncidentSeverity(models.Model):
 
 
 class IncidentComment(models.Model):
-    body = models.CharField(max_length=200)
+    body = models.TextField(max_length=200)
     incident = models.ForeignKey("Incident", on_delete=models.DO_NOTHING)
     is_active = models.BooleanField(default=True)
     is_outcome = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True)
-    sn_body = models.CharField(max_length=200)
-    tm_body = models.CharField(max_length=200)
+    sn_body = models.CharField(max_length=200, blank=True)
+    tm_body = models.CharField(max_length=200, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -43,3 +43,11 @@ class IncidentCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = IncidentComment
         fields = "__all__"
+
+class IncidentCommentSerializer(serializers.ModelSerializer):
+    comment = serializers.CharField(source="body")
+    isOutcome = serializers.BooleanField(source="is_outcome")
+
+    class Meta:
+        model = IncidentComment
+        fields = ("comment", "isOutcome", "sn_body", "tm_body", "incident")

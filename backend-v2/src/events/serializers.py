@@ -1,16 +1,32 @@
 from rest_framework import serializers
 from .models import Event
 from rest_framework import serializers
+from rest_framework.exceptions import APIException
 
-from ..incidents.serializers import IncidentSerializer
+from ..incidents.models import IncidentComment
+
+from ..incidents.serializers import IncidentSerializer, IncidentCommentSerializer
+from ..custom_auth.serializers import UserSerializer
+
+class GenericDataRelatedField(serializers.RelatedField):
+    def to_representation(self, value):
+        if isinstance(value, IncidentComment):
+            return {
+                "comment": {
+                    "body": value.body,
+                    "isOutcome": value.is_outcome
+                }
+            }
+
+        raise APIException('Unexpected type of tagged object')
+
 
 class EventSerializer(serializers.ModelSerializer):
     affectedAttribute = serializers.CharField(source="affected_attribute")
-    data = serializers.ReadOnlyField()
+    createdDate = serializers.DateTimeField(source="created_date")
+    data = GenericDataRelatedField(source="refered_model", read_only=True)
     incident = IncidentSerializer()
-
-    # def get_incident(self, obj):
-    #     return obj.incident
+    initiator = UserSerializer()
 
     class Meta:
         model = Event
@@ -21,10 +37,8 @@ class EventSerializer(serializers.ModelSerializer):
             "description",
             "initiator",
             "incident",
-            
             "affectedAttribute",
-
-            "created_date",
-            "data",
+            "createdDate",
+            "data"
         )
 

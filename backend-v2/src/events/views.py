@@ -9,7 +9,6 @@ from ..incidents.services import is_valid_incident
 
 @api_view(['GET'])
 def get_event_trail(request, incident_id):
-    print(request.user)
     if request.method == "GET":
         if is_valid_incident(incident_id):
             events = get_events_by_incident_id(incident_id)

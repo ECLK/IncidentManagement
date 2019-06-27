@@ -11,19 +11,27 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from .models import Incident
-from .serializers import IncidentSerializer, ReporterSerializer
+from .serializers import (
+    IncidentSerializer,
+    ReporterSerializer,
+    IncidentCommentSerializer,
+)
 from .services import (
     get_incident_by_id,
     create_incident_postscript,
     update_incident_status,
     update_incident_severity,
-    get_reporter_by_id
+    get_reporter_by_id,
+    get_comments_by_incident,
+    create_incident_comment_postscript
 )
+
 
 class IncidentResultsSetPagination(PageNumberPagination):
     page_size = 5
-    page_size_query_param = 'pageSize'
+    page_size_query_param = "pageSize"
     max_page_size = 100
+
 
 class IncidentList(APIView, IncidentResultsSetPagination):
     # authentication_classes = (JSONWebTokenAuthentication, )
@@ -32,11 +40,15 @@ class IncidentList(APIView, IncidentResultsSetPagination):
     serializer_class = IncidentSerializer
 
     def get_paginated_response(self, data):
-        return Response(dict([
-            ('pages', self.page.paginator.count),
-            ('pageNumber', self.page.number),
-            ('incidents', data)
-        ]))
+        return Response(
+            dict(
+                [
+                    ("pages", self.page.paginator.count),
+                    ("pageNumber", self.page.number),
+                    ("incidents", data),
+                ]
+            )
+        )
 
     def get(self, request, format=None):
         incidents = Incident.objects.all()
@@ -77,9 +89,11 @@ class IncidentDetail(APIView):
 
 class IncidentStatusView(APIView):
     def get(self, request, incident_id, format=None):
-        if not ( request.user.has_perm("incidents.can_request_status_change") or 
-                 request.user.has_perm("incidents.can_change_status") ):
-                 return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
+        if not (
+            request.user.has_perm("incidents.can_request_status_change")
+            or request.user.has_perm("incidents.can_change_status")
+        ):
+            return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
 
         action = request.GET.get("action")
 
@@ -104,9 +118,11 @@ class IncidentStatusView(APIView):
 
 class IncidentSeverityView(APIView):
     def get(self, request, incident_id, format=None):
-        if not ( request.user.has_perm("incidents.can_request_severity_change") or 
-                 request.user.has_perm("incidents.can_change_severity") ):
-                 return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
+        if not (
+            request.user.has_perm("incidents.can_request_severity_change")
+            or request.user.has_perm("incidents.can_change_severity")
+        ):
+            return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
 
         action = request.GET.get("action")
 
@@ -128,6 +144,7 @@ class IncidentSeverityView(APIView):
             return Response("Invalid action", status=status.HTTP_400_BAD_REQUEST)
         return Response("No action defined", status=status.HTTP_400_BAD_REQUEST)
 
+
 class ReporterDetail(APIView):
     serializer_class = ReporterSerializer
 
@@ -146,4 +163,32 @@ class ReporterDetail(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class IncidentCommentView(APIView):
+    serializer_class = IncidentCommentSerializer
+
+    def get(self, request, incident_id, format=None):
+        incident = get_incident_by_id(incident_id)
+        if incident is None:
+            return Response("Invalid incident id", status=status.HTTP_404_NOT_FOUND)
+
+        comments = get_comments_by_incident(incident)
+        serializer = IncidentCommentSerializer(comments)
+        return Response(serializer.data)
+
+    def post(self, request, incident_id, format=None):
+        incident = get_incident_by_id(incident_id)
+        if incident is None:
+            return Response("Invalid incident id", status=status.HTTP_404_NOT_FOUND)
+
+        comment_data = request.data
+        comment_data["incident"] = incident.id
+        serializer = IncidentCommentSerializer(data=comment_data)
+        if serializer.is_valid():
+            comment = serializer.save()
+            create_incident_comment_postscript(incident, request.user, comment)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

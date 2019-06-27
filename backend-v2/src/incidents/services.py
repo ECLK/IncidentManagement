@@ -5,6 +5,7 @@ from .models import (
     StatusType,
     SeverityType,
     Reporter,
+    IncidentComment,
 )
 from django.contrib.auth.models import User
 
@@ -25,9 +26,17 @@ def get_incident_by_id(incident_id: str) -> Incident:
     except Exception as e:
         return None
 
+
 def get_reporter_by_id(reporter_id: str) -> Incident:
     try:
         return Reporter.objects.get(id=reporter_id)
+    except Exception as e:
+        return None
+
+
+def get_comments_by_incident(incident: Incident) -> IncidentComment:
+    try:
+        return IncidentComment.objects.get(incident=incident)
     except Exception as e:
         return None
 
@@ -75,7 +84,7 @@ def update_incident_status(
             current_status=status_type,
             previous_status=incident.current_status,
             incident=incident,
-            approved=False
+            approved=False,
         )
         status.save()
         incident.hasPendingStatusChange = "T"
@@ -87,7 +96,7 @@ def update_incident_status(
             current_status=status_type,
             previous_status=incident.current_status,
             incident=incident,
-            approved=True
+            approved=True,
         )
         status.save()
         incident.hasPendingStatusChange = "F"
@@ -115,19 +124,19 @@ def update_incident_severity(
             current_severity=severity_type,
             previous_severity=incident.current_severity,
             incident=incident,
-            approved=False
+            approved=False,
         )
         severity.save()
         incident.hasPendingSeverityChange = "T"
         incident.save()
         event_services.update_incident_severity_event(user, incident, severity, False)
-    
+
     elif user.has_perm("incidents.can_change_severity"):
         severity = IncidentSeverity(
             current_severity=severity_type,
             previous_severity=incident.current_severity,
             incident=incident,
-            approved=True
+            approved=True,
         )
         severity.save()
         incident.hasPendingSeverityChange = "F"
@@ -135,4 +144,16 @@ def update_incident_severity(
         event_services.update_incident_severity_event(user, incident, severity, True)
 
     return ("success", "Severity updated")
+
+
+def create_incident_comment_postscript(
+    incident: Incident, user: User, comment: IncidentComment
+) -> None:
+    """Function to take care of event, status and severity creation"""
+
+    if comment.is_outcome:
+        event_services.create_outcome_event(user, incident, comment)
+    else:
+        event_services.create_comment_event(user, incident, comment)
+    
 
