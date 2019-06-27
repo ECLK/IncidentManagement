@@ -1,4 +1,0 @@
-{
-    "python.formatting.provider": "black",
-    "python.pythonPath": "/home/manujith/.pyenv/versions/3.6.0/bin/python"
-}
