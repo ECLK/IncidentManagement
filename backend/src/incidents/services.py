@@ -155,5 +155,7 @@ def create_incident_comment_postscript(
         event_services.create_outcome_event(user, incident, comment)
     else:
         event_services.create_comment_event(user, incident, comment)
+
+# def incident_auto_assign(incident: Incident, user_level:)
     
 

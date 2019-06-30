@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  mysql:
+    hostname: mysql
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: lsf
+    expose:
+      - '3306'
+    ports:
+      - '3308:3306'
+
+  djangoapp:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - 8000:8000
+    environment:
+      - DATABASE_HOST=mysql
+      - DATABASE_PORT=3306
+      - DATABASE_USER=root
+      - DATABASE_PWD=toor
+    command: gunicorn --bind=0.0.0.0:8000 src.wsgi:application

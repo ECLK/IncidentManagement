@@ -97,8 +97,8 @@ DATABASES = {
         'NAME': 'lsf',
         'USER': env_var('DATABASE_USER'),
         'PASSWORD': env_var('DATABASE_PWD'),
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
+        'HOST': env_var('DATABASE_HOST'),   # Or an IP Address that your DB is hosted on
+        'PORT': env_var("DATABASE_PORT"),
     }
 }
 
