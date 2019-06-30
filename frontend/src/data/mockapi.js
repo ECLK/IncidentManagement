@@ -434,10 +434,10 @@ export function assignToIncident(incidentId, uid) {
   const incidentIndex = incidents.findIndex(inc => inc.id === incidentId);
   const assignee = users.findIndex(user => user.uid === uid);
 
-  incidents[incidentIndex].assignees.push({
+  incidents[incidentIndex].assignees[0] = {
     displayName: users[assignee].displayName,
     uid: users[assignee].uid
-  });
+  };
 
   events.push({
     id: uuidv4(),
