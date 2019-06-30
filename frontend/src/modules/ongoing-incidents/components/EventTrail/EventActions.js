@@ -65,7 +65,7 @@ class EventActions extends React.Component {
 
 
                 <Typography variant="h6" style={{ marginTop: "20px" }}>
-                    Assignees
+                    Assignee
                 </Typography>
                 <Assignees
                     // activeIncident={activeIncident}
@@ -76,12 +76,12 @@ class EventActions extends React.Component {
                     users={users}
                 />
 
-                <Typography variant="h6" style={{ marginTop: "20px" }}>
+                {/* <Typography variant="h6" style={{ marginTop: "20px" }}>
                     Logged Date and Time
-                    </Typography>
+                </Typography>
                 <Typography variant="h7">
                     <Moment>{activeIncident.createdDate}</Moment>
-                </Typography>
+                </Typography> */}
 
                 <Typography variant="h6" style={{ marginTop: "20px" }}>
                     Time from last action
@@ -92,14 +92,14 @@ class EventActions extends React.Component {
 
                 <Typography variant="h6" style={{ marginTop: "20px" }}>
                     Required response time
-                    </Typography>
+                </Typography>
                 <Typography variant="h7">
                     6 hours
-                    </Typography>
+                </Typography>
 
                 <Typography variant="h6" style={{ marginTop: "20px" }}>
                     Status:
-                    </Typography>
+                </Typography>
                 <Typography variant="h7">
                     {activeIncident.status}
                 </Typography>
@@ -113,7 +113,7 @@ class EventActions extends React.Component {
 
                 <Typography variant="h6" style={{ marginTop: "20px" }}>
                     Severity
-                    </Typography>
+                </Typography>
                 <StatusChange
                     activeIncident={activeIncident}
                     currentValue={activeIncident.severity}
@@ -125,13 +125,13 @@ class EventActions extends React.Component {
                 
                 <Divider variant="middle" className={classes.divider}/>
 
-                <Typography variant="h6" style={{ marginTop: "20px" }}>
+                {/* <Typography variant="h6" style={{ marginTop: "20px" }}>
                     Actions
-                </Typography>
+                </Typography> */}
 
-                <Button color="primary" className={classes.button} onClick={this.props.escallateIncident}>Escalate</Button>
-                <Button color="primary" className={classes.button}>Escalate to outside entity</Button>
-                <Button color="primary" className={classes.button}>Request for advice</Button>
+                <Button color="primary" size="large" variant='text' className={classes.button} onClick={this.props.escallateIncident}>Escalate</Button>
+                <Button color="primary" size="large" variant='text' className={classes.button}>Escalate to outside entity</Button>
+                <Button color="primary" size="large" variant='text' className={classes.button}>Request for advice</Button>
 
 
             </div>

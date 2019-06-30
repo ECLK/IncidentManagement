@@ -35,6 +35,8 @@ import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import VerifyIncidentConfirm from './IncidentActions/VerifyIncidentConfirm';
+import EditIcon from '@material-ui/icons/Edit';
+import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 
 
 function TabContainer(props) {
@@ -82,7 +84,7 @@ const styles = theme => ({
 
     },
     sidePane: {
-        marginLeft: theme.spacing.unit*4
+        marginLeft: theme.spacing.unit * 4
 
     },
     mainArea: {
@@ -95,6 +97,12 @@ const styles = theme => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing.unit * 4,
         outline: 'none',
+    },
+    editIcon: {
+        marginRight: theme.spacing.unit * 1,
+    },
+    verifiedIcon:{
+        marginRight: theme.spacing.unit * 1,
     },
 });
 
@@ -160,6 +168,17 @@ class BasicDetailTab extends Component {
                                 </Grid>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Time </Typography>
+                                    <Typography gutterBottom> <Moment format="HH:mm" unix>{incident.createdDate}</Moment> </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Logged Date </Typography>
+                                    <Typography gutterBottom> <Moment format="YYYY/MM/DD" unix>{incident.createdDate}</Moment> </Typography>
+                                </Grid>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Logged Time </Typography>
                                     <Typography gutterBottom> <Moment format="HH:mm" unix>{incident.createdDate}</Moment> </Typography>
                                 </Grid>
                             </Grid>
@@ -453,6 +472,12 @@ class ReviewTab extends Component {
  * Tabular componenet
  */
 class NavTabs extends Component {
+
+
+    scrollToTop = () => {
+        window.scrollTo(0, 0);
+    }
+    
     state = {
         value: 0,
         incident: {
@@ -503,7 +528,7 @@ class NavTabs extends Component {
         },
         isCommentVisible: false,
         open: false,
-        verifyIncidentDialogOpen:false,
+        verifyIncidentDialogOpen: false,
     };
 
     handleChange = (event, value) => {
@@ -515,6 +540,7 @@ class NavTabs extends Component {
             this.props.getIncident(this.props.paramIncidentId);
             this.props.getEvents(this.props.paramIncidentId);
         }
+        this.scrollToTop()
     }
 
     showCommentInput = () => {
@@ -544,18 +570,20 @@ class NavTabs extends Component {
     };
 
     handleMouseLeave = event => {
-        this.setState({open:false})
+        this.setState({ open: false })
     }
 
     onVerifyClick = () => {
-        this.setState((state)=>(
-            {verifyIncidentDialogOpen:!state.verifyIncidentDialogOpen}
-        ))
+        // this.setState((state)=>(
+        //     {verifyIncidentDialogOpen:!state.verifyIncidentDialogOpen}
+        // ))
+        this.props.changeStatus(this.props.activeIncident.id, 'VERIFY')
     }
 
     handleVerifyIncidentDialogClose = () => {
-        this.setState({verifyIncidentDialogOpen:false})
+        this.setState({ verifyIncidentDialogOpen: false })
     }
+
 
     render() {
         const { classes, postComment, activeIncident,
@@ -570,7 +598,7 @@ class NavTabs extends Component {
 
         return (
             <NoSsr>
-                <Grid container spacing={24}>
+                <Grid container spacing={24} >
                     <Grid item xs={9}>
                         <div className={classes.mainArea}>
                             <div className={classes.root}>
@@ -599,15 +627,22 @@ class NavTabs extends Component {
                         </div>
                     </Grid>
                     <Grid item xs={3}>
-                    <div className={classes.sidePane}>
-                    <div className={classes.editButtonWrapper}>
-                        <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick} className={classes.editButton} >
-                            Verify
-                        </Button>
-                        <Button component={EditIncidentLink} variant="outlined" size="large" color="primary" className={classes.editButton} >
-                            Edit
-                        </Button>
-                        {/* <Button
+                        <div className={classes.sidePane}>
+                            <div className={classes.editButtonWrapper}>
+                                {activeIncident.status === 'VERIFY'?
+                                    <Button variant="outlined" disabled size="large" color="secondary" onClick={this.onVerifyClick} className={classes.editButton} >
+                                        <DoneOutlineIcon className={classes.verifiedIcon}/>
+                                        Verified
+                                    </Button>:
+                                    <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick} className={classes.editButton} >
+                                        Verify
+                                    </Button>
+                                }
+                                <Button component={EditIncidentLink} variant="outlined" size="large" color="primary" className={classes.editButton} >
+                                    <EditIcon className={classes.editIcon} />
+                                    Edit
+                                </Button>
+                                {/* <Button
                             variant="outlined" size="large" color="primary"
                             buttonRef={node => {
                                 this.anchorEl = node;
@@ -620,48 +655,48 @@ class NavTabs extends Component {
                         >
                             More
                         </Button> */}
-                        <Popper open={open} anchorEl={this.anchorEl} transition disablePortal>
-                            {({ TransitionProps, placement }) => (
-                                <Grow
-                                    {...TransitionProps}
-                                    id="menu-list-grow"
-                                    style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                                >
-                                    <Paper>
-                                        <ClickAwayListener onClickAway={this.handleClose}>
-                                            <MenuList className={classes.moreActions}>
-                                                <MenuItem onClick={this.handleClose}>Request for Advice</MenuItem>
-                                                <MenuItem onClick={(e)=>{
-                                                    this.handleClose(e)
-                                                    this.props.escallateIncident(activeIncident.id, activeIncident.assignees[0] && activeIncident.assignees[0].uid || 0)
-                                                    }}>Escalate</MenuItem>
-                                                <MenuItem onClick={this.handleClose}>Escalate to outside entity</MenuItem>
-                                            </MenuList>
-                                        </ClickAwayListener>
-                                    </Paper>
-                                </Grow>
-                            )}
-                        </Popper>
-                    </div>
-                    <EventActions
-                        activeIncident={activeIncident}
-                        onStatusChange={changeStatus}
-                        onSeverityChange={changeSeverity}
-                        activeUser={activeUser}
-                        users={users}
-                        getUsers={getUsers}
-                        setIncidentAssignee={setIncidentAssignee}
-                        events={this.props.events}
-                        escallateIncident = {()=>{this.props.escallateIncident(activeIncident.id, activeIncident.assignees[0] && activeIncident.assignees[0].uid || 0)}}
-                    />
-                </div>
+                                <Popper open={open} anchorEl={this.anchorEl} transition disablePortal>
+                                    {({ TransitionProps, placement }) => (
+                                        <Grow
+                                            {...TransitionProps}
+                                            id="menu-list-grow"
+                                            style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                                        >
+                                            <Paper>
+                                                <ClickAwayListener onClickAway={this.handleClose}>
+                                                    <MenuList className={classes.moreActions}>
+                                                        <MenuItem onClick={this.handleClose}>Request for Advice</MenuItem>
+                                                        <MenuItem onClick={(e) => {
+                                                            this.handleClose(e)
+                                                            this.props.escallateIncident(activeIncident.id, activeIncident.assignees[0] && activeIncident.assignees[0].uid || 0)
+                                                        }}>Escalate</MenuItem>
+                                                        <MenuItem onClick={this.handleClose}>Escalate to outside entity</MenuItem>
+                                                    </MenuList>
+                                                </ClickAwayListener>
+                                            </Paper>
+                                        </Grow>
+                                    )}
+                                </Popper>
+                            </div>
+                            <EventActions
+                                activeIncident={activeIncident}
+                                onStatusChange={changeStatus}
+                                onSeverityChange={changeSeverity}
+                                activeUser={activeUser}
+                                users={users}
+                                getUsers={getUsers}
+                                setIncidentAssignee={setIncidentAssignee}
+                                events={this.props.events}
+                                escallateIncident={() => { this.props.escallateIncident(activeIncident.id, activeIncident.assignees[0] && activeIncident.assignees[0].uid || 0) }}
+                            />
+                        </div>
 
                     </Grid>
                 </Grid>
 
-               
 
-                <VerifyIncidentConfirm open={verifyIncidentDialogOpen} handleClose={this.handleVerifyIncidentDialogClose}/>
+
+                <VerifyIncidentConfirm open={verifyIncidentDialogOpen} handleClose={this.handleVerifyIncidentDialogClose} />
 
 
             </NoSsr>
