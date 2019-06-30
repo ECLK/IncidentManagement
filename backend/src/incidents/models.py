@@ -3,6 +3,7 @@ import enum
 from django.contrib.auth.models import User
 import uuid
 
+from django_filters import rest_framework as filters
 
 class Occurrence(enum.Enum):
     OCCURRED = "Occurred"
@@ -181,12 +182,20 @@ class Incident(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     @property
-    def current_status(self):
-        status = (
-            IncidentStatus.objects.filter(incident=self, approved=True)
-            .order_by("-created_date")
-            .first()
-        )
+    def current_status(self, status_type=None):
+        if status_type is None:
+            status = (
+                IncidentStatus.objects.filter(incident=self, approved=True)
+                .order_by("-created_date")
+                .first()
+            )    
+        else:
+            status = (
+                IncidentStatus.objects.filter(incident=self, approved=True, current_status=status_type)
+                .order_by("-created_date")
+                .first()
+            )
+
         if status is not None:
             return status.current_status
         return None
@@ -204,3 +213,14 @@ class Incident(models.Model):
 
     class Meta:
         ordering = ("created_date",)
+
+class IncidentFilter(filters.FilterSet):
+    current_status = filters.ChoiceFilter(choices=StatusType, method='my_custom_filter')
+    
+    class Meta:
+        model = Incident
+        fields = ["current_status"]
+    
+    def my_custom_filter(self, queryset, name, value):
+        print(queryset, name, value)
+

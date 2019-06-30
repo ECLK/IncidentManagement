@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'corsheaders',
+    'django_filters',
 
     'src.common',
     'src.custom_auth',

@@ -7,9 +7,10 @@ from .models import (
     Reporter,
     IncidentComment,
 )
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 from ..events import services as event_services
+from django.db import connection
 
 
 def is_valid_incident(incident_id: str) -> bool:
@@ -89,7 +90,8 @@ def update_incident_status(
         status.save()
         incident.hasPendingStatusChange = "T"
         incident.save()
-        event_services.update_incident_status_event(user, incident, status, False)
+        event_services.update_incident_status_event(
+            user, incident, status, False)
 
     elif user.has_perm("incidents.can_change_status"):
         status = IncidentStatus(
@@ -101,7 +103,8 @@ def update_incident_status(
         status.save()
         incident.hasPendingStatusChange = "F"
         incident.save()
-        event_services.update_incident_status_event(user, incident, status, True)
+        event_services.update_incident_status_event(
+            user, incident, status, True)
 
     return ("success", "Status updated")
 
@@ -129,7 +132,8 @@ def update_incident_severity(
         severity.save()
         incident.hasPendingSeverityChange = "T"
         incident.save()
-        event_services.update_incident_severity_event(user, incident, severity, False)
+        event_services.update_incident_severity_event(
+            user, incident, severity, False)
 
     elif user.has_perm("incidents.can_change_severity"):
         severity = IncidentSeverity(
@@ -141,7 +145,8 @@ def update_incident_severity(
         severity.save()
         incident.hasPendingSeverityChange = "F"
         incident.save()
-        event_services.update_incident_severity_event(user, incident, severity, True)
+        event_services.update_incident_severity_event(
+            user, incident, severity, True)
 
     return ("success", "Severity updated")
 
@@ -156,19 +161,69 @@ def create_incident_comment_postscript(
     else:
         event_services.create_comment_event(user, incident, comment)
 
-# def incident_auto_assign(incident: Incident, user_level:)
-    
 
 def get_incidents_by_status(status_type_str: str) -> Incident:
     try:
-        incidents =  Incident.objects.all()
-        filtered_incidents = (incident for incident in incidents if incident.current_status==status_type_str)
+        incidents = Incident.objects.all()
+        filtered_incidents = (
+            incident for incident in incidents if incident.current_status == status_type_str)
         return filtered_incidents
     except Exception as e:
         return None
+
 
 def get_incidents_before_date(date: str) -> Incident:
     try:
         return Incident.objects.all().filter(created_date__lte=date)
     except Exception as e:
         return None
+
+
+def incident_auto_assign(incident: Incident, user_group: Group):
+    """auto assign will find the user from the given user group with minimum
+       # of incidents already assigned
+    """
+
+    # should we move this to a view / procedure lateron?
+    # also query optimizations here are welcome
+    sql = """
+            SELECT usr.id, COUNT(incident.id) as incident_count FROM `auth_user` as usr 
+            LEFT JOIN incidents_incident as incident on incident.assignee_id = usr.id 
+            INNER JOIN auth_user_groups on usr.id = auth_user_groups.user_id
+            INNER JOIN auth_group as grp on grp.id = auth_user_groups.group_id
+            WHERE grp.rank = %d
+            GROUP BY usr.id
+            ORDER BY incident_count ASC
+          """ % user_group.rank
+
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        row = cursor.fetchone()
+
+        if row is None:
+            return ("error", "Error in finding auto assignment")
+
+        assignee = User.objects.get(id=row[0])
+        incident.assignee = assignee
+        incident.save()
+
+        return ("success", "Auto assign completed")
+
+def incident_escalate(incident: Incident, escalate_dir: str = "UP"):
+    # find the rank of the current incident assignee
+    assignee_groups = incident.assignee.groups.all()
+    if len(assignee_groups) == 0:
+        return ("error", "No group for current assignee")
+
+    current_rank = assignee_groups[0].rank
+
+    # if escalate UP
+    next_rank = current_rank - 1
+    if escalate_dir == "DOWN":
+        next_rank = current_rank + 1
+    
+    next_group = Group.objects.get(rank=next_rank)
+    if next_group is None:
+        return ("error", "Can't escalate %s from here" % escalate_dir)
+
+    return incident_auto_assign(incident, next_group)
