@@ -159,3 +159,16 @@ def create_incident_comment_postscript(
 # def incident_auto_assign(incident: Incident, user_level:)
     
 
+def get_incidents_by_status(status_type_str: str) -> Incident:
+    try:
+        incidents =  Incident.objects.all()
+        filtered_incidents = (incident for incident in incidents if incident.current_status==status_type_str)
+        return filtered_incidents
+    except Exception as e:
+        return None
+
+def get_incidents_before_date(date: str) -> Incident:
+    try:
+        return Incident.objects.all().filter(created_date__lte=date)
+    except Exception as e:
+        return None

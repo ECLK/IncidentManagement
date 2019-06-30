@@ -54,4 +54,5 @@ urlpatterns = [
         incident_views.IncidentCommentView.as_view(),
     ),
     path("reporters/<int:reporter_id>", incident_views.ReporterDetail.as_view()),
+    path("incidents/search/status", incident_views.IncidentSearchByStatus.as_view()),
 ]
