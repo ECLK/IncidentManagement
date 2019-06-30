@@ -1,3 +1,4 @@
+import moment from "moment";
 import handler from "./apiHandler";
 // import handler from './apiHandler'
 
@@ -39,7 +40,23 @@ export const getIncident = async (incidentId) => {
 
 export const getIncidents = async (filters) => {
     // return mockapi.getIncidents();
-    return (await handler.get('/incidents/')).data;
+    var query = "";
+
+    if(filters.severity){
+      query += "&severity=" + filters.severity;
+    }
+
+    if(filters.status){
+      query += "&status=" + filters.status;
+    }
+
+    if(filters.startTime && filters.endTime){
+      const startDate = moment(filters.startTime).format("YYYY-MM-DD");
+      const endDate = moment(filters.endTime).format("YYYY-MM-DD");
+      query += "&start_date=" + startDate + "&end_date=" + endDate;
+    }
+
+    return (await handler.get(`/incidents/?${query}`)).data;
 };
 
 export const updateIncident = async (incidentId, incidentData) => {
