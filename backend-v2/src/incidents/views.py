@@ -13,7 +13,8 @@ from .services import (
     get_incident_by_id,
     create_incident_postscript,
     update_incident_status,
-    update_incident_severity
+    update_incident_severity,
+    get_incidents_by_status
 )
 
 
@@ -108,3 +109,16 @@ class IncidentSeverityView(APIView):
 
             return Response("Invalid action", status=status.HTTP_400_BAD_REQUEST)
         return Response("No action defined", status=status.HTTP_400_BAD_REQUEST)
+
+class IncidentSearchByStatus(APIView):
+    serializer_class = IncidentSerializer
+
+    def get(self, request, format=None):
+        status_type = request.GET.get("type")
+
+        if status_type:
+            filtered_incidents = get_incidents_by_status(status_type)
+            serializer = IncidentSerializer(filtered_incidents, many=True)
+            return Response(serializer.data)
+
+        return Response("Status type is invalid or not defined", status=status.HTTP_400_BAD_REQUEST)
