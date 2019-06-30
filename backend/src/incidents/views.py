@@ -244,7 +244,7 @@ class IncidentEscalateView(APIView):
         if incident is None:
             return Response("Invalid incident id", status=status.HTTP_404_NOT_FOUND)
 
-        result = incident_escalate(incident)
+        result = incident_escalate(request.user, incident)
         if result[0] == 'success':
             return Response("Incident escalated", status=status.HTTP_200_OK)
         

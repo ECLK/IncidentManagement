@@ -92,5 +92,13 @@ def create_outcome_event(initiator, incident, comment):
                     refered_model=comment
                 )
 
+def create_assignment_event(initiator, incident, assignee):
+    create_event(
+                    EventAction.ENTITY_ASSIGNED,
+                    initiator, 
+                    incident, 
+                    refered_model=assignee
+                )
+
 
 

@@ -207,9 +207,9 @@ def incident_auto_assign(incident: Incident, user_group: Group):
         incident.assignee = assignee
         incident.save()
 
-        return ("success", "Auto assign completed")
+        return ("success", "Auto assign completed", assignee)
 
-def incident_escalate(incident: Incident, escalate_dir: str = "UP"):
+def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP"):
     # find the rank of the current incident assignee
     assignee_groups = incident.assignee.groups.all()
     if len(assignee_groups) == 0:
@@ -226,4 +226,9 @@ def incident_escalate(incident: Incident, escalate_dir: str = "UP"):
     if next_group is None:
         return ("error", "Can't escalate %s from here" % escalate_dir)
 
-    return incident_auto_assign(incident, next_group)
+    result = incident_auto_assign(incident, next_group)
+
+    if result[0] == 'success':
+        event_services.create_assignment_event(user, incident, result[2])
+
+    return result

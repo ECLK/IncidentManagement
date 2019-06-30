@@ -636,7 +636,7 @@ class NavTabs extends Component {
                                                 <MenuItem onClick={this.handleClose}>Request for Advice</MenuItem>
                                                 <MenuItem onClick={(e)=>{
                                                     this.handleClose(e)
-                                                    this.props.escallateIncident(activeIncident.id, activeIncident.assignees[0] && activeIncident.assignees[0].uid || 0)
+                                                    this.props.escallateIncident(activeIncident.id)
                                                     }}>Escalate</MenuItem>
                                                 <MenuItem onClick={this.handleClose}>Escalate to outside entity</MenuItem>
                                             </MenuList>
@@ -656,7 +656,7 @@ class NavTabs extends Component {
                             getUsers={getUsers}
                             setIncidentAssignee={setIncidentAssignee}
                             events={events}
-                            escallateIncident = {()=>{this.props.escallateIncident(activeIncident.id, activeIncident.assignees[0] && activeIncident.assignees[0].uid || 0)}}
+                            escallateIncident = {()=>{this.props.escallateIncident(activeIncident.id)}}
                         />
                     )}
                 </div>
