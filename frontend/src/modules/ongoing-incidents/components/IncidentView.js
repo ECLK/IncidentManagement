@@ -578,7 +578,7 @@ class NavTabs extends Component {
         // this.setState((state)=>(
         //     {verifyIncidentDialogOpen:!state.verifyIncidentDialogOpen}
         // ))
-        this.props.changeStatus(this.props.activeIncident.id, 'VERIFY')
+        this.props.changeStatus(this.props.activeIncident.id, 'VERIFIED')
     }
 
     handleVerifyIncidentDialogClose = () => {
