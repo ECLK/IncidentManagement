@@ -86,7 +86,7 @@ export const changeSeverity = async (incidentId, severity) => {
 
 export const assignToIncident = async (incidentId, uid) => {
   // return mockapi.assignToIncident(incidentId, uid);
-  return (await handler.get(`/incidents/${incidentId}/assginee?action=change&assignee=${uid}`)).data;
+  return (await handler.get(`/incidents/${incidentId}/assignee?action=change&assignee=${uid}`)).data;
 };
 
 export const removeFromIncident = async (incidentId, uid) => {
