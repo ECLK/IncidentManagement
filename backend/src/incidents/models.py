@@ -214,6 +214,10 @@ class Incident(models.Model):
     class Meta:
         ordering = ("created_date",)
 
+        permissions = (
+            ("can_change_assignee", "Can directly change assignee"),
+        )
+
 class IncidentFilter(filters.FilterSet):
     current_status = filters.ChoiceFilter(choices=StatusType, method='my_custom_filter')
     
