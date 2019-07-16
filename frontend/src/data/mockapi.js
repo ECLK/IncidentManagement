@@ -251,6 +251,44 @@ export function getIncident(incidentID) {
 const PAGE_SIZE = 10;
 export function getIncidents(filters, pageNumber = 1) {
   let filteredIncidents = [...incidents];
+  let { textSearch } = filters;
+  textSearch = textSearch.toLowerCase();
+  if (textSearch) {
+    let refIds = []
+      .concat(
+        filteredIncidents
+          .filter(({ refId }) => refId === textSearch)
+          .map(({ refId }) => refId)
+      )
+      .concat(
+        filteredIncidents
+          .filter(
+            ({ description }) =>
+              description && description.toLowerCase().includes(textSearch)
+          )
+          .map(({ refId }) => refId)
+      )
+      .concat(
+        filteredIncidents
+          .filter(
+            ({ locationName }) =>
+              locationName && locationName.toLowerCase().includes(textSearch)
+          )
+          .map(({ refId }) => refId)
+      )
+      .concat(
+        filteredIncidents
+          .filter(
+            ({ title }) => title && title.toLowerCase().includes(textSearch)
+          )
+          .map(({ refId }) => refId)
+      );
+
+    filteredIncidents = filteredIncidents.filter(({ refId }) =>
+      refIds.includes(refId)
+    );
+  }
+
   if (filters.severity) {
     filteredIncidents = filteredIncidents.filter(
       ({ severity }) => severity === filters.severity
@@ -434,10 +472,10 @@ export function assignToIncident(incidentId, uid) {
   const incidentIndex = incidents.findIndex(inc => inc.id === incidentId);
   const assignee = users.findIndex(user => user.uid === uid);
 
-  incidents[incidentIndex].assignees.push({
+  incidents[incidentIndex].assignees[0] = {
     displayName: users[assignee].displayName,
     uid: users[assignee].uid
-  });
+  };
 
   events.push({
     id: uuidv4(),
@@ -499,8 +537,8 @@ export function getUsers() {
   };
 }
 
-export function escallateIncident(incidentId, assigneeId ) {
-  assignToIncident(incidentId, assigneeId + 1)
-  var incident  = getIncident(incidentId)
-  return incident
+export function escallateIncident(incidentId, assigneeId) {
+  assignToIncident(incidentId, assigneeId + 1);
+  var incident = getIncident(incidentId);
+  return incident;
 }
