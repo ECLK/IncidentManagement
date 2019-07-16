@@ -10,7 +10,10 @@ from .models import (
 from django.contrib.auth.models import User, Group
 
 from ..events import services as event_services
+from ..events.models import Event
 from django.db import connection
+
+from .exceptions import WorkflowException, IncidentException
 
 
 def is_valid_incident(incident_id: str) -> bool:
@@ -23,9 +26,24 @@ def is_valid_incident(incident_id: str) -> bool:
 
 def get_incident_by_id(incident_id: str) -> Incident:
     try:
-        return Incident.objects.get(id=incident_id)
-    except Exception as e:
-        return None
+        incident = Incident.objects.get(id=incident_id)
+        if incident is None:
+            raise IncidentException("Invalid incident id")
+    except:
+        raise IncidentException("Invalid incident id")
+
+    return incident
+
+
+def get_user_by_id(user_id: str) -> User:
+    try:
+        user = User.objects.get(id=user_id)
+        if user is None:
+            raise IncidentException("Invalid user id")
+    except:
+        raise IncidentException("Invalid user id")
+
+    return user
 
 
 def get_reporter_by_id(reporter_id: str) -> Incident:
@@ -44,11 +62,12 @@ def get_comments_by_incident(incident: Incident) -> IncidentComment:
 
 def create_incident_postscript(incident: Incident, user: User) -> None:
     """Function to take care of event, status and severity creation"""
-    status = IncidentStatus(current_status=StatusType.NEW, incident=incident)
+    status = IncidentStatus(current_status=StatusType.NEW,
+                            incident=incident, approved=True)
     status.save()
 
     severity = IncidentSeverity(
-        current_severity=SeverityType.DEFAULT, incident=incident
+        current_severity=SeverityType.DEFAULT, incident=incident, approved=True
     )
     severity.save()
 
@@ -209,11 +228,12 @@ def incident_auto_assign(incident: Incident, user_group: Group):
 
         return ("success", "Auto assign completed", assignee)
 
+
 def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP"):
     # find the rank of the current incident assignee
     assignee_groups = incident.assignee.groups.all()
     if len(assignee_groups) == 0:
-        return ("error", "No group for current assignee")
+        raise WorkflowException("No group for current assignee")
 
     current_rank = assignee_groups[0].rank
 
@@ -221,17 +241,14 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP"):
     next_rank = current_rank - 1
     if escalate_dir == "DOWN":
         next_rank = current_rank + 1
-    
+
     next_group = Group.objects.get(rank=next_rank)
     if next_group is None:
-        return ("error", "Can't escalate %s from here" % escalate_dir)
+        raise WorkflowException("Can't escalate %s from here" % escalate_dir)
 
     result = incident_auto_assign(incident, next_group)
+    event_services.create_assignment_event(user, incident, result[2])
 
-    if result[0] == 'success':
-        event_services.create_assignment_event(user, incident, result[2])
-
-    return result
 
 def incident_change_assignee(user: User, incident: Incident, assignee: User):
     incident.assignee = assignee
@@ -239,4 +256,119 @@ def incident_change_assignee(user: User, incident: Incident, assignee: User):
 
     event_services.create_assignment_event(user, incident, assignee)
 
-    return ('success', 'Assignee updated')
+
+def incident_close(user: User, incident: Incident, comment: str):
+    # find number of outcomes for the incident
+    outcomes = IncidentComment.objects.filter(
+        incident=incident, is_outcome=True).count()
+
+    if incident.hasPendingStatusChange == "T":
+        raise WorkflowException("Incident has pending changes, can not close")
+
+    if incident.current_status == StatusType.ACTION_PENDING:
+        raise WorkflowException(
+            "All pending actions needs to be resolved first")
+
+    if outcomes == 0:
+        raise WorkflowException(
+            "Incident need at least 1 outcome before closing")
+
+    status = IncidentStatus(
+        current_status=StatusType.CLOSED,
+        previous_status=incident.current_status,
+        incident=incident
+    )
+
+    if user.has_perm("incidents.can_request_status_change"):
+        # if user can't directly change the status
+        # only a pending change is added
+        status.approved = False
+        status.save()
+
+        incident.hasPendingStatusChange = "T"
+        incident.save()
+
+        event_services.update_status_with_description_event(
+            user, incident, status, False, comment)
+
+    elif user.has_perm("incidents.can_change_status"):
+        status.approved = True
+        status.save()
+
+        incident.hasPendingStatusChange = "F"
+        incident.save()
+
+        event_services.update_status_with_description_event(
+            user, incident, status, True, comment)
+
+
+def incident_escalate_external_action(user: User, incident: Incident, comment: str):
+    # new event
+    status = IncidentStatus(
+        current_status=StatusType.ACTION_PENDING,
+        previous_status=incident.current_status,
+        incident=incident
+    )
+    status.save()
+
+    event_services.start_action_event(user, incident, status, comment)
+
+
+def incident_complete_external_action(user: User, incident: Incident, comment: str, start_event: Event):
+    # new event
+    status = IncidentStatus(
+        current_status=StatusType.ACTION_PENDING,
+        previous_status=incident.current_status,
+        incident=incident
+    )
+    status.save()
+
+    event_services.complete_action_event(
+        user, incident, status, comment, start_event)
+
+
+def incident_request_advice(user: User, incident: Incident, assignee: User, comment: str):
+    status = IncidentStatus(
+        current_status=StatusType.ADVICE_REQESTED,
+        previous_status=incident.current_status,
+        incident=incident
+    )
+    status.save()
+
+    incident.linked_individuals.append(assignee)
+    incident.save()
+
+    event_services.update_status_with_description_event(user, incident, status, True, comment)
+
+
+def incident_provide_advice(user: User, incident: Incident, advice: str):
+    if user not in incident.linked_individuals:
+        raise WorkflowException("User not linked to the given incident")
+
+    if incident.current_status != StatusType.ADVICE_REQESTED:
+        raise WorkflowException("Incident does not have pending advice requests")
+
+    status = IncidentStatus(
+        current_status=StatusType.ADVICE_PROVIDED,
+        previous_status=incident.current_status,
+        incident=incident
+    )
+    status.save()
+
+    # check this
+    incident.linked_individuals.remove(user.id)
+
+    event_services.update_status_with_description_event(user, incident, status, True, advice)
+
+def incident_verify(user: User, incident: Incident, comment: str):
+    if incident.current_status != StatusType.NEW:
+        raise WorkflowException("Can only verify unverified incidents")
+
+    status = IncidentStatus(
+        current_status=StatusType.VERIFIED,
+        previous_status=incident.current_status,
+        incident=incident
+    )
+    status.save()
+
+    event_services.update_status_with_description_event(user, incident, status, True, comment)

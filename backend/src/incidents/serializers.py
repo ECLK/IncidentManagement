@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import Incident, IncidentStatus, IncidentSeverity, Reporter, IncidentComment
 from ..common.serializers import DistrictSerializer
 from ..custom_auth.serializers import UserSerializer
-from rest_framework import serializers
 
 class IncidentStatusSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,7 +39,8 @@ class IncidentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Incident
-        fields = "__all__"
+        # fields = "__all__"
+        exclude = ["police_station", "polling_station", "created_date"]
 
 class IncidentCommentSerializer(serializers.ModelSerializer):
     class Meta:

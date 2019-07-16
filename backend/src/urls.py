@@ -27,7 +27,14 @@ from .custom_auth import views as user_views
 # JWT
 from rest_framework_jwt.views import obtain_jwt_token
 
+#swagger
+from rest_framework_swagger.views import get_swagger_view
+
+schema_view = get_swagger_view(title='Incident Backend API')
+
 urlpatterns = [
+    path('', schema_view),
+
     path("admin/", admin.site.urls),
     path("auth-jwt/", obtain_jwt_token),
 
@@ -43,29 +50,19 @@ urlpatterns = [
     path("incidents/", incident_views.IncidentList.as_view()),
     path("incidents/<uuid:incident_id>", incident_views.IncidentDetail.as_view()),
     path("incidents/<uuid:incident_id>/events", event_views.get_event_trail),
-    path(
-        "incidents/<uuid:incident_id>/status",
-        incident_views.IncidentStatusView.as_view(),
-    ),
-    path(
-        "incidents/<uuid:incident_id>/severity",
-        incident_views.IncidentSeverityView.as_view(),
-    ),
+  
     path(
         "incidents/<uuid:incident_id>/comment",
         incident_views.IncidentCommentView.as_view(),
     ),
     path("reporters/<int:reporter_id>", incident_views.ReporterDetail.as_view()),
-    path(
-        "incidents/<uuid:incident_id>/escalate",
-        incident_views.IncidentEscalateView.as_view(),
-    ),
-    path(
-        "incidents/<uuid:incident_id>/assignee",
-        incident_views.IncidentAssigneeView.as_view(),
-    ),
+  
     path(
         "users/",
         user_views.UserList.as_view(),
     ),
+    path(
+        "incidents/<uuid:incident_id>/workflow/<str:workflow>",
+        incident_views.IncidentWorkflowView.as_view()
+    )
 ]
