@@ -18,6 +18,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 
+//hooks
+import { useDispatch } from 'react-redux'
+
 //icons
 import RestoreIcon from '@material-ui/icons/Restore';
 import TimerIcon from '@material-ui/icons/Timer';
@@ -30,6 +33,9 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+
+//actions
+import {showModal} from '../../../modals/state/modal.actions'
 
 const styles = (theme) => ({
     card: {
@@ -51,40 +57,28 @@ const styles = (theme) => ({
     }
 });
 
+const getLastActionTime = (events) => {
 
-class EventActions extends React.Component {
-
-    handleSettingClick = event => {
-        this.setState({
-            anchorEl: event.currentTarget,
-        });
-    };
-
-    handlePopOverClose = () => {
-        this.setState({
-            anchorEl: null,
-        });
-    };
-
-    getLastActionTime = () => {
-        const { events } = this.props;
-
-        if (events.length === 0) {
-            return "No action taken yet";
-        }
-
-        return getDateDiff(events[0].createdDate);
+    if (events.length === 0) {
+        return "No action taken yet";
     }
 
-    render() {
+    return getDateDiff(events[0].createdDate);
+}
+
+
+const EventActions = (props) => {
+
         const { classes, activeIncident, onStatusChange,
             onSeverityChange, activeUser, getUsers,
-            setIncidentAssignee, users } = this.props;
+            setIncidentAssignee, users } = props;
 
         var hourlyResponseTimes = []
         for (var i = 1; i < 24; i++) {
             hourlyResponseTimes.push(i);
         }
+
+        const dispatch = useDispatch()
 
         return (
             <div className={classes.card}>
@@ -155,7 +149,7 @@ class EventActions extends React.Component {
                         <Avatar>
                             <RestoreIcon />
                         </Avatar>
-                        <ListItemText primary="Time Since last action" secondary={this.getLastActionTime()} />
+                        <ListItemText primary="Time Since last action" secondary={getLastActionTime(props.events)} />
                     </ListItem>
                     <ListItem>
                         <Avatar>
@@ -179,7 +173,7 @@ class EventActions extends React.Component {
                                 })}
                             </Select> */}
                             <IconButton aria-label="Edit">
-                                <EditIcon/>
+                                <EditIcon onClick={()=>{dispatch(showModal('RESPOSE_TIME_EDIT',{activeIncident}))}}/>
                             </IconButton>
                         </ListItemSecondaryAction>
 
@@ -199,7 +193,7 @@ class EventActions extends React.Component {
                     Actions
                 </Typography> */}
 
-                <Button color="primary" size="large" variant='text' className={classes.button} onClick={this.props.escallateIncident}>
+                <Button color="primary" size="large" variant='text' className={classes.button} onClick={props.escallateIncident}>
                     <ArrowUpwardIcon className={classes.actionButtonIcon}/>
                     Escalate
                 </Button>
@@ -215,7 +209,6 @@ class EventActions extends React.Component {
 
             </div>
         );
-    }
 }
 
 EventActions.propTypes = {
