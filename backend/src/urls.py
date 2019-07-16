@@ -68,4 +68,8 @@ urlpatterns = [
         "users/",
         user_views.UserList.as_view(),
     ),
+    path(
+        "incidents/<uuid:incident_id>/workflow/<str:workflow>",
+        incident_views.IncidentWorkflowView.as_view()
+    )
 ]

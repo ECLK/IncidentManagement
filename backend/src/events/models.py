@@ -16,6 +16,8 @@ class EventAction(enum.Enum):
     OUTCOME_ADDED = "Outcome added"
     ENTITY_ASSIGNED = "Entity assigned"
     ENTITY_REMOVED = "Entity removed"
+    ACTION_STARTED = "Started Action"
+    ACTION_COMPLETED = "Ended Action"
 
     def __str__(self):
         return self.name
@@ -45,7 +47,7 @@ class Event(models.Model):
     linked_event = models.ForeignKey("Event", on_delete=models.DO_NOTHING, null=True, blank=True)
 
     # specifies additional details
-    description = models.CharField(max_length=200, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
 
     # event intiator - should be a user
     initiator = models.ForeignKey(User, on_delete=models.DO_NOTHING)

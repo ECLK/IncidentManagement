@@ -14,12 +14,12 @@
 4. `docker-compose up`
 5. Go grab a coffee until mysql and django initialize
 6. Open a new terminal, navigate to `backend` 
-7. `docker-compose exec web python manage.py makemigrations`
-8. `docker-compose exec web python manage.py migrate`
+7. `docker-compose exec djangoapp python manage.py makemigrations`
+8. `docker-compose exec djangoapp python manage.py migrate`
 9. Grab another coffee
-10. `docker-compose exec web python manage.py createsuperuser`
+10. `docker-compose exec djangoapp python manage.py createsuperuser`
 11. Enter superuser information when prompted
-12. `docker-compose exec web python manage.py loaddata seed_data.json`
+12. `docker-compose exec djangoapp python manage.py loaddata seed_data.json`
 13. Server runs at 8000
 
 ## Model writing guidelines

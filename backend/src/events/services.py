@@ -2,11 +2,21 @@
 
 from .models import Event, EventAction, AffectedAttribute
 from ..incidents.models import IncidentStatus
+from .exceptions import EventException
 
 def get_events_by_incident_id(incident_id: str):
     events = Event.objects.filter(incident_id=incident_id)
 
     return events
+
+def get_event_by_id(event_id: str):
+    try:
+        event = Event.objects.get(id=event_id)
+        if event is None:
+            raise EventAction("Invalid event id")
+        return event
+    except:
+        raise EventAction("Invalid event id")
 
 
 def create_event(event_action, initiator, incident, 
@@ -21,7 +31,9 @@ def create_event(event_action, initiator, incident,
         refered_model=refered_model,
         initiator = initiator,
         incident = incident,
-        affected_attribute = affected_attribute
+        affected_attribute = affected_attribute,
+        description=description,
+        linked_event=linked_event
     )
 
     event.save()
@@ -98,6 +110,57 @@ def create_assignment_event(initiator, incident, assignee):
                     initiator, 
                     incident, 
                     refered_model=assignee
+                )
+
+def update_status_with_description_event(initiator, incident, status, is_approved, description):
+    if is_approved:
+        create_event(
+                        EventAction.ATTRIBUTE_CHANGED,
+                        initiator, 
+                        incident,
+                        affected_attribute = AffectedAttribute.STATUS,
+                        refered_model=status,           
+                        description=description         
+                    )
+    else:
+        create_event(
+                        EventAction.ATTRIBUTE_CHANGE_REQUESTED,
+                        initiator, 
+                        incident,
+                        affected_attribute = AffectedAttribute.STATUS,
+                        refered_model=status,
+                        description=description                     
+                    )
+
+def start_action_event(initiator, incident, status, description):
+    create_event(
+        EventAction.ACTION_STARTED,
+        initiator,
+        incident,
+        affected_attribute=AffectedAttribute.STATUS,
+        refered_model=status,
+        description=description
+    )
+
+def complete_action_event(initiator, incident, status, description, start_event):
+    create_event(
+        EventAction.ACTION_COMPLETED,
+        initiator,
+        incident,
+        affected_attribute=AffectedAttribute.STATUS,
+        refered_model=status,
+        description=description,
+        linked_event=start_event
+    )
+
+def request_advice_event(initiator, incident, status, description):
+    create_event(
+                    EventAction.ATTRIBUTE_CHANGED,
+                    initiator, 
+                    incident,
+                    affected_attribute = AffectedAttribute.STATUS,
+                    refered_model=status,           
+                    description=description         
                 )
 
 

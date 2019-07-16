@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import Incident, IncidentStatus, IncidentSeverity, Reporter, IncidentComment
 from ..common.serializers import DistrictSerializer
 from ..custom_auth.serializers import UserSerializer
-from rest_framework import serializers
 
 class IncidentStatusSerializer(serializers.ModelSerializer):
     class Meta:

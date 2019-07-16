@@ -27,9 +27,17 @@ from .services import (
     create_incident_comment_postscript,
     incident_auto_assign,
     incident_escalate,
-    incident_change_assignee
+    incident_change_assignee,
+    incident_close,
+    incident_escalate_external_action,
+    incident_complete_external_action,
+
+    get_user_by_id
 )
 
+from ..events import services as event_service
+
+import json
 
 class IncidentResultsSetPagination(PageNumberPagination):
     page_size = 5
@@ -221,10 +229,9 @@ class IncidentCommentView(APIView):
             return Response("Invalid incident id", status=status.HTTP_404_NOT_FOUND)
 
         comment_data = request.data
-        comment_data["incident"] = incident.id
         serializer = IncidentCommentSerializer(data=comment_data)
         if serializer.is_valid():
-            comment = serializer.save()
+            comment = serializer.save(incident=incident)
             create_incident_comment_postscript(incident, request.user, comment)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -269,3 +276,38 @@ class IncidentAssigneeView(APIView):
                 return Response("Incident assignee changed", status=status.HTTP_200_OK)
 
         return Response("Invalid action", status=status.HTTP_400_BAD_REQUEST)
+
+class IncidentWorkflowView(APIView):
+    def post(self, request, incident_id, workflow, format=None):
+        
+        incident = get_incident_by_id(incident_id)
+        
+        if workflow == "close":
+            if not (
+                request.user.has_perm("incidents.can_request_status_change")
+                or request.user.has_perm("incidents.can_change_status")
+            ):
+                return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
+
+            comment = json.dumps(request.data['comment'])
+            incident_close(request.user, incident, comment)
+            return Response("Incident workflow success", status=status.HTTP_200_OK)
+        
+        elif workflow == "request-action":
+            comment = json.dumps(request.data['comment'])
+            incident_escalate_external_action(request.user, incident, comment)
+
+        elif workflow == "complete-action":
+            comment = json.dumps(request.data['comment'])
+            start_event_id = request.data['start_event']
+            start_event = event_service.get_event_by_id(start_event_id)
+            incident_complete_external_action(request.user, incident, comment, start_event)
+
+        elif workflow == "advice-request":
+            comment = json.dumps(request.data['comment'])
+            assignee_id = request.data['assignee']
+            assignee = get_user_by_id(assignee_id)
+
+            
+
+        return Response("Invalid workflow", status=status.HTTP_400_BAD_REQUEST)

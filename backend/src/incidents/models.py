@@ -195,7 +195,7 @@ class Incident(models.Model):
                 .order_by("-created_date")
                 .first()
             )
-
+            
         if status is not None:
             return status.current_status
         return None
