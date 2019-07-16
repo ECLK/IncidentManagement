@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Incident, IncidentStatus, IncidentSeverity, Reporter, IncidentComment
-from ..common.serializers import DistrictSerializer
+from ..common.serializers import DistrictSerializer, PoliceStationSerializer
+from ..common.models import PoliceStation
 from ..custom_auth.serializers import UserSerializer
 
 class IncidentStatusSerializer(serializers.ModelSerializer):
@@ -25,8 +26,8 @@ class IncidentSerializer(serializers.ModelSerializer):
     currentStatus = serializers.ReadOnlyField(source="current_status")
     currentSeverity = serializers.ReadOnlyField(source="current_severity")
 
-    policeStation = serializers.ReadOnlyField(source="police_station")
-    pollingStation = serializers.ReadOnlyField(source="polling_station")
+    # policeStation = serializers.IntegerField(source="police_station", required=False, allow_null=True)
+    # pollingStation = serializers.IntegerField(source="polling_station", required=False, allow_null=True)
     createdDate = serializers.ReadOnlyField(source="created_date")
 
     assignee = UserSerializer(read_only=True)
@@ -39,8 +40,8 @@ class IncidentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Incident
-        # fields = "__all__"
-        exclude = ["police_station", "polling_station", "created_date"]
+        exclude = ["created_date"]
+
 
 class IncidentCommentSerializer(serializers.ModelSerializer):
     class Meta:
