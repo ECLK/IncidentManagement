@@ -5,4 +5,4 @@ class FileSerializer(serializers.ModelSerializer):
 
     class Meta():
         model = File
-        fields = ('file', 'remark', 'timestamp')
+        fields = "__all__"
