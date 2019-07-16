@@ -67,7 +67,7 @@ urlpatterns = [
         incident_views.IncidentAssigneeView.as_view(),
     ),
     path(
-        "incidents/files/upload",
+        "incidents/<uuid:incident_id>/files",
         file_views.FileView.as_view(),
     ),
     path(
