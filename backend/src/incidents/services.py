@@ -75,6 +75,7 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
     reporter.save()
 
     incident.reporter = reporter
+    incident.assignee = user
     incident.save()
 
     event_services.create_incident_event(user, incident)
@@ -307,7 +308,8 @@ def incident_escalate_external_action(user: User, incident: Incident, comment: s
     status = IncidentStatus(
         current_status=StatusType.ACTION_PENDING,
         previous_status=incident.current_status,
-        incident=incident
+        incident=incident,
+        approved=True
     )
     status.save()
 
@@ -319,7 +321,8 @@ def incident_complete_external_action(user: User, incident: Incident, comment: s
     status = IncidentStatus(
         current_status=StatusType.ACTION_PENDING,
         previous_status=incident.current_status,
-        incident=incident
+        incident=incident,
+        approved=True
     )
     status.save()
 
@@ -331,7 +334,8 @@ def incident_request_advice(user: User, incident: Incident, assignee: User, comm
     status = IncidentStatus(
         current_status=StatusType.ADVICE_REQESTED,
         previous_status=incident.current_status,
-        incident=incident
+        incident=incident,
+        approved=True
     )
     status.save()
 
@@ -351,7 +355,8 @@ def incident_provide_advice(user: User, incident: Incident, advice: str):
     status = IncidentStatus(
         current_status=StatusType.ADVICE_PROVIDED,
         previous_status=incident.current_status,
-        incident=incident
+        incident=incident,
+        approved=True
     )
     status.save()
 
@@ -361,13 +366,14 @@ def incident_provide_advice(user: User, incident: Incident, advice: str):
     event_services.update_status_with_description_event(user, incident, status, True, advice)
 
 def incident_verify(user: User, incident: Incident, comment: str):
-    if incident.current_status != StatusType.NEW:
+    if incident.current_status != StatusType.NEW.name:
         raise WorkflowException("Can only verify unverified incidents")
 
     status = IncidentStatus(
         current_status=StatusType.VERIFIED,
         previous_status=incident.current_status,
-        incident=incident
+        incident=incident,
+        approved=True
     )
     status.save()
 

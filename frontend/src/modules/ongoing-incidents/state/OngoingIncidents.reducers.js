@@ -18,7 +18,10 @@ import {
   REQUEST_ALL_INCIDENTS_ERROR,
   REQUEST_ALL_USERS_SUCCESS,
   INCIDENT_SEARCH_FILTERS_UPDATE,
-  INCIDENT_SEARCH_FILTERS_RESET
+  INCIDENT_SEARCH_FILTERS_RESET,
+  REQUEST_WORKFLOW_UPDATE,
+  REQUEST_WORKFLOW_UPDATE_SUCCESS,
+  REQUEST_WORKFLOW_UPDATE_ERROR
 } from "./OngoingIncidents.types";
 import moment from "moment";
 
@@ -83,6 +86,7 @@ export default function OngoingIncidentsReducer(state, action) {
       case INCIDENT_SEARCH_FILTERS_RESET:
         draft.incidentSearchFilter = initialState.incidentSearchFilter;
         return draft;
+
     }
   });
 }

@@ -2,12 +2,14 @@ import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import { useSelector, useDispatch } from 'react-redux'
 
-import  ResponseTimeEditModal from './ResponseTimeEditModal'
+import  ResponseTimeEditModal from './ResponseTimeEditModal';
+import VerifyConfirmModal from './VerifyConfirmModal'
 
 import { hideModal } from '../state/modal.actions'
 
 const MODAL_COMPONENTS = {
     'RESPOSE_TIME_EDIT': ResponseTimeEditModal,
+    'VERIFY_CONFIRM_MODAL': VerifyConfirmModal
     /* other modals */
 }
 

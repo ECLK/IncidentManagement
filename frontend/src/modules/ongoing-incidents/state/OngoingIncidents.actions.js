@@ -27,7 +27,11 @@ import {
 
     REQUEST_INCIDENT_ESCALATE,
     REQUEST_INCIDENT_ESCALATE_SUCCESS,
-    REQUEST_INCIDENT_ESCALATE_ERROR
+    REQUEST_INCIDENT_ESCALATE_ERROR,
+
+    REQUEST_WORKFLOW_UPDATE,
+    REQUEST_WORKFLOW_UPDATE_SUCCESS,
+    REQUEST_WORKFLOW_UPDATE_ERROR
 } from "./OngoingIncidents.types";
 
 import { getEvents, updateEventApproval } from "../../../api/events";
@@ -386,6 +390,48 @@ export function fetchEscallateIncident(incidentId, assigneeId){
             dispatch(fetchIncidentEventTrail(incidentId));
         }catch(error){
             dispatch(escallateIncidentError(error))
+        }
+    }  
+}
+
+export function updateWorkflow( incidentId, workflowType, workflowUpdate ){
+    return {
+        type:REQUEST_WORKFLOW_UPDATE,
+        data:{
+            incidentId,
+            workflowType,
+            workflowUpdate
+        },
+        error:null
+    }
+}
+
+export function updateWorkflowSuccess( ){
+    return {
+        type:REQUEST_WORKFLOW_UPDATE_SUCCESS,
+        data:null,
+        error:null,
+    }
+}
+
+
+export function updateWorkflowError( error ){
+    return {
+        type:REQUEST_WORKFLOW_UPDATE_ERROR,
+        data:null,
+        error:error
+    }
+}
+
+export function fetchUpdateWorkflow(incidentId, workflowType, workflowUpdate){
+    return async function (dispatch) {
+        dispatch(updateWorkflow(incidentId,workflowType,workflowUpdate))
+        try {
+            let response = await incidentAPI.updateIncidentWorkflow(incidentId, workflowType, workflowUpdate);
+            dispatch(updateWorkflowSuccess())
+            dispatch(fetchActiveIncidentData(incidentId))
+        }catch(error){
+            dispatch(updateWorkflowError(error))
         }
     }  
 }
