@@ -43,27 +43,13 @@ urlpatterns = [
     path("incidents/", incident_views.IncidentList.as_view()),
     path("incidents/<uuid:incident_id>", incident_views.IncidentDetail.as_view()),
     path("incidents/<uuid:incident_id>/events", event_views.get_event_trail),
-    # path(
-    #     "incidents/<uuid:incident_id>/status",
-    #     incident_views.IncidentStatusView.as_view(),
-    # ),
-    # path(
-    #     "incidents/<uuid:incident_id>/severity",
-    #     incident_views.IncidentSeverityView.as_view(),
-    # ),
+  
     path(
         "incidents/<uuid:incident_id>/comment",
         incident_views.IncidentCommentView.as_view(),
     ),
     path("reporters/<int:reporter_id>", incident_views.ReporterDetail.as_view()),
-    # path(
-    #     "incidents/<uuid:incident_id>/escalate",
-    #     incident_views.IncidentEscalateView.as_view(),
-    # ),
-    # path(
-    #     "incidents/<uuid:incident_id>/assignee",
-    #     incident_views.IncidentAssigneeView.as_view(),
-    # ),
+  
     path(
         "users/",
         user_views.UserList.as_view(),

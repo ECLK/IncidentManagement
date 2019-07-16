@@ -132,67 +132,6 @@ class IncidentDetail(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-# class IncidentStatusView(APIView):
-#     def get(self, request, incident_id, format=None):
-#         if not (
-#             request.user.has_perm("incidents.can_request_status_change")
-#             or request.user.has_perm("incidents.can_change_status")
-#         ):
-#             return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
-
-#         action = request.GET.get("action")
-
-#         incident = get_incident_by_id(incident_id)
-
-#         if incident is None:
-#             return Response("Invalid incident id", status=status.HTTP_404_NOT_FOUND)
-
-#         if action:
-#             if action == "update":
-#                 status_type = request.GET.get("type")
-#                 result = update_incident_status(
-#                     incident, request.user, status_type)
-
-#                 if result[0] == "success":
-#                     return Response(result[1])
-#                 elif result[0] == "error":
-#                     return Response(result[1], status=status.HTTP_400_BAD_REQUEST)
-
-#             return Response("Invalid action", status=status.HTTP_400_BAD_REQUEST)
-#         return Response("No action defined", status=status.HTTP_400_BAD_REQUEST)
-
-
-# class IncidentSeverityView(APIView):
-#     def get(self, request, incident_id, format=None):
-#         if not (
-#             request.user.has_perm("incidents.can_request_severity_change")
-#             or request.user.has_perm("incidents.can_change_severity")
-#         ):
-#             return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
-
-#         action = request.GET.get("action")
-
-#         incident = get_incident_by_id(incident_id)
-
-#         if incident is None:
-#             return Response("Invalid incident id", status=status.HTTP_404_NOT_FOUND)
-
-#         if action:
-#             if action == "update":
-#                 severity_type = request.GET.get("type")
-#                 result = update_incident_severity(
-#                     incident, request.user, severity_type)
-
-#                 if result[0] == "success":
-#                     return Response(result[1])
-#                 elif result[0] == "error":
-#                     return Response(result[1], status=status.HTTP_400_BAD_REQUEST)
-
-#             return Response("Invalid action", status=status.HTTP_400_BAD_REQUEST)
-#         return Response("No action defined", status=status.HTTP_400_BAD_REQUEST)
-
-
 class ReporterDetail(APIView):
     serializer_class = ReporterSerializer
 
@@ -239,46 +178,6 @@ class IncidentCommentView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class IncidentEscalateView(APIView):
-#     def get(self, request, incident_id, format=None):
-#         incident = get_incident_by_id(incident_id)
-#         if incident is None:
-#             return Response("Invalid incident id", status=status.HTTP_404_NOT_FOUND)
-
-#         result = incident_escalate(request.user, incident)
-#         if result[0] == 'success':
-#             return Response("Incident escalated", status=status.HTTP_200_OK)
-
-#         return Response(result[1], status=status.HTTP_400_BAD_REQUEST)
-
-
-# class IncidentAssigneeView(APIView):
-#     def get(self, request, incident_id, format=None):
-#         if not request.user.has_perm("incidents.can_change_assignee"):
-#             return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
-
-#         incident = get_incident_by_id(incident_id)
-#         if incident is None:
-#             return Response("Invalid incident id", status=status.HTTP_404_NOT_FOUND)
-
-#         param_action = self.request.query_params.get('action', None)
-#         param_assignee = self.request.query_params.get('assignee', None)
-
-#         if param_action is None or param_assignee is None:
-#             return Response("Invalid parameters", status=status.HTTP_400_BAD_REQUEST)
-
-#         if param_action == "change":
-#             assignee = User.objects.get(id=param_assignee)
-#             if assignee is None:
-#                 return Response("Invalid assginee", status=status.HTTP_400_BAD_REQUEST)
-
-#             result = incident_change_assignee(request.user, incident, assignee)
-#             if result[0] == 'success':
-#                 return Response("Incident assignee changed", status=status.HTTP_200_OK)
-
-#         return Response("Invalid action", status=status.HTTP_400_BAD_REQUEST)
 
 class IncidentWorkflowView(APIView):
     def post(self, request, incident_id, workflow, format=None):
