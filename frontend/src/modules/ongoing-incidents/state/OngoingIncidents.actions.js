@@ -377,15 +377,15 @@ export function escallateIncidentError(error) {
 }
 
 export function fetchEscallateIncident(incidentId, assigneeId){
-    return async function (dispath) {
-        dispath(escallateIncident)
+    return async function (dispatch) {
+        dispatch(escallateIncident)
         try {
             let response = await incidentAPI.escallateIncident(incidentId, assigneeId);
-            dispath(escallateIncidentSuccess(response.data))
-            dispath(fetchActiveIncidentData(response.data.id))
+            dispatch(escallateIncidentSuccess(response.data));
+            dispatch(fetchActiveIncidentData(incidentId));
+            dispatch(fetchIncidentEventTrail(incidentId));
         }catch(error){
-            console.log(error)
-            dispath(escallateIncidentError(error))
+            dispatch(escallateIncidentError(error))
         }
     }  
 }
