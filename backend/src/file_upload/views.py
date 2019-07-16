@@ -12,10 +12,14 @@ from .services import (
 class FileView(APIView):
 
   parser_classes = (MultiPartParser, FormParser)
+  serializer_class = FileSerializer
 
   def get(self, request, incident_id):
-    file_ids = get_incident_file_ids(incident_id)
-    return Response(file_ids, status=status.HTTP_200_OK)
+    # file_ids = get_incident_file_ids(incident_id)
+    # return Response(file_ids, status=status.HTTP_200_OK)
+    files = get_incident_file_ids(incident_id)
+    serializer = FileSerializer(files, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
       
   def post(self, request, incident_id):
     
