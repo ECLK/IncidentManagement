@@ -179,6 +179,8 @@ class Incident(models.Model):
         "common.District", on_delete=models.DO_NOTHING, null=True, blank=True
     )
 
+    response_time = models.IntegerField(default=12)
+
     created_date = models.DateTimeField(auto_now_add=True)
 
     @property
@@ -195,7 +197,7 @@ class Incident(models.Model):
                 .order_by("-created_date")
                 .first()
             )
-            
+
         if status is not None:
             return status.current_status
         return None

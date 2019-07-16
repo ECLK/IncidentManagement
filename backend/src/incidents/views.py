@@ -113,9 +113,15 @@ class IncidentList(APIView, IncidentResultsSetPagination):
 
 
 class IncidentDetail(APIView):
+    """
+    Incident Resoruce
+    """
     serializer_class = IncidentSerializer
 
     def get(self, request, incident_id, format=None):
+        """
+            Get incident by incident id
+        """
         incident = get_incident_by_id(incident_id)
 
         if incident is None:
@@ -125,6 +131,9 @@ class IncidentDetail(APIView):
         return Response(serializer.data)
 
     def put(self, request, incident_id, format=None):
+        """
+            Update existing incident
+        """
         incident = get_incident_by_id(incident_id)
         serializer = IncidentSerializer(incident, data=request.data)
         if serializer.is_valid():
