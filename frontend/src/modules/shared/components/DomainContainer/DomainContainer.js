@@ -34,6 +34,8 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import {initiateSignOut} from '../../state/Shared.actions'
 import {changeLanguage} from '../../state/Shared.actions';
 
+import RootModal from '../../../modals/components/RootModal'
+
 const HomeLink = props => <Link to="/app/home" {...props} />
 const ReportLink = props => <Link to="/app/report" {...props} />
 const ReviewLink = props => <Link to="/app/review" {...props} />
@@ -285,6 +287,7 @@ class DomainContainer extends React.Component {
           })}
         >
           {/* <div className={classes.drawerHeader} /> */}
+          <RootModal/>
           {this.props.content}
         </main>
       </div>
