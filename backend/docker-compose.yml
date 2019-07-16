@@ -13,6 +13,8 @@ services:
       - '3306'
     ports:
       - '3308:3306'
+    volumes:
+      - ./data/mysql:/var/lib/mysql
 
   djangoapp:
     build:
@@ -28,4 +30,8 @@ services:
       - DATABASE_PORT=3306
       - DATABASE_USER=root
       - DATABASE_PWD=toor
-    command: gunicorn --bind=0.0.0.0:8000 src.wsgi:application
+    volumes:
+      - './src:/app/src'
+      - './seed_data.json:/app/seed_data.json'
+    # command: gunicorn --bind=0.0.0.0:8000 src.wsgi:application
+    command: python manage.py runserver 0.0.0.0:8000

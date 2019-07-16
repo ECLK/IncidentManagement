@@ -96,10 +96,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'mysql.connector.django', 
         'NAME': 'lsf',
-        'USER': env_var('DATABASE_USER'),
-        'PASSWORD': env_var('DATABASE_PWD'),
-        'HOST': env_var('DATABASE_HOST'),   # Or an IP Address that your DB is hosted on
-        'PORT': env_var("DATABASE_PORT"),
+        'USER': env_var('DATABASE_USER', 'root'),
+        'PASSWORD': env_var('DATABASE_PWD', 'toor'),
+        'HOST': env_var('DATABASE_HOST', 'mysql'),   # Or an IP Address that your DB is hosted on
+        'PORT': env_var("DATABASE_PORT", '3306'),
     }
 }
 

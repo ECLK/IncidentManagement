@@ -1,0 +1,28 @@
+[
+    {
+      "model": "common.category",
+      "pk": 1,
+      "fields": {
+        "top_category": "Violence",
+        "sub_category": "Very bad violence",
+        "sn_top_category": "Violence",
+        "sn_sub_category": "Very bad violence",
+        "tm_top_category": "Violence",
+        "tm_sub_category": "Very bad violence",
+        "created_date": "2019-06-27 16:21:56.502965"
+      }
+    },
+    {
+        "model": "common.category",
+        "pk": 2,
+        "fields": {
+          "top_category": "Violence",
+          "sub_category": "Medium violence",
+          "sn_top_category": "Violence",
+          "sn_sub_category": "Medium violence",
+          "tm_top_category": "Violence",
+          "tm_sub_category": "Medium violence",
+          "created_date": "2019-06-27 16:21:56.502965"
+        }
+    }
+  ]

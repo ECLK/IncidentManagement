@@ -30,7 +30,7 @@ class IncidentSerializer(serializers.ModelSerializer):
     pollingStation = serializers.ReadOnlyField(source="polling_station")
     createdDate = serializers.ReadOnlyField(source="created_date")
 
-    assignee = UserSerializer()
+    assignee = UserSerializer(read_only=True)
 
     # refId = serializers.CharField(required=False)
     # election = serializers.CharField(required=False)
