@@ -41,8 +41,12 @@ class FileView(APIView):
 class FileDownload(APIView):
 
   # def download(request,file_name):
-  def get(self, request):
-    file_path = "media/1e7714b7-efc9-43a0-af10-0c0385a64114.png"
+  def get(self, request, file_id):
+    file_name = str(file_id)
+    ext = request.GET.get('ext', '')
+    file_full_name = file_name + "." + ext
+    file_path = "media/" + file_full_name
+    # file_path = "media/1e7714b7-efc9-43a0-af10-0c0385a64114.png"
     # /media/achala/Data3/Projects/LSF/IncidentManagement/backend
     # file_path = settings.MEDIA_ROOT +'/'+ file_name
     file_wrapper = FileWrapper(open(file_path,'rb'))
@@ -50,5 +54,6 @@ class FileDownload(APIView):
     response = HttpResponse(file_wrapper)
     response['X-Sendfile'] = file_path
     response['Content-Length'] = os.stat(file_path).st_size
-    response['Content-Disposition'] = 'attachment; filename=%s' % smart_str("f076d5ca-1ce0-4ccb-be6d-ff39e91831d9.png") 
+    response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file_full_name) 
+    # response['Content-Disposition'] = 'attachment; filename=%s' % smart_str("f076d5ca-1ce0-4ccb-be6d-ff39e91831d9.png") 
     return response
