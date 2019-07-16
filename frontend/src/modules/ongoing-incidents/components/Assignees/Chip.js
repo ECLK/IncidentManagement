@@ -43,7 +43,9 @@ class Chips extends React.Component {
         const { classes, users } = this.props;
         return (
             <div className={classes.root}>
-                {users.map(user => (
+                {users && users.map(user => {
+                    if(user){
+                    return (
                     <Grid key={user.key}>
                         <Chip
                             label={user.displayname}
@@ -54,7 +56,9 @@ class Chips extends React.Component {
                             className={classes.chip}
                         />
                     </Grid>
-                ))}
+                    )}
+                    
+                })}
             </div>
         );
     }
