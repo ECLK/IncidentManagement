@@ -27,15 +27,15 @@ const ResponseTimeEditModal = (props) => {
     const dispatch = useDispatch();
     const {activeIncident} = useSelector(state => state.modalReducer.modalProps);
     
-    //maintains selected in local state until confirmed
-    const [allocatedTime, setAlocatedTime] = useState(activeIncident.responseTimeInHours);
+    //maintains selected value in local state until change is confirmed
+    const [allocatedTime, setAlocatedTime] = useState(activeIncident.response_time);
 
     return (
         <div>
             <DialogTitle id="form-dialog-title">Change Resopse Time</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Incident should be addressed and closed within:.
+                    Incident should be addressed and closed within: 
                 </DialogContentText>
                 <Select
                     value={allocatedTime}
@@ -49,7 +49,7 @@ const ResponseTimeEditModal = (props) => {
                     {hourlyResponseTimes.map((value, index) => {
                         return (<MenuItem key={index} value={value}>{value}</MenuItem>)
                     })}
-                </Select>
+                </Select> <DialogContentText>hours</DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={()=>{dispatch(hideModal())}} color="primary">
@@ -57,8 +57,11 @@ const ResponseTimeEditModal = (props) => {
                 </Button>
                 <Button 
                     onClick={()=>{
-                        activeIncident.responseTimeInHours = allocatedTime
-                        dispatch(fetchUpdateIncident(activeIncident.id, allocatedTime))}
+                        var activeIncidentUpdate = {...activeIncident}
+                        activeIncidentUpdate.response_time = allocatedTime
+                        dispatch(fetchUpdateIncident(activeIncident.id, activeIncidentUpdate))
+                        dispatch(hideModal())
+                    }
                     } 
                     color="primary">
                     Change Respose Time
