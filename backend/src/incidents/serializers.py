@@ -39,7 +39,8 @@ class IncidentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Incident
-        fields = "__all__"
+        # fields = "__all__"
+        exclude = ["police_station", "polling_station", "created_date"]
 
 class IncidentCommentSerializer(serializers.ModelSerializer):
     class Meta:

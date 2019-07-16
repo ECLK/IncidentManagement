@@ -153,15 +153,4 @@ def complete_action_event(initiator, incident, status, description, start_event)
         linked_event=start_event
     )
 
-def request_advice_event(initiator, incident, status, description):
-    create_event(
-                    EventAction.ATTRIBUTE_CHANGED,
-                    initiator, 
-                    incident,
-                    affected_attribute = AffectedAttribute.STATUS,
-                    refered_model=status,           
-                    description=description         
-                )
-
-
 

@@ -233,7 +233,7 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP"):
     # find the rank of the current incident assignee
     assignee_groups = incident.assignee.groups.all()
     if len(assignee_groups) == 0:
-        return ("error", "No group for current assignee")
+        raise WorkflowException("No group for current assignee")
 
     current_rank = assignee_groups[0].rank
 
@@ -244,14 +244,10 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP"):
 
     next_group = Group.objects.get(rank=next_rank)
     if next_group is None:
-        return ("error", "Can't escalate %s from here" % escalate_dir)
+        raise WorkflowException("Can't escalate %s from here" % escalate_dir)
 
     result = incident_auto_assign(incident, next_group)
-
-    if result[0] == 'success':
-        event_services.create_assignment_event(user, incident, result[2])
-
-    return result
+    event_services.create_assignment_event(user, incident, result[2])
 
 
 def incident_change_assignee(user: User, incident: Incident, assignee: User):
@@ -259,8 +255,6 @@ def incident_change_assignee(user: User, incident: Incident, assignee: User):
     incident.save()
 
     event_services.create_assignment_event(user, incident, assignee)
-
-    return ('success', 'Assignee updated')
 
 
 def incident_close(user: User, incident: Incident, comment: str):
@@ -344,14 +338,15 @@ def incident_request_advice(user: User, incident: Incident, assignee: User, comm
     incident.linked_individuals.append(assignee)
     incident.save()
 
-    event_services.request_advice_event(user, incident, status, comment)
+    event_services.update_status_with_description_event(user, incident, status, True, comment)
 
 
 def incident_provide_advice(user: User, incident: Incident, advice: str):
     if user not in incident.linked_individuals:
         raise WorkflowException("User not linked to the given incident")
 
-    # if incident.current_status !
+    if incident.current_status != StatusType.ADVICE_REQESTED:
+        raise WorkflowException("Incident does not have pending advice requests")
 
     status = IncidentStatus(
         current_status=StatusType.ADVICE_PROVIDED,
@@ -359,3 +354,21 @@ def incident_provide_advice(user: User, incident: Incident, advice: str):
         incident=incident
     )
     status.save()
+
+    # check this
+    incident.linked_individuals.remove(user.id)
+
+    event_services.update_status_with_description_event(user, incident, status, True, advice)
+
+def incident_verify(user: User, incident: Incident, comment: str):
+    if incident.current_status != StatusType.NEW:
+        raise WorkflowException("Can only verify unverified incidents")
+
+    status = IncidentStatus(
+        current_status=StatusType.VERIFIED,
+        previous_status=incident.current_status,
+        incident=incident
+    )
+    status.save()
+
+    event_services.update_status_with_description_event(user, incident, status, True, comment)
