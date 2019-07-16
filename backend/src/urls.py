@@ -71,6 +71,10 @@ urlpatterns = [
         file_views.FileView.as_view(),
     ),
     path(
+        "incidents/files/download",
+        file_views.FileDownload.as_view(),
+    ),
+    path(
         "users/",
         user_views.UserList.as_view(),
     ),
