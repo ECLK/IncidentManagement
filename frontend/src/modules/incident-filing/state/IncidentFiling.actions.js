@@ -123,8 +123,8 @@ export function fetchUpdateIncident(incidentId, incidentData) {
                 "infoChannel",
                 "location",
                 "occurrence",
-                "policeStation",
-                "pollingStation",
+                "police_station",
+                "polling_station",
                 "title",
                 "ward",
 

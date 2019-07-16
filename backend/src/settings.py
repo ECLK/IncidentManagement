@@ -55,7 +55,8 @@ INSTALLED_APPS = [
     'src.common',
     'src.custom_auth',
     'src.incidents',
-    'src.events'
+    'src.events',
+    'src.reporting'
 ]
 
 MIDDLEWARE = [
