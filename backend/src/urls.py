@@ -22,6 +22,8 @@ from .events import views as event_views
 
 from .incidents import views as incident_views
 
+from .custom_auth import views as user_views
+
 # JWT
 from rest_framework_jwt.views import obtain_jwt_token
 
@@ -54,9 +56,16 @@ urlpatterns = [
         incident_views.IncidentCommentView.as_view(),
     ),
     path("reporters/<int:reporter_id>", incident_views.ReporterDetail.as_view()),
-    path("incidents/search/status", incident_views.IncidentSearchByStatus.as_view()),
     path(
         "incidents/<uuid:incident_id>/escalate",
         incident_views.IncidentEscalateView.as_view(),
+    ),
+    path(
+        "incidents/<uuid:incident_id>/assignee",
+        incident_views.IncidentAssigneeView.as_view(),
+    ),
+    path(
+        "users/",
+        user_views.UserList.as_view(),
     ),
 ]

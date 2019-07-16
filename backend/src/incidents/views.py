@@ -26,7 +26,8 @@ from .services import (
     get_comments_by_incident,
     create_incident_comment_postscript,
     incident_auto_assign,
-    incident_escalate
+    incident_escalate,
+    incident_change_assignee
 )
 
 
@@ -55,7 +56,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
 
     def get(self, request, format=None):
         incidents = Incident.objects.all()
-    
+
         # filtering
         param_category = self.request.query_params.get('category', None)
         if param_category is not None:
@@ -65,21 +66,24 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         param_end_date = self.request.query_params.get('end_date', None)
 
         if param_start_date and param_end_date:
-            incidents = incidents.filter(created_date__range=(param_start_date, param_end_date))
+            incidents = incidents.filter(
+                created_date__range=(param_start_date, param_end_date))
 
         param_status = self.request.query_params.get('status', None)
         if param_status is not None:
             try:
                 status_type = StatusType[param_status]
-                incidents = [incident for incident in incidents if incident.current_status == status_type.name]
+                incidents = [
+                    incident for incident in incidents if incident.current_status == status_type.name]
             except Exception as e:
                 return Response("Invalid status", status=status.HTTP_400_BAD_REQUEST)
-        
+
         param_severity = self.request.query_params.get('severity', None)
         if param_severity is not None:
             try:
                 severity_type = SeverityType[param_severity]
-                incidents = [incident for incident in incidents if incident.current_severity == severity_type.name]
+                incidents = [
+                    incident for incident in incidents if incident.current_severity == severity_type.name]
             except Exception as e:
                 return Response("Invalid severity", status=status.HTTP_400_BAD_REQUEST)
 
@@ -136,7 +140,8 @@ class IncidentStatusView(APIView):
         if action:
             if action == "update":
                 status_type = request.GET.get("type")
-                result = update_incident_status(incident, request.user, status_type)
+                result = update_incident_status(
+                    incident, request.user, status_type)
 
                 if result[0] == "success":
                     return Response(result[1])
@@ -165,7 +170,8 @@ class IncidentSeverityView(APIView):
         if action:
             if action == "update":
                 severity_type = request.GET.get("type")
-                result = update_incident_severity(incident, request.user, severity_type)
+                result = update_incident_severity(
+                    incident, request.user, severity_type)
 
                 if result[0] == "success":
                     return Response(result[1])
@@ -224,19 +230,6 @@ class IncidentCommentView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class IncidentSearchByStatus(APIView):
-    serializer_class = IncidentSerializer
-
-    def get(self, request, format=None):
-        status_type = request.GET.get("type")
-
-        if status_type:
-            filtered_incidents = get_incidents_by_status(status_type)
-            serializer = IncidentSerializer(filtered_incidents, many=True)
-            return Response(serializer.data)
-
-        return Response("Status type is invalid or not defined", status=status.HTTP_400_BAD_REQUEST)
-
 
 class IncidentEscalateView(APIView):
     def get(self, request, incident_id, format=None):
@@ -247,5 +240,32 @@ class IncidentEscalateView(APIView):
         result = incident_escalate(request.user, incident)
         if result[0] == 'success':
             return Response("Incident escalated", status=status.HTTP_200_OK)
-        
+
         return Response(result[1], status=status.HTTP_400_BAD_REQUEST)
+
+
+class IncidentAssigneeView(APIView):
+    def get(self, request, incident_id, format=None):
+        if not request.user.has_perm("incidents.can_change_assignee"):
+            return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
+
+        incident = get_incident_by_id(incident_id)
+        if incident is None:
+            return Response("Invalid incident id", status=status.HTTP_404_NOT_FOUND)
+
+        param_action = self.request.query_params.get('action', None)
+        param_assignee = self.request.query_params.get('assignee', None)
+
+        if param_action is None or param_assignee is None:
+            return Response("Invalid parameters", status=status.HTTP_400_BAD_REQUEST)
+
+        if param_action == "change":
+            assignee = User.objects.get(id=param_assignee)
+            if assignee is None:
+                return Response("Invalid assginee", status=status.HTTP_400_BAD_REQUEST)
+
+            result = incident_change_assignee(request.user, incident, assignee)
+            if result[0] == 'success':
+                return Response("Incident assignee changed", status=status.HTTP_200_OK)
+
+        return Response("Invalid action", status=status.HTTP_400_BAD_REQUEST)

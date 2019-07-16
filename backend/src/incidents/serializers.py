@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Incident, IncidentStatus, IncidentSeverity, Reporter, IncidentComment
 from ..common.serializers import DistrictSerializer
+from ..custom_auth.serializers import UserSerializer
 from rest_framework import serializers
 
 class IncidentStatusSerializer(serializers.ModelSerializer):
@@ -28,6 +29,8 @@ class IncidentSerializer(serializers.ModelSerializer):
     policeStation = serializers.ReadOnlyField(source="police_station")
     pollingStation = serializers.ReadOnlyField(source="polling_station")
     createdDate = serializers.ReadOnlyField(source="created_date")
+
+    assignee = UserSerializer()
 
     # refId = serializers.CharField(required=False)
     # election = serializers.CharField(required=False)

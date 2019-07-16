@@ -130,7 +130,7 @@ class EventActions extends React.Component {
                 </Typography> */}
 
                 <Button color="primary" size="large" variant='text' className={classes.button} onClick={this.props.escallateIncident}>Escalate</Button>
-                <Button color="primary" size="large" variant='text' className={classes.button}>Escalate to outside entity</Button>
+                <Button color="primary" size="large" variant='text' className={classes.button}>Escalate to outside </Button>
                 <Button color="primary" size="large" variant='text' className={classes.button}>Request for advice</Button>
 
 

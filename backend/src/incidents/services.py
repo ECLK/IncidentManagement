@@ -232,3 +232,11 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP"):
         event_services.create_assignment_event(user, incident, result[2])
 
     return result
+
+def incident_change_assignee(user: User, incident: Incident, assignee: User):
+    incident.assignee = assignee
+    incident.save()
+
+    event_services.create_assignment_event(user, incident, assignee)
+
+    return ('success', 'Assignee updated')
