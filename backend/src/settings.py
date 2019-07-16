@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'src.common',
     'src.custom_auth',
     'src.incidents',
-    'src.events'
+    'src.events',
+    'src.file_upload'
 ]
 
 MIDDLEWARE = [
@@ -168,3 +169,7 @@ JWT_AUTH = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+# file uload parameters
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
