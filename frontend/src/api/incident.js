@@ -1,3 +1,4 @@
+import moment from "moment";
 import handler from "./apiHandler";
 // import handler from './apiHandler'
 
@@ -28,32 +29,55 @@ import handler from "./apiHandler";
 import * as mockapi from "../data/mockapi";
 
 export const createIncident = async incidentData => {
-  return mockapi.createIncident(incidentData);
+  // return mockapi.createIncident(incidentData);
+  return (await handler.post(`/incidents/`, incidentData)).data;
 };
 
-export const getIncident = async incidentId => {
-  return mockapi.getIncident(incidentId);
+export const getIncident = async (incidentId) => {
+    // return mockapi.getIncident(incidentId);
+    return (await handler.get(`/incidents/${incidentId}`)).data;
 };
 
-export const getIncidents = async filters => {
-  return mockapi.getIncidents(filters);
+export const getIncidents = async (filters) => {
+    // return mockapi.getIncidents();
+    var query = "";
+
+    if(filters.severity){
+      query += "&severity=" + filters.severity;
+    }
+
+    if(filters.status){
+      query += "&status=" + filters.status;
+    }
+
+    if(filters.startTime && filters.endTime){
+      const startDate = moment(filters.startTime).format("YYYY-MM-DD");
+      const endDate = moment(filters.endTime).format("YYYY-MM-DD");
+      query += "&start_date=" + startDate + "&end_date=" + endDate;
+    }
+
+    return (await handler.get(`/incidents/?${query}`)).data;
 };
 
 export const updateIncident = async (incidentId, incidentData) => {
-  await mockapi.updateIncident(incidentId, incidentData);
-  return true;
+    // await mockapi.updateIncident(incidentId, incidentData);
+    // return true;
+    return (await handler.put(`/incidents/${incidentId}`, incidentData)).data;
 };
 
-export const getReporter = async reporterId => {
-  return mockapi.getReporter(reporterId);
+export const getReporter = async (reporterId) => {
+    // return mockapi.getReporter(reporterId);
+    return (await handler.get(`/reporters/${reporterId}`)).data;
 };
 
 export const updateReporter = async (reporterId, reporterData) => {
-  return mockapi.updateReporter(reporterId, reporterData);
-};
+    // return mockapi.updateReporter(reporterId, reporterData);
+    return (await handler.put(`/reporters/${reporterId}`, reporterData)).data;
+}
+
 
 export const changeStatus = async (incidentId, status) => {
-  return mockapi.changeStatus(incidentId, status);
+  return (await handler.get(`/incidents/${incidentId}/status?action=update&type=${status}`)).data;
 };
 
 export const changeSeverity = async (incidentId, severity) => {
@@ -61,7 +85,8 @@ export const changeSeverity = async (incidentId, severity) => {
 };
 
 export const assignToIncident = async (incidentId, uid) => {
-  return mockapi.assignToIncident(incidentId, uid);
+  // return mockapi.assignToIncident(incidentId, uid);
+  return (await handler.get(`/incidents/${incidentId}/assignee?action=change&assignee=${uid}`)).data;
 };
 
 export const removeFromIncident = async (incidentId, uid) => {
@@ -69,5 +94,6 @@ export const removeFromIncident = async (incidentId, uid) => {
 };
 
 export const escallateIncident = async (incidentId, assigneeId) => {
-  return mockapi.escallateIncident(incidentId, assigneeId);
+  return (await handler.get(`/incidents/${incidentId}/escalate`)).data;
+  // return mockapi.escallateIncident(incidentId, assigneeId);
 };

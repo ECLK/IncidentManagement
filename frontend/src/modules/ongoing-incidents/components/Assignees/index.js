@@ -78,7 +78,7 @@ class Assginee extends React.Component {
 
     render() {
         const { classes, assignees, users } = this.props;
-        const suggestions = users.map((o) => ( {label: o.displayName, value: o.uid }) ); 
+        const suggestions = users.map((o) => ( {label: o.displayname, value: o.uid }) ); 
         
         return (
             <div className={classes.root}>

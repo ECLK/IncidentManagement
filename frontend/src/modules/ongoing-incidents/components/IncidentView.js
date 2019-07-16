@@ -164,11 +164,11 @@ class BasicDetailTab extends Component {
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Date </Typography>
-                                    <Typography gutterBottom> <Moment format="YYYY/MM/DD" unix>{incident.createdDate}</Moment> </Typography>
+                                    <Typography gutterBottom> <Moment format="YYYY/MM/DD">{incident.createdDate}</Moment> </Typography>
                                 </Grid>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Time </Typography>
-                                    <Typography gutterBottom> <Moment format="HH:mm" unix>{incident.createdDate}</Moment> </Typography>
+                                    <Typography gutterBottom> <Moment format="HH:mm">{incident.createdDate}</Moment> </Typography>
                                 </Grid>
                             </Grid>
 
@@ -201,18 +201,18 @@ class BasicDetailTab extends Component {
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Category </Typography>
-                                    <Typography gutterBottom> {this.state.category.top_category} </Typography>
+                                    <Typography gutterBottom> {incident.category} </Typography>
                                 </Grid>
-                                <Grid item xs>
+                                {/* <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Sub Category </Typography>
                                     <Typography gutterBottom> {this.state.category.sub_category} </Typography>
-                                </Grid>
+                                </Grid> */}
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Information Channel </Typography>
-                                    <Typography gutterBottom> {this.state.incident.channel} </Typography>
+                                    <Typography gutterBottom> {incident.infoChannel} </Typography>
                                 </Grid>
                             </Grid>
 
@@ -240,6 +240,7 @@ class LocationTab extends Component {
 
     render() {
         const { classes } = this.props;
+        const { incident } = this.state;
 
         return (
             <div>
@@ -250,21 +251,21 @@ class LocationTab extends Component {
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Name / Description </Typography>
-                                    <Typography gutterBottom> Maligawata Road, Main Plaza </Typography>
+                                    <Typography gutterBottom> {incident.location} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Address </Typography>
-                                    <Typography gutterBottom> 22/2, Maligawatta </Typography>
+                                    <Typography gutterBottom> {incident.address}</Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Coordinates </Typography>
-                                    <Typography gutterBottom> 6.936047, 79.869638 </Typography>
+                                    <Typography gutterBottom> {incident.coordinates} </Typography>
                                 </Grid>
                             </Grid>
 
@@ -279,35 +280,35 @@ class LocationTab extends Component {
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Province </Typography>
-                                    <Typography variant="" gutterBottom> Western Province </Typography>
+                                    <Typography variant="" gutterBottom> {incident.district ? incident.district.province : ""} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> District </Typography>
-                                    <Typography gutterBottom> Colombo District </Typography>
+                                    <Typography gutterBottom> {incident.district ? incident.district.name : ""}</Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Polling Division </Typography>
-                                    <Typography gutterBottom> Maligawatta Division </Typography>
+                                    <Typography gutterBottom> {incident.ds_division} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Ward </Typography>
-                                    <Typography gutterBottom> Ward 7 </Typography>
+                                    <Typography gutterBottom> {incident.ward} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Police Station </Typography>
-                                    <Typography gutterBottom> Maligawatta Police Station </Typography>
+                                    <Typography gutterBottom> {incident.policeStation} </Typography>
                                 </Grid>
                             </Grid>
 
@@ -577,7 +578,7 @@ class NavTabs extends Component {
         // this.setState((state)=>(
         //     {verifyIncidentDialogOpen:!state.verifyIncidentDialogOpen}
         // ))
-        this.props.changeStatus(this.props.activeIncident.id, 'VERIFY')
+        this.props.changeStatus(this.props.activeIncident.id, 'VERIFIED')
     }
 
     handleVerifyIncidentDialogClose = () => {
@@ -589,8 +590,10 @@ class NavTabs extends Component {
         const { classes, postComment, activeIncident,
             reporter, changeStatus, changeSeverity,
             activeUser, users, getUsers,
-            setIncidentAssignee
+            setIncidentAssignee, events
         } = this.props;
+
+        console.log(this.props.events);
 
         const { value, open, verifyIncidentDialogOpen } = this.state;
 
@@ -668,7 +671,7 @@ class NavTabs extends Component {
                                                         <MenuItem onClick={this.handleClose}>Request for Advice</MenuItem>
                                                         <MenuItem onClick={(e) => {
                                                             this.handleClose(e)
-                                                            this.props.escallateIncident(activeIncident.id, activeIncident.assignees[0] && activeIncident.assignees[0].uid || 0)
+                                                            this.props.escallateIncident(activeIncident.id)
                                                         }}>Escalate</MenuItem>
                                                         <MenuItem onClick={this.handleClose}>Escalate to outside entity</MenuItem>
                                                     </MenuList>
@@ -687,7 +690,7 @@ class NavTabs extends Component {
                                 getUsers={getUsers}
                                 setIncidentAssignee={setIncidentAssignee}
                                 events={this.props.events}
-                                escallateIncident={() => { this.props.escallateIncident(activeIncident.id, activeIncident.assignees[0] && activeIncident.assignees[0].uid || 0) }}
+                                escallateIncident={() => { this.props.escallateIncident(activeIncident.id) }}
                             />
                         </div>
 

@@ -355,7 +355,7 @@ class IndicdentForm extends Component {
         }
 
         return (
-            <div className={classes.root} key={incident.id}>
+            <div className={classes.root} key={incident ? incident.id : "incident"}>
                 <Formik
                     initialValues={this.getInitialValues()}
                     validate={values => {

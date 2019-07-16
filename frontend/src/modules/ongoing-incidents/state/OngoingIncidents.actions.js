@@ -391,3 +391,17 @@ export function fetchEscallateIncident(incidentId, assigneeId) {
     }
   };
 }
+
+export function fetchEscallateIncident(incidentId, assigneeId){
+    return async function (dispatch) {
+        dispatch(escallateIncident)
+        try {
+            let response = await incidentAPI.escallateIncident(incidentId, assigneeId);
+            dispatch(escallateIncidentSuccess(response.data));
+            dispatch(fetchActiveIncidentData(incidentId));
+            dispatch(fetchIncidentEventTrail(incidentId));
+        }catch(error){
+            dispatch(escallateIncidentError(error))
+        }
+    }  
+}

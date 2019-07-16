@@ -2,20 +2,24 @@
 import handler from './apiHandler'
 import * as mockapi from '../data/mockapi';
 
+export const getCategories = async () => {
+    return (await handler.get('/categories')).data;
+}
+
 export const getDistricts = async () => {
-    return handler.get('/districts')
+    return (await handler.get('/districts')).data;
 }
 
 export const getPoliceStations = async () => {
-    return handler.get('/policestations')
+    return (await handler.get('/policestations')).data;
 }
 
 export const getPollingStations = async () => {
-    return handler.get('/pollingstations')
+    return (await handler.get('/pollingstations')).data;
 }
 
 export const getWards = async () => {
-    return handler.get('/wards')
+    return (await handler.get('/wards')).data;
 }
 
 export const getElections = async () => {

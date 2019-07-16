@@ -1,0 +1,7 @@
+Django==2.2.1
+djangorestframework==3.9.4
+mysql-connector-python==8.0.16
+djangorestframework-jwt==1.11.0
+django-cors-headers==3.0.2
+django-filter==2.1.0
+gunicorn==19.9.0
