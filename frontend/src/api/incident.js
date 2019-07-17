@@ -97,3 +97,8 @@ export const escallateIncident = async (incidentId, assigneeId) => {
   return (await handler.get(`/incidents/${incidentId}/escalate`)).data;
   // return mockapi.escallateIncident(incidentId, assigneeId);
 };
+
+export const updateIncidentWorkflow = async (incidentId, workflowType, workflowUpdate) => {
+  return (await handler.post(`/incidents/${incidentId}/workflow/${workflowType}`, workflowUpdate) ).data;
+};
+

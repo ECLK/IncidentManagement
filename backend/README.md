@@ -6,6 +6,21 @@
 4. `python manage.py createsuperuser --email admin@example.com --username admin`
 5. `python manage.py runserver`
 
+## Docker run
+
+1. Install docker-compose
+2. Navigate to `backend` directory
+3. `docker-compose build`
+4. `docker-compose up`
+5. Go grab a coffee until mysql and django initialize
+6. Open a new terminal, navigate to `backend` 
+7. `docker-compose exec djangoapp python manage.py makemigrations`
+8. `docker-compose exec djangoapp python manage.py migrate`
+9. Grab another coffee
+10. `docker-compose exec djangoapp python manage.py createsuperuser`
+11. Enter superuser information when prompted
+12. `docker-compose exec djangoapp python manage.py loaddata seed_data.json`
+13. Server runs at 8000
 
 ## Model writing guidelines
 

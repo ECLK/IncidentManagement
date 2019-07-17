@@ -123,10 +123,11 @@ export function fetchUpdateIncident(incidentId, incidentData) {
                 "infoChannel",
                 "location",
                 "occurrence",
-                "policeStation",
-                "pollingStation",
+                "police_station",
+                "polling_station",
                 "title",
                 "ward",
+                "response_time",
 
                 "refId",
                 "election"
@@ -134,8 +135,9 @@ export function fetchUpdateIncident(incidentId, incidentData) {
             const incidentUpdate = updatableFields.reduce((a, e) => (a[e] = incidentData[e], a), {});
 
             const response = await updateIncident(incidentId, incidentUpdate);
-            await dispatch(recieveIncidentUpdateSuccess(response.data));
-            await dispatch(stepForwardIncidentStepper());
+            dispatch(recieveIncidentUpdateSuccess(response.data));
+            dispatch(fetchActiveIncidentData(incidentId));
+            dispatch(stepForwardIncidentStepper());
         }catch(error){
             await dispatch(recieveIncidentUpdateError(error));
         }

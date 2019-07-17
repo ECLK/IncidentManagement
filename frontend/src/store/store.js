@@ -6,12 +6,14 @@ import incidentReducer from '../modules/incident-filing/state/IncidentFiling.red
 import ongoingIncidentReducer from '../modules/ongoing-incidents/state/OngoingIncidents.reducers';
 
 import sharedReducer from '../modules/shared/state/Shared.reducers';
+import modalReducer from '../modules/modals/state/modal.reducers';
 
 
 const reducer = combineReducers({
     incidentReducer,
     sharedReducer,
-    ongoingIncidentReducer
+    ongoingIncidentReducer,
+    modalReducer
 })
 
 const store = createStore(

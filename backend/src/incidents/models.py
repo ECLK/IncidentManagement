@@ -179,6 +179,8 @@ class Incident(models.Model):
         "common.District", on_delete=models.DO_NOTHING, null=True, blank=True
     )
 
+    response_time = models.IntegerField(default=12)
+
     created_date = models.DateTimeField(auto_now_add=True)
 
     @property

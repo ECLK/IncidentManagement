@@ -38,6 +38,8 @@ import VerifyIncidentConfirm from './IncidentActions/VerifyIncidentConfirm';
 import EditIcon from '@material-ui/icons/Edit';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 
+import {showModal} from '../../modals/state/modal.actions'
+
 
 function TabContainer(props) {
     return (
@@ -575,10 +577,8 @@ class NavTabs extends Component {
     }
 
     onVerifyClick = () => {
-        // this.setState((state)=>(
-        //     {verifyIncidentDialogOpen:!state.verifyIncidentDialogOpen}
-        // ))
-        this.props.changeStatus(this.props.activeIncident.id, 'VERIFIED')
+        this.props.showVerifyConfirmation(this.props.activeIncident.id)
+
     }
 
     handleVerifyIncidentDialogClose = () => {
@@ -593,7 +593,6 @@ class NavTabs extends Component {
             setIncidentAssignee, events
         } = this.props;
 
-        console.log(this.props.events);
 
         const { value, open, verifyIncidentDialogOpen } = this.state;
 
@@ -632,8 +631,8 @@ class NavTabs extends Component {
                     <Grid item xs={3}>
                         <div className={classes.sidePane}>
                             <div className={classes.editButtonWrapper}>
-                                {activeIncident.status === 'VERIFY'?
-                                    <Button variant="outlined" disabled size="large" color="secondary" onClick={this.onVerifyClick} className={classes.editButton} >
+                                {activeIncident.currentStatus === 'VERIFIED'?
+                                    <Button disabled variant="outlined"  size="large" color="secondary" className={classes.editButton} >
                                         <DoneOutlineIcon className={classes.verifiedIcon}/>
                                         Verified
                                     </Button>:
@@ -645,41 +644,6 @@ class NavTabs extends Component {
                                     <EditIcon className={classes.editIcon} />
                                     Edit
                                 </Button>
-                                {/* <Button
-                            variant="outlined" size="large" color="primary"
-                            buttonRef={node => {
-                                this.anchorEl = node;
-                            }}
-                            aria-owns={open ? 'menu-list-grow' : undefined}
-                            aria-haspopup="true"
-                            onClick={this.handleToggle}
-                            onMouseEnter={this.handleToggle}
-                            // onMouseLeave={this.handleMouseLeave}
-                        >
-                            More
-                        </Button> */}
-                                <Popper open={open} anchorEl={this.anchorEl} transition disablePortal>
-                                    {({ TransitionProps, placement }) => (
-                                        <Grow
-                                            {...TransitionProps}
-                                            id="menu-list-grow"
-                                            style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                                        >
-                                            <Paper>
-                                                <ClickAwayListener onClickAway={this.handleClose}>
-                                                    <MenuList className={classes.moreActions}>
-                                                        <MenuItem onClick={this.handleClose}>Request for Advice</MenuItem>
-                                                        <MenuItem onClick={(e) => {
-                                                            this.handleClose(e)
-                                                            this.props.escallateIncident(activeIncident.id)
-                                                        }}>Escalate</MenuItem>
-                                                        <MenuItem onClick={this.handleClose}>Escalate to outside entity</MenuItem>
-                                                    </MenuList>
-                                                </ClickAwayListener>
-                                            </Paper>
-                                        </Grow>
-                                    )}
-                                </Popper>
                             </div>
                             <EventActions
                                 activeIncident={activeIncident}
@@ -750,6 +714,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         escallateIncident: (incidentId, assigneeId) => {
             dispatch(fetchEscallateIncident(incidentId, assigneeId))
+        },
+        showVerifyConfirmation: (incidentId) => {
+            dispatch(showModal('VERIFY_CONFIRM_MODAL',{incidentId}))
         }
     }
 }
