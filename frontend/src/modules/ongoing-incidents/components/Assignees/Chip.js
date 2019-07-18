@@ -48,8 +48,8 @@ class Chips extends React.Component {
                     return (
                     <Grid key={user.key}>
                         <Chip
-                            label={user.displayname}
-                            avatar={<Avatar>{this.getAvatarLetters(user.displayname)}</Avatar>}
+                            label={user.userName}
+                            avatar={<Avatar>{this.getAvatarLetters(user.userName)}</Avatar>}
                             key={user.uid}
                             onClick={this.handleClick}
                             // onDelete={() => this.handleDelete(user.uid)}

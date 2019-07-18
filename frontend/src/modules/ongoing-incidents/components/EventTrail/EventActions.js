@@ -109,8 +109,8 @@ const EventActions = (props) => {
                     <ListItemText primary="Required response time" secondary={activeIncident.response_time + " hours.1 hour(s) remaining.\n Ends at 5.30 p.m."} />
 
                     <ListItemSecondaryAction>
-                        <IconButton aria-label="Edit">
-                            <EditIcon onClick={() => { dispatch(showModal('RESPOSE_TIME_EDIT', { activeIncident })) }} />
+                        <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('RESPOSE_TIME_EDIT', { activeIncident })) }}>
+                            <EditIcon />
                         </IconButton>
                     </ListItemSecondaryAction>
 
@@ -119,7 +119,7 @@ const EventActions = (props) => {
                     <Avatar>
                         <ShowChartIcon />
                     </Avatar>
-                    <ListItemText primary="Status" secondary={activeIncident.status} />
+                    <ListItemText primary="Status" secondary={activeIncident.currentStatus} />
                 </ListItem>
             </List>
 
