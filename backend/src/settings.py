@@ -97,7 +97,7 @@ WSGI_APPLICATION = 'src.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mysql.connector.django', 
-        'NAME': 'lsf',
+        'NAME': env_var('DATABASE_NAME', 'lsf'),
         'USER': env_var('DATABASE_USER', 'root'),
         'PASSWORD': env_var('DATABASE_PWD', 'toor'),
         'HOST': env_var('DATABASE_HOST', 'mysql'),   # Or an IP Address that your DB is hosted on
