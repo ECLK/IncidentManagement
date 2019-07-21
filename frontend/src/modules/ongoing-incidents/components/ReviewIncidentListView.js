@@ -21,7 +21,17 @@ import SearchForm from "./SearchForm";
 const CustomTableCell = withRouter(
   withStyles(theme => ({
     body: {
-      fontSize: 14
+      padding: "3px 8px",
+      fontSize: "14px",
+      "& p.description": {
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        display: "-webkit-box",
+        lineHeight: "16px",
+        maxHeight: "32px",
+        "-webkit-line-clamp": 2,
+        "-webkit-box-orient": "vertical"
+      }
     }
   }))(TableCell)
 );
@@ -63,11 +73,12 @@ const styles = theme => ({
   },
   root: {
     display: "flex",
-    flexWrap: "wrap"
+    flexWrap: "wrap",
+    padding: "24px 31px"
   },
   formControl: {
     margin: theme.spacing.unit * 2,
-    minWidth: 300
+    minWidth: 240
   },
   buttonContainer: {
     margin: theme.spacing.unit * 2,
@@ -98,8 +109,9 @@ class ReviewIncidentListView extends React.Component {
         <SearchForm categories={categories} {...this.props} />
         <Table className={classes.table}>
           <colgroup>
+            <col style={{ width: "2%" }} />
             <col style={{ width: "20%" }} />
-            <col style={{ width: "50%" }} />
+            <col style={{ width: "45%" }} />
             <col style={{ width: "5%" }} />
             <col style={{ width: "15%" }} />
             <col style={{ width: "2%" }} />
@@ -110,6 +122,8 @@ class ReviewIncidentListView extends React.Component {
           </colgroup>
           <TableHead>
             <TableRow>
+              <CustomTableCell align="center">Ref Id</CustomTableCell>
+
               <CustomTableCell align="center">Title</CustomTableCell>
               <CustomTableCell align="center">Description</CustomTableCell>
               <CustomTableCell align="center">Status</CustomTableCell>
@@ -130,9 +144,18 @@ class ReviewIncidentListView extends React.Component {
                 className={classes.row}
                 key={row.id}
               >
-                <CustomTableCell scope="center">{row.title}</CustomTableCell>
-                <CustomTableCell>{row.description}</CustomTableCell>
-                <CustomTableCell align="center">{row.status}</CustomTableCell>
+                <CustomTableCell scope="center">
+                  <p>{row.refId}</p>
+                </CustomTableCell>
+                <CustomTableCell scope="center">
+                  <p>{row.title}</p>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <p className="description">{row.description}</p>
+                </CustomTableCell>
+                <CustomTableCell align="center">
+                  <p>{row.status}</p>
+                </CustomTableCell>
                 <CustomTableCell align="center">
                   <div>
                     {moment(row.createdDate).format(moment.HTML5_FMT.DATE)}
@@ -141,14 +164,14 @@ class ReviewIncidentListView extends React.Component {
                   <div>{moment(row.createdDate).format("hh:mm A")}</div>
                 </CustomTableCell>
                 <CustomTableCell align="center">
-                  {row.responseTimeInHours}
+                  <p>{row.responseTimeInHours}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
-                  {row.subCategory}
+                  <p>{row.subCategory}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">{row.severity}</CustomTableCell>
                 <CustomTableCell align="center">
-                  {row.locationName}
+                  <p>{row.locationName}</p>
                 </CustomTableCell>
               </TableRow>
             ))}

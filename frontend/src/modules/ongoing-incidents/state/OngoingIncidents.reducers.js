@@ -41,16 +41,15 @@ const initialState = {
   },
   users: [],
   incidentSearchFilter: {
+    textSearch: "",
     status: "",
     maxResponseTime: "",
     severity: "",
     category: "",
-    startDate: moment(new Date())
+    startTime: moment(new Date())
       .subtract(1, "year")
-      .format(moment.HTML5_FMT.DATE),
-    endDate: moment(new Date()).format(moment.HTML5_FMT.DATE),
-    startTime: moment(new Date()).format(moment.HTML5_FMT.TIME),
-    endTime: moment(new Date()).format(moment.HTML5_FMT.TIME)
+      .format(moment.HTML5_FMT.DATETIME_LOCAL),
+    endTime: moment(new Date()).format(moment.HTML5_FMT.DATETIME_LOCAL)
   }
 };
 
