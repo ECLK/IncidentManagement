@@ -47,7 +47,7 @@ function getActionText(event){
         case "GENERIC_UPDATE":
             return "edited incident information";
         case "ATTRIBUTE_CHANGED":
-            switch(event.affected_attribute){
+            switch(event.affectedAttribute){
                 case "STATUS":
                     return `changed the status from ${event.data.status.from_status_type} 
                                 to ${event.data.status.to_status_type}`;
@@ -58,7 +58,7 @@ function getActionText(event){
                     return 'unknown attribute change'
             }
         case "ATTRIBUTE_CHANGE_REQUESTED":
-            switch(event.affected_attribute){
+            switch(event.affectedAttribute){
                 case "STATUS":
                     return `requested to change the status from ${event.data.status.from_status_type} 
                                 to ${event.data.status.to_status_type}`;

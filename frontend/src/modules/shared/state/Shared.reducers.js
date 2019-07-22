@@ -1,5 +1,6 @@
 
 import produce from "immer";
+import axios from 'axios';
 import * as localStorage from "../../../utils/localStorage"
 
 import {
@@ -83,6 +84,7 @@ export default function sharedReducer(state, action) {
         if(userData && userData.authenticated){
             initialState.signedInUser.data = userData.user;
             initialState.signedInUser.isSignedIn = true;
+            axios.defaults.headers.common['Authorization'] = "JWT " + userData.token;
         }
         return initialState;
     }
@@ -132,6 +134,7 @@ export default function sharedReducer(state, action) {
                 return draft
             case ACTIVE_INCIDENT_GET_DATA_SUCCESS:
                 draft.activeIncident.data = action.data.incident
+                draft.activeIncident.data.assignees = [draft.activeIncident.data.assignee]
                 draft.activeIncidentReporter = action.data.reporter
                 draft.activeIncident.isLoading = false
                 return draft

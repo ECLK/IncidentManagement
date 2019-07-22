@@ -43,18 +43,22 @@ class Chips extends React.Component {
         const { classes, users } = this.props;
         return (
             <div className={classes.root}>
-                {users.map(user => (
+                {users && users.map(user => {
+                    if(user){
+                    return (
                     <Grid key={user.key}>
                         <Chip
-                            label={user.displayName}
-                            avatar={<Avatar>{this.getAvatarLetters(user.displayName)}</Avatar>}
+                            label={user.userName}
+                            avatar={<Avatar>{this.getAvatarLetters(user.userName)}</Avatar>}
                             key={user.uid}
                             onClick={this.handleClick}
-                            onDelete={() => this.handleDelete(user.uid)}
+                            // onDelete={() => this.handleDelete(user.uid)}
                             className={classes.chip}
                         />
                     </Grid>
-                ))}
+                    )}
+                    
+                })}
             </div>
         );
     }

@@ -26,7 +26,10 @@ import {
   INCIDENT_SEARCH_FILTERS_UPDATE,
   REQUEST_INCIDENT_ESCALATE,
   REQUEST_INCIDENT_ESCALATE_SUCCESS,
-  REQUEST_INCIDENT_ESCALATE_ERROR
+  REQUEST_INCIDENT_ESCALATE_ERROR,
+  REQUEST_WORKFLOW_UPDATE,
+  REQUEST_WORKFLOW_UPDATE_SUCCESS,
+  REQUEST_WORKFLOW_UPDATE_ERROR
 } from "./OngoingIncidents.types";
 
 import { getEvents, updateEventApproval } from "../../../api/events";
@@ -376,18 +379,63 @@ export function escallateIncidentError(error) {
 }
 
 export function fetchEscallateIncident(incidentId, assigneeId) {
-  return async function(dispath) {
-    dispath(escallateIncident);
+  return async function(dispatch) {
+    dispatch(escallateIncident);
     try {
       let response = await incidentAPI.escallateIncident(
         incidentId,
         assigneeId
       );
-      dispath(escallateIncidentSuccess(response.data));
-      dispath(fetchActiveIncidentData(response.data.id));
+      dispatch(escallateIncidentSuccess(response.data));
+      dispatch(fetchActiveIncidentData(incidentId));
+      dispatch(fetchIncidentEventTrail(incidentId));
     } catch (error) {
-      console.log(error);
-      dispath(escallateIncidentError(error));
+      dispatch(escallateIncidentError(error));
+    }
+  };
+}
+
+export function updateWorkflow(incidentId, workflowType, workflowUpdate) {
+  return {
+    type: REQUEST_WORKFLOW_UPDATE,
+    data: {
+      incidentId,
+      workflowType,
+      workflowUpdate
+    },
+    error: null
+  };
+}
+
+export function updateWorkflowSuccess() {
+  return {
+    type: REQUEST_WORKFLOW_UPDATE_SUCCESS,
+    data: null,
+    error: null
+  };
+}
+
+export function updateWorkflowError(error) {
+  return {
+    type: REQUEST_WORKFLOW_UPDATE_ERROR,
+    data: null,
+    error: error
+  };
+}
+
+export function fetchUpdateWorkflow(incidentId, workflowType, workflowUpdate) {
+  return async function(dispatch) {
+    dispatch(updateWorkflow(incidentId, workflowType, workflowUpdate));
+    try {
+      let response = await incidentAPI.updateIncidentWorkflow(
+        incidentId,
+        workflowType,
+        workflowUpdate
+      );
+      dispatch(updateWorkflowSuccess());
+      dispatch(fetchActiveIncidentData(incidentId));
+    } catch (error) {
+      dispatch(updateWorkflowError(error));
     }
   };
 }
