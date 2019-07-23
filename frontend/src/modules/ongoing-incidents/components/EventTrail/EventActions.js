@@ -24,6 +24,9 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import HelpIcon from '@material-ui/icons/Help';
 import EditIcon from '@material-ui/icons/Edit';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+
+
 
 
 import IconButton from '@material-ui/core/IconButton';
@@ -87,7 +90,7 @@ const EventActions = (props) => {
             <List className={classes.root}>
                 <ListItem>
                     <Avatar>
-                        <RestoreIcon />
+                        <PermIdentityIcon />
                     </Avatar>
                     <ListItemText primary="Current Assignee" secondary={activeIncident.assignees ? activeIncident.assignees[0].displayname : ""} />
                     <ListItemSecondaryAction>
