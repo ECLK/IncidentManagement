@@ -585,6 +585,10 @@ class NavTabs extends Component {
         this.props.showEscalateModal(this.props.activeIncident.id);
     }
 
+    onRequestAdviceClick = () => {
+        this.props.showRequestAdviceModal(this.props.activeIncident.id, this.props.users);
+    }
+
     handleVerifyIncidentDialogClose = () => {
         this.setState({ verifyIncidentDialogOpen: false })
     }
@@ -634,7 +638,7 @@ class NavTabs extends Component {
                     <Grid item xs={3}>
                         <div className={classes.sidePane}>
                             <div className={classes.editButtonWrapper}>
-                                {activeIncident.currentStatus === 'VERIFIED'?
+                                {activeIncident.currentStatus !== 'NEW'?
                                     <Button disabled variant="outlined"  size="large" color="secondary" className={classes.editButton} >
                                         <DoneOutlineIcon className={classes.verifiedIcon}/>
                                         Verified
@@ -664,11 +668,7 @@ class NavTabs extends Component {
                     </Grid>
                 </Grid>
 
-
-
                 <VerifyIncidentConfirm open={verifyIncidentDialogOpen} handleClose={this.handleVerifyIncidentDialogClose} />
-
-
             </NoSsr>
         );
     }
@@ -723,7 +723,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         showEscalateModal: (incidentId) => {
             dispatch(showModal('ESCALATE_MODAL', { incidentId }))
-        }
+        },
+        showRequestAdviceModal: (incidentId, users) => {
+            dispatch(showModal('REQUEST_ADVICE_MODAL', { incidentId, users }))
+        },
     }
 }
 

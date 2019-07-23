@@ -347,7 +347,7 @@ def incident_request_advice(user: User, incident: Incident, assignee: User, comm
     )
     status.save()
 
-    incident.linked_individuals.append(assignee)
+    incident.linked_individuals.add(assignee)
     incident.save()
 
     event_services.update_status_with_description_event(user, incident, status, True, comment)

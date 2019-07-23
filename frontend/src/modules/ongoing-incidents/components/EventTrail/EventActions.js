@@ -89,7 +89,7 @@ const EventActions = (props) => {
                     <Avatar>
                         <RestoreIcon />
                     </Avatar>
-                    <ListItemText primary="Current Assignee" secondary={activeIncident.assignees ? activeIncident.assignees[0].displayname : "" } />
+                    <ListItemText primary="Current Assignee" secondary={activeIncident.assignees ? activeIncident.assignees[0].displayname : ""} />
                     <ListItemSecondaryAction>
                         <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('CHANGE_ASSIGNEE_MODAL', { activeIncident, users })) }}>
                             <EditIcon />
@@ -144,7 +144,7 @@ const EventActions = (props) => {
                 <SubdirectoryArrowLeftIcon className={classes.actionButtonIcon} />
                 Escalate to outside
             </Button>
-            <Button color="primary" size="large" variant='text' className={classes.button}>
+            <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REQUEST_ADVICE_MODAL', { activeIncident, users })) }}>
                 <HelpIcon className={classes.actionButtonIcon} />
                 Request for advice
             </Button>
