@@ -23,6 +23,8 @@ import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft'
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import HelpIcon from '@material-ui/icons/Help';
 import EditIcon from '@material-ui/icons/Edit';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+
 
 import IconButton from '@material-ui/core/IconButton';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -96,31 +98,40 @@ const EventActions = (props) => {
 
 
             <List className={classes.root}>
+
                 <ListItem>
                     <Avatar>
                         <RestoreIcon />
                     </Avatar>
                     <ListItemText primary="Time Since last action" secondary={getLastActionTime(props.events)} />
                 </ListItem>
+
                 <ListItem>
                     <Avatar>
-                        <TimerIcon />
+                        <AccessTimeIcon />
                     </Avatar>
-                    <ListItemText primary="Required response time" secondary={activeIncident.response_time + " hours.1 hour(s) remaining.\n Ends at 5.30 p.m."} />
-
+                    <ListItemText primary="Close within" secondary={activeIncident.response_time + " hours."} />
                     <ListItemSecondaryAction>
                         <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('RESPOSE_TIME_EDIT', { activeIncident })) }}>
                             <EditIcon />
                         </IconButton>
                     </ListItemSecondaryAction>
-
                 </ListItem>
+
+                <ListItem>
+                    <Avatar>
+                        <TimerIcon />
+                    </Avatar>
+                    <ListItemText primary="Countdown" secondary="1 hour(s) remaining. Ends at 5.30 p.m." />
+                </ListItem>
+
                 <ListItem>
                     <Avatar>
                         <ShowChartIcon />
                     </Avatar>
                     <ListItemText primary="Status" secondary={activeIncident.currentStatus} />
                 </ListItem>
+
             </List>
 
 
