@@ -84,20 +84,18 @@ const EventActions = (props) => {
 
             <Divider variant="middle" className={classes.topDivider} />
 
-
-            <Typography variant="h6" style={{ marginTop: "20px" }}>
-                Assignee
-            </Typography>
-            <Assignees
-                assignees={activeIncident.assignees}
-                id={activeIncident.id}
-                getUsers={getUsers}
-                setIncidentAssignee={setIncidentAssignee}
-                users={users}
-            />
-
-
             <List className={classes.root}>
+                <ListItem>
+                    <Avatar>
+                        <RestoreIcon />
+                    </Avatar>
+                    <ListItemText primary="Current Assignee" secondary={activeIncident.assignees ? activeIncident.assignees[0].displayname : "" } />
+                    <ListItemSecondaryAction>
+                        <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('CHANGE_ASSIGNEE_MODAL', { activeIncident, users })) }}>
+                            <EditIcon />
+                        </IconButton>
+                    </ListItemSecondaryAction>
+                </ListItem>
 
                 <ListItem>
                     <Avatar>

@@ -123,7 +123,7 @@ class BasicDetailTab extends Component {
     }
 
     componentDidMount() {
-
+        
     }
 
     render() {
@@ -544,6 +544,7 @@ class NavTabs extends Component {
             this.props.getEvents(this.props.paramIncidentId);
         }
         this.scrollToTop()
+        this.props.getUsers();
     }
 
     showCommentInput = () => {

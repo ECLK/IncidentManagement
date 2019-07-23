@@ -236,7 +236,7 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP"):
     if incident.assignee != user:
         raise WorkflowException("Only current incident assignee can escalate the incident")
     
-    if incident.current_status != StatusType.VERIFIED:
+    if incident.current_status != StatusType.VERIFIED.name:
         raise WorkflowException("Incident is not verified")
 
     # find the rank of the current incident assignee
