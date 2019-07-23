@@ -8,10 +8,10 @@ import TextField from '@material-ui/core/TextField';
 
 
 // react-redux hooks
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { hideModal  } from '../state/modal.actions'
-import { setIncidentStatus, fetchUpdateWorkflow } from '../../ongoing-incidents/state/OngoingIncidents.actions'
+import { fetchUpdateWorkflow } from '../../ongoing-incidents/state/OngoingIncidents.actions'
 
 
 var hourlyResponseTimes = []
@@ -23,7 +23,7 @@ for (var i = 1; i < 24; i++) {
 const VerifyConfirmModal = (props) => {
 
     const dispatch = useDispatch();
-    const {incidentId} = useSelector(state => state.modalReducer.modalProps);
+    const {incidentId} = props;
     
     const [comment, setComment] = useState("");
 

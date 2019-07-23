@@ -7,11 +7,13 @@ import { hideModal } from '../state/modal.actions'
 import  ResponseTimeEditModal from './ResponseTimeEditModal';
 import VerifyConfirmModal from './VerifyConfirmModal'
 import EscalateModal from './EscalateModal';
+import EscallateOutsideModal from './EscallateOutsideModal';
 
 const MODAL_COMPONENTS = {
     'RESPOSE_TIME_EDIT': ResponseTimeEditModal,
     'VERIFY_CONFIRM_MODAL': VerifyConfirmModal,
-    'ESCALATE_MODAL': EscalateModal
+    'ESCALATE_MODAL': EscalateModal,
+    'ESCALLATE_OUTSIDE': EscallateOutsideModal
     /* other modals */
 }
 

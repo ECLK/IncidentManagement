@@ -142,7 +142,7 @@ const EventActions = (props) => {
                 <ArrowUpwardIcon className={classes.actionButtonIcon} />
                 Escalate
             </Button>
-            <Button color="primary" size="large" variant='text' className={classes.button}>
+            <Button color="primary" size="large" variant='text' className={classes.button} onClick={()=>{dispatch(showModal('ESCALLATE_OUTSIDE', { incidentId: activeIncident.id }))}}>
                 <SubdirectoryArrowLeftIcon className={classes.actionButtonIcon} />
                 Escalate to outside
             </Button>
