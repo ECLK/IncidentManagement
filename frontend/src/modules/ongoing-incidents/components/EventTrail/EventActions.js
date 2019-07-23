@@ -152,6 +152,10 @@ const EventActions = (props) => {
                 <HelpIcon className={classes.actionButtonIcon} />
                 Provide advice
             </Button>
+            <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('CLOSE_MODAL', { activeIncident })) }}>
+                <HelpIcon className={classes.actionButtonIcon} />
+                Close Incident
+            </Button>
 
 
         </div>

@@ -10,6 +10,7 @@ import EscalateModal from './EscalateModal';
 import ChangeAssigneeModal from './ChangeAssigneeModal';
 import RequestAdviceModal from './RequestAdviceModal';
 import ProvideAdviceModal from './ProvideAdviceModal';
+import CloseModal from './CloseModal';
 
 const MODAL_COMPONENTS = {
     'RESPOSE_TIME_EDIT': ResponseTimeEditModal,
@@ -17,7 +18,8 @@ const MODAL_COMPONENTS = {
     'ESCALATE_MODAL': EscalateModal,
     'CHANGE_ASSIGNEE_MODAL': ChangeAssigneeModal,
     'REQUEST_ADVICE_MODAL': RequestAdviceModal,
-    'PROVIDE_ADVICE_MODAL': ProvideAdviceModal
+    'PROVIDE_ADVICE_MODAL': ProvideAdviceModal,
+    'CLOSE_MODAL': CloseModal
     /* other modals */
 }
 
