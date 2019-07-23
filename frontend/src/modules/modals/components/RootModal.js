@@ -8,12 +8,20 @@ import  ResponseTimeEditModal from './ResponseTimeEditModal';
 import VerifyConfirmModal from './VerifyConfirmModal'
 import EscalateModal from './EscalateModal';
 import EscallateOutsideModal from './EscallateOutsideModal';
+import ChangeAssigneeModal from './ChangeAssigneeModal';
+import RequestAdviceModal from './RequestAdviceModal';
+import ProvideAdviceModal from './ProvideAdviceModal';
+import CloseModal from './CloseModal';
 
 const MODAL_COMPONENTS = {
     'RESPOSE_TIME_EDIT': ResponseTimeEditModal,
     'VERIFY_CONFIRM_MODAL': VerifyConfirmModal,
     'ESCALATE_MODAL': EscalateModal,
-    'ESCALLATE_OUTSIDE': EscallateOutsideModal
+    'ESCALLATE_OUTSIDE': EscallateOutsideModal,
+    'CHANGE_ASSIGNEE_MODAL': ChangeAssigneeModal,
+    'REQUEST_ADVICE_MODAL': RequestAdviceModal,
+    'PROVIDE_ADVICE_MODAL': ProvideAdviceModal,
+    'CLOSE_MODAL': CloseModal
     /* other modals */
 }
 

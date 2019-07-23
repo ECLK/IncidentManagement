@@ -236,7 +236,7 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP"):
     if incident.assignee != user:
         raise WorkflowException("Only current incident assignee can escalate the incident")
     
-    if incident.current_status != StatusType.VERIFIED:
+    if incident.current_status != StatusType.VERIFIED.name:
         raise WorkflowException("Incident is not verified")
 
     # find the rank of the current incident assignee
@@ -347,17 +347,17 @@ def incident_request_advice(user: User, incident: Incident, assignee: User, comm
     )
     status.save()
 
-    incident.linked_individuals.append(assignee)
+    incident.linked_individuals.add(assignee)
     incident.save()
 
     event_services.update_status_with_description_event(user, incident, status, True, comment)
 
 
 def incident_provide_advice(user: User, incident: Incident, advice: str):
-    if user not in incident.linked_individuals:
+    if not Incident.objects.filter(linked_individuals__id=user.id).exists():
         raise WorkflowException("User not linked to the given incident")
 
-    if incident.current_status != StatusType.ADVICE_REQESTED:
+    if incident.current_status != StatusType.ADVICE_REQESTED.name:
         raise WorkflowException("Incident does not have pending advice requests")
 
     status = IncidentStatus(

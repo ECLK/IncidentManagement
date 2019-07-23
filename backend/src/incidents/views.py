@@ -42,6 +42,7 @@ from ..events import services as event_service
 
 import json
 
+
 class IncidentResultsSetPagination(PageNumberPagination):
     page_size = 5
     page_size_query_param = "pageSize"
@@ -141,6 +142,7 @@ class IncidentDetail(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ReporterDetail(APIView):
     serializer_class = ReporterSerializer
 
@@ -188,18 +190,19 @@ class IncidentCommentView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class IncidentWorkflowView(APIView):
     def post(self, request, incident_id, workflow, format=None):
-        
+
         incident = get_incident_by_id(incident_id)
-        
+
         if workflow == "close":
             if not request.user.has_perm("incidents.can_change_status"):
-                return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
+                return Response("User can't close incident", status=status.HTTP_401_UNAUTHORIZED)
 
             comment = json.dumps(request.data['comment'])
             incident_close(request.user, incident, comment)
-        
+
         elif workflow == "request-action":
             comment = json.dumps(request.data['comment'])
             incident_escalate_external_action(request.user, incident, comment)
@@ -208,7 +211,8 @@ class IncidentWorkflowView(APIView):
             comment = json.dumps(request.data['comment'])
             start_event_id = request.data['start_event']
             start_event = event_service.get_event_by_id(start_event_id)
-            incident_complete_external_action(request.user, incident, comment, start_event)
+            incident_complete_external_action(
+                request.user, incident, comment, start_event)
 
         elif workflow == "request-advice":
             comment = json.dumps(request.data['comment'])
@@ -219,7 +223,7 @@ class IncidentWorkflowView(APIView):
         elif workflow == "provide-advice":
             comment = json.dumps(request.data['comment'])
             incident_provide_advice(request.user, incident, comment)
-        
+
         elif workflow == "verify":
             comment = json.dumps(request.data['comment'])
             incident_verify(request.user, incident, comment)
@@ -227,13 +231,13 @@ class IncidentWorkflowView(APIView):
 
         elif workflow == "assign":
             if not request.user.has_perm("incidents.can_change_assignee"):
-                return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
+                return Response("User can't change assignee", status=status.HTTP_401_UNAUTHORIZED)
 
             assignee_id = self.request.data['assignee']
             assignee = get_user_by_id(assignee_id)
 
             incident_change_assignee(request.user, incident, assignee)
-            
+
         elif workflow == "escalate":
             incident_escalate(request.user, incident)
 
@@ -241,5 +245,3 @@ class IncidentWorkflowView(APIView):
             return Response("Invalid workflow", status=status.HTTP_400_BAD_REQUEST)
 
         return Response("Incident workflow success", status=status.HTTP_200_OK)
-
-        
