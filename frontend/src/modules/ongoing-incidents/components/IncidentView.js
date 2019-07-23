@@ -578,13 +578,15 @@ class NavTabs extends Component {
 
     onVerifyClick = () => {
         this.props.showVerifyConfirmation(this.props.activeIncident.id)
+    }
 
+    onEscalateClick = () => {
+        this.props.showEscalateModal(this.props.activeIncident.id);
     }
 
     handleVerifyIncidentDialogClose = () => {
         this.setState({ verifyIncidentDialogOpen: false })
     }
-
 
     render() {
         const { classes, postComment, activeIncident,
@@ -654,7 +656,7 @@ class NavTabs extends Component {
                                 getUsers={getUsers}
                                 setIncidentAssignee={setIncidentAssignee}
                                 events={this.props.events}
-                                escallateIncident={() => { this.props.escallateIncident(activeIncident.id) }}
+                                escallateIncident={this.onEscalateClick}
                             />
                         </div>
 
@@ -717,6 +719,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         showVerifyConfirmation: (incidentId) => {
             dispatch(showModal('VERIFY_CONFIRM_MODAL',{incidentId}))
+        },
+        showEscalateModal: (incidentId) => {
+            dispatch(showModal('ESCALATE_MODAL', { incidentId }))
         }
     }
 }

@@ -14,7 +14,7 @@ services:
     ports:
       - '3308:3306'
     volumes:
-      - ./data/mysql:/var/lib/mysql
+      - ../data/mysql:/var/lib/mysql
 
   djangoapp:
     build:

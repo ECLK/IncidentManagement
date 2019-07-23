@@ -93,7 +93,7 @@ export const removeFromIncident = async (incidentId, uid) => {
   return mockapi.removeFromIncident(incidentId, uid);
 };
 
-export const escallateIncident = async (incidentId, assigneeId) => {
+export const escallateIncident = async (incidentId) => {
   return (await handler.get(`/incidents/${incidentId}/escalate`)).data;
   // return mockapi.escallateIncident(incidentId, assigneeId);
 };

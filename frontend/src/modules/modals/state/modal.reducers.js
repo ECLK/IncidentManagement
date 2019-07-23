@@ -2,6 +2,9 @@ import produce from "immer";
 
 import { SHOW_MODAL, HIDE_MODAL } from './modal.types';
 
+/**
+ * Register new modals in the RootModal
+ */
 
 const initialState = {
     modalType: null,

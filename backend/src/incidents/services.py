@@ -219,18 +219,26 @@ def incident_auto_assign(incident: Incident, user_group: Group):
     with connection.cursor() as cursor:
         cursor.execute(sql)
         row = cursor.fetchone()
-
         if row is None:
-            return ("error", "Error in finding auto assignment")
+            raise WorkflowException("Error in finding auto assignment")
+        
+        try:
+            assignee = User.objects.get(id=row[0])
+            incident.assignee = assignee
+            incident.save()
 
-        assignee = User.objects.get(id=row[0])
-        incident.assignee = assignee
-        incident.save()
-
-        return ("success", "Auto assign completed", assignee)
+            return assignee
+        except:
+            raise WorkflowException("Error in finding auto assignment")
 
 
 def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP"):
+    if incident.assignee != user:
+        raise WorkflowException("Only current incident assignee can escalate the incident")
+    
+    if incident.current_status != StatusType.VERIFIED:
+        raise WorkflowException("Incident is not verified")
+
     # find the rank of the current incident assignee
     assignee_groups = incident.assignee.groups.all()
     if len(assignee_groups) == 0:
@@ -247,8 +255,8 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP"):
     if next_group is None:
         raise WorkflowException("Can't escalate %s from here" % escalate_dir)
 
-    result = incident_auto_assign(incident, next_group)
-    event_services.create_assignment_event(user, incident, result[2])
+    assignee = incident_auto_assign(incident, next_group)
+    event_services.create_assignment_event(user, incident, assignee)
 
 
 def incident_change_assignee(user: User, incident: Incident, assignee: User):
