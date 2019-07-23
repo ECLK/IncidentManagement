@@ -198,7 +198,7 @@ class IncidentWorkflowView(APIView):
 
         if workflow == "close":
             if not request.user.has_perm("incidents.can_change_status"):
-                return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
+                return Response("User can't close incident", status=status.HTTP_401_UNAUTHORIZED)
 
             comment = json.dumps(request.data['comment'])
             incident_close(request.user, incident, comment)

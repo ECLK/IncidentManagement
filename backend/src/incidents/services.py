@@ -354,10 +354,10 @@ def incident_request_advice(user: User, incident: Incident, assignee: User, comm
 
 
 def incident_provide_advice(user: User, incident: Incident, advice: str):
-    if user not in incident.linked_individuals:
+    if not Incident.objects.filter(linked_individuals__id=user.id).exists():
         raise WorkflowException("User not linked to the given incident")
 
-    if incident.current_status != StatusType.ADVICE_REQESTED:
+    if incident.current_status != StatusType.ADVICE_REQESTED.name:
         raise WorkflowException("Incident does not have pending advice requests")
 
     status = IncidentStatus(
