@@ -15,7 +15,9 @@ import {
 
     INCIDENT_GET_DATA_REQUEST,
     INCIDENT_GET_DATA_SUCCESS,
-    INCIDENT_GET_DATA_ERROR
+    INCIDENT_GET_DATA_ERROR,
+
+    RESET_INCIDENT_FORM
 } from './IncidentFiling.types'
 import { createIncident, updateIncident, updateReporter, getIncident, getReporter } from '../../../api/incident';
 
@@ -44,7 +46,7 @@ export function requestIncidentSubmit() {
 }
 
 export function recieveIncidentSubmitSuccess(submitResponse) {
-    history.replace({ ...history.location, pathname: `/report/${submitResponse.incident.id}`});
+    history.replace({ ...history.location, pathname: `/app/report/${submitResponse.incident.id}`});
 
     return {
         type: INCIDENT_BASIC_DATA_SUBMIT_SUCCESS,
@@ -66,10 +68,18 @@ export function submitIncidentBasicData(incidentData) {
         dispatch(requestIncidentSubmit());
         try{
             const response = await createIncident(incidentData);
-            await dispatch(getActiveIncidentDataSuccess(response.data));
-            await dispatch(recieveIncidentSubmitSuccess(response.data));
+            const _transform = {
+                incident: response.data,
+                reporter: { 
+                    id:response.data.reporter
+                }
+            };
+
+            await dispatch(getActiveIncidentDataSuccess(_transform));
+            await dispatch(recieveIncidentSubmitSuccess(_transform));
             await dispatch(stepForwardIncidentStepper());
         }catch(error){
+            console.log(error);
             await dispatch(recieveIncidentSubmitError(error));
         }
     }
@@ -103,9 +113,31 @@ export function fetchUpdateIncident(incidentId, incidentData) {
     return async function (dispatch) {
         dispatch(requestIncidentUpdate());
         try{
-            const response = await updateIncident(incidentId, incidentData);
-            await dispatch(recieveIncidentUpdateSuccess(response.data));
-            await dispatch(stepForwardIncidentStepper());
+            const updatableFields = [
+                "address",
+                "category",
+                "coordinates",
+                "description",
+                "district",
+                "ds_division",
+                "infoChannel",
+                "location",
+                "occurrence",
+                "police_station",
+                "polling_station",
+                "title",
+                "ward",
+                "response_time",
+
+                "refId",
+                "election"
+            ];
+            const incidentUpdate = updatableFields.reduce((a, e) => (a[e] = incidentData[e], a), {});
+
+            const response = await updateIncident(incidentId, incidentUpdate);
+            dispatch(recieveIncidentUpdateSuccess(response.data));
+            dispatch(fetchActiveIncidentData(incidentId));
+            dispatch(stepForwardIncidentStepper());
         }catch(error){
             await dispatch(recieveIncidentUpdateError(error));
         }
@@ -140,7 +172,14 @@ export function fetchUpdateReporter(incidentId, reporterId, reporterData) {
     return async function (dispatch) {
         dispatch(requestReporterUpdate());
         try{
-            const response = await updateReporter(reporterId, reporterData);
+            const reporterUpdate = {
+                "name": reporterData["reporter_name"],
+                "reporter_type": reporterData["reporter_type"],
+                "email": reporterData["reporter_email"],
+                "telephone": reporterData["reporter_telephone"],
+                "address": reporterData["reporter_address"],
+            }
+            const response = await updateReporter(reporterId, reporterUpdate);
             await dispatch(recieveReporterUpdateSuccess(response.data));
             await dispatch(fetchActiveIncidentData(incidentId));
             await dispatch(stepForwardIncidentStepper());
@@ -187,6 +226,15 @@ export function fetchIncidentData(incidentId) {
         }catch(error){
             await dispatch(getIncidentDataError(error));
         }
+    }
+}
+
+
+export function resetIncidentForm() {
+    return {
+        type: RESET_INCIDENT_FORM,
+        data: null,
+        error: null
     }
 }
 

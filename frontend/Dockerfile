@@ -15,7 +15,8 @@ WORKDIR /usr/share/nginx/html/
 
 EXPOSE 80
 
-CMD echo 'window._env_ = {}; window._env_.API_BASE ="'${API_BASE}'"' > env-config.js && nginx -g 'daemon off;'
+CMD ["nginx", "-g", "daemon off;"];
+# CMD echo 'window._env_ = {}; window._env_.API_BASE ="'${API_BASE}'"' > env-config.js && nginx -g 'daemon off;'
 # CMD ["bash", "-c", "echo 'window._env_.API_BASE = \"$API_BASE\"' > env-config.js && nginx -g 'daemon off;'"]
 # CMD echo ${API_BASE}
 

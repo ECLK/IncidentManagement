@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import {
     REQUEST_INCIDENT_CATAGORIES,
     REQUEST_INCIDENT_CATAGORIES_SUCCESS,
@@ -21,12 +23,30 @@ import {
 
     ACTIVE_INCIDENT_GET_DATA_REQUEST,
     ACTIVE_INCIDENT_GET_DATA_SUCCESS,
-    ACTIVE_INCIDENT_GET_DATA_ERROR
+    ACTIVE_INCIDENT_GET_DATA_ERROR,
+
+    SIGN_IN_REQUEST, 
+    SIGN_IN_REQUEST_SUCCESS,
+    SIGN_IN_REQUEST_ERROR,
+
+    TOGGLE_REMEBER_USER,
+    SIGN_OUT,
+    SIGN_OUT_ERROR,
+
+    CHANGE_LANGUAGE,
+
+    RESET_ACTIVE_INCIDENT,
+
+    REQUEST_INCIDENT_DS_DIVISIONS,
+    REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS,
+    REQUEST_INCIDENT_DS_DIVISIONS_FAILURE,
+
 } from './Shared.types'
 
 import { getIncident, getReporter  } from '../../../api/incident';
-import { getDistricts, getPoliceStations, getPollingStations, getWards } from '../../../api/shared';
-import {getCategories} from '../../../api/category'
+import { getCategories, getDistricts, getPoliceStations, getPollingStations, getWards, getDSDivisions } from '../../../api/shared';
+import { signIn } from '../../../api/user';
+import * as localStorage from '../../../utils/localStorage';
 
 // Get Catogories
 
@@ -173,6 +193,41 @@ export function fetchPollingStations(){
     }
 }
 
+// Get DS Divisions
+
+export function requestDSDivisions() {
+    return {
+        type: REQUEST_INCIDENT_DS_DIVISIONS,
+    }
+}
+
+export function receiveDSDivisions(response) {
+    return {
+        type: REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function receiveDSDivisionsError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_DS_DIVISIONS_FAILURE,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchDSDivisions(){
+    return async function(dispatch){
+        dispatch(requestDSDivisions());
+        try{
+            const response = await getDSDivisions();
+            await dispatch(receiveDSDivisions(response.data));
+        }catch(error){
+            await dispatch(receiveDSDivisionsError(error));
+        }
+    }
+}
 
 // Get Wards
 
@@ -240,13 +295,120 @@ export function fetchActiveIncidentData(incidentId) {
         dispatch(requestActiveIncidentData(incidentId));
         try{
             const responseIncident = await getIncident(incidentId);
-            const responseReporter = await getReporter(responseIncident.data.reporter_id);
-            await dispatch(getActiveIncidentDataSuccess({
+            const responseReporter = await getReporter(responseIncident.data.reporter);
+            dispatch(getActiveIncidentDataSuccess({
                 "incident": responseIncident.data,
                 "reporter": responseReporter.data
             }));
         }catch(error){
-            await dispatch(getActiveIncidentDataError(error));
+            console.log(error);
+            dispatch(getActiveIncidentDataError(error));
         }
+    }
+}
+
+
+// SIGN IN
+
+export function requestSignIn() {
+    return {
+        type: SIGN_IN_REQUEST,
+    }
+}
+
+export function requestSignInSuccess(response) {
+    return {
+        type: SIGN_IN_REQUEST_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function requestSignInError(errorResponse) {
+    return {
+        type: SIGN_IN_REQUEST_ERROR,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchSignIn(userName, password) {
+    return async function (dispatch, getState) {
+        dispatch(requestSignIn());
+        try{
+            let signInData = null;
+            signInData = localStorage.read('ECIncidentManagementUser');
+            let token = null;
+
+            if(!signInData){
+                signInData = (await signIn(userName, password)).data;
+                
+                if(signInData.status === "success"){
+                    if(getState().sharedReducer.signedInUser.rememberMe){
+                        localStorage.write('ECIncidentMangementUser', signInData.data);
+                        token = signInData.data.token;
+                    }
+                }else{
+                    dispatch(requestSignInError(signInData.message));
+                }
+            }else{
+                token = signInData.token;
+            }   
+
+            axios.defaults.headers.common['Authorization'] = "JWT " + token;
+            dispatch(requestSignInSuccess(signInData.data));
+        }catch(error){
+            dispatch(getActiveIncidentDataError(error));
+        }
+    }
+}
+
+//Remeber user
+export function toggleRememberUser(){
+    return {
+        type: TOGGLE_REMEBER_USER,
+        data:null,
+        error:null
+    }
+}
+
+//sign out
+
+export function signOut() {
+    return {
+        type: SIGN_OUT
+    }
+}
+
+export function signOutError(error) {
+    return {
+        type: SIGN_OUT_ERROR,
+        error: error
+    }
+}
+
+export function initiateSignOut() {
+    return async function (dispatch, getState) {
+        try{
+            localStorage.remove('ECIncidentMangementUser');
+            axios.defaults.headers.common['Authorization'] = null;
+            dispatch(signOut())
+        }catch(error){
+            dispatch(signOutError(error));
+        }
+    }
+}
+
+//change langguage
+export function changeLanguage(selectedLanguage) {
+    return {
+        type: CHANGE_LANGUAGE,
+        selectedLanguage
+    }
+}
+
+export function resetActiveIncident(){
+    return {
+        type: RESET_ACTIVE_INCIDENT
     }
 }

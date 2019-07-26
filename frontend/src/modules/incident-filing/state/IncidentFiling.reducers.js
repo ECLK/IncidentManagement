@@ -18,12 +18,12 @@ import {
 
     INCIDENT_GET_DATA_REQUEST,
     INCIDENT_GET_DATA_SUCCESS,
-    INCIDENT_GET_DATA_ERROR
+    INCIDENT_GET_DATA_ERROR,
+
+    RESET_INCIDENT_FORM
 } from './IncidentFiling.types'
 
 const initialState = {
-    incident: {},
-    reporter: {},
 
     isIncidentLoading: false,
 
@@ -55,8 +55,10 @@ export default function incidentReducer(state, action) {
             case INCIDENT_BASIC_DATA_SUBMIT_SUCCESS:
                 draft.guestIncidentForm.isSubmitting = false;
 
-                draft.incident = action.data.incident;
-                draft.reporter = action.data.reporter;
+                // draft.incident = action.incident;
+                // draft.reporter = {
+                //     id: action.data.reporter
+                // }
 
                 return draft
             case INCIDENT_BASIC_DATA_SUBMIT_ERROR:
@@ -100,6 +102,12 @@ export default function incidentReducer(state, action) {
                 draft.hasError = true;
                 draft.error = action.error;
                 return draft
+            case RESET_INCIDENT_FORM:
+                draft.guestIncidentForm = {
+                    activeStep: 0,
+                    isSubmitting:false
+                };
+                return draft;
         }
     })
 }

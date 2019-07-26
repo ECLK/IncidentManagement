@@ -2,10 +2,12 @@
     "eclk.incident.management.incidents": "சம்பவங்கள்",
     "eclk.incident.management.incidents.reporting.system": "தேர்தல் மீறல் சம்பவங்கள் அறிக்கை அறிக்கை",
     "eclk.incident.management.report.incidents":"ஒரு சம்பவம் குறித்து புகாரளி",
+    "eclk.incident.management.ongoing.incidents":"ஒரு சம்பவத்தை நிர்வகி",
+    "eclk.incident.management.historic.reports":"சம்பவ அறிக்கைகள்",
 
-    "eclk.incident.management.filing.guest.form.steps.basic.details":"சம்பவ விவரங்கள் சமர்ப்பிக்கவும்",
-    "eclk.incident.management.filing.guest.form.steps.location.details":"சம்பவ இட விவரங்கள் சமர்ப்பிக்கவும்",
-    "eclk.incident.management.filing.guest.form.steps.contact.details":"தொடர்பு விபரங்களை சமர்ப்பிக்கவும்",
+    "eclk.incident.management.filing.guest.form.steps.basic.details":"சம்பவ விவரங்கள்",
+    "eclk.incident.management.filing.guest.form.steps.location.details":"சம்பவ இட விவரங்கள்",
+    "eclk.incident.management.filing.guest.form.steps.contact.details":"தொடர்பு விபரங்களை",
     "eclk.incident.management.filing.guest.form.steps.review.details":"மதிப்பாய்வு விவரங்கள்"
 
 }

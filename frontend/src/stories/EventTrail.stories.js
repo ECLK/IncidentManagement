@@ -1,6 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import EventTrail from '../components/EventTrail';
+import Comment from "../components/EventTrail/Comment";
 
 const events = [
     {
@@ -52,3 +53,4 @@ storiesOf('EventTrail', module)
         <EventTrail events={events.slice(0, -1)} total={5} />
     ))
     .add('load more', () => <EventTrail events={events} />)
+    .add('comment', ()=>(<Comment/>))

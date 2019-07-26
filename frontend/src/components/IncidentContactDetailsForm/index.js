@@ -1,2 +1,0 @@
-
-export { IncidentContactDetailsForm } from './IncidentContactDetailsForm';
