@@ -34,7 +34,7 @@ def env_var(key, default=None):
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['api.incidents.ecdev.opensource.lk']
 
 
 # Application definition
