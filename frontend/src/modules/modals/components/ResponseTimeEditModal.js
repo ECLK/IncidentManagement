@@ -9,7 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
 // react-redux hooks
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { hideModal  } from '../state/modal.actions'
 import { fetchUpdateIncident } from '../../incident-filing/state/IncidentFiling.actions'
@@ -24,7 +24,7 @@ for (var i = 1; i < 24; i++) {
 const ResponseTimeEditModal = (props) => {
 
     const dispatch = useDispatch();
-    const {activeIncident} = useSelector(state => state.modalReducer.modalProps);
+    const {activeIncident} = props
     
     //maintains selected value in local state until change is confirmed
     const [allocatedTime, setAlocatedTime] = useState(activeIncident.response_time);
