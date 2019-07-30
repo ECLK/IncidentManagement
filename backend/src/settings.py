@@ -35,7 +35,7 @@ def env_var(key, default=None):
 DEBUG = env_var('django_debug', True)
 
 ALLOWED_HOSTS = [
-    "api.incidents.ecdev.opensource.lk"
+    "api.incidents.ecdev.opensource.lk", "43.224.124.64", "localhost", "127.0.0.1"
 ]
 
 
