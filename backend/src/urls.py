@@ -62,14 +62,6 @@ urlpatterns = [
         incident_views.ReporterDetail.as_view(),
     ),
     path(
-        "incidents/<uuid:incident_id>/escalate",
-        incident_views.IncidentEscalateView.as_view(),
-    ),
-    path(
-        "incidents/<uuid:incident_id>/assignee",
-        incident_views.IncidentAssigneeView.as_view(),
-    ),
-    path(
         "incidents/<uuid:incident_id>/files",
         file_views.FileView.as_view(),
     ),
