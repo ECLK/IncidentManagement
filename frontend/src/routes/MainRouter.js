@@ -7,6 +7,7 @@ import { IntlProvider } from "react-intl";
 import i18n from "../translation/i18n.js";
 import Historic from "../modules/reporting";
 import {Report} from "../modules/incident-filing";
+import IncidentFormInternal from "../modules/incident-filing/components/IncidentFormInternal";
 import {Ongoing} from "../modules/ongoing-incidents";
 import {SignInPage} from "../modules/shared";
 import PrivateRoute from "./PrivateRoute";
@@ -52,6 +53,7 @@ class MainRouter extends Component {
             <PrivateRoute path="/app" component={Layout}>
               <Switch>
                 <PrivateRoute exact path="/app/report" component={Report} /> 
+                <PrivateRoute exact path="/app/report2" component={ IncidentFormInternal } /> 
                 <PrivateRoute exact path="/app/report/:paramIncidentId" component={Report} /> 
 
                 <PrivateRoute exact path="/app/ongoing" component={Ongoing}/>
