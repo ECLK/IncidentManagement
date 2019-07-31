@@ -345,7 +345,7 @@ class IncidentFormInternal extends Component {
                                                 value={this.state.age}
                                                 onChange={this.handleChange}
                                                 inputProps={{
-                                                    name: 'police-station',
+                                                    name: 'policeStation',
                                                     id: 'police-station',
                                                 }}
                                             >
@@ -357,6 +357,81 @@ class IncidentFormInternal extends Component {
                                                 <MenuItem value={30}>Thirty</MenuItem>
                                             </Select>
                                         </FormControl>
+                                    </Grid>
+                                </Grid>
+                            </Paper>
+
+                            {/* contact information of the complianer */}
+                            <Paper className={classes.paper}>
+                                <Grid container spacing={24}>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            id="reporter-name"
+                                            label="Reporter Name"
+                                            className={classes.textField}
+                                            // value={values.name}
+                                            // onChange={handleChange('name')}
+                                            margin="normal"
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={4}>
+                                        <FormControl className={classes.formControl} >
+                                            <InputLabel htmlFor="reporter-type">Reporter Type</InputLabel>
+                                            <Select
+                                                value={this.state.age}
+                                                onChange={this.handleChange}
+                                                inputProps={{
+                                                    name: 'reporter-type',
+                                                    id: 'reporter-type',
+                                                }}
+                                            >
+                                                <MenuItem value="">
+                                                    <em>None</em>
+                                                </MenuItem>
+                                                <MenuItem value={"Individual"}>Individual</MenuItem>
+                                                <MenuItem value={"Organization"}>Organization</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            id="reporter-address"
+                                            label="Reporter Address"
+                                            className={classes.textField}
+                                            // value={values.name}
+                                            // onChange={handleChange('name')}
+                                            margin="normal"
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            id="reporter-mobile"
+                                            label="Reporter Mobile"
+                                            className={classes.textField}
+                                            // value={values.name}
+                                            // onChange={handleChange('name')}
+                                            margin="normal"
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            id="reporter-landline"
+                                            label="Reporter Landline"
+                                            className={classes.textField}
+                                            // value={values.name}
+                                            // onChange={handleChange('name')}
+                                            margin="normal"
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            id="reporter-email"
+                                            label="Reporter Email"
+                                            className={classes.textField}
+                                            // value={values.name}
+                                            // onChange={handleChange('name')}
+                                            margin="normal"
+                                        />
                                     </Grid>
                                 </Grid>
                             </Paper>
