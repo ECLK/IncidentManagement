@@ -141,7 +141,7 @@ class IncidentFormInternal extends Component {
                                             onChange={props.handleChange}
                                             onBlur={props.handleBlur}
                                             value={props.values.otherCat}
-                                            className={classes.textfield}
+                                            className={classes.textField}
                                             disabled
                                         />
                                     </Grid>
@@ -160,7 +160,7 @@ class IncidentFormInternal extends Component {
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                         <FormControl component="fieldset" className={classes.formControl}>
-                                            <FormLabel component="legend">Gender</FormLabel>
+                                            <FormLabel component="legend">Occurrance</FormLabel>
                                             <RadioGroup
                                                 aria-label="Current status"
                                                 name="current_status"
@@ -226,7 +226,7 @@ class IncidentFormInternal extends Component {
                             </Paper>
 
                             {/* Incident location information */}
-                            {/* <Paper className={classes.paper}>
+                            <Paper className={classes.paper}>
                                 <Grid container spacing={24}>
                                     <Grid item xs={12}>
                                         <TextField
@@ -249,11 +249,117 @@ class IncidentFormInternal extends Component {
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={4}>
-                                        <AutoComplete options={props.values.optionsCity} />
+                                        <TextField
+                                            id="city"
+                                            label="City"
+                                            className={classes.textField}
+                                            // value={values.name}
+                                            // onChange={handleChange('name')}
+                                            margin="normal"
+                                        />
                                     </Grid>
-                                    <Grid item xs={4}></Grid>
+                                    <Grid item xs={12} sm={4}>
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel htmlFor="province">Province</InputLabel>
+                                            <Select
+                                                value={this.state.province}
+                                                onChange={this.handleChange}
+                                                inputProps={{
+                                                    name: 'province',
+                                                    id: 'province',
+                                                }}
+                                            >
+                                                <MenuItem value="">
+                                                    <em>None</em>
+                                                </MenuItem>
+                                                <MenuItem value={"Western"}>Western</MenuItem>
+                                                <MenuItem value={"Eastern"}>Eastern</MenuItem>
+                                                <MenuItem value={"Nothern"}>Nothern</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} sm={4}>
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel htmlFor="district">District</InputLabel>
+                                            <Select
+                                                value={this.state.age}
+                                                onChange={this.handleChange}
+                                                inputProps={{
+                                                    name: 'district',
+                                                    id: 'district',
+                                                }}
+                                            >
+                                                <MenuItem value="">
+                                                    <em>None</em>
+                                                </MenuItem>
+                                                <MenuItem value={10}>Ten</MenuItem>
+                                                <MenuItem value={20}>Twenty</MenuItem>
+                                                <MenuItem value={30}>Thirty</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} sm={4}>
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel htmlFor="polling-division">Polling Division</InputLabel>
+                                            <Select
+                                                value={this.state.age}
+                                                onChange={this.handleChange}
+                                                inputProps={{
+                                                    name: 'pollingDivision',
+                                                    id: 'polling-division',
+                                                }}
+                                            >
+                                                <MenuItem value="">
+                                                    <em>None</em>
+                                                </MenuItem>
+                                                <MenuItem value={10}>Ten</MenuItem>
+                                                <MenuItem value={20}>Twenty</MenuItem>
+                                                <MenuItem value={30}>Thirty</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} sm={4}>
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel htmlFor="polling-station">Polling Station</InputLabel>
+                                            <Select
+                                                value={this.state.age}
+                                                onChange={this.handleChange}
+                                                inputProps={{
+                                                    name: 'pollingStation',
+                                                    id: 'polling-station',
+                                                }}
+                                            >
+                                                <MenuItem value="">
+                                                    <em>None</em>
+                                                </MenuItem>
+                                                <MenuItem value={10}>Ten</MenuItem>
+                                                <MenuItem value={20}>Twenty</MenuItem>
+                                                <MenuItem value={30}>Thirty</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} sm={4}>
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel htmlFor="police-station">Police Station</InputLabel>
+                                            <Select
+                                                value={this.state.age}
+                                                onChange={this.handleChange}
+                                                inputProps={{
+                                                    name: 'police-station',
+                                                    id: 'police-station',
+                                                }}
+                                            >
+                                                <MenuItem value="">
+                                                    <em>None</em>
+                                                </MenuItem>
+                                                <MenuItem value={10}>Ten</MenuItem>
+                                                <MenuItem value={20}>Twenty</MenuItem>
+                                                <MenuItem value={30}>Thirty</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
                                 </Grid>
-                            </Paper> */}
+                            </Paper>
 
                             {/* action panel */}
                             <Paper className={classes.paper}>
