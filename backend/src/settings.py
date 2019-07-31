@@ -32,7 +32,7 @@ def env_var(key, default=None):
     return val
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env_var('django_debug', True)
 
 ALLOWED_HOSTS = []
 
