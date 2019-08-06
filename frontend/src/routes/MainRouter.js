@@ -67,6 +67,7 @@ class MainRouter extends Component {
 
           <Route exact path="/" component={LandingPage} />
           <Route path="/login" component={SignInPage} />
+          <Route path="/report" component={Report} />
           </div>
         </Router>
       </IntlProvider>
