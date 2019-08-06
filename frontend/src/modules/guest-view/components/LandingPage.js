@@ -91,10 +91,10 @@ function HomePage(props) {
                                 <CardContent className={classes.cardContent} >
                                     <Typography gutterBottom variant="h4" component="h2" className={classes.cardText} color="primary">
                                         Check Status
-                                 </Typography>
+                                    </Typography>
                                     <Typography gutterBottom variant="h4" component="h2" className={classes.cardText} color="primary">
                                         on Incident
-                                 </Typography>
+                                    </Typography>
                                     <Typography gutterBottom variant="h4" component="h2" className={classes.cardText} color="primary">
                                         <CheckStatusIcon className={classes.icon} />
                                     </Typography>
@@ -103,7 +103,17 @@ function HomePage(props) {
                         </Link>
                     </Card>
                 </Grid>
+            </Grid>
 
+            <Grid container spacing={24}>
+            <Grid xs={12}>
+                    <Typography variant="h5" component="h5" className={classes.cardText} color="primary">
+                        Already registered user?
+                        <Button color="primary" className={classes.button} href="/login">
+                            Sign In
+                        </Button>
+                    </Typography>
+                </Grid>
             </Grid>
         </div>
     );
