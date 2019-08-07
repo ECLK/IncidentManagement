@@ -87,6 +87,7 @@ function SearchForm(props) {
     <Formik
       initialValues={props.incidentSearchFilter}
       onSubmit={(values, { setSubmitting }) => {
+        console.log(values);
         let preparedValues = {
           ...values,
           startTime: values.startTime !== "" ? moment(values.startTime).toDate() : null,
