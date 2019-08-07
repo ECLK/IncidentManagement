@@ -390,3 +390,13 @@ def incident_verify(user: User, incident: Incident, comment: str):
     status.save()
 
     event_services.update_status_with_description_event(user, incident, status, True, comment)
+
+def get_police_report_by_incident(incident: Incident):
+    try:
+        incident_police_report = IncidentPoliceReport.objects.get(incident=incident)
+        if incident_police_report is None:
+            raise IncidentException("No police report associated to the incident")
+    except:
+        raise IncidentException("No police report associated to the incident")
+
+    return incident_police_report

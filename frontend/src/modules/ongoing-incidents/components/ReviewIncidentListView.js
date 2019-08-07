@@ -147,7 +147,7 @@ class ReviewIncidentListView extends React.Component {
             {pagedIncidents.incidents.map(row => (
               <TableRow
                 
-                hover
+                // hover
                 className={classes.row}
                 key={row.id}
               >

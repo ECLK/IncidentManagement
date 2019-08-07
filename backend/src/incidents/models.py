@@ -179,7 +179,7 @@ class Incident(models.Model):
         "common.District", on_delete=models.DO_NOTHING, null=True, blank=True
     )
 
-    complainer_consent = models.BooleanField(default=False)
+    complainer_consent = models.BooleanField(default=False, null=True, blank=True)
 
     response_time = models.IntegerField(default=12)
 
@@ -234,19 +234,19 @@ class IncidentPoliceReport(models.Model):
     # time
     # place
     # complained date
-    nature_of_incident = models.CharField(max_length=200, blank=True)
-    complainers_name = models.CharField(max_length=200, blank=True)
-    complainers_address = models.CharField(max_length=200, blank=True)
+    nature_of_incident = models.CharField(max_length=200, null=True, blank=True)
+    complainers_name = models.CharField(max_length=200, null=True, blank=True)
+    complainers_address = models.CharField(max_length=200, null=True, blank=True)
     # complainers political view
     # complainers candidate status
-    victims_name = models.CharField(max_length=200, blank=True)
-    victims_address = models.CharField(max_length=200, blank=True)
-    respondents_name = models.CharField(max_length=200, blank=True)
-    respondents_address = models.CharField(max_length=200, blank=True)
+    victims_name = models.CharField(max_length=200, null=True, blank=True)
+    victims_address = models.CharField(max_length=200, null=True, blank=True)
+    respondents_name = models.CharField(max_length=200, null=True, blank=True)
+    respondents_address = models.CharField(max_length=200, null=True, blank=True)
     # Respondents candidate status
-    no_of_vehicles_arrested =  models.IntegerField(default=0)
-    steps_taken = models.CharField(max_length=200, blank=True)
-    court_case_no = models.CharField(max_length=200, blank=True)
+    no_of_vehicles_arrested =  models.IntegerField(default=0, null=True, blank=True)
+    steps_taken = models.CharField(max_length=200, null=True, blank=True)
+    court_case_no = models.CharField(max_length=200, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
