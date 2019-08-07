@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Incident, IncidentStatus, IncidentSeverity, Reporter, IncidentComment
+from .models import Incident, IncidentStatus, IncidentSeverity, Reporter, IncidentComment, IncidentPoliceReport
 from ..common.serializers import DistrictSerializer, PoliceStationSerializer
 from ..common.models import PoliceStation
 from ..custom_auth.serializers import UserSerializer
@@ -42,6 +42,10 @@ class IncidentSerializer(serializers.ModelSerializer):
         model = Incident
         exclude = ["created_date"]
 
+class IncidentPoliceReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IncidentPoliceReport
+        fields = "__all__"
 
 class IncidentCommentSerializer(serializers.ModelSerializer):
     class Meta:

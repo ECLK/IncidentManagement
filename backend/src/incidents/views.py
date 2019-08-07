@@ -17,6 +17,7 @@ from .serializers import (
     IncidentSerializer,
     ReporterSerializer,
     IncidentCommentSerializer,
+    IncidentPoliceReportSerializer,
 )
 from .services import (
     get_incident_by_id,
@@ -122,7 +123,21 @@ class IncidentList(APIView, IncidentResultsSetPagination):
             incident = serializer.save()
             create_incident_postscript(incident, request.user)
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            incident_police_report_data = request.data
+            incident_police_report_data["incident"] = serializer.data["id"]
+            incident_police_report_serializer = IncidentPoliceReportSerializer(data=incident_police_report_data)
+            # print("serializer.data")
+            # print(type(serializer.data))
+            # return_data = {}
+            # return_data.update(serializer.data)
+            return_data = serializer.data
+            if incident_police_report_serializer.is_valid():
+                incident_police_report = incident_police_report_serializer.save()
+                return_data.update(incident_police_report_serializer.data)
+                # print("return_data")
+                # print(return_data)
+
+            return Response(return_data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

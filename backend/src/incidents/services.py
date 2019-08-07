@@ -6,6 +6,7 @@ from .models import (
     SeverityType,
     Reporter,
     IncidentComment,
+    IncidentPoliceReport,
 )
 from django.contrib.auth.models import User, Group
 
