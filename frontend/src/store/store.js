@@ -7,13 +7,16 @@ import ongoingIncidentReducer from '../modules/ongoing-incidents/state/OngoingIn
 
 import sharedReducer from '../modules/shared/state/Shared.reducers';
 import modalReducer from '../modules/modals/state/modal.reducers';
+import { notificationReducer } 
+        from '../modules/notifications/state/notifications.reducers';
 
 
 const reducer = combineReducers({
     incidentReducer,
     sharedReducer,
     ongoingIncidentReducer,
-    modalReducer
+    modalReducer,
+    notificationReducer
 })
 
 const store = createStore(

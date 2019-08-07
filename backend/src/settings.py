@@ -34,7 +34,11 @@ def env_var(key, default=None):
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env_var('django_debug', True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "api.incidents.ecdev.opensource.lk",
+    "127.0.0.1",
+    "localhost"
+]
 
 
 # Application definition

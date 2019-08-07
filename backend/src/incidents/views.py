@@ -82,6 +82,8 @@ class IncidentList(APIView, IncidentResultsSetPagination):
             incidents = incidents.filter(
                 created_date__range=(param_start_date, param_end_date))
 
+        # this will load all incidents to memory 
+        # change this to a better way next time
         param_status = self.request.query_params.get('status', None)
         if param_status is not None:
             try:
