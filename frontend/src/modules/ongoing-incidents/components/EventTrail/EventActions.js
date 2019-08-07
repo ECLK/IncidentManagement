@@ -25,6 +25,9 @@ import HelpIcon from '@material-ui/icons/Help';
 import EditIcon from '@material-ui/icons/Edit';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import WhereToVoteIcon from '@material-ui/icons/WhereToVote';
+import SpeackerNotesIcon from '@material-ui/icons/SpeakerNotes';
 
 import IconButton from '@material-ui/core/IconButton';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -125,7 +128,7 @@ const EventActions = (props) => {
 
                 <ListItem>
                     <Avatar>
-                        <TimerIcon />
+                        <HourglassEmptyIcon />
                     </Avatar>
                     <ListItemText primary="Countdown" secondary="1 hour(s) remaining. Ends at 5.30 p.m." />
                 </ListItem>
@@ -158,16 +161,16 @@ const EventActions = (props) => {
                 Request for advice
             </Button>
             <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('PROVIDE_ADVICE_MODAL', { activeIncident })) }}>
-                <HelpIcon className={classes.actionButtonIcon} />
+                <SpeackerNotesIcon className={classes.actionButtonIcon} />
                 Provide advice
             </Button>
 
             {userCan(currentUser, activeIncident, USER_ACTIONS.CLOSE_INCIDENT) &&
                 <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('CLOSE_MODAL', { activeIncident })) }}>
-                    <HelpIcon className={classes.actionButtonIcon} />
+                    <WhereToVoteIcon className={classes.actionButtonIcon} />
                     Close Incident
                 </Button>
-            }
+            } 
 
 
         </div>

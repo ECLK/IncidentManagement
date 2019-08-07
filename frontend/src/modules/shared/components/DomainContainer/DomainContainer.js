@@ -2,25 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import HomeIcon from '@material-ui/icons/Home';
-import MailIcon from '@material-ui/icons/Mail';
+
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from "react-router";
 import { Button } from '@material-ui/core';
 
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -28,8 +17,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
 import { Link } from 'react-router-dom';
-import AssignmentLateIcon from '@material-ui/icons/AssignmentLate';
-import AssignmentIcon from '@material-ui/icons/Assignment';
 
 import {initiateSignOut} from '../../state/Shared.actions'
 import {changeLanguage} from '../../state/Shared.actions';
@@ -155,7 +142,7 @@ class DomainContainer extends React.Component {
   }
 
   render() {
-    const { classes, theme, drawer, selectedLanguage } = this.props;
+    const { classes, selectedLanguage } = this.props;
     const { open, anchorEl, anchorLang } = this.state;
     const menuOpen = Boolean(anchorEl);
     const langMenuOpen = Boolean(anchorLang);
@@ -170,22 +157,11 @@ class DomainContainer extends React.Component {
 
         <AppBar
           position="static"
-          // className={classNames(classes.appBar, {
-          //   [classes.appBarShift]: open,
-          // })}
+
         >
           <Toolbar disableGutters={!open}>
-            {/* <IconButton
-              color="inherit"
-              aria-label="Open drawer"
-              onClick={this.handleDrawerOpen}
-              className={classNames(classes.menuButton, open && classes.hide)}
-            >
-              <MenuIcon />
-            </IconButton> */}
+
             <Typography variant="h6" color="inherit" className={classes.grow}>
-                {/* {this.props.header? this.props.header() : ''} */}
-                
                 Incident Management
 
                 <Button color="inherit" component={HomeLink} className={classes.homeButton}>Home</Button>
@@ -250,50 +226,11 @@ class DomainContainer extends React.Component {
             
           </Toolbar>
         </AppBar>
-
-        
-        {/* <Drawer
-          className={classes.drawer}
-          variant="persistent"
-          anchor="left"
-          open={open}
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-        >
-          <div className={classes.drawerHeader}>
-            <IconButton onClick={this.handleDrawerClose}>
-              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-            </IconButton>
-          </div>
-          <Divider />
-
-          <List>
-              <ListItem button component={Link} to={"/app/home"}>
-                  <ListItemIcon><HomeIcon /></ListItemIcon>
-                  <ListItemText primary='Home' />
-              </ListItem>
-              <ListItem button component={Link} to={"/app/report"}>
-                  <ListItemIcon><AssignmentIcon /></ListItemIcon>
-                  <ListItemText primary='Create Incident' />
-              </ListItem>
-              <ListItem button component={Link} to={"/app/review"}>
-                  <ListItemIcon><AssignmentLateIcon /></ListItemIcon>
-                  <ListItemText primary='Review Incidents' />
-              </ListItem>
-              <ListItem button component={Link} to={`/app/ongoing`}>
-                  <ListItemIcon><AssignmentIcon /></ListItemIcon>
-                  <ListItemText primary='[debug] Ongoing' />
-              </ListItem>
-          </List>
-
-        </Drawer> */}
         <main
           className={classNames(classes.content, {
             [classes.contentShift]: open,
           })}
         >
-          {/* <div className={classes.drawerHeader} /> */}
           <RootModal/>
           {this.props.content}
         </main>
