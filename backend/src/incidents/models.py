@@ -179,7 +179,7 @@ class Incident(models.Model):
         "common.District", on_delete=models.DO_NOTHING, null=True, blank=True
     )
 
-    complainer_consent = models.BooleanField(default=False)
+    complainer_consent = models.BooleanField(default=False, null=True, blank=True)
 
     response_time = models.IntegerField(default=12)
 

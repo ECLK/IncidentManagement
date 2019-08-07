@@ -8,8 +8,12 @@ const ErrorNotification = (props) => {
     let message = null;
 
     if(errors){
-        if(errors.response && errors.response.data && errors.response.data.data.message){
-            message = errors.response.data.data.message;
+        if(errors.response && errors.response.data){
+            if(errors.response.data.data){
+                message = errors.response.data.data.message;
+            }else{
+                message = "Server error"
+            }
         }else{
             message = errors.message;
         }
