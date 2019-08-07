@@ -142,7 +142,7 @@ class DomainContainer extends React.Component {
   }
 
   render() {
-    const { classes, selectedLanguage } = this.props;
+    const { classes, selectedLanguage, signedInUser } = this.props;
     const { open, anchorEl, anchorLang } = this.state;
     const menuOpen = Boolean(anchorEl);
     const langMenuOpen = Boolean(anchorLang);
@@ -196,15 +196,6 @@ class DomainContainer extends React.Component {
                   <MenuItem onClick={()=>(this.handleLanguageChange('ta'))}>Tamil</MenuItem>
                   <MenuItem onClick={()=>(this.handleLanguageChange('en'))}>English</MenuItem>
             </Menu>
-
-            <IconButton
-                  aria-owns={open ? 'menu-appbar' : undefined}
-                  aria-haspopup="true"
-                  onClick={this.handleMenu}
-                  color="inherit"
-                >
-                  <AccountCircle />
-            </IconButton>
             <Menu
                   id="menu-appbar"
                   anchorEl={anchorEl}
@@ -222,6 +213,17 @@ class DomainContainer extends React.Component {
                   <MenuItem >Profile</MenuItem>
                   <MenuItem onClick={this.handleSignOut}>Sign Out</MenuItem>
             </Menu>
+
+            <Button 
+              aria-owns={open ? 'menu-appbar' : undefined}
+              aria-haspopup="true" 
+              color="inherit" 
+              onClick={this.handleMenu} 
+            > 
+              {signedInUser.displayname}
+              <AccountCircle style={{margin:5}} />
+            </Button>
+
 
             
           </Toolbar>
@@ -249,7 +251,8 @@ DomainContainer.propTypes = {
 const mapStateToProps = (state, ownProps) => {
     return {
         isSignedIn:state.sharedReducer.signedInUser.isSignedIn,
-        selectedLanguage: state.sharedReducer.selectedLanguage
+        selectedLanguage: state.sharedReducer.selectedLanguage,
+        signedInUser: state.sharedReducer.signedInUser.data
     }
 }
 

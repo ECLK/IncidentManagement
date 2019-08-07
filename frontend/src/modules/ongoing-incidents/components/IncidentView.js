@@ -14,6 +14,7 @@ import Modal from '@material-ui/core/Modal';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import ButtonBase from '@material-ui/core/ButtonBase';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Popper from '@material-ui/core/Popper';
@@ -87,6 +88,15 @@ const styles = theme => ({
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit
 
+    },
+    verifiedButton:{
+        color:'#4caf50',
+        border: 'solid 1px',
+        borderColor: '#4caf50',
+        width:'49%',
+        borderRadius:4,
+        fontSize: '14px',
+        fontWeight: 500,
     },
     sidePane: {
         marginLeft: theme.spacing.unit * 4
@@ -639,10 +649,10 @@ class NavTabs extends Component {
                         <div className={classes.sidePane}>
                             <div className={classes.editButtonWrapper}>
                                 {activeIncident.currentStatus !== 'NEW'?
-                                    <Button disabled variant="outlined"  size="large" color="secondary" className={classes.editButton} >
+                                    <ButtonBase disabled variant="outlined"  size="large" color="secondary" className={classes.verifiedButton} >
                                         <DoneOutlineIcon className={classes.verifiedIcon}/>
-                                        Verified
-                                    </Button>:
+                                        VERIFIED
+                                    </ButtonBase>:
                                     <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick} className={classes.editButton} >
                                         Verify
                                     </Button>

@@ -96,7 +96,7 @@ const EventActions = (props) => {
                     <Avatar>
                         <PermIdentityIcon />
                     </Avatar>
-                    <ListItemText primary="Current Assignee" secondary={activeIncident.assignees ? activeIncident.assignees[0].displayname : ""} />
+                    <ListItemText primary="Assign to" secondary={activeIncident.assignees ? activeIncident.assignees[0].displayname : ""} />
                     
                     {userCan(currentUser, activeIncident, USER_ACTIONS.CHANGE_ASSIGNEE) &&
                         <ListItemSecondaryAction>
