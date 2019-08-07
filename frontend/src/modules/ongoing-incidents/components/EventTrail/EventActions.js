@@ -26,14 +26,14 @@ import EditIcon from '@material-ui/icons/Edit';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 
-
-
-
 import IconButton from '@material-ui/core/IconButton';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 //actions
 import { showModal } from '../../../modals/state/modal.actions'
+
+//utils
+import { userCan, USER_ACTIONS } from '../../../utils/userUtils';
 
 const styles = (theme) => ({
     card: {
@@ -77,6 +77,7 @@ const EventActions = (props) => {
 
     const dispatch = useDispatch()
     const activeIncident = useSelector(state => state.sharedReducer.activeIncident.data);
+    const currentUser = useSelector(state => state.sharedReducer.signedInUser.data);
 
     if (!activeIncident) {
         return null
@@ -93,11 +94,14 @@ const EventActions = (props) => {
                         <PermIdentityIcon />
                     </Avatar>
                     <ListItemText primary="Current Assignee" secondary={activeIncident.assignees ? activeIncident.assignees[0].displayname : ""} />
-                    <ListItemSecondaryAction>
-                        <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('CHANGE_ASSIGNEE_MODAL', { activeIncident, users })) }}>
-                            <EditIcon />
-                        </IconButton>
-                    </ListItemSecondaryAction>
+                    
+                    {userCan(currentUser, activeIncident, USER_ACTIONS.CHANGE_ASSIGNEE) &&
+                        <ListItemSecondaryAction>
+                            <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('CHANGE_ASSIGNEE_MODAL', { activeIncident, users })) }}>
+                                <EditIcon />
+                            </IconButton>
+                        </ListItemSecondaryAction>
+                    }
                 </ListItem>
 
                 <ListItem>
@@ -138,11 +142,13 @@ const EventActions = (props) => {
 
             <Divider variant="middle" className={classes.divider} />
 
-
-            <Button color="primary" size="large" variant='text' className={classes.button} onClick={props.escallateIncident}>
-                <ArrowUpwardIcon className={classes.actionButtonIcon} />
-                Escalate
-            </Button>
+            {userCan(currentUser, activeIncident, USER_ACTIONS.ESCALATE_INCIDENT) && 
+                <Button color="primary" size="large" variant='text' className={classes.button} onClick={props.escallateIncident}>
+                    <ArrowUpwardIcon className={classes.actionButtonIcon} />
+                    Escalate
+                </Button>
+            }
+            
             <Button color="primary" size="large" variant='text' className={classes.button} onClick={()=>{dispatch(showModal('ESCALLATE_OUTSIDE', { incidentId: activeIncident.id }))}}>
                 <SubdirectoryArrowLeftIcon className={classes.actionButtonIcon} />
                 Escalate to outside
@@ -155,10 +161,13 @@ const EventActions = (props) => {
                 <HelpIcon className={classes.actionButtonIcon} />
                 Provide advice
             </Button>
-            <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('CLOSE_MODAL', { activeIncident })) }}>
-                <HelpIcon className={classes.actionButtonIcon} />
-                Close Incident
-            </Button>
+
+            {userCan(currentUser, activeIncident, USER_ACTIONS.CLOSE_INCIDENT) &&
+                <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('CLOSE_MODAL', { activeIncident })) }}>
+                    <HelpIcon className={classes.actionButtonIcon} />
+                    Close Incident
+                </Button>
+            }
 
 
         </div>

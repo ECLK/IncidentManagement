@@ -86,6 +86,15 @@ export default function OngoingIncidentsReducer(state, action) {
         draft.incidentSearchFilter = initialState.incidentSearchFilter;
         return draft;
 
+      case REQUEST_WORKFLOW_UPDATE:
+        return draft;
+      
+      case REQUEST_WORKFLOW_UPDATE_SUCCESS:
+        return draft;
+      
+      case REQUEST_WORKFLOW_UPDATE_ERROR:
+        return draft;
+
     }
   });
 }

@@ -38,6 +38,7 @@ import RootModal from '../../../modals/components/RootModal'
 import Notification from '../../../notifications/components/Notification';
 import ErrorNotification from '../../../notifications/components/ErrorNotification';
 import ConfirmNotification from '../../../notifications/components/ConfirmNotification';
+import LoadingNotification from '../../../notifications/components/LoadingNotification';
 
 const HomeLink = props => <Link to="/app/home" {...props} />
 const ReportLink = props => <Link to="/app/report" {...props} />
@@ -163,6 +164,7 @@ class DomainContainer extends React.Component {
       <div className={classes.root}>
         <ErrorNotification />
         <ConfirmNotification />
+        <LoadingNotification />
         <CssBaseline />
 
 
