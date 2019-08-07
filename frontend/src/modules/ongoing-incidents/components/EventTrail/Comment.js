@@ -10,6 +10,8 @@ import 'froala-editor/css/froala_editor.pkgd.min.css';
 
 import FroalaEditor from 'react-froala-wysiwyg';
 
+import RichEditor from './RichTextEditor'
+
 const styles = theme => ({
     container: {
         
@@ -72,11 +74,8 @@ class Comment extends Component {
         const { classes  } = this.props;
         return(
             <div className={classes.container}>
-                <FroalaEditor
-                    tag='textarea'
-                    model={this.state.comment}
-                    onModelChange={this.onTextInputChange}
-                />
+                
+                <RichEditor/>
                 <FormGroup row>
                     <FormControlLabel
                     control={
