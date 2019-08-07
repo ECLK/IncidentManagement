@@ -109,7 +109,7 @@ function HomePage(props) {
             <Grid xs={12}>
                     <Typography variant="h5" component="h5" className={classes.cardText} color="primary">
                         Already registered user?
-                        <Button color="primary" className={classes.button} href="/login">
+                        <Button color="primary" className={classes.button} href="/sign-in">
                             Sign In
                         </Button>
                     </Typography>
