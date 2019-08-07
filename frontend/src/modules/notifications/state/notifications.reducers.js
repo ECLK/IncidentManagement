@@ -12,10 +12,6 @@ export function notificationReducer(state = initState, action) {
     return produce(state, draft => {
         const { type, error, isLoading, confirm } = action;
 
-        console.log("action", action);
-
-        
-
         if (type === SHOW_NOTIFICATION){
             draft.isOpen = true;
             return draft;

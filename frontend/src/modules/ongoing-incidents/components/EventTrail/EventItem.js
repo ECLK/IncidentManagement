@@ -2,7 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from './Avatar';
 import * as moment from 'moment';
-import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
+// import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 import Button from '@material-ui/core/Button';
 
 const styles = {
@@ -99,9 +99,9 @@ function getSecondaryItem(event){
     if(event.action === "COMMENTED" || event.action === "OUTCOME_ADDED"){
         return (
             <div>
-                <FroalaEditorView
+                {/* <FroalaEditorView
                     model={event.data.comment.body}
-                />
+                /> */}
             </div>
         )
     }

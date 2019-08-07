@@ -75,6 +75,7 @@ const styles = theme => ({
 
 function SearchForm(props) {
   const filterIncidents = values => {
+    console.log(values);
     props.getIncidents(values);
   };
 
@@ -88,8 +89,8 @@ function SearchForm(props) {
       onSubmit={(values, { setSubmitting }) => {
         let preparedValues = {
           ...values,
-          startTime: moment(values.startTime).toDate(),
-          endTime: moment(values.endTime).toDate()
+          startTime: values.startTime !== "" ? moment(values.startTime).toDate() : null,
+          endTime: values.endTime !== "" ? moment(values.endTime).toDate() : null
         };
         // alert(JSON.stringify(preparedValues));
         filterIncidents(preparedValues);
@@ -163,9 +164,12 @@ function SearchForm(props) {
                           <em>None</em>
                         </MenuItem>
                         <MenuItem value={"NEW"}>New</MenuItem>
-                        <MenuItem value={"REQUEST_MORE_INFO"}>
-                          Request More Info
-                        </MenuItem>
+                        <MenuItem value={"CLOSED"}>Closed</MenuItem>
+                        <MenuItem value={"ACTION_TAKEN"}>Action Taken</MenuItem>
+                        <MenuItem value={"ACTION_PENDING"}>Action Pending</MenuItem>
+                        <MenuItem value={"ADVICE_PROVIDED"}>Advice Provided</MenuItem>
+                        <MenuItem value={"ADVICE_REQESTED"}>Advice Requested</MenuItem>
+                        <MenuItem value={"VERIFIED"}>Verified</MenuItem>
                       </Select>
                     </FormControl>
                     <FormControl className={classes.formControl}>
@@ -222,9 +226,8 @@ function SearchForm(props) {
                         <MenuItem value="">
                           <em>None</em>
                         </MenuItem>
-                        <MenuItem value={"insignificant"}>
-                          Insignificant
-                        </MenuItem>
+                        <MenuItem value={"DEFAULT"}>Default</MenuItem>
+                        <MenuItem value={"INSIGNIFICANT"}>Insignificant</MenuItem>
                         <MenuItem value={"MINOR"}>Minor</MenuItem>
                         <MenuItem value={"MODERATE"}>Moderate</MenuItem>
                         <MenuItem value={"MAJOR"}>Major</MenuItem>
@@ -265,7 +268,7 @@ function SearchForm(props) {
                         id="start-time"
                         label="Start Time"
                         name="startTime"
-                        type="datetime-local"
+                        type="date"
                         value={values.startTime}
                         className={classes.textField}
                         InputLabelProps={{
@@ -279,7 +282,7 @@ function SearchForm(props) {
                         id="end-time"
                         label="End Time"
                         name="endTime"
-                        type="datetime-local"
+                        type="date"
                         value={values.endTime}
                         className={classes.textField}
                         InputLabelProps={{
