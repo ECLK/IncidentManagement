@@ -14,25 +14,26 @@ import { hideModal  } from '../state/modal.actions'
 import { fetchUpdateWorkflow } from '../../ongoing-incidents/state/OngoingIncidents.actions'
 
 
-const VerifyConfirmModal = (props) => {
+
+const CompleteOutsideActionModal = (props) => {
 
     const dispatch = useDispatch();
-    const {incidentId} = props;
+    const {incidentId, startEventId} = props;
     
     const [comment, setComment] = useState("");
 
     return (
         <div>
-            <DialogTitle id="form-dialog-title">Verify this Incident?  </DialogTitle>
+            <DialogTitle id="form-dialog-title"> Mark as action complete?  </DialogTitle>
             <DialogContent style={{width:400}}>
             <DialogContentText>
-                Comment(optional)
+                Describe the outcome from the outside entity.
             </DialogContentText>
             <TextField
               autoFocus
               margin="dense"
               id="name"
-              type="email"
+              type="text"
               value={comment}
               onChange={(e)=>{setComment(e.target.value)}}
               fullWidth
@@ -45,16 +46,16 @@ const VerifyConfirmModal = (props) => {
                 </Button>
                 <Button 
                     onClick={()=>{
-                        dispatch(fetchUpdateWorkflow(incidentId,'verify', {comment}))
+                        dispatch(fetchUpdateWorkflow(incidentId,'complete-action', {comment,start_event:startEventId}))
                         dispatch(hideModal())
                     }
                     } 
                     color="primary">
-                    Verify
+                    Complete Action
                 </Button>
             </DialogActions>
         </div>
     );
 }
 
-export default VerifyConfirmModal;
+export default CompleteOutsideActionModal;

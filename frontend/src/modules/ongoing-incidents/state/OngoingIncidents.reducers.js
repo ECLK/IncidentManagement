@@ -37,7 +37,8 @@ const initialState = {
   pagedIncidents: {
     incidents: [],
     pages: 1,
-    pageNumber: 1
+    pageNumber: 1,
+    count: 0
   },
   users: [],
   incidentSearchFilter: {
@@ -46,10 +47,12 @@ const initialState = {
     maxResponseTime: "",
     severity: "",
     category: "",
-    startTime: moment(new Date())
-      .subtract(1, "year")
-      .format(moment.HTML5_FMT.DATETIME_LOCAL),
-    endTime: moment(new Date()).format(moment.HTML5_FMT.DATETIME_LOCAL)
+    startTime: "",
+    endTime: ""
+    // startTime: moment(new Date())
+    //   .subtract(1, "year")
+    //   .format(moment.HTML5_FMT.DATETIME_LOCAL),
+    // endTime: moment(new Date()).format(moment.HTML5_FMT.DATETIME_LOCAL)
   }
 };
 

@@ -111,7 +111,7 @@ const EventActions = (props) => {
                     <Avatar>
                         <RestoreIcon />
                     </Avatar>
-                    <ListItemText primary="Time Since last action" secondary={getLastActionTime(props.events)} />
+                    <ListItemText primary="Last action happened" secondary={getLastActionTime(props.events)} />
                 </ListItem>
 
                 <ListItem>
@@ -130,7 +130,7 @@ const EventActions = (props) => {
                     <Avatar>
                         <HourglassEmptyIcon />
                     </Avatar>
-                    <ListItemText primary="Countdown" secondary="1 hour(s) remaining. Ends at 5.30 p.m." />
+                    <ListItemText primary="Close this before" secondary="5.30 p.m.(1 hour(s) remaining.)" />
                 </ListItem>
 
                 <ListItem>

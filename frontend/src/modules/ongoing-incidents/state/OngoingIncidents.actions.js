@@ -273,11 +273,11 @@ export function updateIncidentFilters(filters) {
   };
 }
 
-export function fetchIncidents(filters = {}) {
+export function fetchIncidents(filters = {}, page) {
   return async function(dispatch) {
     dispatch(requestAllIncidents());
     try {
-      const response = await getIncidents(filters);
+      const response = await getIncidents(filters, page);
       dispatch(requestAllIncidentsSuccess(response.data));
     } catch (error) {
       console.error(error);
@@ -453,7 +453,8 @@ export function fetchUpdateWorkflow(incidentId, workflowType, workflowUpdate) {
         workflowUpdate
       );
       dispatch(updateWorkflowSuccess());
-      dispatch(fetchActiveIncidentData(incidentId));
+      dispatch(fetchActiveIncidentData(incidentId))
+      dispatch(fetchIncidentEventTrail(incidentId))
     } catch (error) {
       dispatch(updateWorkflowError(error));
     }

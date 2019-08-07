@@ -104,7 +104,7 @@ class DomainContainer extends React.Component {
   state = {
     open: true,
     anchorEl: null,
-    anchorLang: null,
+    anchorLang: null
   };
 
   handleDrawerOpen = () => {
@@ -232,7 +232,9 @@ class DomainContainer extends React.Component {
           })}
         >
           <RootModal/>
-          {this.props.content}
+          
+            {this.props.content}
+          
         </main>
       </div>
     );
@@ -258,6 +260,14 @@ const mapDispatchToProps = (dispatch) => {
         },
         changeLanguage: (lang) => {
             dispatch(changeLanguage(lang))
+        },
+        showError: (error) => {
+          dispatch({
+            type: "SHOW_NOTIFICATION",
+            error: {
+              message: "Major error in data! Fallback"
+            }
+          })
         }
     }
 }
