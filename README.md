@@ -4,27 +4,13 @@ Incident Management System for Elections Commission of Sri Lanka
 
 # Setting up
 
-## Setting up runtime
+## Backend
+[backend/README.md](https://github.com/ECLK/IncidentManagement/blob/master/backend/README.md)
+Using Python 3 with Django
 
-1. Use Python 3.x and Pip 3.x versions
-2. Install the dependencies by `pip3 install -r requirements.txt `
+## Frontend
+[frontend/README.md](https://github.com/ECLK/IncidentManagement/blob/master/frontend/README.md)
+Using React with Material UI
 
-## Setting up database
-
-Use MySQL 8  
-
-## DB migrations
-Remove the migrations dir if any  
-
-1) flask db init
-2) flask db migrate
-3) flask db upgrade
-
-### Installation for MySQL 5.x
-
-If you are using MySQL 5.x, Change the folllwing in the dump before importiing it
-
-```
-charset = utf8
-collate = utf8_general_ci
-```
+## Database
+Use MySQL 8
