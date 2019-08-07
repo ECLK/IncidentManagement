@@ -12,6 +12,7 @@ import ChangeAssigneeModal from './ChangeAssigneeModal';
 import RequestAdviceModal from './RequestAdviceModal';
 import ProvideAdviceModal from './ProvideAdviceModal';
 import CloseModal from './CloseModal';
+import CompleteOutsideActionModal from './CompleteOutsideActionModal'
 
 const MODAL_COMPONENTS = {
     'RESPOSE_TIME_EDIT': ResponseTimeEditModal,
@@ -21,7 +22,8 @@ const MODAL_COMPONENTS = {
     'CHANGE_ASSIGNEE_MODAL': ChangeAssigneeModal,
     'REQUEST_ADVICE_MODAL': RequestAdviceModal,
     'PROVIDE_ADVICE_MODAL': ProvideAdviceModal,
-    'CLOSE_MODAL': CloseModal
+    'CLOSE_MODAL': CloseModal,
+    'COMPLETE_OUTSIDE_ACTION_MODAL':CompleteOutsideActionModal
     /* other modals */
 }
 

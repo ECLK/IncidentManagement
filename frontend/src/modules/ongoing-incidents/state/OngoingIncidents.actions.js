@@ -453,7 +453,8 @@ export function fetchUpdateWorkflow(incidentId, workflowType, workflowUpdate) {
         workflowUpdate
       );
       dispatch(updateWorkflowSuccess());
-      dispatch(fetchActiveIncidentData(incidentId));
+      dispatch(fetchActiveIncidentData(incidentId))
+      dispatch(fetchIncidentEventTrail(incidentId))
     } catch (error) {
       dispatch(updateWorkflowError(error));
     }
