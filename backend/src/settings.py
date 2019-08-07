@@ -34,7 +34,10 @@ def env_var(key, default=None):
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env_var('django_debug', True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "api.incidents.ecdev.opensource.lk",
+    "127.0.0.1"
+]
 
 
 # Application definition
@@ -56,7 +59,8 @@ INSTALLED_APPS = [
     'src.custom_auth',
     'src.incidents',
     'src.events',
-    'src.reporting'
+    'src.reporting',
+    'src.file_upload'
 ]
 
 MIDDLEWARE = [
@@ -170,3 +174,7 @@ JWT_AUTH = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+# file uload parameters
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

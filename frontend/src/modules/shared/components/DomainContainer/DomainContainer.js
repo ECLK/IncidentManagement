@@ -22,6 +22,9 @@ import {initiateSignOut} from '../../state/Shared.actions'
 import {changeLanguage} from '../../state/Shared.actions';
 
 import RootModal from '../../../modals/components/RootModal'
+import Notification from '../../../notifications/components/Notification';
+import ErrorNotification from '../../../notifications/components/ErrorNotification';
+import ConfirmNotification from '../../../notifications/components/ConfirmNotification';
 
 const HomeLink = props => <Link to="/app/home" {...props} />
 const ReportLink = props => <Link to="/app/report" {...props} />
@@ -145,6 +148,8 @@ class DomainContainer extends React.Component {
 
     return (
       <div className={classes.root}>
+        <ErrorNotification />
+        <ConfirmNotification />
         <CssBaseline />
 
 

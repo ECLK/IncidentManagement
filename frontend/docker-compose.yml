@@ -6,6 +6,6 @@ services:
       dockerfile: Dockerfile
       context: .
     ports:
-      - '81:80'
+      - '80:80'
     environment:
-    - API_BASE=http://localhost:5000
+      - API_BASE=http://localhost:5000
