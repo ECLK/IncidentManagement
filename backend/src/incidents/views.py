@@ -35,8 +35,8 @@ from .services import (
     incident_request_advice,
     incident_provide_advice,
     incident_verify,
-
-    get_user_by_id
+    get_user_by_id,
+    get_police_report_by_incident
 )
 
 from ..events import services as event_service
@@ -108,25 +108,22 @@ class IncidentList(APIView, IncidentResultsSetPagination):
 
     def post(self, request, format=None):
         serializer = IncidentSerializer(data=request.data)
+
         if serializer.is_valid():
             incident = serializer.save()
             create_incident_postscript(incident, request.user)
-
             incident_police_report_data = request.data
             incident_police_report_data["incident"] = serializer.data["id"]
             incident_police_report_serializer = IncidentPoliceReportSerializer(data=incident_police_report_data)
-            # print("serializer.data")
-            # print(type(serializer.data))
-            # return_data = {}
-            # return_data.update(serializer.data)
             return_data = serializer.data
+
             if incident_police_report_serializer.is_valid():
                 incident_police_report = incident_police_report_serializer.save()
                 return_data.update(incident_police_report_serializer.data)
-                # print("return_data")
-                # print(return_data)
+                return_data["id"] = serializer.data["id"]
 
             return Response(return_data, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -154,9 +151,22 @@ class IncidentDetail(APIView):
         """
         incident = get_incident_by_id(incident_id)
         serializer = IncidentSerializer(incident, data=request.data)
+        incident_police_report = get_police_report_by_incident(incident)
+        incident_police_report_data = request.data
+        incident_police_report_data["incident"] = incident_id
+        incident_police_report_serializer = IncidentPoliceReportSerializer(incident_police_report, data=incident_police_report_data)
+        
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return_data = serializer.data
+            
+            if incident_police_report_serializer.is_valid():
+                incident_police_report_serializer.save()
+                return_data.update(incident_police_report_serializer.data)
+                return_data["id"] = incident_id
+
+            return Response(return_data)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
