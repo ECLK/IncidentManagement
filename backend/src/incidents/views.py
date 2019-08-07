@@ -9,6 +9,7 @@ from rest_framework.renderers import (
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from django.db.models import Q
 
 from .models import Incident, StatusType, SeverityType
 from django.contrib.auth.models import User, Group
@@ -16,6 +17,7 @@ from .serializers import (
     IncidentSerializer,
     ReporterSerializer,
     IncidentCommentSerializer,
+    IncidentPoliceReportSerializer,
 )
 from .services import (
     get_incident_by_id,
@@ -59,6 +61,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         return Response(
             dict(
                 [
+                    ("count", self.page.paginator.count),
                     ("pages", self.page.paginator.num_pages),
                     ("pageNumber", self.page.number),
                     ("incidents", data),
@@ -70,9 +73,18 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         incidents = Incident.objects.all()
 
         # filtering
+        param_query = self.request.query_params.get('q', None)
+        if param_query is not None and param_query != "":
+            incidents = incidents.filter(
+                Q(title__icontains=param_query) | Q(description__icontains=param_query))
+
         param_category = self.request.query_params.get('category', None)
         if param_category is not None:
             incidents = incidents.filter(category=param_category)
+
+        param_response_time = self.request.query_params.get('response_time', None)
+        if param_response_time is not None:
+            incidents = incidents.filter(response_time__lte=int(param_response_time))
 
         param_start_date = self.request.query_params.get('start_date', None)
         param_end_date = self.request.query_params.get('end_date', None)
@@ -81,7 +93,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
             incidents = incidents.filter(
                 created_date__range=(param_start_date, param_end_date))
 
-        # this will load all incidents to memory 
+        # this will load all incidents to memory
         # change this to a better way next time
         param_status = self.request.query_params.get('status', None)
         if param_status is not None:
@@ -111,7 +123,21 @@ class IncidentList(APIView, IncidentResultsSetPagination):
             incident = serializer.save()
             create_incident_postscript(incident, request.user)
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            incident_police_report_data = request.data
+            incident_police_report_data["incident"] = serializer.data["id"]
+            incident_police_report_serializer = IncidentPoliceReportSerializer(data=incident_police_report_data)
+            # print("serializer.data")
+            # print(type(serializer.data))
+            # return_data = {}
+            # return_data.update(serializer.data)
+            return_data = serializer.data
+            if incident_police_report_serializer.is_valid():
+                incident_police_report = incident_police_report_serializer.save()
+                return_data.update(incident_police_report_serializer.data)
+                # print("return_data")
+                # print(return_data)
+
+            return Response(return_data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

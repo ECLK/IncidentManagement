@@ -15,8 +15,6 @@ const ErrorNotification = (props) => {
         }
     }
     
-
-    console.log(errors);
     return (
         <>
             {errors && (

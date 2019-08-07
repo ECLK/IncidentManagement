@@ -50,7 +50,8 @@ import { fetchActiveIncidentData } from "../../shared/state/Shared.actions";
 
 export function requestIncidentEventTrail() {
   return {
-    type: REQUEST_INCIDENT_EVENT_TRAIL
+    type: REQUEST_INCIDENT_EVENT_TRAIL,
+    isLoading: true
   };
 }
 
@@ -58,7 +59,8 @@ export function requestIncidentEventTrailSuccess(response) {
   return {
     type: REQUEST_INCIDENT_EVENT_TRAIL_SUCCESS,
     data: response,
-    error: null
+    error: null,
+    isLoading: false
   };
 }
 
@@ -66,7 +68,8 @@ export function requestIncidentEventTrailError(errorResponse) {
   return {
     type: REQUEST_INCIDENT_EVENT_TRAIL_ERROR,
     data: null,
-    error: errorResponse
+    error: errorResponse,
+    isLoading: false
   };
 }
 
@@ -92,7 +95,10 @@ export function postIncidentCommentSuccess(response) {
   return {
     type: POST_INCIDENT_COMMENT_SUCCESS,
     data: response,
-    error: null
+    error: null,
+    confirm: {
+      message: "Comment posted"
+    }
   };
 }
 
@@ -237,7 +243,8 @@ export function resolveEvent(incidentId, eventId, decision) {
 
 export function requestAllIncidents() {
   return {
-    type: REQUEST_ALL_INCIDENTS
+    type: REQUEST_ALL_INCIDENTS,
+    isLoading: true
   };
 }
 
@@ -245,7 +252,8 @@ export function requestAllIncidentsSuccess(response) {
   return {
     type: REQUEST_ALL_INCIDENTS_SUCCESS,
     data: response,
-    error: null
+    error: null,
+    isLoading: false
   };
 }
 
@@ -253,7 +261,8 @@ export function requestAllIncidentsError(errorResponse) {
   return {
     type: REQUEST_ALL_INCIDENTS_ERROR,
     data: null,
-    error: errorResponse
+    error: errorResponse,
+    isLoading: false
   };
 }
 
@@ -264,11 +273,11 @@ export function updateIncidentFilters(filters) {
   };
 }
 
-export function fetchIncidents(filters = {}) {
+export function fetchIncidents(filters = {}, page) {
   return async function(dispatch) {
     dispatch(requestAllIncidents());
     try {
-      const response = await getIncidents(filters);
+      const response = await getIncidents(filters, page);
       dispatch(requestAllIncidentsSuccess(response.data));
     } catch (error) {
       console.error(error);
@@ -279,7 +288,8 @@ export function fetchIncidents(filters = {}) {
 
 export function requestAllUsers() {
   return {
-    type: REQUEST_ALL_USERS
+    type: REQUEST_ALL_USERS,
+    isLoading: true
   };
 }
 
@@ -287,7 +297,8 @@ export function requestAllUsersSuccess(response) {
   return {
     type: REQUEST_ALL_USERS_SUCCESS,
     data: response,
-    error: null
+    error: null,
+    isLoading: false
   };
 }
 
@@ -295,7 +306,8 @@ export function requestAllUsersError(errorResponse) {
   return {
     type: REQUEST_ALL_USERS_ERROR,
     data: null,
-    error: errorResponse
+    error: errorResponse,
+    isLoading: false
   };
 }
 
@@ -313,7 +325,8 @@ export function fetchAllUsers() {
 
 export function updateIncidentAssignee() {
   return {
-    type: UPDATE_INCIDENT_ASSIGNEE
+    type: UPDATE_INCIDENT_ASSIGNEE,
+    isLoading: true
   };
 }
 
@@ -321,7 +334,8 @@ export function updateIncidentAssigneeSuccess(response) {
   return {
     type: UPDATE_INCIDENT_ASSIGNEE_SUCCESS,
     data: response,
-    error: null
+    error: null,
+    isLoading: false
   };
 }
 
@@ -329,7 +343,8 @@ export function updateIncidentAssigneeError(errorResponse) {
   return {
     type: UPDATE_INCIDENT_ASSIGNEE_ERROR,
     data: null,
-    error: errorResponse
+    error: errorResponse,
+    isLoading: false
   };
 }
 
@@ -358,7 +373,8 @@ export function escallateIncident() {
   return {
     type: REQUEST_INCIDENT_ESCALATE,
     data: null,
-    error: null
+    error: null,
+    isLoading: true
   };
 }
 
@@ -366,7 +382,8 @@ export function escallateIncidentSuccess(response) {
   return {
     type: REQUEST_INCIDENT_ESCALATE_SUCCESS,
     data: response,
-    error: null
+    error: null,
+    isLoading: false
   };
 }
 
@@ -374,7 +391,8 @@ export function escallateIncidentError(error) {
   return {
     type: REQUEST_INCIDENT_ESCALATE_ERROR,
     data: null,
-    error: error
+    error: error,
+    isLoading: false
   };
 }
 
@@ -395,15 +413,12 @@ export function fetchEscallateIncident(incidentId, assigneeId) {
   };
 }
 
-export function updateWorkflow(incidentId, workflowType, workflowUpdate) {
+export function updateWorkflow() {
   return {
     type: REQUEST_WORKFLOW_UPDATE,
-    data: {
-      incidentId,
-      workflowType,
-      workflowUpdate
-    },
-    error: null
+    data: null,
+    error: null,
+    isLoading: true
   };
 }
 
@@ -411,7 +426,11 @@ export function updateWorkflowSuccess() {
   return {
     type: REQUEST_WORKFLOW_UPDATE_SUCCESS,
     data: null,
-    error: null
+    error: null,
+    isLoading: false,
+    confirm: {
+      message: "Workflow action success!"
+    }
   };
 }
 
@@ -419,13 +438,14 @@ export function updateWorkflowError(error) {
   return {
     type: REQUEST_WORKFLOW_UPDATE_ERROR,
     data: null,
-    error: error
+    error: error,
+    isLoading: false
   };
 }
 
 export function fetchUpdateWorkflow(incidentId, workflowType, workflowUpdate) {
   return async function(dispatch) {
-    dispatch(updateWorkflow(incidentId, workflowType, workflowUpdate));
+    dispatch(updateWorkflow());
     try {
       let response = await incidentAPI.updateIncidentWorkflow(
         incidentId,

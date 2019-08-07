@@ -25,6 +25,7 @@ import RootModal from '../../../modals/components/RootModal'
 import Notification from '../../../notifications/components/Notification';
 import ErrorNotification from '../../../notifications/components/ErrorNotification';
 import ConfirmNotification from '../../../notifications/components/ConfirmNotification';
+import LoadingNotification from '../../../notifications/components/LoadingNotification';
 
 const HomeLink = props => <Link to="/app/home" {...props} />
 const ReportLink = props => <Link to="/app/report" {...props} />
@@ -103,7 +104,7 @@ class DomainContainer extends React.Component {
   state = {
     open: true,
     anchorEl: null,
-    anchorLang: null,
+    anchorLang: null
   };
 
   handleDrawerOpen = () => {
@@ -150,6 +151,7 @@ class DomainContainer extends React.Component {
       <div className={classes.root}>
         <ErrorNotification />
         <ConfirmNotification />
+        <LoadingNotification />
         <CssBaseline />
 
 
@@ -230,7 +232,9 @@ class DomainContainer extends React.Component {
           })}
         >
           <RootModal/>
-          {this.props.content}
+          
+            {this.props.content}
+          
         </main>
       </div>
     );
@@ -256,6 +260,14 @@ const mapDispatchToProps = (dispatch) => {
         },
         changeLanguage: (lang) => {
             dispatch(changeLanguage(lang))
+        },
+        showError: (error) => {
+          dispatch({
+            type: "SHOW_NOTIFICATION",
+            error: {
+              message: "Major error in data! Fallback"
+            }
+          })
         }
     }
 }

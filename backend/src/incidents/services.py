@@ -6,6 +6,7 @@ from .models import (
     SeverityType,
     Reporter,
     IncidentComment,
+    IncidentPoliceReport,
 )
 from django.contrib.auth.models import User, Group
 
@@ -339,6 +340,9 @@ def incident_complete_external_action(user: User, incident: Incident, comment: s
 
 
 def incident_request_advice(user: User, incident: Incident, assignee: User, comment: str):
+    if incident.current_status == StatusType.ADVICE_REQESTED.name:
+        raise WorkflowException("Incident already has a pending advice request")
+
     status = IncidentStatus(
         current_status=StatusType.ADVICE_REQESTED,
         previous_status=incident.current_status,

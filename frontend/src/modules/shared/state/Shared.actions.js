@@ -53,6 +53,7 @@ import * as localStorage from '../../../utils/localStorage';
 export function requestIncidentCatogories() {
     return {
         type: REQUEST_INCIDENT_CATAGORIES,
+        isLoading: true
     }
 }
 
@@ -60,7 +61,8 @@ export function recieveIncidentCatogories(catogories) {
     return {
         type: REQUEST_INCIDENT_CATAGORIES_SUCCESS,
         data: catogories,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -68,7 +70,8 @@ export function recieveIncidentCatogoriesError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_CATAGORIES_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -90,6 +93,7 @@ export function fetchCatogories(){
 export function requestDistricts() {
     return {
         type: REQUEST_INCIDENT_DISTRICTS,
+        isLoading: true
     }
 }
 
@@ -97,7 +101,8 @@ export function receiveDistricts(response) {
     return {
         type: REQUEST_INCIDENT_DISTRICTS_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -105,7 +110,8 @@ export function receiveDistrictsError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_DISTRICTS_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -126,6 +132,7 @@ export function fetchDistricts(){
 export function requestPoliceStations() {
     return {
         type: REQUEST_INCIDENT_POLICE_STATIONS,
+        isLoading: true
     }
 }
 
@@ -133,7 +140,8 @@ export function receivePoliceStations(response) {
     return {
         type: REQUEST_INCIDENT_POLICE_STATIONS_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -141,7 +149,8 @@ export function receivePoliceStationsError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_POLICE_STATIONS_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -162,6 +171,7 @@ export function fetchPoliceStations(){
 export function requestPollingStations() {
     return {
         type: REQUEST_INCIDENT_POLLING_STATIONS,
+        isLoading: true
     }
 }
 
@@ -169,7 +179,8 @@ export function receivePollingStations(response) {
     return {
         type: REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -177,7 +188,8 @@ export function receivePollingStationsError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_POLLING_STATIONS_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -198,6 +210,7 @@ export function fetchPollingStations(){
 export function requestDSDivisions() {
     return {
         type: REQUEST_INCIDENT_DS_DIVISIONS,
+        isLoading: true
     }
 }
 
@@ -205,7 +218,8 @@ export function receiveDSDivisions(response) {
     return {
         type: REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -213,7 +227,8 @@ export function receiveDSDivisionsError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_DS_DIVISIONS_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -234,6 +249,7 @@ export function fetchDSDivisions(){
 export function requestWards() {
     return {
         type: REQUEST_INCIDENT_WARDS,
+        isLoading: true
     }
 }
 
@@ -241,7 +257,8 @@ export function receiveWards(response) {
     return {
         type: REQUEST_INCIDENT_WARDS_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -249,7 +266,8 @@ export function receiveWardsError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_WARDS_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -271,6 +289,7 @@ export function fetchWards(){
 export function requestActiveIncidentData() {
     return {
         type: ACTIVE_INCIDENT_GET_DATA_REQUEST,
+        isLoading: true
     }
 }
 
@@ -278,7 +297,8 @@ export function getActiveIncidentDataSuccess(response) {
     return {
         type: ACTIVE_INCIDENT_GET_DATA_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -286,7 +306,8 @@ export function getActiveIncidentDataError(errorResponse) {
     return {
         type: ACTIVE_INCIDENT_GET_DATA_ERROR,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -301,7 +322,6 @@ export function fetchActiveIncidentData(incidentId) {
                 "reporter": responseReporter.data
             }));
         }catch(error){
-            console.log(error);
             dispatch(getActiveIncidentDataError(error));
         }
     }
@@ -313,6 +333,7 @@ export function fetchActiveIncidentData(incidentId) {
 export function requestSignIn() {
     return {
         type: SIGN_IN_REQUEST,
+        isLoading: true
     }
 }
 
@@ -320,7 +341,8 @@ export function requestSignInSuccess(response) {
     return {
         type: SIGN_IN_REQUEST_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -328,7 +350,8 @@ export function requestSignInError(errorResponse) {
     return {
         type: SIGN_IN_REQUEST_ERROR,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
