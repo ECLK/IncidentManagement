@@ -15,6 +15,8 @@ import PrivateRoute from "./PrivateRoute";
 import {ReviewIncidentListView} from '../modules/ongoing-incidents';
 import DomainContainer from '../modules/shared/components/DomainContainer';
 
+import { LandingPage } from '../modules/guest-view';
+
 import { Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 
@@ -65,8 +67,9 @@ class MainRouter extends Component {
               </Switch>
             </PrivateRoute>
 
-          <Route exact path="/" component={SignInPage} />
+          <Route exact path="/" component={LandingPage} />
           <Route path="/sign-in" component={SignInPage} />
+          <Route path="/report" component={Report} />
           </div>
         </Router>
       </IntlProvider>
