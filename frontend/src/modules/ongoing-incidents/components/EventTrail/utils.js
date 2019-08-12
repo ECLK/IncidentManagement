@@ -19,3 +19,9 @@ export function getDateDiff(event){
         return `${years} years ago`;
     }
 }
+
+export function  calculateDeadline(incident){
+    console.log(incident)
+    //
+    return "2 hours remaining"
+}

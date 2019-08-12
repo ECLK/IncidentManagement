@@ -26,6 +26,7 @@ import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 
 import EventList from './EventTrail/EventList';
 import Editor from './EventTrail/RichTextEditor'
+import DropZone from '../../shared/components/DropZone'
 
 import {
     fetchIncidentEventTrail,
@@ -39,9 +40,6 @@ import {
 } from '../state/OngoingIncidents.actions';
 import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 import { EventActions } from './EventTrail'
-
-
-
 import {showModal} from '../../modals/state/modal.actions'
 
 
@@ -642,6 +640,7 @@ class NavTabs extends Component {
                                     resolveEvent={this.onResolveEvent}
                                 />
                                 <Editor/>
+                                <DropZone/>
                             </div>
                         </div>
                     </Grid>
