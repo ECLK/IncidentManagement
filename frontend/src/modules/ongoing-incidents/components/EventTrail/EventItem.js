@@ -1,5 +1,6 @@
 import React from 'react';
-import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux';
+import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from './Avatar';
@@ -131,7 +132,7 @@ function getSecondaryItem(event){
     if(event.action === "COMMENTED" || event.action === "OUTCOME_ADDED"){
         return (
             <div>
-                {event.data.comment.body}
+                { ReactHtmlParser(event.data.comment.body)}
             </div>
         )
     }

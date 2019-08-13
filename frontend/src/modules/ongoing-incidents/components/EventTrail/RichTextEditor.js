@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw } from 'draft-js';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux';
+import draftToHtml from 'draftjs-to-html';
 
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -28,9 +29,11 @@ const styles = theme => ({
 
 
 const postComment = (incidentId, editorState, isOutcome, dispatch) => {
+    let commentBody = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    console.log(commentBody);
     let commentObj = {
         incident: incidentId,
-        comment : editorState.getCurrentContent().getPlainText(),
+        comment : commentBody,
         isOutcome: isOutcome
     }
     dispatch(submitIncidentComment(incidentId, commentObj))
