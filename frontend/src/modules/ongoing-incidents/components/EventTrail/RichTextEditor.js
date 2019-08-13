@@ -70,7 +70,10 @@ const EditorComponent = (props) => {
                 />
                 <Button
                 variant="contained" 
-                onClick={()=>{postComment( activeIncidentId, editorState, isOutcome, dispatch)}}>
+                onClick={()=>{
+                    postComment( activeIncidentId, editorState, isOutcome, dispatch)
+                    setEditorState(initialEditorState)
+                }}>
                     Post
                 </Button>
             </div>
