@@ -1,82 +1,110 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { useDispatch, useSelector } from 'react-redux'
 
-import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
+import { incidentFileUpload } from '../../incident-filing/state/IncidentFiling.actions'
 
-const styles = (theme) => ({
+const baseStyle = {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '20px',
+    borderWidth: 2,
+    borderRadius: 2,
+    borderColor: '#eeeeee',
+    borderStyle: 'dashed',
+    backgroundColor: '#fafafa',
+    color: '#bdbdbd',
+    outline: 'none',
+    transition: 'border .24s ease-in-out'
+};
 
-    thumbsContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        marginTop: 16,
-    },
-    thumb: {
-        display: 'inline-flex',
-        borderRadius: 2,
-        border: '1px solid #eaeaea',
-        marginBottom: 8,
-        marginRight: 8,
-        width: 100,
-        height: 100,
-        padding: 4,
-        boxSizing: 'border-box'
-    },
-    thumbInner: {
-        display: 'flex',
-        minWidth: 0,
-        overflow: 'hidden'
-    },
-    img: {
-        display: 'block',
-        width: 'auto',
-        height: '100%'
-    }
-});
+const activeStyle = {
+    borderColor: '#2196f3'
+};
 
+const acceptStyle = {
+    borderColor: '#00e676'
+};
 
-function Previews(props) {
+const rejectStyle = {
+    borderColor: '#ff1744'
+};
 
-    const [files, setFiles] = useState([]);
-    const { getRootProps, getInputProps } = useDropzone({
-        accept: 'image/*',
-        onDrop: acceptedFiles => {
-            setFiles(acceptedFiles.map(file => Object.assign(file, {
-                preview: URL.createObjectURL(file)
-            })));
-        }
+export default function Dropzone(props) {
+
+    const {
+        getRootProps,
+        getInputProps,
+        isDragActive,
+        isDragAccept,
+        isDragReject,
+        acceptedFiles
+    } = useDropzone({ 
+        accept: '',
+        multiple: false,
+        maxSize: 104857600 //100mb
     });
 
-    const {classes} = props
+    const dispatch = useDispatch()
+    const { id } = useSelector((state)=>(state.sharedReducer.activeIncident.data))
 
-    const thumbs = files.map(file => (
-        <div className={classes.thumb} key={file.name}>
-            <div className={classes.thumbInner}>
-                <img
-                    src={file.preview}
-                    className={classes.img}
-                />
-            </div>
-        </div>
+    const files = acceptedFiles.map(file => (
+        <li key={file.path}>
+          {file.path} - {file.size} bytes
+        </li>
     ));
 
-    useEffect(() => () => {
-        // Make sure to revoke the data uris to avoid memory leaks
-        files.forEach(file => URL.revokeObjectURL(file.preview));
-    }, [files]);
+    console.log(files)
+
+    const style = useMemo(() => ({
+        ...baseStyle,
+        ...(isDragActive ? activeStyle : {}),
+        ...(isDragAccept ? acceptStyle : {}),
+        ...(isDragReject ? rejectStyle : {})
+    }), [
+            isDragActive,
+            isDragReject
+    ]);
+
+    const uploadFile = (acceptedFiles) => {
+
+        const formData = new FormData();
+        formData.append("file", acceptedFiles[0]);
+
+        dispatch(incidentFileUpload(id,formData))
+
+        // const reader = new FileReader()
+
+        // reader.onabort = () => console.log('file reading was aborted')
+        // reader.onerror = () => console.log('file reading has failed')
+        // reader.onload = () => {
+        //     // Do whatever you want with the file contents
+        //     const binaryStr = reader.result
+        //     console.log(binaryStr)
+        //     const data = new FormData() 
+        //     data.append('file', binaryStr)
+        // }
+        
+        // acceptedFiles.forEach(file => reader.readAsBinaryString(file))
+    }
 
     return (
         <section className="container">
-            <div {...getRootProps({ className: 'dropzone' })}>
+            <div {...getRootProps({ style })}>
                 <input {...getInputProps()} />
                 <p>Drag 'n' drop some files here, or click to select files</p>
             </div>
-            <aside className={classes.thumbsContainer}>
-                {thumbs}
-            </aside>
+
+            <div style={{display:'flex'}}>
+            <h4>Selected File: {files[0] ? files[0].key : 'None'}</h4>
+            <Button disabled={!files[0]} onClick={()=>{uploadFile(acceptedFiles)}}>
+                Upload
+            </Button>
+            </div>
         </section>
     );
 }
-
-export default withStyles(styles)(Previews)

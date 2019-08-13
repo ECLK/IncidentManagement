@@ -17,9 +17,14 @@ import {
     INCIDENT_GET_DATA_SUCCESS,
     INCIDENT_GET_DATA_ERROR,
 
-    RESET_INCIDENT_FORM
+    RESET_INCIDENT_FORM,
+
+    INCIDENT_FILE_UPLOAD_REQUEST,
+    INCIDENT_FILE_UPLOAD_SUCCESS,
+    INCIDENT_FILE_UPLOAD_ERROR,
+
 } from './IncidentFiling.types'
-import { createIncident, updateIncident, updateReporter, getIncident, getReporter } from '../../../api/incident';
+import { createIncident, updateIncident, updateReporter, getIncident, getReporter, uploadFile } from '../../../api/incident';
 
 import { getActiveIncidentDataSuccess, fetchActiveIncidentData } from '../../shared/state/Shared.actions'
 
@@ -258,6 +263,47 @@ export function resetIncidentForm() {
         error: null
     }
 }
+
+
+export function incidentFileUploadRequest() {
+    return {
+        type: INCIDENT_FILE_UPLOAD_REQUEST,
+        data: null,
+        error: null
+    }
+}
+
+export function incidentFileUploadSuccess() {
+    return {
+        type: INCIDENT_FILE_UPLOAD_SUCCESS,
+        data: null,
+        error: null
+    }
+}
+
+export function incidentFileUploadError() {
+    return {
+        type: INCIDENT_FILE_UPLOAD_ERROR,
+        data: null,
+        error: null
+    }
+}
+
+export function incidentFileUpload(incidentId, formData) {
+    console.log(incidentId)
+    return async (dispatch) => {
+        try{
+            dispatch(incidentFileUploadRequest());
+            const result = await uploadFile(incidentId, formData)
+            dispatch(incidentFileUploadSuccess())
+        }catch(e){
+            dispatch(incidentFileUploadError())
+        }
+    }
+}
+
+
+
 
 
 

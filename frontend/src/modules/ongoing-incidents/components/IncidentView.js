@@ -102,6 +102,7 @@ const styles = theme => ({
     },
     mainArea: {
         marginLeft: theme.spacing.unit * 4,
+        marginBottom: theme.spacing.unit * 20
     },
     verifyIncidentDialog: {
         position: 'absolute',
@@ -640,7 +641,7 @@ class NavTabs extends Component {
                                     resolveEvent={this.onResolveEvent}
                                 />
                                 <Editor/>
-                                <DropZone/>
+                                {/* <DropZone/> */}
                             </div>
                         </div>
                     </Grid>

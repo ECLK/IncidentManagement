@@ -131,7 +131,7 @@ const EventActions = (props) => {
                     <Avatar>
                         <HourglassEmptyIcon />
                     </Avatar>
-                    <ListItemText primary="Close this before" secondary={`5.30 p.m. (${calculateDeadline(activeIncident)})`} />
+                    <ListItemText primary="Close this before" secondary={calculateDeadline(activeIncident)} />
                 </ListItem>
 
                 <ListItem>
