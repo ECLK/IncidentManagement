@@ -49,9 +49,9 @@ import {
 
     RESET_ACTIVE_INCIDENT,
 
-    REQUEST_INCIDENT_DS_DIVISIONS,
-    REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS,
-    REQUEST_INCIDENT_DS_DIVISIONS_FAILURE,
+    REQUEST_INCIDENT_POLLING_DIVISIONS,
+    REQUEST_INCIDENT_POLLING_DIVISIONS_SUCCESS,
+    REQUEST_INCIDENT_POLLING_DIVISIONS_FAILURE,
 
 
 } from './Shared.types'
@@ -63,10 +63,10 @@ import {
     getDistricts,
     getDivisionalSecretariats,
     getGramaNiladharis,
+    getPollingDivisions,
     getPoliceStations, 
     getPollingStations, 
-    getWards, 
-    getDSDivisions
+    getWards
 } from '../../../api/shared';
 import { signIn } from '../../../api/user';
 import * as localStorage from '../../../utils/localStorage';
@@ -255,6 +255,44 @@ export function fetchGramaNiladharis() {
     }
 }
 
+// Get Polling Divisions
+
+export function requestPollingDivisions() {
+    return {
+        type: REQUEST_INCIDENT_POLLING_DIVISIONS,
+    }
+}
+
+export function receivePollingDivisions(response) {
+    return {
+        type: REQUEST_INCIDENT_POLLING_DIVISIONS_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function receivePollingDivisionsError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_POLLING_DIVISIONS_FAILURE,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchPollingDivisions(){
+    return async function(dispatch){
+        dispatch(requestPollingDivisions());
+        try{
+            const response = await getPollingDivisions();
+            await dispatch(receivePollingDivisions(response.data));
+        }catch(error){
+            await dispatch(receivePollingDivisionsError(error));
+        }
+    }
+}
+
+
+
 // Get Police stations
 
 export function requestPoliceStations() {
@@ -327,41 +365,6 @@ export function fetchPollingStations(){
     }
 }
 
-// Get DS Divisions
-
-export function requestDSDivisions() {
-    return {
-        type: REQUEST_INCIDENT_DS_DIVISIONS,
-    }
-}
-
-export function receiveDSDivisions(response) {
-    return {
-        type: REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS,
-        data: response,
-        error: null
-    }
-}
-
-export function receiveDSDivisionsError(errorResponse) {
-    return {
-        type: REQUEST_INCIDENT_DS_DIVISIONS_FAILURE,
-        data: null,
-        error: errorResponse
-    }
-}
-
-export function fetchDSDivisions(){
-    return async function(dispatch){
-        dispatch(requestDSDivisions());
-        try{
-            const response = await getDSDivisions();
-            await dispatch(receiveDSDivisions(response.data));
-        }catch(error){
-            await dispatch(receiveDSDivisionsError(error));
-        }
-    }
-}
 
 // Get Wards
 

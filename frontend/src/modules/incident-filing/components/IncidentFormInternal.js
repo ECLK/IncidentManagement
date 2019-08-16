@@ -37,12 +37,12 @@ import {
     fetchDistricts,
     fetchDivisionalSecretariats,
     fetchGramaNiladharis,
+    fetchPollingDivisions,
     fetchPoliceStations,
     fetchPollingStations,
     fetchWards,
     fetchActiveIncidentData,
-    resetActiveIncident,
-    fetchDSDivisions
+    resetActiveIncident
 } from '../../shared/state/Shared.actions';
 
 const styles = theme => ({
@@ -93,12 +93,7 @@ class IncidentFormInternal extends Component {
         district: "",
         divisionalSecretariat: "",
         gramaNiladhari: "",
-        polling_divisions: [
-            { value: '1', label: 'Kollonnawa' },
-            { value: '2', label: 'Wattala' },
-            { value: '3', label: 'Panadura' },
-        ],
-        polling_division_id: "",
+        pollingDivision: "",
         polling_stations: [
             { value: '1', label: 'Thurston College, Colombo 03' },
             { value: '2', label: 'Royal College, Colombo 07' },
@@ -126,10 +121,11 @@ class IncidentFormInternal extends Component {
         this.props.getDistricts();
         this.props.getDivisionalSecretariats();
         this.props.getGramaNiladharis();
+        this.props.getPollingDivisions();
+        this.props.getPollingStations();
         this.props.getPoliceStations();
         this.props.getPollingStations();
         this.props.getWards();
-        this.props.getDSDivisions();
 
         this.props.resetIncidentForm();
 
@@ -379,18 +375,18 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="polling_division_id">Polling Division</InputLabel>
+                                                <InputLabel htmlFor="pollingDivision">Polling Division</InputLabel>
                                                 <Select
-                                                    value={values.polling_division_id}
+                                                    value={values.pollingDivision}
                                                     onChange={handleChange}
                                                     inputProps={{
-                                                        name: 'polling_division_id',
-                                                        id: 'polling_division_id',
+                                                        name: 'pollingDivision',
+                                                        id: 'pollingDivision',
                                                     }}
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {values.polling_divisions.map((c, k) => (
-                                                        <MenuItem value={c.value} key={k}>{c.label}</MenuItem>
+                                                    {this.props.pollingDivisions.map((c, k) => (
+                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
@@ -563,11 +559,11 @@ const mapStateToProps = (state, ownProps) => {
         provinces: state.sharedReducer.provinces,
         divisionalSecretariats: state.sharedReducer.divisionalSecretariats,
         gramaNiladharis: state.sharedReducer.gramaNiladharis,
+        pollingDivisions: state.sharedReducer.pollingDivisions,
         pollingStations: state.sharedReducer.pollingStations,
         policeStations: state.sharedReducer.policeStations,
         wards: state.sharedReducer.wards,
         elections: state.sharedReducer.elections,
-        dsDivisions: state.sharedReducer.dsDivisions,
 
         ...ownProps
     }
@@ -606,6 +602,9 @@ const mapDispatchToProps = (dispatch) => {
         getGramaNiladharis: () => {
             dispatch(fetchGramaNiladharis());
         },
+        getPollingDivisions: () => {
+            dispatch(fetchPollingDivisions())
+        },
         getPollingStations: () => {
             dispatch(fetchPollingStations())
         },
@@ -626,9 +625,6 @@ const mapDispatchToProps = (dispatch) => {
 
         resetIncidentForm: () => {
             dispatch(resetIncidentForm())
-        },
-        getDSDivisions: () => {
-            dispatch(fetchDSDivisions());
         }
     }
 }

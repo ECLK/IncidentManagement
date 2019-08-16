@@ -2,9 +2,8 @@ import { events } from "./events";
 import { incidents } from "./incidents";
 import { reporters } from "./reporters";
 import { users } from "./users";
-import { ds_divisions } from "./ds_divisions";
 import { provinces, districts, divisionalSecretariats, gramaNiladharis } from "./locations";
-import { polling_divisions } from "./polling_divisions";
+import { polling_divisions } from "./polling";
 import * as storage from "../utils/localStorage";
 import * as auth from "../utils/authorization";
 import moment from "moment";
@@ -36,6 +35,13 @@ export function getGramaNiladharis() {
         status: 200,
         data: gramaNiladharis
     }
+}
+
+export function getPollingDivisions() {
+    return {
+        status: 200,
+        data: polling_divisions
+    };
 }
 
 function getCurrentUser() {
@@ -478,20 +484,6 @@ export async function signIn(userName, password) {
     return {
         user: users[user],
         authenticated: true
-    };
-}
-
-export function getDSDivisions() {
-    return {
-        status: 200,
-        data: ds_divisions
-    };
-}
-
-export function getPollingDivisions() {
-    return {
-        status: 200,
-        data: polling_divisions
     };
 }
 
