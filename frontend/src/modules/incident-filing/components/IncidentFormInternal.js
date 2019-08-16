@@ -94,12 +94,7 @@ class IncidentFormInternal extends Component {
         divisionalSecretariat: "",
         gramaNiladhari: "",
         pollingDivision: "",
-        polling_stations: [
-            { value: '1', label: 'Thurston College, Colombo 03' },
-            { value: '2', label: 'Royal College, Colombo 07' },
-            { value: '3', label: 'St Peter\'s College, Colombo 04' },
-        ],
-        polling_division_id: "",
+        pollingStation: "",
         police_stations: [
             { value: '1', label: 'Grandpass' },
             { value: '2', label: 'Pettah' },
@@ -393,18 +388,18 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="polling_station_id">Polling Station</InputLabel>
+                                                <InputLabel htmlFor="pollingStation">Polling Station</InputLabel>
                                                 <Select
-                                                    value={values.polling_station_id}
+                                                    value={values.pollingStation}
                                                     onChange={handleChange}
                                                     inputProps={{
-                                                        name: 'polling_station_id',
-                                                        id: 'polling_station_id',
+                                                        name: 'pollingStation',
+                                                        id: 'pollingStation',
                                                     }}
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.pollingStations.map((c, k) => (
-                                                        <MenuItem value={c.value} key={k}>{c.label}</MenuItem>
+                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>

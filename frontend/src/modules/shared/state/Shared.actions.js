@@ -291,6 +291,42 @@ export function fetchPollingDivisions(){
     }
 }
 
+// Get Polling Stations
+
+export function requestPollingStations() {
+    return {
+        type: REQUEST_INCIDENT_POLLING_STATIONS,
+    }
+}
+
+export function receivePollingStations(response) {
+    return {
+        type: REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function receivePollingStationsError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_POLLING_STATIONS_FAILURE,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchPollingStations(){
+    return async function(dispatch){
+        dispatch(requestPollingStations());
+        try{
+            const response = await getPollingStations();
+            await dispatch(receivePollingStations(response.data));
+        }catch(error){
+            await dispatch(receivePollingStationsError(error));
+        }
+    }
+}
+
 
 
 // Get Police stations
@@ -325,42 +361,6 @@ export function fetchPoliceStations(){
             await dispatch(receivePoliceStations(response.data));
         }catch(error){
             await dispatch(receivePoliceStationsError(error));
-        }
-    }
-}
-
-// Get Polling Stations
-
-export function requestPollingStations() {
-    return {
-        type: REQUEST_INCIDENT_POLLING_STATIONS,
-    }
-}
-
-export function receivePollingStations(response) {
-    return {
-        type: REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS,
-        data: response,
-        error: null
-    }
-}
-
-export function receivePollingStationsError(errorResponse) {
-    return {
-        type: REQUEST_INCIDENT_POLLING_STATIONS_FAILURE,
-        data: null,
-        error: errorResponse
-    }
-}
-
-export function fetchPollingStations(){
-    return async function(dispatch){
-        dispatch(requestPollingStations());
-        try{
-            const response = await getPollingStations();
-            await dispatch(receivePollingStations(response.data));
-        }catch(error){
-            await dispatch(receivePollingStationsError(error));
         }
     }
 }

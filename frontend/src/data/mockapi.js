@@ -3,7 +3,7 @@ import { incidents } from "./incidents";
 import { reporters } from "./reporters";
 import { users } from "./users";
 import { provinces, districts, divisionalSecretariats, gramaNiladharis } from "./locations";
-import { polling_divisions } from "./polling";
+import { polling_divisions, polling_stations } from "./polling";
 import * as storage from "../utils/localStorage";
 import * as auth from "../utils/authorization";
 import moment from "moment";
@@ -41,6 +41,13 @@ export function getPollingDivisions() {
     return {
         status: 200,
         data: polling_divisions
+    };
+}
+
+export function getPollingStations() {
+    return {
+        status: 200,
+        data: polling_stations
     };
 }
 

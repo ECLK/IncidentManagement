@@ -32,7 +32,8 @@ export const getPoliceStations = async () => {
 }
 
 export const getPollingStations = async () => {
-    return (await handler.get('/pollingstations')).data;
+    // return (await handler.get('/pollingstations')).data;
+    return mockapi.getPollingStations();
 }
 
 export const getWards = async () => {
