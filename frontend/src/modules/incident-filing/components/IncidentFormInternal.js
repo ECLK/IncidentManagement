@@ -36,6 +36,7 @@ import {
     fetchProvinces,
     fetchDistricts,
     fetchDivisionalSecretariats,
+    fetchGramaNiladharis,
     fetchPoliceStations,
     fetchPollingStations,
     fetchWards,
@@ -91,6 +92,7 @@ class IncidentFormInternal extends Component {
         province: "",
         district: "",
         divisionalSecretariat: "",
+        gramaNiladhari: "",
         polling_divisions: [
             { value: '1', label: 'Kollonnawa' },
             { value: '2', label: 'Wattala' },
@@ -123,6 +125,7 @@ class IncidentFormInternal extends Component {
         this.props.getProvinces();
         this.props.getDistricts();
         this.props.getDivisionalSecretariats();
+        this.props.getGramaNiladharis();
         this.props.getPoliceStations();
         this.props.getPollingStations();
         this.props.getWards();
@@ -358,18 +361,18 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="grama_niladhari_division">Grama Niladhari Division</InputLabel>
+                                                <InputLabel htmlFor="gramaNiladhari">Grama Niladhari Division</InputLabel>
                                                 <Select
-                                                    value={values.grama_niladhari_id}
+                                                    value={values.gramaNiladhari}
                                                     onChange={handleChange}
                                                     inputProps={{
-                                                        name: 'grama_niladhari_division',
-                                                        id: 'grama_niladhari_division',
+                                                        name: 'gramaNiladhari',
+                                                        id: 'gramaNiladhari',
                                                     }}
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {values.polling_divisions.map((c, k) => (
-                                                        <MenuItem value={c.value} key={k}>{c.label}</MenuItem>
+                                                    {this.props.gramaNiladharis.map((c, k) => (
+                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
@@ -559,6 +562,7 @@ const mapStateToProps = (state, ownProps) => {
         districts: state.sharedReducer.districts,
         provinces: state.sharedReducer.provinces,
         divisionalSecretariats: state.sharedReducer.divisionalSecretariats,
+        gramaNiladharis: state.sharedReducer.gramaNiladharis,
         pollingStations: state.sharedReducer.pollingStations,
         policeStations: state.sharedReducer.policeStations,
         wards: state.sharedReducer.wards,
@@ -598,6 +602,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         getDivisionalSecretariats: () => {
             dispatch(fetchDivisionalSecretariats())
+        },
+        getGramaNiladharis: () => {
+            dispatch(fetchGramaNiladharis());
         },
         getPollingStations: () => {
             dispatch(fetchPollingStations())

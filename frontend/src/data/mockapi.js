@@ -3,7 +3,7 @@ import { incidents } from "./incidents";
 import { reporters } from "./reporters";
 import { users } from "./users";
 import { ds_divisions } from "./ds_divisions";
-import { provinces, districts, divisionalSecretariats } from "./locations";
+import { provinces, districts, divisionalSecretariats, gramaNiladharis } from "./locations";
 import { polling_divisions } from "./polling_divisions";
 import * as storage from "../utils/localStorage";
 import * as auth from "../utils/authorization";
@@ -29,6 +29,13 @@ export function getDivisionalSecretariats() {
         status: 200,
         data: divisionalSecretariats
     };
+}
+
+export function getGramaNiladharis() {
+    return {
+        status: 200,
+        data: gramaNiladharis
+    }
 }
 
 function getCurrentUser() {

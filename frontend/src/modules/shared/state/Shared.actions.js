@@ -1,13 +1,25 @@
 import axios from 'axios';
 
 import {
-    REQUEST_INCIDENT_CATAGORIES, REQUEST_INCIDENT_CATAGORIES_SUCCESS, REQUEST_INCIDENT_CATAGORIES_FAILURE,
+    REQUEST_INCIDENT_CATAGORIES, 
+    REQUEST_INCIDENT_CATAGORIES_SUCCESS, 
+    REQUEST_INCIDENT_CATAGORIES_FAILURE,
 
-    REQUEST_INCIDENT_PROVINCES, REQUEST_INCIDENT_PROVINCES_SUCCESS, REQUEST_INCIDENT_PROVINCES_FAILURE,
+    REQUEST_INCIDENT_PROVINCES, 
+    REQUEST_INCIDENT_PROVINCES_SUCCESS, 
+    REQUEST_INCIDENT_PROVINCES_FAILURE,
 
-    REQUEST_INCIDENT_DISTRICTS, REQUEST_INCIDENT_DISTRICTS_SUCCESS, REQUEST_INCIDENT_DISTRICTS_FAILURE,
+    REQUEST_INCIDENT_DISTRICTS, 
+    REQUEST_INCIDENT_DISTRICTS_SUCCESS, 
+    REQUEST_INCIDENT_DISTRICTS_FAILURE,
 
-    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS, REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_SUCCESS, REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_FAILURE,
+    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS, 
+    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_SUCCESS, 
+    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_FAILURE,
+
+    REQUEST_INCIDENT_GRAMA_NILADHARIS, 
+    REQUEST_INCIDENT_GRAMA_NILADHARIS_SUCCESS,
+    REQUEST_INCIDENT_GRAMA_NILADHARIS_FAILURE,
 
     REQUEST_INCIDENT_POLICE_STATIONS,
     REQUEST_INCIDENT_POLICE_STATIONS_SUCCESS,
@@ -50,6 +62,7 @@ import {
     getProvinces, 
     getDistricts,
     getDivisionalSecretariats,
+    getGramaNiladharis,
     getPoliceStations, 
     getPollingStations, 
     getWards, 
@@ -168,6 +181,7 @@ export function fetchDistricts(){
     }
 }
 
+
 // divisionalSecretariats
 
 export function requestDivisionalSecretariats() {
@@ -200,6 +214,43 @@ export function fetchDivisionalSecretariats() {
             dispatch(receiveDivisionalSecretariats(response.data));
         } catch (error) {
             dispatch(receiveDivisionalSecretariatsError(error));
+        }
+    }
+}
+
+
+// get Grama Niladharis
+
+export function requestGramaNiladharis() {
+    return {
+        type: REQUEST_INCIDENT_GRAMA_NILADHARIS
+    }
+}
+
+export function receiveGramaNiladharis(response) {
+    return {
+        type: REQUEST_INCIDENT_GRAMA_NILADHARIS_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function receiveGramaNiladharisError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_GRAMA_NILADHARIS_FAILURE,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchGramaNiladharis() {
+    return async function(dispatch) {
+        dispatch(requestGramaNiladharis());
+        try {
+            const response = await getGramaNiladharis();
+            await dispatch(receiveGramaNiladharis(response.data));
+        } catch (error) {
+            await dispatch(receiveGramaNiladharisError(error));
         }
     }
 }

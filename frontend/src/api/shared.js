@@ -19,6 +19,10 @@ export const getDivisionalSecretariats = async () => {
     return mockapi.getDivisionalSecretariats();
 }
 
+export const getGramaNiladharis = async () => {
+    return mockapi.getGramaNiladharis();
+}
+
 export const getPoliceStations = async () => {
     return (await handler.get('/policestations')).data;
 }
