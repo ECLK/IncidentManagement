@@ -1,13 +1,13 @@
 import axios from 'axios';
 
 import {
-    REQUEST_INCIDENT_CATAGORIES,
-    REQUEST_INCIDENT_CATAGORIES_SUCCESS,
-    REQUEST_INCIDENT_CATAGORIES_FAILURE,
+    REQUEST_INCIDENT_CATAGORIES, REQUEST_INCIDENT_CATAGORIES_SUCCESS, REQUEST_INCIDENT_CATAGORIES_FAILURE,
 
-    REQUEST_INCIDENT_DISTRICTS,
-    REQUEST_INCIDENT_DISTRICTS_SUCCESS,
-    REQUEST_INCIDENT_DISTRICTS_FAILURE,
+    REQUEST_INCIDENT_PROVINCES, REQUEST_INCIDENT_PROVINCES_SUCCESS, REQUEST_INCIDENT_PROVINCES_FAILURE,
+
+    REQUEST_INCIDENT_DISTRICTS, REQUEST_INCIDENT_DISTRICTS_SUCCESS, REQUEST_INCIDENT_DISTRICTS_FAILURE,
+
+    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS, REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_SUCCESS, REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_FAILURE,
 
     REQUEST_INCIDENT_POLICE_STATIONS,
     REQUEST_INCIDENT_POLICE_STATIONS_SUCCESS,
@@ -41,12 +41,23 @@ import {
     REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS,
     REQUEST_INCIDENT_DS_DIVISIONS_FAILURE,
 
+
 } from './Shared.types'
 
 import { getIncident, getReporter  } from '../../../api/incident';
-import { getCategories, getDistricts, getPoliceStations, getPollingStations, getWards, getDSDivisions } from '../../../api/shared';
+import { 
+    getCategories, 
+    getProvinces, 
+    getDistricts,
+    getDivisionalSecretariats,
+    getPoliceStations, 
+    getPollingStations, 
+    getWards, 
+    getDSDivisions
+} from '../../../api/shared';
 import { signIn } from '../../../api/user';
 import * as localStorage from '../../../utils/localStorage';
+
 
 // Get Catogories
 
@@ -84,6 +95,42 @@ export function fetchCatogories(){
     }
 }
 
+// Provinces 
+
+export function requestIncidentProvinces() {
+    return {
+        type: REQUEST_INCIDENT_PROVINCES,
+    };
+}
+
+export function receiveIncidentProvinces(provinces) {
+    return {
+        type: REQUEST_INCIDENT_PROVINCES_SUCCESS,
+        data: provinces,
+        error: null
+    };
+}
+
+export function receiveIncidentProvincesError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_PROVINCES_FAILURE,
+        data: null,
+        error: errorResponse
+    };
+}
+
+export function fetchProvinces() {
+    return async function(dispatch){
+        dispatch(requestIncidentProvinces());
+        try {
+            const response = await getProvinces();
+            await dispatch(receiveIncidentProvinces(response.data));
+        } catch(error) {
+            await dispatch(receiveIncidentProvincesError(error));
+        }
+    };
+}
+
 
 // Get Disticts
 
@@ -117,6 +164,42 @@ export function fetchDistricts(){
             await dispatch(receiveDistricts(response.data));
         }catch(error){
             await dispatch(receiveDistrictsError(error));
+        }
+    }
+}
+
+// divisionalSecretariats
+
+export function requestDivisionalSecretariats() {
+    return {
+        type: REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS,
+    }
+}
+
+export function receiveDivisionalSecretariats(response) {
+    return {
+        type: REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function receiveDivisionalSecretariatsError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_FAILURE,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchDivisionalSecretariats() {
+    return async function(dispatch) {
+        dispatch(requestDivisionalSecretariats());
+        try {
+            const response = await getDivisionalSecretariats();
+            dispatch(receiveDivisionalSecretariats(response.data));
+        } catch (error) {
+            dispatch(receiveDivisionalSecretariatsError(error));
         }
     }
 }

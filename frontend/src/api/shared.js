@@ -6,8 +6,17 @@ export const getCategories = async () => {
     return (await handler.get('/categories')).data;
 }
 
+export const getProvinces = async () => {
+    return mockapi.getProvinces();
+}
+
 export const getDistricts = async () => {
-    return (await handler.get('/districts')).data;
+    // return (await handler.get('/districts')).data;
+    return mockapi.getDistricts();
+}
+
+export const getDivisionalSecretariats = async () => {
+    return mockapi.getDivisionalSecretariats();
 }
 
 export const getPoliceStations = async () => {

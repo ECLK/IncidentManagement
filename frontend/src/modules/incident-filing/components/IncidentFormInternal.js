@@ -19,6 +19,9 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+
+import Checkbox from '@material-ui/core/Checkbox';
 
 import {
     submitIncidentBasicData,
@@ -30,7 +33,9 @@ import {
 } from '../state/IncidentFiling.actions'
 import {
     fetchCatogories,
+    fetchProvinces,
     fetchDistricts,
+    fetchDivisionalSecretariats,
     fetchPoliceStations,
     fetchPollingStations,
     fetchWards,
@@ -67,31 +72,76 @@ const styles = theme => ({
 class IncidentFormInternal extends Component {
 
     state = {
-        title: "",
+        title: "default title",
         description: "",
         current_status: "OCCURRED",
         date: "",
         time: "",
-        election_id: "",
+        otherCat: "",
         category: "",
-        categories: [
-            { id: "1", sub_category: "cat1" },
-            { id: "2", sub_category: "cat2" },
-            { id: "3", sub_category: "cat3" },
+        elections: [
+            { value: '1', label: 'Presidential Election 2020' },
+            { value: '2', label: 'Provincial Election 2020' },
+            { value: '3', label: 'Parliamentary Election 2021' },
         ],
-        optionsCity: [
-            { value: 'chocolate', label: 'Chocolate' },
-            { value: 'strawberry', label: 'Strawberry' },
-            { value: 'vanilla', label: 'Vanilla' }
-        ]
+        election_id: "",
+        location: "",
+        address: "",
+        city: "",
+        province: "",
+        district: "",
+        divisionalSecretariat: "",
+        polling_divisions: [
+            { value: '1', label: 'Kollonnawa' },
+            { value: '2', label: 'Wattala' },
+            { value: '3', label: 'Panadura' },
+        ],
+        polling_division_id: "",
+        polling_stations: [
+            { value: '1', label: 'Thurston College, Colombo 03' },
+            { value: '2', label: 'Royal College, Colombo 07' },
+            { value: '3', label: 'St Peter\'s College, Colombo 04' },
+        ],
+        polling_division_id: "",
+        police_stations: [
+            { value: '1', label: 'Grandpass' },
+            { value: '2', label: 'Pettah' },
+            { value: '3', label: 'Maradana' },
+        ],
+        police_station_id: "",
+        consent: false,
+        reporter_name: "",
+        reporter_type: "",
+        reporter_address: "",
+        reporter_mobile: "",
+        reporter_landline: "",
+        reporter_email: "",
     }
 
-    handleChange = (event, value) => {
-        this.setState({ value });
+    componentDidMount() {
+        this.props.getcategories();
+        this.props.getProvinces();
+        this.props.getDistricts();
+        this.props.getDivisionalSecretariats();
+        this.props.getPoliceStations();
+        this.props.getPollingStations();
+        this.props.getWards();
+        this.props.getDSDivisions();
+
+        this.props.resetIncidentForm();
+
+        const {paramIncidentId} = this.props.match.params
+
+        if (paramIncidentId) {
+            this.props.getIncident(paramIncidentId);
+        }else{
+            this.props.resetActiveIncident();
+        }
     }
 
     handleSubmit = (values, actions) => {
         this.props.submitIncidentBasicDetails(values);
+        this.props.submitContactDetails()
     }
 
     render() {
@@ -102,353 +152,392 @@ class IncidentFormInternal extends Component {
                 <Formik
                     initialValues={this.state}
                     onSubmit={(values, actions) => {
-                        // setTimeout(() => {
-                        //     alert(JSON.stringify(values, null, 2));
-                        //     actions.setSubmitting(false);
-                        // }, 1000);
                         this.handleSubmit(values, actions)
                     }}
-                    render={props => (
-                        <form className={classes.container} noValidate autoComplete="off" onSubmit={props.onSubmit}>
+                    render={
+                        ({ handleSubmit, handleChange, handleBlur, values, errors }) => (
+                            <form className={classes.container} noValidate autoComplete="off" onSubmit={handleSubmit}>
 
-                            {/* basic incident detail information */}
-                            <Paper className={classes.paper}>
+                                {/* basic incident detail information */}
+                                <Paper className={classes.paper}>
+                                    <Grid container spacing={24}>
+                                        <Grid item xs={12} sm={6}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="category">Category</InputLabel>
+                                                <Select
+                                                    value={values.category}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'category',
+                                                        id: 'category',
+                                                    }}
+                                                >
+                                                    {this.props.categories.map((c, k) => (
+                                                        <MenuItem value={c.id} key={k}>{c.sub_category}</MenuItem>
+                                                    ))}
+                                                    <MenuItem value="Other"> Other </MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                type="text"
+                                                name="otherCat"
+                                                label="If Other(Specify Here)"
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                value={values.otherCat}
+                                                className={classes.textField}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                type="text"
+                                                name="description"
+                                                label="Description"
+                                                placeholder="Press enter for new lines."
+                                                className={classes.textField}
+                                                multiline
+                                                value={values.description}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <FormControl component="fieldset" className={classes.formControl}>
+                                                <FormLabel component="legend">Occurrance</FormLabel>
+                                                <RadioGroup
+                                                    aria-label="Current status"
+                                                    name="current_status"
+                                                    className={classes.group}
+                                                    value={values.current_status}
+                                                    onChange={handleChange}
+                                                    row={true}
+                                                >
+                                                    <FormControlLabel value="OCCURRED" control={<Radio />} label="Occurred" />
+                                                    <FormControlLabel value="OCCURRING" control={<Radio />} label="Occurring" />
+                                                    <FormControlLabel value="WILL_OCCUR" control={<Radio />} label="Will Occur" />
+                                                </RadioGroup>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={6} sm={3}>
+                                            <TextField
+                                                margin="normal"
+                                                id="date"
+                                                label="Date"
+                                                type="date"
+                                                value={values.date}
+                                                InputLabelProps={{ shrink: true }}
+                                                onChange={handleChange}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6} sm={3}>
+                                            <TextField
+                                                id="time"
+                                                label="Time"
+                                                type="time"
+                                                value={values.time}
+                                                margin="normal"
+                                                InputLabelProps={{ shrink: true }}
+                                                inputProps={{
+                                                    step: 300, // 5 min
+                                                }}
+                                                onChange={handleChange}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="election" >Election</InputLabel>
+                                                <Select
+                                                    value={values.election_id}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'election',
+                                                        id: 'election',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {values.elections.map((c, k) => (
+                                                        <MenuItem value={c.value} key={k}>{c.label}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+
+
+                                    </Grid>
+                                </Paper>
+
+                                {/* Incident location information */}
+                                <Paper className={classes.paper}>
+                                    <Grid container spacing={24}>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                id="location"
+                                                label="Location / Description"
+                                                className={classes.textField}
+                                                value={values.location}
+                                                onChange={handleChange}
+                                                margin="normal"
+                                                multiline
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={8}>
+                                            <TextField
+                                                id="address"
+                                                label="Address"
+                                                className={classes.textField}
+                                                value={values.address}
+                                                onChange={handleChange}
+                                                margin="normal"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <TextField
+                                                id="city"
+                                                label="City"
+                                                className={classes.textField}
+                                                value={values.city}
+                                                onChange={handleChange}
+                                                margin="normal"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="province">Province</InputLabel>
+                                                <Select
+                                                    value={values.province}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'province',
+                                                        id: 'province',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {this.props.provinces.map((c, k) => (
+                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="district">Districts</InputLabel>
+                                                <Select
+                                                    value={values.district}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'district',
+                                                        id: 'district',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {this.props.districts.map((c, k) => (
+                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="divisionalSecretariat">Divisional Secretariat</InputLabel>
+                                                <Select
+                                                    value={values.divisionalSecretariat}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'divisionalSecretariat',
+                                                        id: 'divisionalSecretariat',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {this.props.divisionalSecretariats.map((c, k) => (
+                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="grama_niladhari_division">Grama Niladhari Division</InputLabel>
+                                                <Select
+                                                    value={values.grama_niladhari_id}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'grama_niladhari_division',
+                                                        id: 'grama_niladhari_division',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {values.polling_divisions.map((c, k) => (
+                                                        <MenuItem value={c.value} key={k}>{c.label}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="polling_division_id">Polling Division</InputLabel>
+                                                <Select
+                                                    value={values.polling_division_id}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'polling_division_id',
+                                                        id: 'polling_division_id',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {values.polling_divisions.map((c, k) => (
+                                                        <MenuItem value={c.value} key={k}>{c.label}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="polling_station_id">Polling Station</InputLabel>
+                                                <Select
+                                                    value={values.polling_station_id}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'polling_station_id',
+                                                        id: 'polling_station_id',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {this.props.pollingStations.map((c, k) => (
+                                                        <MenuItem value={c.value} key={k}>{c.label}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="police_station_id">Police Station</InputLabel>
+                                                <Select
+                                                    value={values.police_station_id}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'police_station_id',
+                                                        id: 'police_station_id',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {this.props.policeStations.map((c, k) => (
+                                                        <MenuItem value={c.value} key={k}>{c.label}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                    </Grid>
+                                </Paper>
+
+                                {/* contact information of the complianer */}
+                                <Paper className={classes.paper}>
+                                    <Grid container spacing={24}>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                id="reporter_name"
+                                                label="Reporter Name"
+                                                className={classes.textField}
+                                                value={values.reporter_name}
+                                                onChange={handleChange}
+                                                margin="normal"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl} >
+                                                <InputLabel htmlFor="reporter_type">Reporter Type</InputLabel>
+                                                <Select
+                                                    value={values.reporter_type}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'reporter_type',
+                                                        id: 'reporter_type',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    <MenuItem value={"Individual"}>Individual</MenuItem>
+                                                    <MenuItem value={"Organization"}>Organization</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                id="reporter_address"
+                                                label="Reporter Address"
+                                                className={classes.textField}
+                                                value={values.reporter_address}
+                                                onChange={handleChange}
+                                                margin="normal"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                id="reporter_mobile"
+                                                label="Reporter Mobile"
+                                                className={classes.textField}
+                                                value={values.reporter_mobile}
+                                                onChange={handleChange}
+                                                margin="normal"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                id="reporter_landline"
+                                                label="Reporter Landline"
+                                                className={classes.textField}
+                                                value={values.reporter_landline}
+                                                onChange={handleChange}
+                                                margin="normal"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                id="reporter_email"
+                                                label="Reporter Email"
+                                                className={classes.textField}
+                                                value={values.reporter_email}
+                                                onChange={handleChange}
+                                                margin="normal"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} >
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox 
+                                                        id="consent"
+                                                        name="consent"
+                                                        checked={values.consent} 
+                                                        onChange={handleChange}
+                                                    />
+                                                }
+                                                label="Yes. Complainer give concent to share his/her details outside 
+                                                in order to support complaint to be processed."
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                </Paper>
+
+                                {/* action panel */}
                                 <Grid container spacing={24}>
-                                    <Grid item xs={12} sm={6}>
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel htmlFor="category">Category</InputLabel>
-                                            <Select
-                                                value={props.values.category}
-                                                onChange={props.handleChange}
-                                                inputProps={{
-                                                    name: 'category',
-                                                    id: 'category',
-                                                }}
-                                            >
-                                                {props.values.categories.map((c, k) => (
-                                                    <MenuItem value={c.id} key={k}>{c.sub_category}</MenuItem>
-                                                ))}
-
-                                                <MenuItem value="Other"> Other </MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            type="text"
-                                            name="otherCat"
-                                            label="If Other(Specify Here)"
-                                            onChange={props.handleChange}
-                                            onBlur={props.handleBlur}
-                                            value={props.values.otherCat}
-                                            className={classes.textField}
-                                            disabled
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <TextField
-                                            type="text"
-                                            name="description"
-                                            label="Description"
-                                            placeholder="Press enter for new lines."
-                                            className={classes.textField}
-                                            multiline
-                                            value={props.values.description}
-                                            onChange={props.handleChange}
-                                            onBlur={props.handleBlur}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <FormControl component="fieldset" className={classes.formControl}>
-                                            <FormLabel component="legend">Occurrance</FormLabel>
-                                            <RadioGroup
-                                                aria-label="Current status"
-                                                name="current_status"
-                                                className={classes.group}
-                                                value={props.values.current_status}
-                                                onChange={props.handleChange}
-                                                row={true}
-                                            >
-                                                <FormControlLabel value="OCCURRED" control={<Radio />} label="Occurred" />
-                                                <FormControlLabel value="OCCURRING" control={<Radio />} label="Occurring" />
-                                                <FormControlLabel value="WILL_OCCUR" control={<Radio />} label="Will Occur" />
-                                            </RadioGroup>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={6} sm={3}>
-                                        <TextField
-                                            margin="normal"
-                                            id="date"
-                                            label="Date"
-                                            type="date"
-                                            value={props.values.date}
-                                            InputLabelProps={{ shrink: true }}
-                                            onChange={props.handleChange}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={6} sm={3}>
-                                        <TextField
-                                            id="time"
-                                            label="Time"
-                                            type="time"
-                                            value={props.values.time}
-                                            margin="normal"
-                                            InputLabelProps={{ shrink: true }}
-                                            inputProps={{
-                                                step: 300, // 5 min
-                                            }}
-                                            onChange={props.handleChange}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel htmlFor="election_id" >Election</InputLabel>
-                                            <Select
-                                                value={props.values.election_id}
-                                                onChange={props.handleChange}
-                                                inputProps={{
-                                                    name: 'election_id',
-                                                    id: 'election_id',
-                                                }}
-                                            >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={1}>Parliamentary Election 2020 </MenuItem>
-                                                <MenuItem value={2}>Presedential Election 2021</MenuItem>
-                                                <MenuItem value={3}>Provincial Election 2020</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-
-
-                                </Grid>
-                            </Paper>
-
-                            {/* Incident location information */}
-                            <Paper className={classes.paper}>
-                                <Grid container spacing={24}>
-                                    <Grid item xs={12}>
-                                        <TextField
-                                            id="location"
-                                            label="Location / Description"
-                                            className={classes.textField}
-                                            // value={values.name}
-                                            // onChange={handleChange('name')}
-                                            margin="normal"
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={8}>
-                                        <TextField
-                                            id="address"
-                                            label="Address"
-                                            className={classes.textField}
-                                            // value={values.name}
-                                            // onChange={handleChange('name')}
-                                            margin="normal"
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <TextField
-                                            id="city"
-                                            label="City"
-                                            className={classes.textField}
-                                            // value={values.name}
-                                            // onChange={handleChange('name')}
-                                            margin="normal"
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel htmlFor="province">Province</InputLabel>
-                                            <Select
-                                                value={this.state.province}
-                                                onChange={this.handleChange}
-                                                inputProps={{
-                                                    name: 'province',
-                                                    id: 'province',
-                                                }}
-                                            >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={"Western"}>Western</MenuItem>
-                                                <MenuItem value={"Eastern"}>Eastern</MenuItem>
-                                                <MenuItem value={"Nothern"}>Nothern</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel htmlFor="district">District</InputLabel>
-                                            <Select
-                                                value={this.state.age}
-                                                onChange={this.handleChange}
-                                                inputProps={{
-                                                    name: 'district',
-                                                    id: 'district',
-                                                }}
-                                            >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel htmlFor="polling-division">Polling Division</InputLabel>
-                                            <Select
-                                                value={this.state.age}
-                                                onChange={this.handleChange}
-                                                inputProps={{
-                                                    name: 'pollingDivision',
-                                                    id: 'polling-division',
-                                                }}
-                                            >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel htmlFor="polling-station">Polling Station</InputLabel>
-                                            <Select
-                                                value={this.state.age}
-                                                onChange={this.handleChange}
-                                                inputProps={{
-                                                    name: 'pollingStation',
-                                                    id: 'polling-station',
-                                                }}
-                                            >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel htmlFor="police-station">Police Station</InputLabel>
-                                            <Select
-                                                value={this.state.age}
-                                                onChange={this.handleChange}
-                                                inputProps={{
-                                                    name: 'policeStation',
-                                                    id: 'police-station',
-                                                }}
-                                            >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
-                            </Paper>
-
-                            {/* contact information of the complianer */}
-                            <Paper className={classes.paper}>
-                                <Grid container spacing={24}>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            id="reporter-name"
-                                            label="Reporter Name"
-                                            className={classes.textField}
-                                            // value={values.name}
-                                            // onChange={handleChange('name')}
-                                            margin="normal"
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <FormControl className={classes.formControl} >
-                                            <InputLabel htmlFor="reporter-type">Reporter Type</InputLabel>
-                                            <Select
-                                                value={this.state.age}
-                                                onChange={this.handleChange}
-                                                inputProps={{
-                                                    name: 'reporter-type',
-                                                    id: 'reporter-type',
-                                                }}
-                                            >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={"Individual"}>Individual</MenuItem>
-                                                <MenuItem value={"Organization"}>Organization</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <TextField
-                                            id="reporter-address"
-                                            label="Reporter Address"
-                                            className={classes.textField}
-                                            // value={values.name}
-                                            // onChange={handleChange('name')}
-                                            margin="normal"
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            id="reporter-mobile"
-                                            label="Reporter Mobile"
-                                            className={classes.textField}
-                                            // value={values.name}
-                                            // onChange={handleChange('name')}
-                                            margin="normal"
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            id="reporter-landline"
-                                            label="Reporter Landline"
-                                            className={classes.textField}
-                                            // value={values.name}
-                                            // onChange={handleChange('name')}
-                                            margin="normal"
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            id="reporter-email"
-                                            label="Reporter Email"
-                                            className={classes.textField}
-                                            // value={values.name}
-                                            // onChange={handleChange('name')}
-                                            margin="normal"
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </Paper>
-
-                            {/* action panel */}
-                            <Paper className={classes.paper}>
-                                <Grid container spacing={24}>
-                                    <Grid item xs={12}>
+                                    <Grid item xs={12} style={{ textAlign: "center" }}>
                                         <Button variant="contained" className={classes.button}> Cancel</Button>
                                         <Button type="submit" variant="contained" color="primary" className={classes.button}> Sumbit</Button>
                                     </Grid>
                                 </Grid>
-                            </Paper>
-                        </form>
-                    )}
+                            </form>
+                        )}
                 />
 
+                <Snackbar
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    open={this.state.submitSuccessMessage}
+                    onClose={this.handleSuccessMessageClose}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">Incident submitted sucessfully!</span>}
+                />
             </div>
         );
     }
@@ -469,6 +558,7 @@ const mapStateToProps = (state, ownProps) => {
         categories: state.sharedReducer.categories,
         districts: state.sharedReducer.districts,
         provinces: state.sharedReducer.provinces,
+        divisionalSecretariats: state.sharedReducer.divisionalSecretariats,
         pollingStations: state.sharedReducer.pollingStations,
         policeStations: state.sharedReducer.policeStations,
         wards: state.sharedReducer.wards,
@@ -500,8 +590,14 @@ const mapDispatchToProps = (dispatch) => {
         getcategories: () => {
             dispatch(fetchCatogories())
         },
+        getProvinces: () => {
+            dispatch(fetchProvinces())
+        },
         getDistricts: () => {
             dispatch(fetchDistricts())
+        },
+        getDivisionalSecretariats: () => {
+            dispatch(fetchDivisionalSecretariats())
         },
         getPollingStations: () => {
             dispatch(fetchPollingStations())

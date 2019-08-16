@@ -4,13 +4,13 @@ import axios from 'axios';
 import * as localStorage from "../../../utils/localStorage"
 
 import {
-    REQUEST_INCIDENT_CATAGORIES,
-    REQUEST_INCIDENT_CATAGORIES_SUCCESS,
-    REQUEST_INCIDENT_CATAGORIES_FAILURE,
+    REQUEST_INCIDENT_CATAGORIES, REQUEST_INCIDENT_CATAGORIES_SUCCESS, REQUEST_INCIDENT_CATAGORIES_FAILURE,
 
-    REQUEST_INCIDENT_DISTRICTS,
-    REQUEST_INCIDENT_DISTRICTS_SUCCESS,
-    REQUEST_INCIDENT_DISTRICTS_FAILURE,
+    REQUEST_INCIDENT_PROVINCES, REQUEST_INCIDENT_PROVINCES_SUCCESS, REQUEST_INCIDENT_PROVINCES_FAILURE,
+
+    REQUEST_INCIDENT_DISTRICTS, REQUEST_INCIDENT_DISTRICTS_SUCCESS, REQUEST_INCIDENT_DISTRICTS_FAILURE,
+
+    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS, REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_SUCCESS, REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_FAILURE,
 
     REQUEST_INCIDENT_POLICE_STATIONS,
     REQUEST_INCIDENT_POLICE_STATIONS_SUCCESS,
@@ -50,6 +50,7 @@ const initialState = {
     categories: [],
     provinces: [],
     districts: [],
+    divisionalSecretariats: [],
     pollingStations: [],
     policeStations: [],
     dsDivisions: [],
@@ -98,13 +99,29 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_CATAGORIES_FAILURE:
                 return draft
 
+            case REQUEST_INCIDENT_PROVINCES:
+                return draft
+            case REQUEST_INCIDENT_PROVINCES_SUCCESS:
+                draft.provinces = action.data;
+                return draft
+            case REQUEST_INCIDENT_PROVINCES_FAILURE:
+                return draft
+
             case REQUEST_INCIDENT_DISTRICTS:
                 return draft
             case REQUEST_INCIDENT_DISTRICTS_SUCCESS:
                 draft.districts = action.data;
-                draft.provinces = [...new Set(action.data.map(item => item.province))];
+                // draft.provinces = [...new Set(action.data.map(item => item.province))];
                 return draft
             case REQUEST_INCIDENT_DISTRICTS_FAILURE:
+                return draft
+
+            case REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS:
+                return draft
+            case REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_SUCCESS:
+                draft.divisionalSecretariats = action.data;
+                return draft
+            case REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_FAILURE:
                 return draft
 
             case REQUEST_INCIDENT_POLICE_STATIONS:
@@ -183,7 +200,7 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_DS_DIVISIONS_FAILURE:
                 return draft
         }
-    })
+    });
 }
 
 
