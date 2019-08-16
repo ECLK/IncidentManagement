@@ -29,7 +29,11 @@ import {
   REQUEST_INCIDENT_ESCALATE_ERROR,
   REQUEST_WORKFLOW_UPDATE,
   REQUEST_WORKFLOW_UPDATE_SUCCESS,
-  REQUEST_WORKFLOW_UPDATE_ERROR
+  REQUEST_WORKFLOW_UPDATE_ERROR,
+
+  INCIDENT_ATTACH_FILE_REQUEST,
+  INCIDENT_ATTACH_FILE_SUCCESS,
+  INCIDENT_ATTACH_FILE_ERROR
 } from "./OngoingIncidents.types";
 
 import { getEvents, updateEventApproval } from "../../../api/events";
@@ -459,4 +463,46 @@ export function fetchUpdateWorkflow(incidentId, workflowType, workflowUpdate) {
       dispatch(updateWorkflowError(error));
     }
   };
+}
+
+
+
+export function attachFileRequest() {
+  return {
+      type: INCIDENT_ATTACH_FILE_REQUEST,
+      data: null,
+      error: null,
+      isLoading: true
+  }
+}
+
+export function attachFileSuccess(data) {
+  return {
+      type: INCIDENT_ATTACH_FILE_SUCCESS,
+      data: data,
+      error: null,
+      isLoading: false
+  }
+}
+
+export function attachFileError(error) {
+  return {
+      type: INCIDENT_ATTACH_FILE_ERROR,
+      data: null,
+      error: error,
+      isLoading: false
+  }
+}
+
+export function attachFile(incidentId, formData) {
+  return async (dispatch) => {
+      try{
+          dispatch(attachFileRequest());
+          const result = await incidentAPI.uploadFile(incidentId, formData)
+          console.log(result)
+          dispatch(attachFileSuccess(result))
+      }catch(e){
+          dispatch(attachFileError())
+      }
+  }
 }

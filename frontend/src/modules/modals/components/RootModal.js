@@ -1,6 +1,9 @@
 import React from 'react';
-import Dialog from '@material-ui/core/Dialog';
 import { useSelector, useDispatch } from 'react-redux'
+
+import Dialog from '@material-ui/core/Dialog';
+import { withStyles } from '@material-ui/core/styles';
+
 
 import { hideModal } from '../state/modal.actions'
 
@@ -27,7 +30,16 @@ const MODAL_COMPONENTS = {
     /* other modals */
 }
 
-const RootModal = () => {
+const styles = theme => ({
+    root : {
+        minWidth: 800
+    }
+})
+
+const RootModal = (props) => {
+
+    const { classes } = props
+
     // this retrieves props from the reducer
     const {modalType, modalProps} = useSelector(state => state.modalReducer)
     const dispatch = useDispatch()
@@ -41,14 +53,18 @@ const RootModal = () => {
     return (
         <div>
             <Dialog
+                classes={{
+                    root:classes.root,
+                    fullWidth:true
+                }}
                 open={modalType?true:false}
                 onClose={()=>{dispatch(hideModal())}}
                 aria-labelledby="form-dialog-title"
             >
-                <ModalContent {...modalProps}/>
+                <ModalContent {...modalProps}  />
             </Dialog>
         </div>
     );
 }
 
-export default RootModal;
+export default withStyles(styles) (RootModal);

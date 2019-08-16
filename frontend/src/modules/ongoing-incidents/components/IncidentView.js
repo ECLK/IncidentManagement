@@ -26,7 +26,7 @@ import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 
 import EventList from './EventTrail/EventList';
 import Editor from './EventTrail/RichTextEditor'
-import DropZone from '../../shared/components/DropZone'
+import DropZone from './EventTrail/EventTrailDropZone'
 
 import {
     fetchIncidentEventTrail,
@@ -118,6 +118,10 @@ const styles = theme => ({
     verifiedIcon:{
         marginRight: theme.spacing.unit * 1,
     },
+    textEditorWrapper:{
+        paddingLeft: theme.spacing.unit * 9,
+        paddingRight: theme.spacing.unit * 4
+    }
 });
 
 /**
@@ -640,8 +644,10 @@ class NavTabs extends Component {
                                     events={this.props.events}
                                     resolveEvent={this.onResolveEvent}
                                 />
-                                <Editor/>
-                                {/* <DropZone/> */}
+                                <div className={classes.textEditorWrapper}>
+                                    <Editor/>
+                                    <DropZone/>
+                                </div>
                             </div>
                         </div>
                     </Grid>

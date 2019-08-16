@@ -56,6 +56,9 @@ const styles = (theme) => ({
     },
     actionButtonIcon: {
         marginRight: theme.spacing.unit * 2
+    },
+    timeLimitOverDue: {
+        color:'red'
     }
 });
 
@@ -82,6 +85,9 @@ const EventActions = (props) => {
     const dispatch = useDispatch()
     const activeIncident = useSelector(state => state.sharedReducer.activeIncident.data);
     const currentUser = useSelector(state => state.sharedReducer.signedInUser.data);
+    const timeLimitInfo = calculateDeadline(activeIncident);
+    const timeLimitText = timeLimitInfo.text;
+    const timeLimitStatus = timeLimitInfo.status;
 
     if (!activeIncident) {
         return null
@@ -97,7 +103,7 @@ const EventActions = (props) => {
                     <Avatar>
                         <PermIdentityIcon />
                     </Avatar>
-                    <ListItemText primary="Assign to" secondary={activeIncident.assignees ? activeIncident.assignees[0].displayname : ""} />
+                    <ListItemText primary="Assigned to" secondary={activeIncident.assignees ? activeIncident.assignees[0].displayname : ""} />
                     
                     {userCan(currentUser, activeIncident, USER_ACTIONS.CHANGE_ASSIGNEE) &&
                         <ListItemSecondaryAction>
@@ -131,7 +137,14 @@ const EventActions = (props) => {
                     <Avatar>
                         <HourglassEmptyIcon />
                     </Avatar>
-                    <ListItemText primary="Close this before" secondary={calculateDeadline(activeIncident)} />
+                    <ListItemText 
+                        primary="Close this before" 
+                        secondary={timeLimitText}
+                        classes = {{
+                            inset:true,
+                            secondary: calculateDeadline(activeIncident).status === 'OVERDUE' && classes.timeLimitOverDue
+                        }}
+                    />
                 </ListItem>
 
                 <ListItem>

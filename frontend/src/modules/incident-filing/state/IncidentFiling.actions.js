@@ -290,7 +290,6 @@ export function incidentFileUploadError() {
 }
 
 export function incidentFileUpload(incidentId, formData) {
-    console.log(incidentId)
     return async (dispatch) => {
         try{
             dispatch(incidentFileUploadRequest());

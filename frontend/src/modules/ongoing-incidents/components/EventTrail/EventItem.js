@@ -17,7 +17,6 @@ const styles = {
     },
     eventItem: {
         backgroundColor: "#fff",
-        marginBottom: "10px",
         border: "1px solid #ccc",
         display: "flex",
         padding: "0px 0px 0px 0px",
@@ -168,9 +167,9 @@ const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
     return (
     <li className={classes.eventItem}>
         <div className={classes.eventItemDetails}>
-            <div className={classes.eventItemAvatar}>
+            {/* <div className={classes.eventItemAvatar}>
                 <Avatar user={event.author} />
-            </div>
+            </div> */}
             <div className={classes.eventItemUserDetails}>
                 <div className={classes.truncate}>
                     <strong>

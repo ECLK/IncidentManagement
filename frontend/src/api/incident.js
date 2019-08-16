@@ -113,5 +113,6 @@ export const updateIncidentWorkflow = async (incidentId, workflowType, workflowU
 
 export const uploadFile = async (incidentId, formData) => {
   const result = await handler.post(`/incidents/${incidentId}/files`, formData)
+  return result.data;
 }
 
