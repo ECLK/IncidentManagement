@@ -400,3 +400,23 @@ def get_police_report_by_incident(incident: Incident):
         raise IncidentException("No police report associated to the incident")
 
     return incident_police_report
+
+def get_incidents_to_escalate():
+
+    sql = """
+        SELECT b.incident_id, b.current_status, b.created_date
+            FROM incidents_incidentstatus b
+            INNER JOIN (
+              SELECT i.incident_id, max(i.created_date) cdate
+              FROM incidents_incidentstatus i
+              GROUP BY i.incident_id
+            ) c 
+            ON c.incident_id = b.incident_id AND c.cdate = b.created_date
+     	WHERE b.`current_status` <> 'CLOSED' AND b.`created_date` >  NOW() - interval 120 minute
+    """
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        incidents = cursor.fetchall()
+
+        return incidents

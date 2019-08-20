@@ -37,7 +37,8 @@ from .services import (
     incident_provide_advice,
     incident_verify,
     get_user_by_id,
-    get_police_report_by_incident
+    get_police_report_by_incident,
+    get_incidents_to_escalate
 )
 
 from ..events import services as event_service
@@ -283,3 +284,10 @@ class IncidentWorkflowView(APIView):
             return Response("Invalid workflow", status=status.HTTP_400_BAD_REQUEST)
 
         return Response("Incident workflow success", status=status.HTTP_200_OK)
+
+class Test(APIView):
+
+    def get(self, request):
+
+        data = get_incidents_to_escalate()
+        return Response(data)
