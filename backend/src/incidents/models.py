@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django_filters import rest_framework as filters
 import uuid
 import enum
-
+from datetime import datetime
 
 class Occurrence(enum.Enum):
     OCCURRED = "Occurred"
@@ -120,11 +120,16 @@ class IncidentComment(models.Model):
         ordering = ("id",)
 
 
+def generate_ref_id():
+    current_count = Incident.objects.count()
+    refID = "%s/%0.4d" % (datetime.now().strftime("%Y/%m/%d"), current_count+1)
+    return refID
+
 class Incident(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    refId = models.CharField(max_length=200, blank=True)
+    refId = models.CharField(max_length=200, default=generate_ref_id)
 
     title = models.CharField(max_length=200)
     description = models.TextField()
