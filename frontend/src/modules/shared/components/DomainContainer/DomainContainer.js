@@ -31,6 +31,7 @@ import Breadcrumbs from '../Breadcrumbs'
 const HomeLink = props => <Link to="/app/home" {...props} />
 const ReportLink = props => <Link to="/app/report" {...props} />
 const ReviewLink = props => <Link to="/app/review" {...props} />
+const StaticReportLink = props => <Link to="/app/reports" {...props} />
 
 
 const drawerWidth = 240;
@@ -105,65 +106,98 @@ const styles = theme => ({
 });
 
 class DomainContainer extends React.Component {
-    state = {
-        open: true,
-        anchorEl: null,
-        anchorLang: null
-    };
+  state = {
+    open: true,
+    anchorEl: null,
+    anchorLang: null
+  };
 
-    handleDrawerOpen = () => {
-        this.setState({ open: true });
-    };
+  handleDrawerOpen = () => {
+    this.setState({ open: true });
+  };
 
-    handleDrawerClose = () => {
-        this.setState({ open: false });
-    };
+  handleDrawerClose = () => {
+    this.setState({ open: false });
+  };
 
-    handleLangMenu = event => {
-        this.setState({ anchorLang: event.currentTarget });
-    };
+  handleLangMenu = event => {
+    this.setState({ anchorLang: event.currentTarget });
+  };
 
-    handleLangMenuClose = () => {
-        this.setState({ anchorLang: null });
-    };
+  handleLangMenuClose = () => {
+    this.setState({ anchorLang: null });
+  };
 
-    handleMenu = event => {
-        this.setState({ anchorEl: event.currentTarget });
-    };
+  handleMenu = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
 
-    handleMenuClose = () => {
-        this.setState({ anchorEl: null });
-    };
+  handleMenuClose = () => {
+    this.setState({ anchorEl: null });
+  };
 
-    handleSignOut = () => {
-        const { signOut } = this.props;
-        signOut();
-    }
+  handleSignOut = () => {
+      const {signOut} = this.props;
+      signOut();
+  }
 
-    handleLanguageChange = (lang) => {
-        const { changeLanguage } = this.props;
-        changeLanguage(lang);
-    }
+  handleLanguageChange = (lang) => {
+    const {changeLanguage} = this.props;
+    changeLanguage(lang);
+  }
 
-    render() {
-        const { classes, selectedLanguage, signedInUser, location } = this.props;
-        const { open, anchorEl, anchorLang } = this.state;
-        const menuOpen = Boolean(anchorEl);
-        const langMenuOpen = Boolean(anchorLang);
+  render() {
+    const { classes, selectedLanguage, signedInUser, location } = this.props;
+    const { open, anchorEl, anchorLang } = this.state;
+    const menuOpen = Boolean(anchorEl);
+    const langMenuOpen = Boolean(anchorLang);
+
+    return (
+      <div className={classes.root}>
+        <ErrorNotification />
+        <ConfirmNotification />
+        <LoadingNotification />
+        <CssBaseline />
 
 
-        return (
-            <div className={classes.root}>
-                <ErrorNotification />
-                <ConfirmNotification />
-                <LoadingNotification />
-                <CssBaseline />
+        <AppBar
+          position="static"
 
+        >
+            <Toolbar disableGutters={!open}>
 
-                <AppBar
-                    position="static"
+                <Typography variant="h6" color="inherit" className={classes.grow}>
+                    Incident Management
 
-                >
+                    <Button color="inherit" component={HomeLink} className={classes.homeButton}>Home</Button>
+                    <Button color="inherit" component={ReportLink}>Create</Button>
+                    <Button color="inherit" component={ReviewLink}>Review</Button>
+                    <Button color="inherit" component={StaticReportLink}>Reports</Button>
+
+                </Typography>
+
+                <Button
+                    aria-owns={open ? 'menu-appbar' : undefined}
+                    aria-haspopup="true"
+                    onClick={this.handleLangMenu}
+                    color="inherit"
+                    >
+                {selectedLanguage}
+                </Button>
+                <Menu
+                    id="menu-appbar"
+                    anchorEl={anchorLang}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    open={langMenuOpen}
+                    onClose={this.handleLangMenuClose}
+                    >
                     <Toolbar disableGutters={!open}>
 
                         <Typography variant="h6" color="inherit" className={classes.grow}>
@@ -183,6 +217,7 @@ class DomainContainer extends React.Component {
                         >
                             {selectedLanguage}
                         </Button>
+
                         <Menu
                             id="menu-appbar"
                             anchorEl={anchorLang}
@@ -201,6 +236,7 @@ class DomainContainer extends React.Component {
                             <MenuItem onClick={() => (this.handleLanguageChange('ta'))}>Tamil</MenuItem>
                             <MenuItem onClick={() => (this.handleLanguageChange('en'))}>English</MenuItem>
                         </Menu>
+
                         <Menu
                             id="menu-appbar"
                             anchorEl={anchorEl}
@@ -231,7 +267,9 @@ class DomainContainer extends React.Component {
 
 
                     </Toolbar>
-                </AppBar>
+                </Menu>
+            </Toolbar>
+        </AppBar>
                 <main
                     className={classNames(classes.content, {
                         [classes.contentShift]: open,
