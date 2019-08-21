@@ -30,6 +30,7 @@ import LoadingNotification from '../../../notifications/components/LoadingNotifi
 const HomeLink = props => <Link to="/app/home" {...props} />
 const ReportLink = props => <Link to="/app/report" {...props} />
 const ReviewLink = props => <Link to="/app/review" {...props} />
+const StaticReportLink = props => <Link to="/app/report" {...props} />
 
 
 const drawerWidth = 240;
@@ -167,6 +168,7 @@ class DomainContainer extends React.Component {
                 <Button color="inherit" component={HomeLink} className={classes.homeButton}>Home</Button>
                 <Button color="inherit" component={ReportLink}>Create</Button>
                 <Button color="inherit" component={ReviewLink}>Review</Button>
+                <Button color="inherit" component={StaticReportLink}>Reports</Button>
 
             </Typography>
 

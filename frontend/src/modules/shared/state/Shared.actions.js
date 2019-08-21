@@ -356,6 +356,7 @@ export function requestSignInError(errorResponse) {
 }
 
 export function fetchSignIn(userName, password) {
+
     return async function (dispatch, getState) {
         dispatch(requestSignIn());
         try{
@@ -368,7 +369,7 @@ export function fetchSignIn(userName, password) {
                 
                 if(signInData.status === "success"){
                     if(getState().sharedReducer.signedInUser.rememberMe){
-                        localStorage.write('ECIncidentMangementUser', signInData.data);
+                        localStorage.write('ECIncidentManagementUser', signInData.data);
                         token = signInData.data.token;
                     }
                 }else{
@@ -377,7 +378,7 @@ export function fetchSignIn(userName, password) {
             }else{
                 token = signInData.token;
             }   
-
+            console.log(signInData, token);
             axios.defaults.headers.common['Authorization'] = "JWT " + token;
             dispatch(requestSignInSuccess(signInData.data));
         }catch(error){
@@ -413,7 +414,7 @@ export function signOutError(error) {
 export function initiateSignOut() {
     return async function (dispatch, getState) {
         try{
-            localStorage.remove('ECIncidentMangementUser');
+            localStorage.remove('ECIncidentManagementUser');
             axios.defaults.headers.common['Authorization'] = null;
             dispatch(signOut())
         }catch(error){
