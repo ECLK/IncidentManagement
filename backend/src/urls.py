@@ -80,5 +80,10 @@ urlpatterns = [
     path(
         "incidents/test",
         incident_views.Test.as_view()
+    ),
+    path(
+        "incidents/auto-escalate",
+        incident_views.IncidentAutoEscalate.as_view()
     )
+
 ]

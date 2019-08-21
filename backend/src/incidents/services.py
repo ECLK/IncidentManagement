@@ -237,8 +237,13 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP"):
     if incident.assignee != user:
         raise WorkflowException("Only current incident assignee can escalate the incident")
     
-    if incident.current_status != StatusType.VERIFIED.name:
-        raise WorkflowException("Incident is not verified")
+    if (
+        incident.current_status == StatusType.VERIFIED.name 
+        or incident.current_status == StatusType.NEW.name
+        or incident.current_status == StatusType.ACTION_PENDING.name
+        or incident.current_status == StatusType.ADVICE_REQESTED.name
+    ) :
+        raise WorkflowException("Incident cannot be escalated")
 
     # find the rank of the current incident assignee
     assignee_groups = incident.assignee.groups.all()
@@ -412,7 +417,11 @@ def get_incidents_to_escalate():
               GROUP BY i.incident_id
             ) c 
             ON c.incident_id = b.incident_id AND c.cdate = b.created_date
-     	WHERE b.`current_status` <> 'CLOSED' AND b.`created_date` >  NOW() - interval 120 minute
+     	WHERE b.`created_date` >  NOW() - interval 120 minute AND
+                b.`current_status` <> 'CLOSED' AND
+                b.`current_status` <> 'ACTION_PENDING' AND
+                b.`current_status` <> 'NEW' AND
+                b.`current_status` <> 'ADVICE_REQESTED'
     """
     
     with connection.cursor() as cursor:
@@ -420,3 +429,12 @@ def get_incidents_to_escalate():
         incidents = cursor.fetchall()
 
         return incidents
+
+def auto_escalate_incidents():
+
+    incident_details = get_incidents_to_escalate()
+
+    for incident_detail in incident_details :
+        incident = get_incident_by_id(incident_detail[0])
+        incident_escalate(incident.assignee, incident)
+

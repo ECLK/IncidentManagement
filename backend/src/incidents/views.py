@@ -38,7 +38,8 @@ from .services import (
     incident_verify,
     get_user_by_id,
     get_police_report_by_incident,
-    get_incidents_to_escalate
+    get_incidents_to_escalate,
+    auto_escalate_incidents
 )
 
 from ..events import services as event_service
@@ -285,9 +286,12 @@ class IncidentWorkflowView(APIView):
 
         return Response("Incident workflow success", status=status.HTTP_200_OK)
 
-class Test(APIView):
-
+class IncidentAutoEscalate(APIView):
     def get(self, request):
+        auto_escalate_incidents()
 
+class Test(APIView):
+    def get(self, request):
         data = get_incidents_to_escalate()
+
         return Response(data)
