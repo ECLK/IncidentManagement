@@ -34,7 +34,7 @@ const ReportList = ({classes, ...props}) =>{
             >
                 <TableCell
                     onClick={() => {
-                        props.history.push(`/app/report/view?report=di_division_summary_report`);
+                        props.history.push(`/app/reports/view?report=di_division_summary_report`);
                     }} >
                 Police Division Summary Report
                 </TableCell>
@@ -44,7 +44,7 @@ const ReportList = ({classes, ...props}) =>{
             >
                 <TableCell
                     onClick={() => {
-                        props.history.push(`/app/report/view?report=category_wise_summary_report`);
+                        props.history.push(`/app/reports/view?report=category_wise_summary_report`);
                     }} >
                     Caategory-wise Summary Report
                 </TableCell>

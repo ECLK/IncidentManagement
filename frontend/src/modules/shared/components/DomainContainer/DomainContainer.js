@@ -30,7 +30,7 @@ import LoadingNotification from '../../../notifications/components/LoadingNotifi
 const HomeLink = props => <Link to="/app/home" {...props} />
 const ReportLink = props => <Link to="/app/report" {...props} />
 const ReviewLink = props => <Link to="/app/review" {...props} />
-const StaticReportLink = props => <Link to="/app/report" {...props} />
+const StaticReportLink = props => <Link to="/app/reports" {...props} />
 
 
 const drawerWidth = 240;
