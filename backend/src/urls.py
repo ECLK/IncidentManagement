@@ -76,5 +76,9 @@ urlpatterns = [
     path(
         "incidents/<uuid:incident_id>/workflow/<str:workflow>",
         incident_views.IncidentWorkflowView.as_view()
+    ),
+    path(
+        "incidents/test",
+        incident_views.Test.as_view()
     )
 ]

@@ -1,9 +1,10 @@
 from django.db import models
-import enum
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
-import uuid
-
 from django_filters import rest_framework as filters
+import uuid
+import enum
+
 
 class Occurrence(enum.Enum):
     OCCURRED = "Occurred"
@@ -79,15 +80,17 @@ class IncidentStatus(models.Model):
 
 
 class IncidentSeverity(models.Model):
-    previous_severity = models.CharField(
-        max_length=50,
-        choices=[(tag.name, tag.value) for tag in SeverityType],
-        blank=True,
-        null=True,
-    )
-    current_severity = models.CharField(
-        max_length=50, choices=[(tag.name, tag.value) for tag in SeverityType]
-    )
+    # previous_severity = models.CharField(
+    #     max_length=50,
+    #     choices=[(tag.name, tag.value) for tag in SeverityType],
+    #     blank=True,
+    #     null=True,
+    # )
+    # current_severity = models.CharField(
+    #     max_length=50, choices=[(tag.name, tag.value) for tag in SeverityType]
+    # )
+    previous_severity = models.PositiveIntegerField(default=10, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    current_severity = models.PositiveIntegerField(default=10, validators=[MinValueValidator(1), MaxValueValidator(10)])
     incident = models.ForeignKey("Incident", on_delete=models.DO_NOTHING)
     approved = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
