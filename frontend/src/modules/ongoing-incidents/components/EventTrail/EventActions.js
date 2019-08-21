@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Assignees from '../Assignees';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
-import { getDateDiff } from './utils';
+import { getDateDiff, calculateDeadline } from './utils';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -130,7 +131,7 @@ const EventActions = (props) => {
                     <Avatar>
                         <HourglassEmptyIcon />
                     </Avatar>
-                    <ListItemText primary="Close this before" secondary="5.30 p.m.(1 hour(s) remaining.)" />
+                    <ListItemText primary="Close this before" secondary={calculateDeadline(activeIncident)} />
                 </ListItem>
 
                 <ListItem>
