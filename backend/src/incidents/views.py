@@ -78,7 +78,8 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         param_query = self.request.query_params.get('q', None)
         if param_query is not None and param_query != "":
             incidents = incidents.filter(
-                Q(title__icontains=param_query) | Q(description__icontains=param_query))
+                Q(refId__icontains=param_query) | Q(title__icontains=param_query) | 
+                Q(description__icontains=param_query))
 
         param_category = self.request.query_params.get('category', None)
         if param_category is not None:
