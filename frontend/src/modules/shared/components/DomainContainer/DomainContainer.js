@@ -152,6 +152,8 @@ class DomainContainer extends React.Component {
     const menuOpen = Boolean(anchorEl);
     const langMenuOpen = Boolean(anchorLang);
 
+    const selectedMainSection = location.pathname.split('/')[2]
+
     return (
       <div className={classes.root}>
         <ErrorNotification />
@@ -169,10 +171,15 @@ class DomainContainer extends React.Component {
                 <Typography variant="h6" color="inherit" className={classes.grow}>
                     Incident Management
 
-                    <Button color="inherit" component={HomeLink} className={classes.homeButton}>Home</Button>
-                    <Button color="inherit" component={ReportLink}>Create</Button>
-                    <Button color="inherit" component={ReviewLink}>Review</Button>
-                    <Button color="inherit" component={StaticReportLink}>Reports</Button>
+                    <Button 
+                        variant={selectedMainSection==='home'?'outlined': 'flat'} 
+                        color="inherit" component={HomeLink} className={classes.homeButton}>Home</Button>
+                    <Button variant={selectedMainSection==='report'?'outlined': 'flat'} 
+                        color="inherit" component={ReportLink}>Create</Button>
+                    <Button variant={selectedMainSection==='review'?'outlined': 'flat'} 
+                        color="inherit" component={ReviewLink}>Review</Button>
+                    <Button variant={selectedMainSection==='reports'?'outlined': 'flat'} 
+                        color="inherit" component={StaticReportLink}>Reports</Button>
 
                 </Typography>
 
