@@ -7,4 +7,5 @@ django-filter==2.1.0
 gunicorn==19.9.0
 django-rest-swagger==2.2.0
 xhtml2pdf
+numpy
 pandas

@@ -1,20 +1,7 @@
-import React, { Component } from 'react';
-import DomainContainer from '../shared/components/DomainContainer';
-import { Typography } from '@material-ui/core';
-import { FormattedMessage } from 'react-intl';
-class Historic extends Component {
+import ReportList from './components/ReportList';
+import ReportViewer from './components/ReportViewer';
 
-    render(){
-        return(<DomainContainer header={()=>
-            <Typography variant="h5" color='inherit' noWrap className='line-height-fix'>
-                <FormattedMessage
-                    id='eclk.incident.management.historic.reports'
-                    description='Historic Reports'
-                    defaultMessage='Historic Reports'
-                />
-            </Typography>
-        } />)
-    }
+export {
+    ReportList,
+    ReportViewer
 }
-
-export default Historic;

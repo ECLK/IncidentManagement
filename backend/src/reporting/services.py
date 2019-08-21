@@ -4,6 +4,8 @@ from django.db import connection
 import pandas as pd
 import numpy as np
 
+from ..incidents.models import Incident
+
 def get_totals_by_category():
     sql = """
             SELECT usr.id, COUNT(incident.id) as incident_count FROM `auth_user` as usr 
@@ -64,7 +66,46 @@ def get_DI_Division_summary():
     dataframe["province_total"] = dataframe.groupby('province')['total'].transform(np.sum)
 
     dataframe.columns = headers
+    dataframe.index.names = ["Province", "DI Division", "Police Division"]
 
+    return dataframe.to_html()
+
+def get_category_summary():
+    categories = set(Incident.objects.all().values_list('category', flat=True))
+    
+    sql2 = ", ".join(map(lambda c : "MAX(CASE WHEN (category = '%s') THEN 1 ELSE NULL END) AS '%s'" % (c,c), categories))
+    sql1 = ", ".join(map(lambda c : "COUNT(cats.`%s`) as '%s'" % (c,c), categories))
+
+    sql = """
+            SELECT 
+                incident.province,
+                incident.di_division,
+                incident.police_division,
+                %s
+            FROM incidents_incident incident,
+            ( 
+                SELECT
+                id,
+                %s
+                FROM incidents_incident
+                GROUP BY id
+            ) as cats 
+            WHERE cats.id = incident.id
+            GROUP BY incident.province, incident.di_division, incident.police_division
+        """ % (sql1, sql2)
+
+    # headers = [ cat.n]
+    dataframe = pd.read_sql_query(sql, connection)
+    
+    dataframe.sort_values(by=['province', 'di_division'], inplace=True)
+    dataframe.set_index(['province', 'di_division', 'police_division'], inplace=True)
+    dataframe.fillna(value=0, inplace=True)
+    dataframe.columns = categories
+
+    dataframe['Total'] = dataframe.sum(axis=1)
+
+    dataframe.index.names = ["Province", "DI Division", "Police Division"]
+    
     return dataframe.to_html()
 
 
