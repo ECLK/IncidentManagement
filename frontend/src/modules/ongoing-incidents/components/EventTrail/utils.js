@@ -27,8 +27,14 @@ export function  calculateDeadline(incident){
     let remainingTime = deadline.diff(currTime, 'hours')
 
     if(remainingTime>=0){
-        return `${deadline.format('llll')}, (${remainingTime} hours remaining.)`
+        return {
+            status: 'PENDING',
+            text:`${deadline.format('llll')}, (${remainingTime} hours remaining.)`
+        }
     }else{
-        return `${deadline.format('llll')}, (overdue by ${remainingTime*-1} hours.)`
+        return {
+            status: 'OVERDUE',
+            text: `${deadline.format('llll')}, (overdue by ${remainingTime*-1} hours.)`
+        }
     }
 }

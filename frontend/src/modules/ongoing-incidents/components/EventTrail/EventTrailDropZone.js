@@ -2,8 +2,8 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 
 
-import { incidentFileUpload } from '../../incident-filing/state/IncidentFiling.actions'
-import  DropZoneBase  from './DropZoneBase'
+import { attachFile } from '../../state/OngoingIncidents.actions'
+import  DropZoneBase  from '../../../shared/components/DropZoneBase'
 
 
 
@@ -15,7 +15,7 @@ export default function Dropzone(props) {
     const uploadFile = (acceptedFiles) => {
         const formData = new FormData();
         formData.append("file", acceptedFiles[0]);
-        dispatch(incidentFileUpload(id,formData))
+        dispatch(attachFile(id,formData))
     }
 
     return (

@@ -21,6 +21,7 @@ import { LandingPage } from '../modules/guest-view';
 
 import { Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
+import { Home } from "../modules/home";
 
 class Layout extends React.Component{
   
@@ -56,8 +57,9 @@ class MainRouter extends Component {
           <div>
             <PrivateRoute path="/app" component={Layout}>
               <Switch>
-                <PrivateRoute exact path="/app/report" component={ReportList} /> 
-                <PrivateRoute exact path="/app/report/view" component={ReportViewer} /> 
+                <PrivateRoute exact path="/app/home" component={Home} /> 
+                <PrivateRoute exact path="/app/reports" component={ReportList} /> 
+                <PrivateRoute exact path="/app/reports/view" component={ReportViewer} /> 
 
                 <PrivateRoute exact path="/app/ongoing" component={Ongoing}/>
 

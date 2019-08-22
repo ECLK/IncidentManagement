@@ -73,12 +73,14 @@ class IncidentList(APIView, IncidentResultsSetPagination):
 
     def get(self, request, format=None):
         incidents = Incident.objects.all()
+        user = request.user
 
         # filtering
         param_query = self.request.query_params.get('q', None)
         if param_query is not None and param_query != "":
             incidents = incidents.filter(
-                Q(title__icontains=param_query) | Q(description__icontains=param_query))
+                Q(refId__icontains=param_query) | Q(title__icontains=param_query) | 
+                Q(description__icontains=param_query))
 
         param_category = self.request.query_params.get('category', None)
         if param_category is not None:
@@ -94,6 +96,19 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         if param_start_date and param_end_date:
             incidents = incidents.filter(
                 created_date__range=(param_start_date, param_end_date))
+
+        param_assignee = self.request.query_params.get('assignee', None)
+        if param_assignee is not None:
+            if param_assignee == "me":
+                # get incidents of the current user
+                incidents = incidents.filter(assignee=user)
+
+        param_linked = self.request.query_params.get('user_linked', None)
+        if param_linked is not None:
+            if param_linked == "me":
+                # get incidents of the current user
+                incidents = incidents.filter(linked_individuals__id=user.id)
+
 
         # this will load all incidents to memory
         # change this to a better way next time
@@ -115,6 +130,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
             except Exception as e:
                 return Response("Invalid severity", status=status.HTTP_400_BAD_REQUEST)
 
+        
         results = self.paginate_queryset(incidents, request, view=self)
         serializer = IncidentSerializer(results, many=True)
         return self.get_paginated_response(serializer.data)

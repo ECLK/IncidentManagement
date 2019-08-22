@@ -68,7 +68,7 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
     status.save()
 
     severity = IncidentSeverity(
-        current_severity=SeverityType.DEFAULT, incident=incident, approved=True
+        current_severity=0, incident=incident, approved=True
     )
     severity.save()
 

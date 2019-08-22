@@ -59,6 +59,14 @@ export const getIncidents = async (filters, page=1) => {
       query += "&response_time=" + filters.maxResponseTime;
     }
 
+    if(filters.assignee){
+      query += "&assignee=" + filters.assignee;
+    }
+
+    if(filters.user_linked){
+      query += "&user_linked=" + filters.user_linked;
+    }
+
     if(filters.startTime && filters.endTime){
       const startDate = moment(filters.startTime).format("YYYY-MM-DD");
       const endDate = moment(filters.endTime).format("YYYY-MM-DD");
@@ -113,5 +121,6 @@ export const updateIncidentWorkflow = async (incidentId, workflowType, workflowU
 
 export const uploadFile = async (incidentId, formData) => {
   const result = await handler.post(`/incidents/${incidentId}/files`, formData)
+  return result.data;
 }
 

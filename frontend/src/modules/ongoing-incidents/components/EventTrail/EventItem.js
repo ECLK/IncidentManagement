@@ -1,5 +1,6 @@
 import React from 'react';
-import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux';
+import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from './Avatar';
@@ -16,7 +17,6 @@ const styles = {
     },
     eventItem: {
         backgroundColor: "#fff",
-        marginBottom: "10px",
         border: "1px solid #ccc",
         display: "flex",
         padding: "0px 0px 0px 0px",
@@ -53,7 +53,7 @@ function getStatusChangeText(event) {
         case 'VERIFIED':
             return 'verified the incident'
         case 'ADVICE_REQESTED':
-            return `requested advice from: `
+            return `requested advice `
         case 'ADVICE_PROVIDED':
             return `provided action`
         case 'ACTION_PENDING':
@@ -107,7 +107,7 @@ function getActionText(event){
         case "CREATED":
             return ` created the incident`
         case "ACTION_STARTED":
-            return ` escallated to ${event.description}`
+            return ` escallated to ${JSON.parse(event.description).entity}`
         case "ACTION_COMPLETED":
             return ` marked as action completed`
         default:
@@ -120,7 +120,16 @@ function hasEventBody(event){
     if(event.action === "COMMENTED"){
         return true;
     }
-    if(event.action === "OUTCOME_ADDED"){
+    else if(event.action === "OUTCOME_ADDED"){
+        return true;
+    }
+    else if(event.action === "ACTION_STARTED"){
+        return true;
+    }
+    else if(event.action === "ACTION_COMPLETED"){
+        return true;
+    }
+    else if(event.action === "ATTRIBUTE_CHANGED"){
         return true;
     }
     return false;
@@ -131,7 +140,28 @@ function getSecondaryItem(event){
     if(event.action === "COMMENTED" || event.action === "OUTCOME_ADDED"){
         return (
             <div>
-                {event.data.comment.body}
+                { ReactHtmlParser(event.data.comment.body)}
+            </div>
+        )
+    }else if(
+        event.action === "ATTRIBUTE_CHANGED" || 
+        event.action === "ACTION_COMPLETED"
+       ) {
+        return (
+            <div>
+                { ReactHtmlParser(event.description)}
+            </div>
+        )
+    }else if( event.action==="ACTION_STARTED"){
+        let descObj = JSON.parse(event.description)
+
+        return (
+            <div>
+                { ReactHtmlParser(`
+                    <div>Entity: ${descObj.entity}</div>
+                    <div>Name: ${descObj.name}</div>
+                    <div>Comment: ${descObj.comment}</div><div></div>`
+                )}
             </div>
         )
     }
@@ -160,16 +190,22 @@ function getDateDiff(event){
 }
 
 
+
+
 const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
 
     const dispatch = useDispatch()
 
+    const hasPendingAdviceRequest = (event.action=== "ATTRIBUTE_CHANGED" && 
+                                    event.data.status.to_status_type === "ADVICE_REQESTED" &&
+                                    eventLinks[event.id]===undefined )
+
     return (
     <li className={classes.eventItem}>
         <div className={classes.eventItemDetails}>
-            <div className={classes.eventItemAvatar}>
+            {/* <div className={classes.eventItemAvatar}>
                 <Avatar user={event.author} />
-            </div>
+            </div> */}
             <div className={classes.eventItemUserDetails}>
                 <div className={classes.truncate}>
                     <strong>
@@ -217,6 +253,19 @@ const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
                             onClick={() => eventAction(event.id, "REJECT")}
                         >
                             Reject
+                        </Button>
+                    </div>
+                )}
+
+                {hasPendingAdviceRequest && 
+                 (
+                    <div className={classes.eventItemActions}>
+                        <Button 
+                            color="primary" 
+                            className={classes.button} 
+                            onClick={() => eventAction(event.id, "APPROVE")}
+                        >
+                            Provide Advice
                         </Button>
                     </div>
                 )}
