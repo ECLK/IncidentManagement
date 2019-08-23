@@ -38,9 +38,14 @@ export const getIncident = async (incidentId) => {
     return (await handler.get(`/incidents/${incidentId}`)).data;
 };
 
-export const getIncidents = async (filters) => {
+export const getIncidents = async (filters, page=1) => {
     // return mockapi.getIncidents();
-    var query = "";
+    console.log(filters);
+    var query = "page=" + page;
+
+    if(filters.textSearch){
+      query += "&q=" + filters.textSearch;
+    }
 
     if(filters.severity){
       query += "&severity=" + filters.severity;
@@ -48,6 +53,18 @@ export const getIncidents = async (filters) => {
 
     if(filters.status){
       query += "&status=" + filters.status;
+    }
+
+    if(filters.maxResponseTime){
+      query += "&response_time=" + filters.maxResponseTime;
+    }
+
+    if(filters.assignee){
+      query += "&assignee=" + filters.assignee;
+    }
+
+    if(filters.user_linked){
+      query += "&user_linked=" + filters.user_linked;
     }
 
     if(filters.startTime && filters.endTime){
@@ -101,4 +118,9 @@ export const escallateIncident = async (incidentId) => {
 export const updateIncidentWorkflow = async (incidentId, workflowType, workflowUpdate) => {
   return (await handler.post(`/incidents/${incidentId}/workflow/${workflowType}`, workflowUpdate) ).data;
 };
+
+export const uploadFile = async (incidentId, formData) => {
+  const result = await handler.post(`/incidents/${incidentId}/files`, formData)
+  return result.data;
+}
 

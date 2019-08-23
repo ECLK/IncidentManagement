@@ -1,21 +1,33 @@
 import React, { Component, cloneElement } from 'react';
 import PropTypes from 'prop-types';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import Moment from 'react-moment';
+
 import { withStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import NoSsr from '@material-ui/core/NoSsr';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Modal from '@material-ui/core/Modal';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Moment from 'react-moment';
 import Button from '@material-ui/core/Button';
+import ButtonBase from '@material-ui/core/ButtonBase';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import Popper from '@material-ui/core/Popper';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import VerifyIncidentConfirm from './IncidentActions/VerifyIncidentConfirm';
+import EditIcon from '@material-ui/icons/Edit';
+import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 
 import EventList from './EventTrail/EventList';
-import Comment from './EventTrail/Comment';
+import Editor from './EventTrail/RichTextEditor'
+import DropZone from './EventTrail/EventTrailDropZone'
+
 import {
     fetchIncidentEventTrail,
     submitIncidentComment,
@@ -28,16 +40,6 @@ import {
 } from '../state/OngoingIncidents.actions';
 import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 import { EventActions } from './EventTrail'
-
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Grow from '@material-ui/core/Grow';
-import Popper from '@material-ui/core/Popper';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
-import VerifyIncidentConfirm from './IncidentActions/VerifyIncidentConfirm';
-import EditIcon from '@material-ui/icons/Edit';
-import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
-
 import {showModal} from '../../modals/state/modal.actions'
 
 
@@ -85,12 +87,22 @@ const styles = theme => ({
         marginRight: theme.spacing.unit
 
     },
+    verifiedButton:{
+        color:'#4caf50',
+        border: 'solid 1px',
+        borderColor: '#4caf50',
+        width:'49%',
+        borderRadius:4,
+        fontSize: '14px',
+        fontWeight: 500,
+    },
     sidePane: {
         marginLeft: theme.spacing.unit * 4
 
     },
     mainArea: {
         marginLeft: theme.spacing.unit * 4,
+        marginBottom: theme.spacing.unit * 20
     },
     verifyIncidentDialog: {
         position: 'absolute',
@@ -106,6 +118,10 @@ const styles = theme => ({
     verifiedIcon:{
         marginRight: theme.spacing.unit * 1,
     },
+    textEditorWrapper:{
+        paddingLeft: theme.spacing.unit * 9,
+        paddingRight: theme.spacing.unit * 4
+    }
 });
 
 /**
@@ -628,10 +644,10 @@ class NavTabs extends Component {
                                     events={this.props.events}
                                     resolveEvent={this.onResolveEvent}
                                 />
-                                <Comment
-                                    postComment={postComment}
-                                    activeIncident={activeIncident}
-                                />
+                                <div className={classes.textEditorWrapper}>
+                                    <Editor/>
+                                    <DropZone/>
+                                </div>
                             </div>
                         </div>
                     </Grid>
@@ -639,10 +655,10 @@ class NavTabs extends Component {
                         <div className={classes.sidePane}>
                             <div className={classes.editButtonWrapper}>
                                 {activeIncident.currentStatus !== 'NEW'?
-                                    <Button disabled variant="outlined"  size="large" color="secondary" className={classes.editButton} >
+                                    <ButtonBase disabled variant="outlined"  size="large" color="secondary" className={classes.verifiedButton} >
                                         <DoneOutlineIcon className={classes.verifiedIcon}/>
-                                        Verified
-                                    </Button>:
+                                        VERIFIED
+                                    </ButtonBase>:
                                     <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick} className={classes.editButton} >
                                         Verify
                                     </Button>

@@ -1,9 +1,14 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
+
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from './Avatar';
 import * as moment from 'moment';
-import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 import Button from '@material-ui/core/Button';
+
+import { showModal } from '../../../modals/state/modal.actions'
+
 
 const styles = {
     truncate: {
@@ -12,7 +17,6 @@ const styles = {
     },
     eventItem: {
         backgroundColor: "#fff",
-        marginBottom: "10px",
         border: "1px solid #ccc",
         display: "flex",
         padding: "0px 0px 0px 0px",
@@ -42,6 +46,28 @@ const styles = {
     }
 };
 
+
+function getStatusChangeText(event) {
+    const toStatus = event.data.status.to_status_type
+    switch(toStatus){
+        case 'VERIFIED':
+            return 'verified the incident'
+        case 'ADVICE_REQESTED':
+            return `requested advice `
+        case 'ADVICE_PROVIDED':
+            return `provided action`
+        case 'ACTION_PENDING':
+            return `escallated the incident to outside entity`
+        case 'ACTION_TAKEN':
+            return 'action taken'
+        case 'Close':
+            return 'closed the incident'
+        default:
+            return 'performed an unknown status change'
+    }
+}
+
+
 function getActionText(event){
     switch(event.action){
         case "GENERIC_UPDATE":
@@ -49,8 +75,7 @@ function getActionText(event){
         case "ATTRIBUTE_CHANGED":
             switch(event.affectedAttribute){
                 case "STATUS":
-                    return `changed the status from ${event.data.status.from_status_type} 
-                                to ${event.data.status.to_status_type}`;
+                    return getStatusChangeText(event)
                 case "SEVERITY":
                     return `changed the severity from ${event.data.severity.from_severity_type} 
                                 to ${event.data.severity.to_severity_type}`;
@@ -79,35 +104,70 @@ function getActionText(event){
             return `assigned ${event.data.user.displayname} to the incident`;
         case "ENTITY_REMOVED":
             return `removed ${event.data.user.displayname} from the incident`
+        case "CREATED":
+            return ` created the incident`
+        case "ACTION_STARTED":
+            return ` escallated to ${JSON.parse(event.description).entity}`
+        case "ACTION_COMPLETED":
+            return ` marked as action completed`
         default:
             return "unknown action"
     }
 }
 
+
 function hasEventBody(event){
     if(event.action === "COMMENTED"){
         return true;
     }
-    if(event.action === "OUTCOME_ADDED"){
+    else if(event.action === "OUTCOME_ADDED"){
         return true;
     }
-
+    else if(event.action === "ACTION_STARTED"){
+        return true;
+    }
+    else if(event.action === "ACTION_COMPLETED"){
+        return true;
+    }
+    else if(event.action === "ATTRIBUTE_CHANGED"){
+        return true;
+    }
     return false;
 }
+
 
 function getSecondaryItem(event){
     if(event.action === "COMMENTED" || event.action === "OUTCOME_ADDED"){
         return (
             <div>
-                <FroalaEditorView
-                    model={event.data.comment.body}
-                />
+                { ReactHtmlParser(event.data.comment.body)}
+            </div>
+        )
+    }else if(
+        event.action === "ATTRIBUTE_CHANGED" || 
+        event.action === "ACTION_COMPLETED"
+       ) {
+        return (
+            <div>
+                { ReactHtmlParser(event.description)}
+            </div>
+        )
+    }else if( event.action==="ACTION_STARTED"){
+        let descObj = JSON.parse(event.description)
+
+        return (
+            <div>
+                { ReactHtmlParser(`
+                    <div>Entity: ${descObj.entity}</div>
+                    <div>Name: ${descObj.name}</div>
+                    <div>Comment: ${descObj.comment}</div><div></div>`
+                )}
             </div>
         )
     }
-
     return (<></>);
 }
+
 
 function getDateDiff(event){
     const hours = moment(new Date().getTime()).diff(event.createdDate, "hours");
@@ -129,12 +189,23 @@ function getDateDiff(event){
     }
 }
 
-const EventItemView = ({ event, eventAction, classes }) => (
+
+
+
+const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
+
+    const dispatch = useDispatch()
+
+    const hasPendingAdviceRequest = (event.action=== "ATTRIBUTE_CHANGED" && 
+                                    event.data.status.to_status_type === "ADVICE_REQESTED" &&
+                                    eventLinks[event.id]===undefined )
+
+    return (
     <li className={classes.eventItem}>
         <div className={classes.eventItemDetails}>
-            <div className={classes.eventItemAvatar}>
+            {/* <div className={classes.eventItemAvatar}>
                 <Avatar user={event.author} />
-            </div>
+            </div> */}
             <div className={classes.eventItemUserDetails}>
                 <div className={classes.truncate}>
                     <strong>
@@ -143,6 +214,28 @@ const EventItemView = ({ event, eventAction, classes }) => (
                      {getActionText(event)}
                     <span> ({getDateDiff(event)})</span>
                 </div>
+
+                {
+                    (event.action === 'ACTION_STARTED' & !eventLinks[event.id]) ?
+                    <div className={classes.eventItemActions}>
+                        <Button 
+                            color="primary"
+                            className={classes.button} 
+                            onClick={() => {
+                                dispatch(
+                                    showModal(
+                                        'COMPLETE_OUTSIDE_ACTION_MODAL',
+                                        {incidentId:event.incident.id, startEventId:event.id }
+                                        )
+                                    )
+                                }
+                            }
+                        >
+                            Complete Action
+                        </Button>
+                    </div> : null
+                }
+                {/* Status chnage approval action buttons. we may not need this anymore */}
                 {event.action=== "ATTRIBUTE_CHANGE_REQUESTED" &&
                     !event.isResolved && 
                  (
@@ -163,6 +256,19 @@ const EventItemView = ({ event, eventAction, classes }) => (
                         </Button>
                     </div>
                 )}
+
+                {hasPendingAdviceRequest && 
+                 (
+                    <div className={classes.eventItemActions}>
+                        <Button 
+                            color="primary" 
+                            className={classes.button} 
+                            onClick={() => eventAction(event.id, "APPROVE")}
+                        >
+                            Provide Advice
+                        </Button>
+                    </div>
+                )}
             </div>
         </div>
         { hasEventBody(event) && (
@@ -171,8 +277,8 @@ const EventItemView = ({ event, eventAction, classes }) => (
             </div>    
         )}        
     </li>
-);
+)};
+
 
 const EventItem = withStyles(styles)(EventItemView);
-
 export default EventItem;

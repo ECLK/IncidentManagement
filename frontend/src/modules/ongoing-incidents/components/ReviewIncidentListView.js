@@ -18,6 +18,11 @@ import { fetchCatogories } from "../../shared/state/Shared.actions";
 
 import moment from "moment";
 import SearchForm from "./SearchForm";
+import { TableFooter, TablePagination, Grid, IconButton } from "@material-ui/core";
+import CheckIcon from '@material-ui/icons/CheckCircle';
+import EditIcon from '@material-ui/icons/Edit';
+import AssignIcon from '@material-ui/icons/AssignmentInd';
+
 const CustomTableCell = withRouter(
   withStyles(theme => ({
     body: {
@@ -101,6 +106,11 @@ class ReviewIncidentListView extends React.Component {
   componentDidMount() {
     this.props.getCategories();
   }
+
+  handlePageChange = (event, newPage) => {
+    this.props.getIncidents(this.props.incidentSearchFilter, newPage+1);
+  }
+
   render() {
     const { classes, pagedIncidents, categories } = this.props;
 
@@ -127,20 +137,17 @@ class ReviewIncidentListView extends React.Component {
               <CustomTableCell align="center">Title</CustomTableCell>
               <CustomTableCell align="center">Description</CustomTableCell>
               <CustomTableCell align="center">Status</CustomTableCell>
-              <CustomTableCell align="center">Reported Time</CustomTableCell>
               <CustomTableCell align="center">Response Time</CustomTableCell>
               <CustomTableCell align="center">Category</CustomTableCell>
-              <CustomTableCell align="center">Severity</CustomTableCell>
-              <CustomTableCell align="center">Location</CustomTableCell>
+              <CustomTableCell align="center">Last Action At</CustomTableCell>
+              <CustomTableCell align="center">Actions</CustomTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {pagedIncidents.incidents.map(row => (
               <TableRow
-                onClick={() => {
-                  this.props.history.push(`/app/review/${row.id}`);
-                }}
-                hover
+                
+                // hover
                 className={classes.row}
                 key={row.id}
               >
@@ -154,28 +161,58 @@ class ReviewIncidentListView extends React.Component {
                   <p className="description">{row.description}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
-                  <p>{row.status}</p>
+                  <p>{row.currentStatus}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
-                  <div>
-                    {moment(row.createdDate).format(moment.HTML5_FMT.DATE)}
-                  </div>
-                  <div className={classes.separator} />
-                  <div>{moment(row.createdDate).format("hh:mm A")}</div>
+                  <p>{row.response_time} h</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
-                  <p>{row.responseTimeInHours}</p>
+                  <p>{row.category}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
                   <p>{row.subCategory}</p>
                 </CustomTableCell>
-                <CustomTableCell align="center">{row.severity}</CustomTableCell>
                 <CustomTableCell align="center">
-                  <p>{row.locationName}</p>
+                  <div style={{display:"flex"}}>
+                    {row.currentStatus === "NEW" && (
+                      <IconButton aria-label="delete" className={classes.margin} size="small" color="primary">
+                        <CheckIcon fontSize="inherit" />
+                      </IconButton>
+                    )}
+                    <IconButton aria-label="delete" className={classes.margin} size="small">
+                      <AssignIcon fontSize="inherit" />
+                    </IconButton>
+                    <IconButton aria-label="delete" className={classes.margin} 
+                        size="small"
+                        onClick={() => {
+                          this.props.history.push(`/app/review/${row.id}`);
+                        }} >
+                      <EditIcon fontSize="inherit" />
+                    </IconButton>
+                  </div>
                 </CustomTableCell>
+                
               </TableRow>
             ))}
           </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                colSpan={3}
+                count={pagedIncidents.count}
+                rowsPerPage={5}
+                page={pagedIncidents.pageNumber-1}
+                SelectProps={{
+                  inputProps: { 'aria-label': 'rows per page' },
+                  native: true,
+                }}
+                onChangePage={this.handlePageChange}
+                // onChangeRowsPerPage={handleChangeRowsPerPage}
+                // ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableFooter>
         </Table>
       </Paper>
     );
@@ -197,8 +234,8 @@ const mapDispatchToProps = dispatch => {
     getCategories: () => {
       dispatch(fetchCatogories());
     },
-    getIncidents: filters => {
-      dispatch(fetchIncidents(filters));
+    getIncidents: (filters, page) => {
+      dispatch(fetchIncidents(filters, page));
       dispatch(updateIncidentFilters(filters));
     },
     resetFilters: filters => {

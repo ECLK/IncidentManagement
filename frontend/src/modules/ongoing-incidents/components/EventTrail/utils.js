@@ -19,3 +19,22 @@ export function getDateDiff(event){
         return `${years} years ago`;
     }
 }
+
+export function  calculateDeadline(incident){
+
+    let deadline = moment(incident.createdDate).add(incident.response_time,'hours')
+    let currTime = moment(new Date().getTime())
+    let remainingTime = deadline.diff(currTime, 'hours')
+
+    if(remainingTime>=0){
+        return {
+            status: 'PENDING',
+            text:`${deadline.format('llll')}, (${remainingTime} hours remaining.)`
+        }
+    }else{
+        return {
+            status: 'OVERDUE',
+            text: `${deadline.format('llll')}, (overdue by ${remainingTime*-1} hours.)`
+        }
+    }
+}

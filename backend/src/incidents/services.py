@@ -6,6 +6,7 @@ from .models import (
     SeverityType,
     Reporter,
     IncidentComment,
+    IncidentPoliceReport,
 )
 from django.contrib.auth.models import User, Group
 
@@ -67,7 +68,7 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
     status.save()
 
     severity = IncidentSeverity(
-        current_severity=SeverityType.DEFAULT, incident=incident, approved=True
+        current_severity=0, incident=incident, approved=True
     )
     severity.save()
 
@@ -339,6 +340,9 @@ def incident_complete_external_action(user: User, incident: Incident, comment: s
 
 
 def incident_request_advice(user: User, incident: Incident, assignee: User, comment: str):
+    if incident.current_status == StatusType.ADVICE_REQESTED.name:
+        raise WorkflowException("Incident already has a pending advice request")
+
     status = IncidentStatus(
         current_status=StatusType.ADVICE_REQESTED,
         previous_status=incident.current_status,
@@ -386,3 +390,33 @@ def incident_verify(user: User, incident: Incident, comment: str):
     status.save()
 
     event_services.update_status_with_description_event(user, incident, status, True, comment)
+
+def get_police_report_by_incident(incident: Incident):
+    try:
+        incident_police_report = IncidentPoliceReport.objects.get(incident=incident)
+        if incident_police_report is None:
+            raise IncidentException("No police report associated to the incident")
+    except:
+        raise IncidentException("No police report associated to the incident")
+
+    return incident_police_report
+
+def get_incidents_to_escalate():
+
+    sql = """
+        SELECT b.incident_id, b.current_status, b.created_date
+            FROM incidents_incidentstatus b
+            INNER JOIN (
+              SELECT i.incident_id, max(i.created_date) cdate
+              FROM incidents_incidentstatus i
+              GROUP BY i.incident_id
+            ) c 
+            ON c.incident_id = b.incident_id AND c.cdate = b.created_date
+     	WHERE b.`current_status` <> 'CLOSED' AND b.`created_date` >  NOW() - interval 120 minute
+    """
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        incidents = cursor.fetchall()
+
+        return incidents

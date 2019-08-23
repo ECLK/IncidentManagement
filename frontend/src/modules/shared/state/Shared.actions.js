@@ -117,6 +117,7 @@ export function fetchElections() {
 export function requestIncidentCatogories() {
     return {
         type: REQUEST_INCIDENT_CATAGORIES,
+        isLoading: true
     }
 }
 
@@ -124,7 +125,8 @@ export function recieveIncidentCatogories(catogories) {
     return {
         type: REQUEST_INCIDENT_CATAGORIES_SUCCESS,
         data: catogories,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -132,7 +134,8 @@ export function recieveIncidentCatogoriesError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_CATAGORIES_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -190,6 +193,7 @@ export function fetchProvinces() {
 export function requestIncidentDistricts() {
     return {
         type: REQUEST_INCIDENT_DISTRICTS,
+        isLoading: true
     }
 }
 
@@ -197,7 +201,8 @@ export function receiveIncidentDistricts(response) {
     return {
         type: REQUEST_INCIDENT_DISTRICTS_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -205,7 +210,8 @@ export function receiveIncidentDistrictsError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_DISTRICTS_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -227,6 +233,7 @@ export function fetchDistricts(){
 export function requestDivisionalSecretariats() {
     return {
         type: REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS,
+        isLoading: true
     }
 }
 
@@ -234,7 +241,8 @@ export function receiveDivisionalSecretariats(response) {
     return {
         type: REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -242,7 +250,8 @@ export function receiveDivisionalSecretariatsError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -336,6 +345,7 @@ export function fetchPollingDivisions(){
 export function requestPollingStations() {
     return {
         type: REQUEST_INCIDENT_POLLING_STATIONS,
+        isLoading: true
     }
 }
 
@@ -343,7 +353,8 @@ export function receivePollingStations(response) {
     return {
         type: REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -351,7 +362,8 @@ export function receivePollingStationsError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_POLLING_STATIONS_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -374,6 +386,7 @@ export function fetchPollingStations(){
 export function requestPoliceStations() {
     return {
         type: REQUEST_INCIDENT_POLICE_STATIONS,
+        isLoading: true
     }
 }
 
@@ -381,7 +394,8 @@ export function receivePoliceStations(response) {
     return {
         type: REQUEST_INCIDENT_POLICE_STATIONS_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -389,7 +403,8 @@ export function receivePoliceStationsError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_POLICE_STATIONS_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -411,6 +426,7 @@ export function fetchPoliceStations(){
 export function requestWards() {
     return {
         type: REQUEST_INCIDENT_WARDS,
+        isLoading: true
     }
 }
 
@@ -418,7 +434,8 @@ export function receiveWards(response) {
     return {
         type: REQUEST_INCIDENT_WARDS_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -426,7 +443,8 @@ export function receiveWardsError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_WARDS_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -448,6 +466,7 @@ export function fetchWards(){
 export function requestActiveIncidentData() {
     return {
         type: ACTIVE_INCIDENT_GET_DATA_REQUEST,
+        isLoading: true
     }
 }
 
@@ -455,7 +474,8 @@ export function getActiveIncidentDataSuccess(response) {
     return {
         type: ACTIVE_INCIDENT_GET_DATA_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -463,7 +483,8 @@ export function getActiveIncidentDataError(errorResponse) {
     return {
         type: ACTIVE_INCIDENT_GET_DATA_ERROR,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -478,7 +499,6 @@ export function fetchActiveIncidentData(incidentId) {
                 "reporter": responseReporter.data
             }));
         }catch(error){
-            console.log(error);
             dispatch(getActiveIncidentDataError(error));
         }
     }
@@ -490,6 +510,7 @@ export function fetchActiveIncidentData(incidentId) {
 export function requestSignIn() {
     return {
         type: SIGN_IN_REQUEST,
+        isLoading: true
     }
 }
 
@@ -497,7 +518,8 @@ export function requestSignInSuccess(response) {
     return {
         type: SIGN_IN_REQUEST_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -505,11 +527,13 @@ export function requestSignInError(errorResponse) {
     return {
         type: SIGN_IN_REQUEST_ERROR,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
 export function fetchSignIn(userName, password) {
+
     return async function (dispatch, getState) {
         dispatch(requestSignIn());
         try{
@@ -522,7 +546,7 @@ export function fetchSignIn(userName, password) {
                 
                 if(signInData.status === "success"){
                     if(getState().sharedReducer.signedInUser.rememberMe){
-                        localStorage.write('ECIncidentMangementUser', signInData.data);
+                        localStorage.write('ECIncidentManagementUser', signInData.data);
                         token = signInData.data.token;
                     }
                 }else{
@@ -531,7 +555,7 @@ export function fetchSignIn(userName, password) {
             }else{
                 token = signInData.token;
             }   
-
+            console.log(signInData, token);
             axios.defaults.headers.common['Authorization'] = "JWT " + token;
             dispatch(requestSignInSuccess(signInData.data));
         }catch(error){
@@ -567,7 +591,7 @@ export function signOutError(error) {
 export function initiateSignOut() {
     return async function (dispatch, getState) {
         try{
-            localStorage.remove('ECIncidentMangementUser');
+            localStorage.remove('ECIncidentManagementUser');
             axios.defaults.headers.common['Authorization'] = null;
             dispatch(signOut())
         }catch(error){

@@ -1,9 +1,10 @@
 from django.db import models
-import enum
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
-import uuid
-
 from django_filters import rest_framework as filters
+import uuid
+import enum
+from datetime import datetime
 
 class Occurrence(enum.Enum):
     OCCURRED = "Occurred"
@@ -79,15 +80,17 @@ class IncidentStatus(models.Model):
 
 
 class IncidentSeverity(models.Model):
-    previous_severity = models.CharField(
-        max_length=50,
-        choices=[(tag.name, tag.value) for tag in SeverityType],
-        blank=True,
-        null=True,
-    )
-    current_severity = models.CharField(
-        max_length=50, choices=[(tag.name, tag.value) for tag in SeverityType]
-    )
+    # previous_severity = models.CharField(
+    #     max_length=50,
+    #     choices=[(tag.name, tag.value) for tag in SeverityType],
+    #     blank=True,
+    #     null=True,
+    # )
+    # current_severity = models.CharField(
+    #     max_length=50, choices=[(tag.name, tag.value) for tag in SeverityType]
+    # )
+    previous_severity = models.PositiveIntegerField(default=10, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    current_severity = models.PositiveIntegerField(default=10, validators=[MinValueValidator(1), MaxValueValidator(10)])
     incident = models.ForeignKey("Incident", on_delete=models.DO_NOTHING)
     approved = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
@@ -117,11 +120,16 @@ class IncidentComment(models.Model):
         ordering = ("id",)
 
 
+def generate_ref_id():
+    current_count = Incident.objects.count()
+    refID = "%s/%0.4d" % (datetime.now().strftime("%Y/%m/%d"), current_count+1)
+    return refID
+
 class Incident(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    refId = models.CharField(max_length=200, blank=True)
+    refId = models.CharField(max_length=200, default=generate_ref_id)
 
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -136,21 +144,16 @@ class Incident(models.Model):
 
     # getting the elections from a separate service
     election = models.CharField(max_length=200, blank=True)
-    polling_station = models.ForeignKey(
-        "common.PollingStation", on_delete=models.DO_NOTHING, null=True, blank=True
-    )
-    ds_division = models.ForeignKey(
-        "common.DSDivision", on_delete=models.DO_NOTHING, null=True, blank=True
-    )
-    ward = models.ForeignKey(
-        "common.Ward", on_delete=models.DO_NOTHING, null=True, blank=True
-    )
-    category = models.ForeignKey(
-        "common.Category", on_delete=models.DO_NOTHING, null=True, blank=True
-    )
-    police_station = models.ForeignKey(
-        "common.PoliceStation", on_delete=models.DO_NOTHING, null=True, blank=True
-    )
+
+    polling_station = models.CharField(max_length=200, blank=True, null=True)
+    ds_division = models.CharField(max_length=200, blank=True, null=True)
+    ward = models.CharField(max_length=200, blank=True, null=True)
+    category = models.CharField(max_length=200, blank=True, null=True)
+    police_station = models.CharField(max_length=200, blank=True, null=True)
+    di_division = models.CharField(max_length=200, blank=True, null=True)
+    police_division = models.CharField(max_length=200, blank=True, null=True)
+    district = models.CharField(max_length=200, blank=True, null=True)
+    province = models.CharField(max_length=200, blank=True, null=True)
 
     # the medium through which the incident was reported
     infoChannel = models.CharField(max_length=200, null=True, blank=True)
@@ -175,9 +178,9 @@ class Incident(models.Model):
     location = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
     coordinates = models.CharField(max_length=200, null=True, blank=True)
-    district = models.ForeignKey(
-        "common.District", on_delete=models.DO_NOTHING, null=True, blank=True
-    )
+    
+
+    complainer_consent = models.BooleanField(default=False, null=True, blank=True)
 
     response_time = models.IntegerField(default=12)
 
@@ -219,6 +222,36 @@ class Incident(models.Model):
         permissions = (
             ("can_change_assignee", "Can directly change assignee"),
         )
+
+class IncidentPoliceReport(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    incident = models.ForeignKey("Incident", on_delete=models.DO_NOTHING)
+    # division_serial_number
+    # police_station_serial_number
+    # policedivision
+    # police sation *
+    # elec division
+    # date
+    # time
+    # place
+    # complained date
+    nature_of_incident = models.CharField(max_length=200, null=True, blank=True)
+    complainers_name = models.CharField(max_length=200, null=True, blank=True)
+    complainers_address = models.CharField(max_length=200, null=True, blank=True)
+    # complainers political view
+    # complainers candidate status
+    victims_name = models.CharField(max_length=200, null=True, blank=True)
+    victims_address = models.CharField(max_length=200, null=True, blank=True)
+    respondents_name = models.CharField(max_length=200, null=True, blank=True)
+    respondents_address = models.CharField(max_length=200, null=True, blank=True)
+    # Respondents candidate status
+    no_of_vehicles_arrested =  models.IntegerField(default=0, null=True, blank=True)
+    steps_taken = models.CharField(max_length=200, null=True, blank=True)
+    court_case_no = models.CharField(max_length=200, null=True, blank=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("created_date",)
 
 class IncidentFilter(filters.FilterSet):
     current_status = filters.ChoiceFilter(choices=StatusType, method='my_custom_filter')

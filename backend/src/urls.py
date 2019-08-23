@@ -26,6 +26,8 @@ from .custom_auth import views as user_views
 
 from .file_upload import views as file_views
 
+from .reporting import views as report_views
+
 # JWT
 from rest_framework_jwt.views import obtain_jwt_token
 
@@ -76,5 +78,13 @@ urlpatterns = [
     path(
         "incidents/<uuid:incident_id>/workflow/<str:workflow>",
         incident_views.IncidentWorkflowView.as_view()
+    ),
+    path(
+        "reports/",
+        report_views.ReportingView.as_view(),
+    ),
+    path(
+        "incidents/test",
+        incident_views.Test.as_view()
     )
 ]
