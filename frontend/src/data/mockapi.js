@@ -4,10 +4,20 @@ import { reporters } from "./reporters";
 import { users } from "./users";
 import { provinces, districts, divisionalSecretariats, gramaNiladharis } from "./locations";
 import { polling_divisions, polling_stations } from "./polling";
+import { police_stations } from "./police";
+import { elections } from "./elections";
 import * as storage from "../utils/localStorage";
 import * as auth from "../utils/authorization";
 import moment from "moment";
 const uuidv4 = require("uuid/v4");
+
+
+export function getElections() {
+    return {
+        status: 200,
+        data: elections
+    };
+}
 
 export function getProvinces() {
     return {
@@ -49,6 +59,13 @@ export function getPollingStations() {
         status: 200,
         data: polling_stations
     };
+}
+
+export function getPoliceStations() {
+    return {
+        status: 200,
+        data: police_stations
+    }
 }
 
 function getCurrentUser() {

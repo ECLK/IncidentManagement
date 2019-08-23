@@ -1,6 +1,11 @@
 import axios from 'axios';
 
 import {
+
+    REQUEST_INCIDENT_ELECTIONS,
+    REQUEST_INCIDENT_ELECTIONS_SUCCESS,
+    REQUEST_INCIDENT_ELECTIONS_FAILURE,
+
     REQUEST_INCIDENT_CATAGORIES, 
     REQUEST_INCIDENT_CATAGORIES_SUCCESS, 
     REQUEST_INCIDENT_CATAGORIES_FAILURE,
@@ -58,6 +63,7 @@ import {
 
 import { getIncident, getReporter  } from '../../../api/incident';
 import { 
+    getElections,
     getCategories, 
     getProvinces, 
     getDistricts,
@@ -71,6 +77,40 @@ import {
 import { signIn } from '../../../api/user';
 import * as localStorage from '../../../utils/localStorage';
 
+// Get Elections
+export function requestIncidentElections() {
+    return {
+        type: REQUEST_INCIDENT_ELECTIONS
+    };
+}
+
+export function receiveIncidentElections(elections) {
+    return {
+        type: REQUEST_INCIDENT_ELECTIONS_SUCCESS,
+        data: elections,
+        error: null
+    }
+}
+
+export function receiveIncidentElectionsError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_ELECTIONS_FAILURE,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchElections() {
+    return async function(dispatch) {
+        dispatch(requestIncidentElections())
+        try {
+            const response = await getElections();
+            await dispatch(receiveIncidentElections(response.data));
+        } catch (error) {
+            await dispatch(receiveIncidentElectionsError(error));
+        }
+    }
+}
 
 // Get Catogories
 
@@ -147,13 +187,13 @@ export function fetchProvinces() {
 
 // Get Disticts
 
-export function requestDistricts() {
+export function requestIncidentDistricts() {
     return {
         type: REQUEST_INCIDENT_DISTRICTS,
     }
 }
 
-export function receiveDistricts(response) {
+export function receiveIncidentDistricts(response) {
     return {
         type: REQUEST_INCIDENT_DISTRICTS_SUCCESS,
         data: response,
@@ -161,7 +201,7 @@ export function receiveDistricts(response) {
     }
 }
 
-export function receiveDistrictsError(errorResponse) {
+export function receiveIncidentDistrictsError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_DISTRICTS_FAILURE,
         data: null,
@@ -171,12 +211,12 @@ export function receiveDistrictsError(errorResponse) {
 
 export function fetchDistricts(){
     return async function(dispatch){
-        dispatch(requestDistricts());
+        dispatch(requestIncidentDistricts());
         try{
             const response = await getDistricts();
-            await dispatch(receiveDistricts(response.data));
+            await dispatch(receiveIncidentDistricts(response.data));
         }catch(error){
-            await dispatch(receiveDistrictsError(error));
+            await dispatch(receiveIncidentDistrictsError(error));
         }
     }
 }

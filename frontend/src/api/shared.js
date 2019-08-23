@@ -28,7 +28,8 @@ export const getPollingDivisions = async () => {
 }
 
 export const getPoliceStations = async () => {
-    return (await handler.get('/policestations')).data;
+    // return (await handler.get('/policestations')).data;
+    return mockapi.getPoliceStations();
 }
 
 export const getPollingStations = async () => {
@@ -41,5 +42,6 @@ export const getWards = async () => {
 }
 
 export const getElections = async () => {
-    return handler.get('/elections')
+    // return handler.get('/elections')
+    return mockapi.getElections();
 }

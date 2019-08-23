@@ -4,6 +4,10 @@ import axios from 'axios';
 import * as localStorage from "../../../utils/localStorage"
 
 import {
+    REQUEST_INCIDENT_ELECTIONS,
+    REQUEST_INCIDENT_ELECTIONS_SUCCESS,
+    REQUEST_INCIDENT_ELECTIONS_FAILURE,
+
     REQUEST_INCIDENT_CATAGORIES,
     REQUEST_INCIDENT_CATAGORIES_SUCCESS,
     REQUEST_INCIDENT_CATAGORIES_FAILURE,
@@ -60,6 +64,7 @@ import {
 } from './Shared.types'
 
 const initialState = {
+    elections: [],
     categories: [],
     provinces: [],
     districts: [],
@@ -79,11 +84,6 @@ const initialState = {
         error: null
     },
     activeIncidentReporter: null,
-    elections: {
-        1: "General Election 2020",
-        2: "Presedential Election 2020",
-        3: "Presedential Election 2008"
-    },
     signedInUser: {
         isLoading: false,
         isSignedIn: false,
@@ -106,6 +106,14 @@ export default function sharedReducer(state, action) {
     }
     return produce(state, draft => {
         switch (action.type) {
+            case REQUEST_INCIDENT_ELECTIONS:
+                return draft
+            case REQUEST_INCIDENT_ELECTIONS_SUCCESS:
+                draft.elections = action.data;
+                return draft
+            case REQUEST_INCIDENT_ELECTIONS_FAILURE:
+                return draft
+                
             case REQUEST_INCIDENT_CATAGORIES:
                 return draft
             case REQUEST_INCIDENT_CATAGORIES_SUCCESS:
