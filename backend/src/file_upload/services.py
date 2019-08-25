@@ -2,15 +2,15 @@ from .models import File
 from django.core import serializers
 from .exceptions import FileException
 
-# def get_file_by_id(file_id: str) -> File:
-#     try:
-#         requested_file = File.objects.get(id=file_id)
-#         if requested_file is None:
-#             raise FileException("Invalid file id")
-#     except:
-#         raise FileException("Invalid file id")
+def get_file_by_id(file_id: str) -> File:
+    try:
+        requested_file = File.objects.get(id=file_id)
+        if requested_file is None:
+            raise FileException("Invalid file id")
+    except:
+        raise FileException("Invalid file id")
 
-#     return requested_file
+    return requested_file
 
 def get_incident_file_ids(incident_id: str):
     try:

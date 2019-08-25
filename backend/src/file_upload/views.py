@@ -13,7 +13,7 @@ from .serializers import FileSerializer
 from .services import ( 
     get_incident_file_ids,
 )
-# from ..events import services as event_service
+from ..events import services as event_service
 
 class FileView(APIView):
 
