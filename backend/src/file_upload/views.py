@@ -12,8 +12,10 @@ import urllib
 from .serializers import FileSerializer
 from .services import ( 
     get_incident_file_ids,
+    get_file_by_id
 )
 from ..events import services as event_service
+from ..incidents import services as incident_service
 
 class FileView(APIView):
 
@@ -33,7 +35,11 @@ class FileView(APIView):
     file_serializer = FileSerializer(data=file_data)
     if file_serializer.is_valid():
       file_serializer.save()
-      print (file_serializer.data.id)
+      incident = incident_service.get_incident_by_id(incident_id)
+      uploaded_file = get_file_by_id(file_serializer.data["id"])
+      print(uploaded_file)
+      event_service.media_attached_event(request.user, incident)
+      # event_service.media_attached_event(request.user, incident, uploaded_file)
       return Response(file_serializer.data, status=status.HTTP_201_CREATED)
     else:
       return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
