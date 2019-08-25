@@ -4,13 +4,33 @@ import axios from 'axios';
 import * as localStorage from "../../../utils/localStorage"
 
 import {
+    REQUEST_INCIDENT_ELECTIONS,
+    REQUEST_INCIDENT_ELECTIONS_SUCCESS,
+    REQUEST_INCIDENT_ELECTIONS_FAILURE,
+
     REQUEST_INCIDENT_CATAGORIES,
     REQUEST_INCIDENT_CATAGORIES_SUCCESS,
     REQUEST_INCIDENT_CATAGORIES_FAILURE,
 
+    REQUEST_INCIDENT_PROVINCES,
+    REQUEST_INCIDENT_PROVINCES_SUCCESS,
+    REQUEST_INCIDENT_PROVINCES_FAILURE,
+
     REQUEST_INCIDENT_DISTRICTS,
     REQUEST_INCIDENT_DISTRICTS_SUCCESS,
     REQUEST_INCIDENT_DISTRICTS_FAILURE,
+
+    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS,
+    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_SUCCESS,
+    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_FAILURE,
+
+    REQUEST_INCIDENT_GRAMA_NILADHARIS,
+    REQUEST_INCIDENT_GRAMA_NILADHARIS_SUCCESS,
+    REQUEST_INCIDENT_GRAMA_NILADHARIS_FAILURE,
+
+    REQUEST_INCIDENT_POLLING_DIVISIONS,
+    REQUEST_INCIDENT_POLLING_DIVISIONS_SUCCESS,
+    REQUEST_INCIDENT_POLLING_DIVISIONS_FAILURE,
 
     REQUEST_INCIDENT_POLICE_STATIONS,
     REQUEST_INCIDENT_POLICE_STATIONS_SUCCESS,
@@ -40,48 +60,44 @@ import {
 
     RESET_ACTIVE_INCIDENT,
 
-    REQUEST_INCIDENT_DS_DIVISIONS,
-    REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS,
-    REQUEST_INCIDENT_DS_DIVISIONS_FAILURE,
 
 } from './Shared.types'
 
 const initialState = {
+    elections: [],
     categories: [],
     provinces: [],
     districts: [],
+    divisionalSecretariats: [],
+    gramaNiladharis: [],
+    pollingDivisions: [],
     pollingStations: [],
     policeStations: [],
     dsDivisions: [],
     wards: [],
 
-    activeIncident:{
-        isLoading:false,
+    activeIncident: {
+        isLoading: false,
         data: {
-            
+
         },
-        error:null
+        error: null
     },
-    activeIncidentReporter:null,
-    elections:{
-        1:"General Election 2020",
-        2:"Presedential Election 2020",
-        3:"Presedential Election 2008"
-    },
-    signedInUser:{
-        isLoading:false,
-        isSignedIn:false,
-        data:null,
-        error:null,
-        rememberMe:true,
+    activeIncidentReporter: null,
+    signedInUser: {
+        isLoading: false,
+        isSignedIn: false,
+        data: null,
+        error: null,
+        rememberMe: true,
     },
     selectedLanguage: 'en',
 }
 
 export default function sharedReducer(state, action) {
     if (typeof state === 'undefined') {
-        let userData = localStorage.read("ECIncidentManagementUser");
-        if(userData && userData.authenticated){
+        let userData = localStorage.read("ECIncidentMangementUser");
+        if (userData && userData.authenticated) {
             initialState.signedInUser.data = userData.user;
             initialState.signedInUser.isSignedIn = true;
             axios.defaults.headers.common['Authorization'] = "JWT " + userData.token;
@@ -89,7 +105,15 @@ export default function sharedReducer(state, action) {
         return initialState;
     }
     return produce(state, draft => {
-        switch (action.type) {            
+        switch (action.type) {
+            case REQUEST_INCIDENT_ELECTIONS:
+                return draft
+            case REQUEST_INCIDENT_ELECTIONS_SUCCESS:
+                draft.elections = action.data;
+                return draft
+            case REQUEST_INCIDENT_ELECTIONS_FAILURE:
+                return draft
+                
             case REQUEST_INCIDENT_CATAGORIES:
                 return draft
             case REQUEST_INCIDENT_CATAGORIES_SUCCESS:
@@ -98,13 +122,45 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_CATAGORIES_FAILURE:
                 return draft
 
+            case REQUEST_INCIDENT_PROVINCES:
+                return draft
+            case REQUEST_INCIDENT_PROVINCES_SUCCESS:
+                draft.provinces = action.data;
+                return draft
+            case REQUEST_INCIDENT_PROVINCES_FAILURE:
+                return draft
+
             case REQUEST_INCIDENT_DISTRICTS:
                 return draft
             case REQUEST_INCIDENT_DISTRICTS_SUCCESS:
                 draft.districts = action.data;
-                draft.provinces = [...new Set(action.data.map(item => item.province))];
+                // draft.provinces = [...new Set(action.data.map(item => item.province))];
                 return draft
             case REQUEST_INCIDENT_DISTRICTS_FAILURE:
+                return draft
+
+            case REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS:
+                return draft
+            case REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_SUCCESS:
+                draft.divisionalSecretariats = action.data;
+                return draft
+            case REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_FAILURE:
+                return draft
+
+            case REQUEST_INCIDENT_GRAMA_NILADHARIS:
+                return draft
+            case REQUEST_INCIDENT_GRAMA_NILADHARIS_SUCCESS:
+                draft.gramaNiladharis = action.data;
+                return draft
+            case REQUEST_INCIDENT_GRAMA_NILADHARIS_FAILURE:
+                return draft
+
+            case REQUEST_INCIDENT_POLLING_DIVISIONS:
+                return draft
+            case REQUEST_INCIDENT_POLLING_DIVISIONS_SUCCESS:
+                draft.pollingDivisions = action.data;
+                return draft
+            case REQUEST_INCIDENT_POLLING_DIVISIONS_FAILURE:
                 return draft
 
             case REQUEST_INCIDENT_POLICE_STATIONS:
@@ -122,6 +178,7 @@ export default function sharedReducer(state, action) {
                 return draft
             case REQUEST_INCIDENT_POLLING_STATIONS_FAILURE:
                 return draft
+
             case REQUEST_INCIDENT_WARDS:
                 return draft
             case REQUEST_INCIDENT_WARDS_SUCCESS:
@@ -130,7 +187,7 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_WARDS_FAILURE:
                 return draft
             case ACTIVE_INCIDENT_GET_DATA_REQUEST:
-                draft.activeIncident.isLoading= true
+                draft.activeIncident.isLoading = true
                 return draft
             case ACTIVE_INCIDENT_GET_DATA_SUCCESS:
                 draft.activeIncident.data = action.data.incident
@@ -145,7 +202,7 @@ export default function sharedReducer(state, action) {
                 draft.signedInUser.isLoading = true;
                 return draft
             case SIGN_IN_REQUEST_SUCCESS:
-                if(action.data.authenticated){
+                if (action.data.authenticated) {
                     draft.signedInUser.data = action.data.user
                     draft.signedInUser.isSignedIn = true;
                 }
@@ -159,11 +216,11 @@ export default function sharedReducer(state, action) {
                 return draft;
             case SIGN_OUT:
                 draft.signedInUser = {
-                    isLoading:false,
-                    isSignedIn:false,
-                    data:null,
-                    error:null,
-                    rememberMe:true,
+                    isLoading: false,
+                    isSignedIn: false,
+                    data: null,
+                    error: null,
+                    rememberMe: true,
                 }
                 return draft;
             case SIGN_OUT_ERROR:
@@ -175,15 +232,8 @@ export default function sharedReducer(state, action) {
                 draft.activeIncident.data = {};
                 draft.activeIncidentReporter = null;
                 return draft;
-            case REQUEST_INCIDENT_DS_DIVISIONS:
-                return draft
-            case REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS:
-                draft.dsDivisions = action.data;
-                return draft
-            case REQUEST_INCIDENT_DS_DIVISIONS_FAILURE:
-                return draft
         }
-    })
+    });
 }
 
 
