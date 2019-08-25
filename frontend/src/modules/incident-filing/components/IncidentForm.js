@@ -1,5 +1,4 @@
 
-// EditUserDialog.js
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import React, { Component } from 'react';
@@ -35,14 +34,18 @@ import {
     resetIncidentForm 
 } from '../state/IncidentFiling.actions'
 import { 
-    fetchCatogories, 
+    fetchElections,
+    fetchCatogories,
+    fetchProvinces,
     fetchDistricts,
+    fetchDivisionalSecretariats,
+    fetchGramaNiladharis,
     fetchPollingDivisions,
-    fetchPoliceStations, 
-    fetchPollingStations, 
-    fetchWards, 
+    fetchPoliceStations,
+    fetchPollingStations,
+    fetchWards,
     fetchActiveIncidentData,
-    resetActiveIncident 
+    resetActiveIncident
 } from '../../shared/state/Shared.actions';
 
 import Snackbar from '@material-ui/core/Snackbar';
@@ -136,15 +139,18 @@ function getSteps() {
             id: 'eclk.incident.management.filing.guest.form.steps.location.details',
             description: 'Submit Incident Location Details',
             defaultMessage: 'Submit Incident Location Details'
-        }, {
+        }, 
+        {
             id: 'eclk.incident.management.filing.guest.form.steps.contact.details',
             description: 'Submit Contact Details',
             defaultMessage: 'Submit Contact Details'
-        }, {
+        }, 
+        {
             id: 'eclk.incident.management.filing.guest.form.steps.review.details',
             description: 'Add additoinal details',
             defaultMessage: 'Add additoinal details'
-        }];
+        }
+    ];
 }
 
 function getStepContent(step, props, formikProps, state) {
@@ -187,12 +193,17 @@ class IndicdentForm extends Component {
     };
 
     componentDidMount() {
+        this.props.getElections();
         this.props.getcategories();
+        this.props.getProvinces();
         this.props.getDistricts();
+        this.props.getDivisionalSecretariats();
+        this.props.getGramaNiladharis();
+        this.props.getPollingDivisions();
+        this.props.getPollingStations();
         this.props.getPoliceStations();
         this.props.getPollingStations();
         this.props.getWards();
-        this.props.getDSDivisions();
 
         this.props.resetIncidentForm();
 
@@ -499,11 +510,13 @@ const mapStateToProps = (state, ownProps) => {
         categories: state.sharedReducer.categories,
         districts: state.sharedReducer.districts,
         provinces: state.sharedReducer.provinces,
+        divisionalSecretariats: state.sharedReducer.divisionalSecretariats,
+        gramaNiladharis: state.sharedReducer.gramaNiladharis,
+        pollingDivisions: state.sharedReducer.pollingDivisions,
         pollingStations: state.sharedReducer.pollingStations,
         policeStations: state.sharedReducer.policeStations,
         wards: state.sharedReducer.wards,
         elections: state.sharedReducer.elections,
-        dsDivisions: state.sharedReducer.dsDivisions,
 
         ...ownProps
     }
@@ -527,11 +540,23 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(stepForwardIncidentStepper())
         },
 
+        getElections: () => {
+            dispatch(fetchElections());
+        },
         getcategories: () => {
             dispatch(fetchCatogories())
         },
+        getProvinces: () => {
+            dispatch(fetchProvinces())
+        },
         getDistricts: () => {
             dispatch(fetchDistricts())
+        },
+        getDivisionalSecretariats: () => {
+            dispatch(fetchDivisionalSecretariats())
+        },
+        getGramaNiladharis: () => {
+            dispatch(fetchGramaNiladharis());
         },
         getPollingDivisions: () => {
             dispatch(fetchPollingDivisions());
