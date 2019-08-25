@@ -1,5 +1,16 @@
 from .models import File
 from django.core import serializers
+from .exceptions import FileException
+
+# def get_file_by_id(file_id: str) -> File:
+#     try:
+#         requested_file = File.objects.get(id=file_id)
+#         if requested_file is None:
+#             raise FileException("Invalid file id")
+#     except:
+#         raise FileException("Invalid file id")
+
+#     return requested_file
 
 def get_incident_file_ids(incident_id: str):
     try:
@@ -7,8 +18,6 @@ def get_incident_file_ids(incident_id: str):
         file_ids = []
         for f in files:
             file_ids.append(f.id)
-        # return file_ids
         return files
-        # return serializers.serialize('json',files)
-    except Exception as e:
-        return None
+    except:
+        raise FileException("Couldn't find files for the incident")

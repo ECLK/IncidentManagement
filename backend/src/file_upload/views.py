@@ -10,10 +10,10 @@ import os
 import urllib
 
 from .serializers import FileSerializer
-
 from .services import ( 
     get_incident_file_ids,
 )
+# from ..events import services as event_service
 
 class FileView(APIView):
 
@@ -21,8 +21,6 @@ class FileView(APIView):
   serializer_class = FileSerializer
 
   def get(self, request, incident_id):
-    # file_ids = get_incident_file_ids(incident_id)
-    # return Response(file_ids, status=status.HTTP_200_OK)
     files = get_incident_file_ids(incident_id)
     serializer = FileSerializer(files, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -35,6 +33,7 @@ class FileView(APIView):
     file_serializer = FileSerializer(data=file_data)
     if file_serializer.is_valid():
       file_serializer.save()
+      # print (file_serializer.data.id)
       return Response(file_serializer.data, status=status.HTTP_201_CREATED)
     else:
       return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -60,14 +59,13 @@ class FileDownload(APIView):
         response['Content-Encoding'] = encoding
 
     if u'WebKit' in request.META['HTTP_USER_AGENT']:
-        # Safari 3.0 and Chrome 2.0 accepts UTF-8 encoded string directly.
+        # Safari 3.0 and Chrome 2.0 
         filename_header = 'filename=%s' % file_full_name.encode('utf-8')
     elif u'MSIE' in request.META['HTTP_USER_AGENT']:
-        # IE does not support internationalized filename at all.
-        # It can only recognize internationalized URL, so we do the trick via routing rules.
+        # IE does not support internationalized filename at all
         filename_header = ''
     else:
-        # For others like Firefox, we follow RFC2231 (encoding extension in HTTP headers).
+        # For others like Firefox
         filename_header = 'filename*=UTF-8\'\'%s' % urllib.parse.quote(file_full_name.encode('utf-8'))
     response['Content-Disposition'] = 'attachment; ' + filename_header
     return response
