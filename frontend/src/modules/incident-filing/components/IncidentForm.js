@@ -32,16 +32,18 @@ import {
     stepForwardIncidentStepper, 
     fetchUpdateReporter, 
     fetchUpdateIncident,
-    resetIncidentForm } from '../state/IncidentFiling.actions'
+    resetIncidentForm 
+} from '../state/IncidentFiling.actions'
 import { 
     fetchCatogories, 
-    fetchDistricts, 
+    fetchDistricts,
+    fetchPollingDivisions,
     fetchPoliceStations, 
     fetchPollingStations, 
     fetchWards, 
     fetchActiveIncidentData,
-    resetActiveIncident,
-    fetchDSDivisions } from '../../shared/state/Shared.actions';
+    resetActiveIncident 
+} from '../../shared/state/Shared.actions';
 
 import Snackbar from '@material-ui/core/Snackbar';
 
@@ -531,6 +533,9 @@ const mapDispatchToProps = (dispatch) => {
         getDistricts: () => {
             dispatch(fetchDistricts())
         },
+        getPollingDivisions: () => {
+            dispatch(fetchPollingDivisions());
+        },
         getPollingStations: () => {
             dispatch(fetchPollingStations())
         },
@@ -551,9 +556,6 @@ const mapDispatchToProps = (dispatch) => {
 
         resetIncidentForm: () => {
             dispatch(resetIncidentForm())
-        },
-        getDSDivisions: () => {
-            dispatch(fetchDSDivisions());
         }
     }
 }

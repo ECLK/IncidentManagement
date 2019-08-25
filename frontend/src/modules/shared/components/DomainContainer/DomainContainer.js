@@ -29,7 +29,7 @@ import LoadingNotification from '../../../notifications/components/LoadingNotifi
 import Breadcrumbs from '../Breadcrumbs'
 
 const HomeLink = props => <Link to="/app/home" {...props} />
-const ReportLink = props => <Link to="/app/report" {...props} />
+const ReportLink = props => <Link to="/app/incident" {...props} />
 const ReviewLink = props => <Link to="/app/review" {...props} />
 const StaticReportLink = props => <Link to="/app/reports" {...props} />
 
