@@ -304,7 +304,9 @@ class IncidentWorkflowView(APIView):
 
 class IncidentAutoEscalate(APIView):
     def get(self, request):
-        auto_escalate_incidents()
+        escalated_incidents = auto_escalate_incidents()
+
+        return Response(escalated_incidents, status=status.HTTP_200_OK)
 
 class Test(APIView):
     def get(self, request):

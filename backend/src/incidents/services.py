@@ -438,3 +438,5 @@ def auto_escalate_incidents():
         incident = get_incident_by_id(incident_detail[0])
         incident_escalate(incident.assignee, incident)
 
+    return incident_details
+
