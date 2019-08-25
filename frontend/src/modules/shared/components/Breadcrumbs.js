@@ -19,10 +19,11 @@ const styles = theme => ({
 
 const breadcrumbNameMap = {
     '/app': 'Home',
-    '/app/report': 'Report',
+    '/app/report': 'Report',  
     '/app/review': 'Review',
     '/app/review/incident': 'Incident',
     '/app/review/incident/edit': 'Edit',
+    '/app/reports':'Reports'
 };
 
 function SimpleBreadcrumbs(props) {
