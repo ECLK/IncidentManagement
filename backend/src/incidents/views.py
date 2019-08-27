@@ -45,6 +45,7 @@ from .services import (
 
 from ..events import services as event_service
 from ..file_upload import services as file_services
+from .exceptions import IncidentException
 
 import json
 
@@ -126,12 +127,14 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         param_severity = self.request.query_params.get('severity', None)
         if param_severity is not None:
             try:
-                severity_type = SeverityType[param_severity]
-                incidents = [
-                    incident for incident in incidents if incident.current_severity == severity_type.name]
-            except Exception as e:
-                return Response("Invalid severity", status=status.HTTP_400_BAD_REQUEST)
-
+                param_severity = int(param_severity)
+                if param_severity < 1 or param_severity > 10:
+                    raise IncidentException("Severity level must be between 1 - 10")
+            except:
+                raise IncidentException("Severity level must be a number")
+            
+            incidents = [
+                    incident for incident in incidents if incident.current_severity == param_severity]
         
         results = self.paginate_queryset(incidents, request, view=self)
         serializer = IncidentSerializer(results, many=True)
@@ -183,18 +186,21 @@ class IncidentDetail(APIView):
         incident = get_incident_by_id(incident_id)
         serializer = IncidentSerializer(incident, data=request.data)
         incident_police_report = get_police_report_by_incident(incident)
-        incident_police_report_data = request.data
-        incident_police_report_data["incident"] = incident_id
-        incident_police_report_serializer = IncidentPoliceReportSerializer(incident_police_report, data=incident_police_report_data)
         
         if serializer.is_valid():
             serializer.save()
             return_data = serializer.data
-            
-            if incident_police_report_serializer.is_valid():
-                incident_police_report_serializer.save()
-                return_data.update(incident_police_report_serializer.data)
-                return_data["id"] = incident_id
+
+            if incident_police_report is not None:
+                incident_police_report_data = request.data
+                incident_police_report_data["incident"] = incident_id
+                incident_police_report_serializer = IncidentPoliceReportSerializer(incident_police_report, data=incident_police_report_data)
+
+                
+                if incident_police_report_serializer.is_valid():
+                    incident_police_report_serializer.save()
+                    return_data.update(incident_police_report_serializer.data)
+                    return_data["id"] = incident_id
 
             return Response(return_data)
 

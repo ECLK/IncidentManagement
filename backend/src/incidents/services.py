@@ -98,7 +98,7 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
     status.save()
 
     severity = IncidentSeverity(
-        current_severity=0, incident=incident, approved=True
+        current_severity=10, incident=incident, approved=True
     )
     severity.save()
 
@@ -424,10 +424,11 @@ def incident_verify(user: User, incident: Incident, comment: str):
 def get_police_report_by_incident(incident: Incident):
     try:
         incident_police_report = IncidentPoliceReport.objects.get(incident=incident)
-        if incident_police_report is None:
-            raise IncidentException("No police report associated to the incident")
+        # if incident_police_report is None:
+        #     raise IncidentException("No police report associated to the incident")
     except:
-        raise IncidentException("No police report associated to the incident")
+        # raise IncidentException("No police report associated to the incident")
+        return None
 
     return incident_police_report
 
