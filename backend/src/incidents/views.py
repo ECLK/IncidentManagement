@@ -39,16 +39,18 @@ from .services import (
     get_user_by_id,
     get_police_report_by_incident,
     get_incidents_to_escalate,
-    auto_escalate_incidents
+    auto_escalate_incidents,
+    attach_media
 )
 
 from ..events import services as event_service
+from ..file_upload import services as file_services
 
 import json
 
 
 class IncidentResultsSetPagination(PageNumberPagination):
-    page_size = 5
+    page_size = 15
     page_size_query_param = "pageSize"
     max_page_size = 100
 
@@ -301,6 +303,16 @@ class IncidentWorkflowView(APIView):
 
         else:
             return Response("Invalid workflow", status=status.HTTP_400_BAD_REQUEST)
+
+        return Response("Incident workflow success", status=status.HTTP_200_OK)
+
+class IncidentMediaView(APIView):
+    def post(self, request, incident_id, format=None):
+
+        incident = get_incident_by_id(incident_id)
+        file_id = request.data['file_id']
+        uploaded_file = file_services.get_file_by_id(file_id)
+        attach_media(request.user, incident, uploaded_file)
 
         return Response("Incident workflow success", status=status.HTTP_200_OK)
 

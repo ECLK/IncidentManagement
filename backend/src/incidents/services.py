@@ -12,6 +12,7 @@ from django.contrib.auth.models import User, Group
 
 from ..events import services as event_services
 from ..events.models import Event
+from ..file_upload.models import File
 from django.db import connection
 
 from .exceptions import WorkflowException, IncidentException
@@ -442,4 +443,8 @@ def auto_escalate_incidents():
         incident_escalate(incident.assignee, incident)
 
     return incident_details
+
+def attach_media(user:User, incident:Incident, uploaded_file:File):
+    """ Method to indicate media attachment """
+    event_services.media_attached_event(user, incident, uploaded_file)
 

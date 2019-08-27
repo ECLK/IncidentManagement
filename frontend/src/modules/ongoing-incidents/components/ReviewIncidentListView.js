@@ -201,7 +201,7 @@ class ReviewIncidentListView extends React.Component {
                 rowsPerPageOptions={[5, 10, 25]}
                 colSpan={3}
                 count={pagedIncidents.count}
-                rowsPerPage={5}
+                rowsPerPage={15}
                 page={pagedIncidents.pageNumber-1}
                 SelectProps={{
                   inputProps: { 'aria-label': 'rows per page' },
