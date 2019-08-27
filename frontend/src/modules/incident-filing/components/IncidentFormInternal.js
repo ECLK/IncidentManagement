@@ -33,7 +33,7 @@ import {
 } from '../state/IncidentFiling.actions'
 import {
     fetchElections,
-    fetchCatogories,
+    fetchCategories,
     fetchProvinces,
     fetchDistricts,
     fetchDivisionalSecretariats,
@@ -583,7 +583,7 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(fetchElections());
         },
         getcategories: () => {
-            dispatch(fetchCatogories())
+            dispatch(fetchCategories())
         },
         getProvinces: () => {
             dispatch(fetchProvinces())
