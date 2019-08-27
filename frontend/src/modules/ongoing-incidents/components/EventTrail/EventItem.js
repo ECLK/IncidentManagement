@@ -263,7 +263,9 @@ const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
                         <Button 
                             color="primary" 
                             className={classes.button} 
-                            onClick={() => eventAction(event.id, "APPROVE")}
+                            onClick={() => dispatch(showModal(
+                                            'PROVIDE_ADVICE_MODAL', 
+                                            { activeIncident: event.incident }))}
                         >
                             Provide Advice
                         </Button>
