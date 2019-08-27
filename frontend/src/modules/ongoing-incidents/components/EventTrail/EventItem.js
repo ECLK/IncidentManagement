@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import Button from '@material-ui/core/Button';
 
 import { showModal } from '../../../modals/state/modal.actions'
+import { API_BASE_URL } from '../../../../config';
 
 
 const styles = {
@@ -131,6 +132,8 @@ function hasEventBody(event){
     }
     else if(event.action === "ATTRIBUTE_CHANGED"){
         return true;
+    }else if(event.action === "MEDIA_ATTACHED"){
+        return true;
     }
     return false;
 }
@@ -162,6 +165,13 @@ function getSecondaryItem(event){
                     <div>Name: ${descObj.name}</div>
                     <div>Comment: ${descObj.comment}</div><div></div>`
                 )}
+            </div>
+        )
+    }else if(event.action === "MEDIA_ATTACHED"){
+        const file = event.data.media.file;
+        return (
+            <div>
+                <a href={`${API_BASE_URL}/incidents/files/download/${file.id}`}>{file.name}</a>
             </div>
         )
     }
@@ -265,7 +275,7 @@ const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
                             className={classes.button} 
                             onClick={() => dispatch(showModal(
                                             'PROVIDE_ADVICE_MODAL', 
-                                            { activeIncident: event.incident }))}
+                                            {  event }))}
                         >
                             Provide Advice
                         </Button>

@@ -32,26 +32,25 @@ class FileView(APIView):
     file_data = request.data
     file_data["incident"] = incident_id
     file_data["extension"] = file_data["file"].name.split('.')[-1]
+    file_data["original_name"] = file_data["file"].name
+
     file_serializer = FileSerializer(data=file_data)
     if file_serializer.is_valid():
       file_serializer.save()
-      incident = incident_service.get_incident_by_id(incident_id)
-      uploaded_file = get_file_by_id(file_serializer.data["id"])
-      print(uploaded_file)
-      event_service.media_attached_event(request.user, incident)
+      # incident = incident_service.get_incident_by_id(incident_id)
+      # uploaded_file = get_file_by_id(file_serializer.data["id"])
+      # event_service.media_attached_event(request.user, incident)
       # event_service.media_attached_event(request.user, incident, uploaded_file)
       return Response(file_serializer.data, status=status.HTTP_201_CREATED)
     else:
       return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class FileDownload(APIView):
-
+  permission_classes = []
   def get(self, request, file_id):
-
-    file_name = str(file_id)
-    ext = request.GET.get('ext', '')
-    file_full_name = file_name + "." + ext
-    file_path = "media/" + file_full_name
+    uploaded_file = get_file_by_id(file_id)
+    file_path = uploaded_file.file.url
+    file_full_name = uploaded_file.original_name
 
     fp = open(file_path, 'rb')
     response = HttpResponse(fp.read())
@@ -66,12 +65,12 @@ class FileDownload(APIView):
 
     if u'WebKit' in request.META['HTTP_USER_AGENT']:
         # Safari 3.0 and Chrome 2.0 
-        filename_header = 'filename=%s' % file_full_name.encode('utf-8')
+        filename_header = 'filename=%s' % file_full_name
     elif u'MSIE' in request.META['HTTP_USER_AGENT']:
         # IE does not support internationalized filename at all
         filename_header = ''
     else:
         # For others like Firefox
-        filename_header = 'filename*=UTF-8\'\'%s' % urllib.parse.quote(file_full_name.encode('utf-8'))
+        filename_header = 'filename*=UTF-8\'\'%s' % file_full_name
     response['Content-Disposition'] = 'attachment; ' + filename_header
     return response

@@ -60,6 +60,10 @@ urlpatterns = [
         incident_views.IncidentCommentView.as_view(),
     ),
     path(
+        "incidents/<uuid:incident_id>/attach_media",
+        incident_views.IncidentMediaView.as_view(),
+    ),
+    path(
         "reporters/<int:reporter_id>", 
         incident_views.ReporterDetail.as_view(),
     ),
@@ -68,7 +72,7 @@ urlpatterns = [
         file_views.FileView.as_view(),
     ),
     path(
-        "incidents/files/download/<uuid:file_id>",
+        "incidents/files/download/<int:file_id>",
         file_views.FileDownload.as_view(),
     ),
     path(
@@ -90,6 +94,10 @@ urlpatterns = [
     path(
         "incidents/auto-escalate",
         incident_views.IncidentAutoEscalate.as_view()
+    ),
+    path(
+        "public/incidents/",
+        incident_views.IncidentPublicUserView.as_view()
     )
 
 ]

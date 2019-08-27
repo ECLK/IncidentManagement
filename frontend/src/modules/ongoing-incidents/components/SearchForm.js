@@ -83,6 +83,7 @@ function SearchForm(props) {
     filterIncidents();
   }, []);
   const { classes, categories } = props;
+  const severityValues = Array(10).fill(0).map((e,i)=>i+1);
   return (
     <Formik
       initialValues={props.incidentSearchFilter}
@@ -227,12 +228,9 @@ function SearchForm(props) {
                         <MenuItem value="">
                           <em>None</em>
                         </MenuItem>
-                        <MenuItem value={"DEFAULT"}>Default</MenuItem>
-                        <MenuItem value={"INSIGNIFICANT"}>Insignificant</MenuItem>
-                        <MenuItem value={"MINOR"}>Minor</MenuItem>
-                        <MenuItem value={"MODERATE"}>Moderate</MenuItem>
-                        <MenuItem value={"MAJOR"}>Major</MenuItem>
-                        <MenuItem value={"CRITICAL"}>Critical</MenuItem>
+                        {severityValues.map((val) => (
+                          <MenuItem value={val} key={val}>{val}</MenuItem>
+                        ))}                        
                       </Select>
                     </FormControl>
                     <FormControl className={classes.formControl}>

@@ -143,7 +143,7 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
                     rowsPerPageOptions={[5, 10, 25]}
                     colSpan={3}
                     count={count}
-                    rowsPerPage={5}
+                    rowsPerPage={15}
                     page={pageNumber}
                     SelectProps={{
                     inputProps: { 'aria-label': 'rows per page' },
