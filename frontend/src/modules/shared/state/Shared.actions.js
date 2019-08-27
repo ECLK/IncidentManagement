@@ -139,7 +139,7 @@ export function recieveIncidentCatogoriesError(errorResponse) {
     }
 }
 
-export function fetchCatogories(){
+export function fetchCategories(){
     return async function(dispatch){
         dispatch(requestIncidentCatogories());
         try{

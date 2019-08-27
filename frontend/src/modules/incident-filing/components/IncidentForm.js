@@ -35,7 +35,7 @@ import {
 } from '../state/IncidentFiling.actions'
 import { 
     fetchElections,
-    fetchCatogories,
+    fetchCategories,
     fetchProvinces,
     fetchDistricts,
     fetchDivisionalSecretariats,
@@ -194,7 +194,7 @@ class IndicdentForm extends Component {
 
     componentDidMount() {
         this.props.getElections();
-        this.props.getcategories();
+        this.props.getCategories();
         this.props.getProvinces();
         this.props.getDistricts();
         this.props.getDivisionalSecretariats();
@@ -543,8 +543,8 @@ const mapDispatchToProps = (dispatch) => {
         getElections: () => {
             dispatch(fetchElections());
         },
-        getcategories: () => {
-            dispatch(fetchCatogories())
+        getCategories: () => {
+            dispatch(fetchCategories())
         },
         getProvinces: () => {
             dispatch(fetchProvinces())

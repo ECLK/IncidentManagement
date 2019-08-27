@@ -14,7 +14,7 @@ import {
   updateIncidentFilters
 } from "../state/OngoingIncidents.actions";
 
-import { fetchCatogories } from "../../shared/state/Shared.actions";
+import { fetchCategories } from "../../shared/state/Shared.actions";
 
 import moment from "moment";
 import SearchForm from "./SearchForm";
@@ -232,7 +232,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
   return {
     getCategories: () => {
-      dispatch(fetchCatogories());
+      dispatch(fetchCategories());
     },
     getIncidents: (filters, page) => {
       dispatch(fetchIncidents(filters, page));
