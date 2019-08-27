@@ -278,7 +278,9 @@ class IncidentWorkflowView(APIView):
 
         elif workflow == "provide-advice":
             comment = json.dumps(request.data['comment'])
-            incident_provide_advice(request.user, incident, comment)
+            start_event_id = request.data['start_event']
+            start_event = event_service.get_event_by_id(start_event_id)
+            incident_provide_advice(request.user, incident, comment, start_event)
 
         elif workflow == "verify":
             comment = json.dumps(request.data['comment'])

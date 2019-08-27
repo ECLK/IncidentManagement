@@ -16,20 +16,19 @@ import { fetchUpdateWorkflow } from '../../ongoing-incidents/state/OngoingIncide
 import { TextField } from '@material-ui/core';
 
 
-const onSubmitClick = (dispatch, incidentId, comment, assignee) => {
-    if(comment === "" || assignee === ""){
+const onSubmitClick = (dispatch, incidentId, comment, startEvent) => {
+    if(comment === ""){
         // show error because mandatory
         return;
-    }
-
+    }  
     dispatch(fetchUpdateWorkflow(incidentId, "provide-advice", {
+        start_event: startEvent,
         comment: comment
     } ));
     dispatch(hideModal());
 }
 
-const ProvideAdviceModal = (props) => {
-
+const ProvideAdviceModal = ({ event }) => {
     const dispatch = useDispatch();
 
     //maintains selected value in local state until change is confirmed
@@ -58,7 +57,7 @@ const ProvideAdviceModal = (props) => {
                     Close
                 </Button>
                 <Button 
-                    onClick={() => onSubmitClick(dispatch, props.activeIncident.id, comment)} 
+                    onClick={() => onSubmitClick(dispatch, event.incident.id, comment, event.id)} 
                     color="primary">
                     Send Advice
                 </Button>

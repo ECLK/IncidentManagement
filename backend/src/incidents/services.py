@@ -362,7 +362,7 @@ def incident_request_advice(user: User, incident: Incident, assignee: User, comm
     event_services.update_status_with_description_event(user, incident, status, True, comment)
 
 
-def incident_provide_advice(user: User, incident: Incident, advice: str):
+def incident_provide_advice(user: User, incident: Incident, advice: str, start_event: Event):
     if not Incident.objects.filter(linked_individuals__id=user.id).exists():
         raise WorkflowException("User not linked to the given incident")
 
@@ -380,11 +380,14 @@ def incident_provide_advice(user: User, incident: Incident, advice: str):
     # check this
     incident.linked_individuals.remove(user.id)
 
-    event_services.update_status_with_description_event(user, incident, status, True, advice)
+    event_services.provide_advice_event(user, incident, status, advice, start_event)
 
 def incident_verify(user: User, incident: Incident, comment: str):
     if incident.current_status != StatusType.NEW.name:
         raise WorkflowException("Can only verify unverified incidents")
+
+    if incident.assignee != user:
+        raise WorkflowException("Only assignee can verify the incident")
 
     status = IncidentStatus(
         current_status=StatusType.VERIFIED,

@@ -265,7 +265,7 @@ const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
                             className={classes.button} 
                             onClick={() => dispatch(showModal(
                                             'PROVIDE_ADVICE_MODAL', 
-                                            { activeIncident: event.incident }))}
+                                            {  event }))}
                         >
                             Provide Advice
                         </Button>
