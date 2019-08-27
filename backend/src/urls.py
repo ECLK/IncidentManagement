@@ -94,6 +94,10 @@ urlpatterns = [
     path(
         "incidents/auto-escalate",
         incident_views.IncidentAutoEscalate.as_view()
+    ),
+    path(
+        "public/incidents/",
+        incident_views.IncidentPublicUserView.as_view()
     )
 
 ]

@@ -71,6 +71,6 @@ class FileDownload(APIView):
         filename_header = ''
     else:
         # For others like Firefox
-        filename_header = 'filename*=UTF-8\'\'%s' % file_full_name.encode('utf-8')
+        filename_header = 'filename*=UTF-8\'\'%s' % file_full_name
     response['Content-Disposition'] = 'attachment; ' + filename_header
     return response

@@ -61,9 +61,38 @@ def get_comments_by_incident(incident: Incident) -> IncidentComment:
     except Exception as e:
         return None
 
+def get_user_group(user: User):
+    user_groups = user.groups.all()
+    if len(user_groups) == 0:
+        raise WorkflowException("No group for current assignee")
+
+    return user_groups[0]
+
 
 def create_incident_postscript(incident: Incident, user: User) -> None:
     """Function to take care of event, status and severity creation"""
+    if user is None:
+        # public user case
+        # if no auth token, then we assign the guest user as public user
+        try:
+            user = User.objects.get(username="guest")
+        except:
+            raise IncidentException("No guest user available")
+        
+    reporter = Reporter()
+    reporter.save()
+
+    incident.reporter = reporter
+    incident.assignee = user
+    incident.save()
+
+    # if the user is from the guest group (public user or data entry operator)
+    # auto escalate it
+    user_group = get_user_group(user)
+    if user_group.name == "guest":
+        print(incident.current_status)
+        incident_escalate(user, incident)
+
     status = IncidentStatus(current_status=StatusType.NEW,
                             incident=incident, approved=True)
     status.save()
@@ -73,15 +102,7 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
     )
     severity.save()
 
-    reporter = Reporter()
-    reporter.save()
-
-    incident.reporter = reporter
-    incident.assignee = user
-    incident.save()
-
     event_services.create_incident_event(user, incident)
-
 
 def update_incident_postscript(incident: Incident, user: User) -> None:
     event_services.create_comment_event(user, incident)
@@ -239,8 +260,8 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP"):
         raise WorkflowException("Only current incident assignee can escalate the incident")
     
     if (
-        incident.current_status == StatusType.VERIFIED.name 
-        or incident.current_status == StatusType.NEW.name
+        # incident.current_status == StatusType.VERIFIED.name 
+        incident.current_status == StatusType.NEW.name
         or incident.current_status == StatusType.ACTION_PENDING.name
         or incident.current_status == StatusType.ADVICE_REQESTED.name
     ) :
