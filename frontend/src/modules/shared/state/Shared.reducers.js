@@ -28,6 +28,10 @@ import {
     REQUEST_INCIDENT_GRAMA_NILADHARIS_SUCCESS,
     REQUEST_INCIDENT_GRAMA_NILADHARIS_FAILURE,
 
+    REQUEST_INCIDENT_POLLING_STATIONS,
+    REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS,
+    REQUEST_INCIDENT_POLLING_STATIONS_FAILURE,
+
     REQUEST_INCIDENT_POLLING_DIVISIONS,
     REQUEST_INCIDENT_POLLING_DIVISIONS_SUCCESS,
     REQUEST_INCIDENT_POLLING_DIVISIONS_FAILURE,
@@ -36,9 +40,9 @@ import {
     REQUEST_INCIDENT_POLICE_STATIONS_SUCCESS,
     REQUEST_INCIDENT_POLICE_STATIONS_FAILURE,
 
-    REQUEST_INCIDENT_POLLING_STATIONS,
-    REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS,
-    REQUEST_INCIDENT_POLLING_STATIONS_FAILURE,
+    REQUEST_INCIDENT_POLICE_DIVISIONS,
+    REQUEST_INCIDENT_POLICE_DIVISIONS_SUCCESS,
+    REQUEST_INCIDENT_POLICE_DIVISIONS_FAILURE,
 
     REQUEST_INCIDENT_WARDS,
     REQUEST_INCIDENT_WARDS_SUCCESS,
@@ -73,7 +77,7 @@ const initialState = {
     pollingDivisions: [],
     pollingStations: [],
     policeStations: [],
-    dsDivisions: [],
+    policeDivisions: [],
     wards: [],
 
     activeIncident: {
@@ -155,6 +159,14 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_GRAMA_NILADHARIS_FAILURE:
                 return draft
 
+            case REQUEST_INCIDENT_POLLING_STATIONS:
+                return draft
+            case REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS:
+                draft.pollingStations = action.data;
+                return draft
+            case REQUEST_INCIDENT_POLLING_STATIONS_FAILURE:
+                return draft
+
             case REQUEST_INCIDENT_POLLING_DIVISIONS:
                 return draft
             case REQUEST_INCIDENT_POLLING_DIVISIONS_SUCCESS:
@@ -171,14 +183,14 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_POLICE_STATIONS_FAILURE:
                 return draft
 
-            case REQUEST_INCIDENT_POLLING_STATIONS:
+            case REQUEST_INCIDENT_POLICE_DIVISIONS:
                 return draft
-            case REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS:
-                draft.pollingStations = action.data;
+            case REQUEST_INCIDENT_POLICE_DIVISIONS_SUCCESS:
+                draft.policeDivisions = action.data;
                 return draft
-            case REQUEST_INCIDENT_POLLING_STATIONS_FAILURE:
+            case REQUEST_INCIDENT_POLICE_DIVISIONS_FAILURE:
                 return draft
-
+    
             case REQUEST_INCIDENT_WARDS:
                 return draft
             case REQUEST_INCIDENT_WARDS_SUCCESS:

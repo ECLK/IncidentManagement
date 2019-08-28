@@ -23,6 +23,11 @@ export const getGramaNiladharis = async () => {
     return mockapi.getGramaNiladharis();
 }
 
+export const getPollingStations = async () => {
+    // return (await handler.get('/pollingstations')).data;
+    return mockapi.getPollingStations();
+}
+
 export const getPollingDivisions = async () => {
     return mockapi.getPollingDivisions();
 }
@@ -32,9 +37,8 @@ export const getPoliceStations = async () => {
     return mockapi.getPoliceStations();
 }
 
-export const getPollingStations = async () => {
-    // return (await handler.get('/pollingstations')).data;
-    return mockapi.getPollingStations();
+export const getPoliceDivisions = async () => {
+    return mockapi.getPoliceDivisions();
 }
 
 export const getWards = async () => {

@@ -26,13 +26,21 @@ import {
     REQUEST_INCIDENT_GRAMA_NILADHARIS_SUCCESS,
     REQUEST_INCIDENT_GRAMA_NILADHARIS_FAILURE,
 
+    REQUEST_INCIDENT_POLLING_STATIONS,
+    REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS,
+    REQUEST_INCIDENT_POLLING_STATIONS_FAILURE,
+
+    REQUEST_INCIDENT_POLLING_DIVISIONS,
+    REQUEST_INCIDENT_POLLING_DIVISIONS_SUCCESS,
+    REQUEST_INCIDENT_POLLING_DIVISIONS_FAILURE,
+
     REQUEST_INCIDENT_POLICE_STATIONS,
     REQUEST_INCIDENT_POLICE_STATIONS_SUCCESS,
     REQUEST_INCIDENT_POLICE_STATIONS_FAILURE,
 
-    REQUEST_INCIDENT_POLLING_STATIONS,
-    REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS,
-    REQUEST_INCIDENT_POLLING_STATIONS_FAILURE,
+    REQUEST_INCIDENT_POLICE_DIVISIONS,
+    REQUEST_INCIDENT_POLICE_DIVISIONS_SUCCESS,
+    REQUEST_INCIDENT_POLICE_DIVISIONS_FAILURE,
 
     REQUEST_INCIDENT_WARDS,
     REQUEST_INCIDENT_WARDS_SUCCESS,
@@ -54,11 +62,6 @@ import {
 
     RESET_ACTIVE_INCIDENT,
 
-    REQUEST_INCIDENT_POLLING_DIVISIONS,
-    REQUEST_INCIDENT_POLLING_DIVISIONS_SUCCESS,
-    REQUEST_INCIDENT_POLLING_DIVISIONS_FAILURE,
-
-
 } from './Shared.types'
 
 import { getIncident, getReporter  } from '../../../api/incident';
@@ -69,9 +72,10 @@ import {
     getDistricts,
     getDivisionalSecretariats,
     getGramaNiladharis,
+    getPollingStations, 
     getPollingDivisions,
     getPoliceStations, 
-    getPollingStations, 
+    getPoliceDivisions, 
     getWards
 } from '../../../api/shared';
 import { signIn } from '../../../api/user';
@@ -420,6 +424,45 @@ export function fetchPoliceStations(){
     }
 }
 
+
+// police divisions
+
+export function requestPoliceDivisions() {
+    return {
+        type: REQUEST_INCIDENT_POLICE_DIVISIONS,
+        isLoading: true
+    }
+}
+
+export function receivePoliceDivisions(response) {
+    return {
+        type: REQUEST_INCIDENT_POLICE_DIVISIONS_SUCCESS,
+        data: response,
+        error: null,
+        isLoading: false
+    }
+}
+
+export function receivePoliceDivisionsError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_POLICE_DIVISIONS_FAILURE,
+        data: null,
+        error: errorResponse,
+        isLoading: false
+    }
+}
+
+export function fetchPoliceDivisions(){
+    return async function(dispatch){
+        dispatch(requestPoliceDivisions());
+        try {
+            const response = await getPoliceDivisions();
+            await dispatch(receivePoliceDivisions(response.data));
+        } catch (error) {
+            await dispatch(receivePoliceDivisionsError(error));
+        }
+    }
+}
 
 // Get Wards
 

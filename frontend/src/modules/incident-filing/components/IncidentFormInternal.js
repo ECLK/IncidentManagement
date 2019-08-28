@@ -41,6 +41,7 @@ import {
     fetchPollingDivisions,
     fetchPoliceStations,
     fetchPollingStations,
+    fetchPoliceDivisions,
     fetchWards,
     fetchActiveIncidentData,
     resetActiveIncident
@@ -92,6 +93,7 @@ class IncidentFormInternal extends Component {
         pollingDivision: "",
         pollingStation: "",
         policeStation: "",
+        policeDivision: "",
         reporterConsent: false,
         reporterName: "",
         reporterType: "",
@@ -111,7 +113,7 @@ class IncidentFormInternal extends Component {
         this.props.getPollingDivisions();
         this.props.getPollingStations();
         this.props.getPoliceStations();
-        this.props.getPollingStations();
+        this.props.getPoliceDivisions();
         this.props.getWards();
 
         this.props.resetIncidentForm();
@@ -414,6 +416,24 @@ class IncidentFormInternal extends Component {
                                                 </Select>
                                             </FormControl>
                                         </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="policeDivision">Police Division</InputLabel>
+                                                <Select
+                                                    value={values.policeDivision}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'policeDivision',
+                                                        id: 'policeDivision',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {this.props.policeDivisions.map((c, k) => (
+                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
                                     </Grid>
                                 </Paper>
 
@@ -554,6 +574,7 @@ const mapStateToProps = (state, ownProps) => {
         pollingDivisions: state.sharedReducer.pollingDivisions,
         pollingStations: state.sharedReducer.pollingStations,
         policeStations: state.sharedReducer.policeStations,
+        policeDivisions: state.sharedReducer.policeDivisions,
         wards: state.sharedReducer.wards,
         elections: state.sharedReducer.elections,
 
@@ -595,7 +616,7 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(fetchDivisionalSecretariats())
         },
         getGramaNiladharis: () => {
-            dispatch(fetchGramaNiladharis());
+            dispatch(fetchGramaNiladharis())
         },
         getPollingDivisions: () => {
             dispatch(fetchPollingDivisions())
@@ -605,6 +626,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         getPoliceStations: () => {
             dispatch(fetchPoliceStations())
+        },
+        getPoliceDivisions: () => {
+            dispatch(fetchPoliceDivisions())
         },
         getWards: () => {
             dispatch(fetchWards())
