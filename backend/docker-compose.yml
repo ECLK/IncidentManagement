@@ -33,5 +33,6 @@ services:
     volumes:
       - './src:/app/src'
       - './seed_data.json:/app/seed_data.json'
+      - './media:/app/media'
     # command: gunicorn --bind=0.0.0.0:8000 src.wsgi:application
     command: python manage.py runserver 0.0.0.0:8000

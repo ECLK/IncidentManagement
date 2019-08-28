@@ -10,3 +10,6 @@ __pycache__/
 .env
 media/*
 !media/.keep
+
+media/
+media

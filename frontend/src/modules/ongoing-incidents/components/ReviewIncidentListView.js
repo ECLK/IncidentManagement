@@ -137,6 +137,7 @@ class ReviewIncidentListView extends React.Component {
               <CustomTableCell align="center">Title</CustomTableCell>
               <CustomTableCell align="center">Description</CustomTableCell>
               <CustomTableCell align="center">Status</CustomTableCell>
+              <CustomTableCell align="center">Severity</CustomTableCell>
               <CustomTableCell align="center">Response Time</CustomTableCell>
               <CustomTableCell align="center">Category</CustomTableCell>
               <CustomTableCell align="center">Last Action At</CustomTableCell>
@@ -162,6 +163,9 @@ class ReviewIncidentListView extends React.Component {
                 </CustomTableCell>
                 <CustomTableCell align="center">
                   <p>{row.currentStatus}</p>
+                </CustomTableCell>
+                <CustomTableCell align="center">
+                  <p>{row.currentSeverity}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
                   <p>{row.response_time} h</p>
@@ -201,7 +205,7 @@ class ReviewIncidentListView extends React.Component {
                 rowsPerPageOptions={[5, 10, 25]}
                 colSpan={3}
                 count={pagedIncidents.count}
-                rowsPerPage={5}
+                rowsPerPage={15}
                 page={pagedIncidents.pageNumber-1}
                 SelectProps={{
                   inputProps: { 'aria-label': 'rows per page' },

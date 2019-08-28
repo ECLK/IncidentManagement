@@ -12,6 +12,7 @@ from django.contrib.auth.models import User, Group
 
 from ..events import services as event_services
 from ..events.models import Event
+from ..file_upload.models import File
 from django.db import connection
 
 from .exceptions import WorkflowException, IncidentException
@@ -60,18 +61,24 @@ def get_comments_by_incident(incident: Incident) -> IncidentComment:
     except Exception as e:
         return None
 
+def get_user_group(user: User):
+    user_groups = user.groups.all()
+    if len(user_groups) == 0:
+        raise WorkflowException("No group for current assignee")
+
+    return user_groups[0]
+
 
 def create_incident_postscript(incident: Incident, user: User) -> None:
     """Function to take care of event, status and severity creation"""
-    status = IncidentStatus(current_status=StatusType.NEW,
-                            incident=incident, approved=True)
-    status.save()
-
-    severity = IncidentSeverity(
-        current_severity=0, incident=incident, approved=True
-    )
-    severity.save()
-
+    if user is None:
+        # public user case
+        # if no auth token, then we assign the guest user as public user
+        try:
+            user = User.objects.get(username="guest")
+        except:
+            raise IncidentException("No guest user available")
+        
     reporter = Reporter()
     reporter.save()
 
@@ -79,8 +86,23 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
     incident.assignee = user
     incident.save()
 
-    event_services.create_incident_event(user, incident)
+    # if the user is from the guest group (public user or data entry operator)
+    # auto escalate it
+    user_group = get_user_group(user)
+    if user_group.name == "guest":
+        print(incident.current_status)
+        incident_escalate(user, incident)
 
+    status = IncidentStatus(current_status=StatusType.NEW,
+                            incident=incident, approved=True)
+    status.save()
+
+    severity = IncidentSeverity(
+        current_severity=10, incident=incident, approved=True
+    )
+    severity.save()
+
+    event_services.create_incident_event(user, incident)
 
 def update_incident_postscript(incident: Incident, user: User) -> None:
     event_services.create_comment_event(user, incident)
@@ -238,8 +260,8 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP"):
         raise WorkflowException("Only current incident assignee can escalate the incident")
     
     if (
-        incident.current_status == StatusType.VERIFIED.name 
-        or incident.current_status == StatusType.NEW.name
+        # incident.current_status == StatusType.VERIFIED.name 
+        incident.current_status == StatusType.NEW.name
         or incident.current_status == StatusType.ACTION_PENDING.name
         or incident.current_status == StatusType.ADVICE_REQESTED.name
     ) :
@@ -362,7 +384,7 @@ def incident_request_advice(user: User, incident: Incident, assignee: User, comm
     event_services.update_status_with_description_event(user, incident, status, True, comment)
 
 
-def incident_provide_advice(user: User, incident: Incident, advice: str):
+def incident_provide_advice(user: User, incident: Incident, advice: str, start_event: Event):
     if not Incident.objects.filter(linked_individuals__id=user.id).exists():
         raise WorkflowException("User not linked to the given incident")
 
@@ -380,11 +402,14 @@ def incident_provide_advice(user: User, incident: Incident, advice: str):
     # check this
     incident.linked_individuals.remove(user.id)
 
-    event_services.update_status_with_description_event(user, incident, status, True, advice)
+    event_services.provide_advice_event(user, incident, status, advice, start_event)
 
 def incident_verify(user: User, incident: Incident, comment: str):
     if incident.current_status != StatusType.NEW.name:
         raise WorkflowException("Can only verify unverified incidents")
+
+    if incident.assignee != user:
+        raise WorkflowException("Only assignee can verify the incident")
 
     status = IncidentStatus(
         current_status=StatusType.VERIFIED,
@@ -399,10 +424,11 @@ def incident_verify(user: User, incident: Incident, comment: str):
 def get_police_report_by_incident(incident: Incident):
     try:
         incident_police_report = IncidentPoliceReport.objects.get(incident=incident)
-        if incident_police_report is None:
-            raise IncidentException("No police report associated to the incident")
+        # if incident_police_report is None:
+        #     raise IncidentException("No police report associated to the incident")
     except:
-        raise IncidentException("No police report associated to the incident")
+        # raise IncidentException("No police report associated to the incident")
+        return None
 
     return incident_police_report
 
@@ -439,4 +465,8 @@ def auto_escalate_incidents():
         incident_escalate(incident.assignee, incident)
 
     return incident_details
+
+def attach_media(user:User, incident:Incident, uploaded_file:File):
+    """ Method to indicate media attachment """
+    event_services.media_attached_event(user, incident, uploaded_file)
 

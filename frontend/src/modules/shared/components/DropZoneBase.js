@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import Button from '@material-ui/core/Button';
@@ -34,7 +34,15 @@ const rejectStyle = {
 
 export default function DropZoneBase(props) {
 
-    const { handleUpload } = props
+    const { handleUpload, setSelectedFiles } = props
+
+    const onDrop = useCallback(acceptedFiles => {
+        if(setSelectedFiles){
+            const formData = new FormData();
+            formData.append("file", acceptedFiles[0]);
+            setSelectedFiles(formData)
+        }
+    }, [])
 
     const {
         getRootProps,
@@ -43,16 +51,17 @@ export default function DropZoneBase(props) {
         isDragAccept,
         isDragReject,
         acceptedFiles
-    } = useDropzone({ 
+    } = useDropzone({
         accept: '',
         multiple: false,
-        maxSize: 104857600 //100mb
+        maxSize: 104857600, //100mb
+        onDrop
     });
 
 
     const files = acceptedFiles.map(file => (
         <li key={file.path}>
-          {file.path} - {file.size} bytes
+            {file.path} - {file.size} bytes
         </li>
     ));
 
@@ -64,7 +73,7 @@ export default function DropZoneBase(props) {
     }), [
             isDragActive,
             isDragReject
-    ]);
+        ]);
 
 
     return (
@@ -74,12 +83,12 @@ export default function DropZoneBase(props) {
                 <p>Drag 'n' drop some files here, or click to select files</p>
             </div>
 
-            <div style={{display:'flex'}}>
-            <h4>Selected File: {files[0] ? files[0].key : 'None'}</h4>
-            <Button disabled={!files[0]} onClick={()=>{handleUpload(acceptedFiles)}}>
-                Upload
-            </Button>
-            </div>
+            {handleUpload && <div style={{ display: 'flex' }}>
+                <h4>Selected File: {files[0] ? files[0].key : 'None'}</h4>
+                <Button disabled={!files[0]} onClick={() => { handleUpload(acceptedFiles) }}>
+                    Upload
+                </Button>
+            </div>}
         </section>
     );
 }
