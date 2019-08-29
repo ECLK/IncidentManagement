@@ -85,6 +85,7 @@ class IncidentFormInternal extends Component {
         otherCat: "",
         category: "",
         election: "",
+        severity: "",
         location: "",
         address: "",
         city: "",
@@ -271,6 +272,31 @@ class IncidentFormInternal extends Component {
                                                     {this.props.elections.map((c, k) => (
                                                         <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
                                                     ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="severity" >Severity</InputLabel>
+                                                <Select
+                                                    value={values.severity}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'severity',
+                                                        id: 'severity',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    <MenuItem value={1} key={1}>1</MenuItem>
+                                                    <MenuItem value={2} key={2}>2</MenuItem>
+                                                    <MenuItem value={3} key={3}>3</MenuItem>
+                                                    <MenuItem value={4} key={4}>4</MenuItem>
+                                                    <MenuItem value={5} key={5}>5</MenuItem>
+                                                    <MenuItem value={6} key={6}>6</MenuItem>
+                                                    <MenuItem value={7} key={7}>7</MenuItem>
+                                                    <MenuItem value={8} key={8}>8</MenuItem>
+                                                    <MenuItem value={9} key={9}>9</MenuItem>
+                                                    <MenuItem value={10} key={10}>10</MenuItem>
                                                 </Select>
                                             </FormControl>
                                         </Grid>
