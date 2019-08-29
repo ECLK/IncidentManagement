@@ -37,7 +37,6 @@ class IncidentReviewDetailsForm extends Component {
             incident,
             elections
          } = this.props;
-         console.log("contogory",categories)
         return (
             <div>
                 <Paper className={classes.root} elevation={1}>

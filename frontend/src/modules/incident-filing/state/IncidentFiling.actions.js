@@ -23,8 +23,12 @@ import {
     INCIDENT_FILE_UPLOAD_SUCCESS,
     INCIDENT_FILE_UPLOAD_ERROR,
 
+    PUBLIC_FILE_UPLOAD_REQUEST,
+    PUBLIC_FILE_UPLOAD_SUCCESS,
+    PUBLIC_FILE_UPLOAD_ERROR,
+
 } from './IncidentFiling.types'
-import { createIncident, updateIncident, updateReporter, getIncident, getReporter, uploadFile } from '../../../api/incident';
+import { createIncident, updateIncident, updateReporter, getIncident, getReporter, uploadFile, uploadFilePublic } from '../../../api/incident';
 
 import { getActiveIncidentDataSuccess, fetchActiveIncidentData } from '../../shared/state/Shared.actions'
 
@@ -297,6 +301,43 @@ export function incidentFileUpload(incidentId, formData) {
             dispatch(incidentFileUploadSuccess())
         }catch(e){
             dispatch(incidentFileUploadError())
+        }
+    }
+}
+
+
+export function publicFileUploadRequest() {
+    return {
+        type: PUBLIC_FILE_UPLOAD_REQUEST,
+        data: null,
+        error: null
+    }
+}
+
+export function publicFileUploadSuccess() {
+    return {
+        type: PUBLIC_FILE_UPLOAD_SUCCESS,
+        data: null,
+        error: null
+    }
+}
+
+export function publicFileUploadError() {
+    return {
+        type: PUBLIC_FILE_UPLOAD_ERROR,
+        data: null,
+        error: null
+    }
+}
+
+export function publicFileUpload(incidentId, formData) {
+    return async (dispatch) => {
+        try{
+            dispatch(publicFileUpload());
+            const result = await uploadFilePublic(incidentId, formData)
+            dispatch(publicFileUploadSuccess())
+        }catch(e){
+            dispatch(publicFileUploadError())
         }
     }
 }

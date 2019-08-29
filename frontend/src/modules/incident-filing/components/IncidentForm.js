@@ -19,10 +19,10 @@ import Paper from '@material-ui/core/Paper';
 import StepContent from '@material-ui/core/StepContent';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import IncidentBasicDetailsForm  from '../../shared/components/IncidentBasicDetailsForm';
-import IncidentLocationDetailsForm  from '../../shared/components/IncidentLocationDetailsForm';
-import IncidentContactDetailsForm  from '../../shared/components/IncidentContactDetailsForm';
-import IncidentReviewDetailsForm  from '../../shared/components/IncidentReviewDetailsForm';
+import IncidentBasicDetailsForm  from './IncidentBasicDetailsForm';
+import IncidentLocationDetailsForm  from './IncidentLocationDetailsForm';
+import IncidentContactDetailsForm  from './IncidentContactDetailsForm';
+import IncidentReviewDetailsForm  from './IncidentReviewDetailsForm';
 
 
 import { 

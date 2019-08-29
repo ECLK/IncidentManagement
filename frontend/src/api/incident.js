@@ -128,6 +128,10 @@ export const uploadFile = async (incidentId, formData) => {
   return result.data;
 }
 
+export const uploadFilePublic = async (incidentId, formData) => {
+  //handle public file upload
+}
+
 export const attachMedia = async (incidentId, mediaData) => {
   // return mockapi.addComment(incidentId, commentData);
   return (await handler.post(`/incidents/${incidentId}/attach_media`, mediaData)).data;
