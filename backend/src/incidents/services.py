@@ -71,16 +71,19 @@ def get_user_group(user: User):
 
     return user_groups[0]
 
+def get_guest_user():
+    try:
+        return User.objects.get(username="guest")
+    except:
+        raise IncidentException("No guest user available")
+
 
 def create_incident_postscript(incident: Incident, user: User) -> None:
     """Function to take care of event, status and severity creation"""
     if user is None:
         # public user case
         # if no auth token, then we assign the guest user as public user
-        try:
-            user = User.objects.get(username="guest")
-        except:
-            raise IncidentException("No guest user available")
+        user = get_guest_user()
         
     reporter = Reporter()
     reporter.save()

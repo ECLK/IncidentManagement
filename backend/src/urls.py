@@ -95,9 +95,24 @@ urlpatterns = [
         "incidents/auto-escalate",
         incident_views.IncidentAutoEscalate.as_view()
     ),
+
+    # public paths
+
     path(
         "public/incidents/",
         incident_views.IncidentPublicUserView.as_view()
-    )
+    ),
+    path(
+        "public/incidents/<uuid:incident_id>", 
+        incident_views.IncidentPublicUserView.as_view()
+    ),
+    path(
+        "pubic/reporters/<int:reporter_id>", 
+        incident_views.ReporterPublicUserView.as_view()
+    ),
+    path(
+        "pubic/incidents/<uuid:incident_id>/attach_media", 
+        incident_views.IncidentMediaPublicUserView.as_view()
+    ),
 
 ]

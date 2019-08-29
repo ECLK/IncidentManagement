@@ -41,7 +41,8 @@ from .services import (
     get_incidents_to_escalate,
     auto_escalate_incidents,
     attach_media,
-    get_fitlered_incidents_report
+    get_fitlered_incidents_report,
+    get_guest_user
 )
 
 from ..events import services as event_service
@@ -325,6 +326,20 @@ class IncidentMediaView(APIView):
 
         return Response("Incident workflow success", status=status.HTTP_200_OK)
 
+class IncidentAutoEscalate(APIView):
+    def get(self, request):
+        escalated_incidents = auto_escalate_incidents()
+
+        return Response(escalated_incidents, status=status.HTTP_200_OK)
+
+class Test(APIView):
+    def get(self, request):
+        data = get_incidents_to_escalate()
+
+        return Response(data)
+
+# public user views
+
 class IncidentPublicUserView(APIView):
     permission_classes = []
     serializer_class = IncidentSerializer
@@ -356,14 +371,28 @@ class IncidentPublicUserView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class IncidentAutoEscalate(APIView):
-    def get(self, request):
-        escalated_incidents = auto_escalate_incidents()
+class ReporterPublicUserView(APIView):
+    serializer_class = ReporterSerializer
+    permission_classes = []
 
-        return Response(escalated_incidents, status=status.HTTP_200_OK)
+    def put(self, request, reporter_id, format=None):
+        snippet = get_reporter_by_id(reporter_id)
+        serializer = ReporterSerializer(snippet, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class Test(APIView):
-    def get(self, request):
-        data = get_incidents_to_escalate()
+class IncidentMediaPublicUserView(APIView):
+    permission_classes = []
 
-        return Response(data)
+    def post(self, request, incident_id, format=None):
+
+        incident = get_incident_by_id(incident_id)
+        file_id = request.data['file_id']
+        uploaded_file = file_services.get_file_by_id(file_id)
+        attach_media(get_guest_user(), incident, uploaded_file)
+
+        return Response("Incident workflow success", status=status.HTTP_200_OK)
+
+
