@@ -2,6 +2,10 @@
 import handler from './apiHandler'
 import * as mockapi from '../data/mockapi';
 
+export const getChannels = async () => {
+    return (await handler.get('/channels')).data;
+}
+
 export const getCategories = async () => {
     return (await handler.get('/categories')).data;
 }

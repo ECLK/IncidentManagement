@@ -32,6 +32,7 @@ import {
     resetIncidentForm
 } from '../state/IncidentFiling.actions'
 import {
+    fetchChannels,
     fetchElections,
     fetchCategories,
     fetchProvinces,
@@ -75,6 +76,7 @@ const styles = theme => ({
 class IncidentFormInternal extends Component {
 
     state = {
+        channel: "",
         title: "default title",
         description: "",
         current_status: "OCCURRED",
@@ -104,8 +106,9 @@ class IncidentFormInternal extends Component {
     }
 
     componentDidMount() {
+        this.props.getChannels();
         this.props.getElections();
-        this.props.getcategories();
+        this.props.getCategories();
         this.props.getProvinces();
         this.props.getDistricts();
         this.props.getDivisionalSecretariats();
@@ -149,34 +152,25 @@ class IncidentFormInternal extends Component {
                                 {/* basic incident detail information */}
                                 <Paper className={classes.paper}>
                                     <Grid container spacing={24}>
-                                        <Grid item xs={12} sm={6}>
-                                            <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="category">Category</InputLabel>
-                                                <Select
-                                                    value={values.category}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'category',
-                                                        id: 'category',
-                                                    }}
-                                                >
-                                                    {this.props.categories.map((c, k) => (
-                                                        <MenuItem value={c.id} key={k}>{c.sub_category}</MenuItem>
-                                                    ))}
-                                                    <MenuItem value="Other"> Other </MenuItem>
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                type="text"
-                                                name="otherCat"
-                                                label="If Other(Specify Here)"
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                value={values.otherCat}
-                                                className={classes.textField}
-                                            />
+                                        <Grid item xs={12}>
+                                            <Grid item xs={12} sm={6}>
+                                                <FormControl className={classes.formControl}>
+                                                    <InputLabel htmlFor="channel">Received Mode</InputLabel>
+                                                    <Select
+                                                        value={values.channel}
+                                                        onChange={handleChange}
+                                                        inputProps={{
+                                                            name: 'channel',
+                                                            id: 'channel',
+                                                        }}
+                                                    >
+                                                        {this.props.channels.map((c, k) => (
+                                                            <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
+                                                        ))}
+                                                        <MenuItem value="Other"> Other </MenuItem>
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
                                         </Grid>
                                         <Grid item xs={12}>
                                             <TextField
@@ -231,6 +225,35 @@ class IncidentFormInternal extends Component {
                                                     step: 300, // 5 min
                                                 }}
                                                 onChange={handleChange}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="category">Category</InputLabel>
+                                                <Select
+                                                    value={values.category}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'category',
+                                                        id: 'category',
+                                                    }}
+                                                >
+                                                    {this.props.categories.map((c, k) => (
+                                                        <MenuItem value={c.id} key={k}>{c.sub_category}</MenuItem>
+                                                    ))}
+                                                    <MenuItem value="Other"> Other </MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                type="text"
+                                                name="otherCat"
+                                                label="If Other(Specify Here)"
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                value={values.otherCat}
+                                                className={classes.textField}
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
@@ -566,6 +589,7 @@ const mapStateToProps = (state, ownProps) => {
         incidentId: state.sharedReducer.activeIncident.data ? state.sharedReducer.activeIncident.data.id : null,
         reporterId: state.sharedReducer.activeIncidentReporter ? state.sharedReducer.activeIncidentReporter.id : null,
 
+        channels: state.sharedReducer.channels,
         categories: state.sharedReducer.categories,
         districts: state.sharedReducer.districts,
         provinces: state.sharedReducer.provinces,
@@ -600,10 +624,13 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(stepForwardIncidentStepper())
         },
 
+        getChannels: () => {
+            dispatch(fetchChannels())
+        },
         getElections: () => {
             dispatch(fetchElections());
         },
-        getcategories: () => {
+        getCategories: () => {
             dispatch(fetchCategories())
         },
         getProvinces: () => {

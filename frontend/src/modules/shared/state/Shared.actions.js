@@ -2,6 +2,10 @@ import axios from 'axios';
 
 import {
 
+    REQUEST_INCIDENT_CHANNELS,
+    REQUEST_INCIDENT_CHANNELS_SUCCESS,
+    REQUEST_INCIDENT_CHANNELS_FAILURE,
+
     REQUEST_INCIDENT_ELECTIONS,
     REQUEST_INCIDENT_ELECTIONS_SUCCESS,
     REQUEST_INCIDENT_ELECTIONS_FAILURE,
@@ -66,6 +70,7 @@ import {
 
 import { getIncident, getReporter  } from '../../../api/incident';
 import { 
+    getChannels,
     getElections,
     getCategories, 
     getProvinces, 
@@ -80,6 +85,43 @@ import {
 } from '../../../api/shared';
 import { signIn } from '../../../api/user';
 import * as localStorage from '../../../utils/localStorage';
+
+
+// get channels
+
+export function requestIncidentChannels() {
+    return {
+        type: REQUEST_INCIDENT_CHANNELS
+    }
+}
+
+export function receiveIncidentChannels(channels) {
+    return {
+        type: REQUEST_INCIDENT_CHANNELS_SUCCESS,
+        data: channels,
+        error: null
+    }
+}
+
+export function receiveIncidentChannelsError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_CHANNELS_FAILURE,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchChannels() {
+    return async function(dispatch) {
+        dispatch(requestIncidentChannels());
+        try {
+            const response = await getChannels();
+            await dispatch(receiveIncidentChannels(response.data));
+        } catch (error) {
+            await dispatch(receiveIncidentChannels(error));
+        }
+    }
+}
 
 // Get Elections
 export function requestIncidentElections() {

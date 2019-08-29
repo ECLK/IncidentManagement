@@ -4,6 +4,11 @@ import axios from 'axios';
 import * as localStorage from "../../../utils/localStorage"
 
 import {
+
+    REQUEST_INCIDENT_CHANNELS,
+    REQUEST_INCIDENT_CHANNELS_SUCCESS,
+    REQUEST_INCIDENT_CHANNELS_FAILURE,
+
     REQUEST_INCIDENT_ELECTIONS,
     REQUEST_INCIDENT_ELECTIONS_SUCCESS,
     REQUEST_INCIDENT_ELECTIONS_FAILURE,
@@ -68,6 +73,7 @@ import {
 } from './Shared.types'
 
 const initialState = {
+    channels: [],
     elections: [],
     categories: [],
     provinces: [],
@@ -108,8 +114,18 @@ export default function sharedReducer(state, action) {
         }
         return initialState;
     }
+    
     return produce(state, draft => {
         switch (action.type) {
+
+            case REQUEST_INCIDENT_CHANNELS:
+                return draft
+            case REQUEST_INCIDENT_CHANNELS_SUCCESS:
+                draft.channels = action.data;
+                return draft
+            case REQUEST_INCIDENT_CHANNELS_FAILURE:
+                return draft
+
             case REQUEST_INCIDENT_ELECTIONS:
                 return draft
             case REQUEST_INCIDENT_ELECTIONS_SUCCESS:
