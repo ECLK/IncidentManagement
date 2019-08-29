@@ -40,7 +40,8 @@ from .services import (
     get_police_report_by_incident,
     get_incidents_to_escalate,
     auto_escalate_incidents,
-    attach_media
+    attach_media,
+    get_fitlered_incidents_report
 )
 
 from ..events import services as event_service
@@ -119,8 +120,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         if param_status is not None:
             try:
                 status_type = StatusType[param_status]
-                incidents = [
-                    incident for incident in incidents if incident.current_status == status_type.name]
+                incidents = incidents.filter(current_status=param_status)
             except Exception as e:
                 return Response("Invalid status", status=status.HTTP_400_BAD_REQUEST)
 
@@ -130,12 +130,15 @@ class IncidentList(APIView, IncidentResultsSetPagination):
                 param_severity = int(param_severity)
                 if param_severity < 1 or param_severity > 10:
                     raise IncidentException("Severity level must be between 1 - 10")
+                incidents = incidents.filter(current_severity=param_severity)
             except:
                 raise IncidentException("Severity level must be a number")
-            
-            incidents = [
-                    incident for incident in incidents if incident.current_severity == param_severity]
         
+        param_export = self.request.query_params.get('export', None)
+        if param_export is not None:
+            # export path will send a different response
+            return get_fitlered_incidents_report(incidents, param_export)
+
         results = self.paginate_queryset(incidents, request, view=self)
         serializer = IncidentSerializer(results, many=True)
         return self.get_paginated_response(serializer.data)

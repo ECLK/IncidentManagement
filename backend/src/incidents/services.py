@@ -16,6 +16,9 @@ from ..file_upload.models import File
 from django.db import connection
 
 from .exceptions import WorkflowException, IncidentException
+import pandas as pd
+from django.http import HttpResponse
+from xhtml2pdf import pisa
 
 
 def is_valid_incident(incident_id: str) -> bool:
@@ -470,3 +473,22 @@ def attach_media(user:User, incident:Incident, uploaded_file:File):
     """ Method to indicate media attachment """
     event_services.media_attached_event(user, incident, uploaded_file)
 
+def get_fitlered_incidents_report(incidents: Incident, output_format: str):
+    dataframe = pd.DataFrame(list(incidents.values("refId", "title", "description", "current_status", "current_severity", "response_time", "category")))
+    dataframe.columns = ["Ref ID", "Title", "Description", "Status", "Severity", "Response Time", "Category"]
+    
+    if output_format == "csv":
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=incidents.csv'
+        dataframe.to_csv(path_or_buf=response,sep=';',float_format='%.2f',index=False,decimal=",")
+        return response
+    
+    if output_format == "pdf":
+        output = dataframe.to_html(float_format='%.2f',index=False)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="incidents.pdf"'
+        pisa.CreatePDF(output, dest=response)
+        return response
+
+    # if it's an unrecognized format, raise exception
+    raise IncidentException("Unrecognized export format '%s'" % output_format)
