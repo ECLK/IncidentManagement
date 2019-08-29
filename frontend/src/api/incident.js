@@ -73,6 +73,10 @@ export const getIncidents = async (filters, page=1) => {
       query += "&start_date=" + startDate + "&end_date=" + endDate;
     }
 
+    if(filters.export){
+      query += "&export=" + filters.export;
+    }
+
     return (await handler.get(`/incidents/?${query}`)).data;
 };
 

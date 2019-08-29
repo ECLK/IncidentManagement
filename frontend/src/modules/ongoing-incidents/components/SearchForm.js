@@ -76,7 +76,7 @@ const styles = theme => ({
 function SearchForm(props) {
   const filterIncidents = values => {
     console.log(values);
-    props.getIncidents(values);
+    props.handleSearchClick(values);
   };
 
   useEffect(() => {
