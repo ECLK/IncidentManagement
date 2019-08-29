@@ -4,7 +4,7 @@ import { reporters } from "./reporters";
 import { users } from "./users";
 import { provinces, districts, divisionalSecretariats, gramaNiladharis } from "./locations";
 import { polling_divisions, polling_stations } from "./polling";
-import { police_stations } from "./police";
+import { police_stations, police_divisions } from "./police";
 import { elections } from "./elections";
 import * as storage from "../utils/localStorage";
 import * as auth from "../utils/authorization";
@@ -47,13 +47,6 @@ export function getGramaNiladharis() {
     }
 }
 
-export function getPollingDivisions() {
-    return {
-        status: 200,
-        data: polling_divisions
-    };
-}
-
 export function getPollingStations() {
     return {
         status: 200,
@@ -61,10 +54,25 @@ export function getPollingStations() {
     };
 }
 
+export function getPollingDivisions() {
+    return {
+        status: 200,
+        data: polling_divisions
+    };
+}
+
+
 export function getPoliceStations() {
     return {
         status: 200,
         data: police_stations
+    }
+}
+
+export function getPoliceDivisions() {
+    return {
+        status: 200,
+        data: police_divisions
     }
 }
 

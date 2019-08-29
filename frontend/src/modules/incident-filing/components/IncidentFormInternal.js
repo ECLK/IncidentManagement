@@ -32,6 +32,7 @@ import {
     resetIncidentForm
 } from '../state/IncidentFiling.actions'
 import {
+    fetchChannels,
     fetchElections,
     fetchCategories,
     fetchProvinces,
@@ -41,6 +42,7 @@ import {
     fetchPollingDivisions,
     fetchPoliceStations,
     fetchPollingStations,
+    fetchPoliceDivisions,
     fetchWards,
     fetchActiveIncidentData,
     resetActiveIncident
@@ -74,6 +76,7 @@ const styles = theme => ({
 class IncidentFormInternal extends Component {
 
     state = {
+        channel: "",
         title: "default title",
         description: "",
         current_status: "OCCURRED",
@@ -82,6 +85,7 @@ class IncidentFormInternal extends Component {
         otherCat: "",
         category: "",
         election: "",
+        severity: "",
         location: "",
         address: "",
         city: "",
@@ -92,6 +96,7 @@ class IncidentFormInternal extends Component {
         pollingDivision: "",
         pollingStation: "",
         policeStation: "",
+        policeDivision: "",
         reporterConsent: false,
         reporterName: "",
         reporterType: "",
@@ -102,8 +107,9 @@ class IncidentFormInternal extends Component {
     }
 
     componentDidMount() {
+        this.props.getChannels();
         this.props.getElections();
-        this.props.getcategories();
+        this.props.getCategories();
         this.props.getProvinces();
         this.props.getDistricts();
         this.props.getDivisionalSecretariats();
@@ -111,7 +117,7 @@ class IncidentFormInternal extends Component {
         this.props.getPollingDivisions();
         this.props.getPollingStations();
         this.props.getPoliceStations();
-        this.props.getPollingStations();
+        this.props.getPoliceDivisions();
         this.props.getWards();
 
         this.props.resetIncidentForm();
@@ -147,34 +153,25 @@ class IncidentFormInternal extends Component {
                                 {/* basic incident detail information */}
                                 <Paper className={classes.paper}>
                                     <Grid container spacing={24}>
-                                        <Grid item xs={12} sm={6}>
-                                            <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="category">Category</InputLabel>
-                                                <Select
-                                                    value={values.category}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'category',
-                                                        id: 'category',
-                                                    }}
-                                                >
-                                                    {this.props.categories.map((c, k) => (
-                                                        <MenuItem value={c.id} key={k}>{c.sub_category}</MenuItem>
-                                                    ))}
-                                                    <MenuItem value="Other"> Other </MenuItem>
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                type="text"
-                                                name="otherCat"
-                                                label="If Other(Specify Here)"
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                value={values.otherCat}
-                                                className={classes.textField}
-                                            />
+                                        <Grid item xs={12}>
+                                            <Grid item xs={12} sm={6}>
+                                                <FormControl className={classes.formControl}>
+                                                    <InputLabel htmlFor="channel">Received Mode</InputLabel>
+                                                    <Select
+                                                        value={values.channel}
+                                                        onChange={handleChange}
+                                                        inputProps={{
+                                                            name: 'channel',
+                                                            id: 'channel',
+                                                        }}
+                                                    >
+                                                        {this.props.channels.map((c, k) => (
+                                                            <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
+                                                        ))}
+                                                        <MenuItem value="Other"> Other </MenuItem>
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
                                         </Grid>
                                         <Grid item xs={12}>
                                             <TextField
@@ -233,6 +230,35 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="category">Category</InputLabel>
+                                                <Select
+                                                    value={values.category}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'category',
+                                                        id: 'category',
+                                                    }}
+                                                >
+                                                    {this.props.categories.map((c, k) => (
+                                                        <MenuItem value={c.id} key={k}>{c.sub_category}</MenuItem>
+                                                    ))}
+                                                    <MenuItem value="Other"> Other </MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                type="text"
+                                                name="otherCat"
+                                                label="If Other(Specify Here)"
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                value={values.otherCat}
+                                                className={classes.textField}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="election" >Election</InputLabel>
                                                 <Select
                                                     value={values.election}
@@ -246,6 +272,31 @@ class IncidentFormInternal extends Component {
                                                     {this.props.elections.map((c, k) => (
                                                         <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
                                                     ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="severity" >Severity</InputLabel>
+                                                <Select
+                                                    value={values.severity}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'severity',
+                                                        id: 'severity',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    <MenuItem value={1} key={1}>1</MenuItem>
+                                                    <MenuItem value={2} key={2}>2</MenuItem>
+                                                    <MenuItem value={3} key={3}>3</MenuItem>
+                                                    <MenuItem value={4} key={4}>4</MenuItem>
+                                                    <MenuItem value={5} key={5}>5</MenuItem>
+                                                    <MenuItem value={6} key={6}>6</MenuItem>
+                                                    <MenuItem value={7} key={7}>7</MenuItem>
+                                                    <MenuItem value={8} key={8}>8</MenuItem>
+                                                    <MenuItem value={9} key={9}>9</MenuItem>
+                                                    <MenuItem value={10} key={10}>10</MenuItem>
                                                 </Select>
                                             </FormControl>
                                         </Grid>
@@ -414,6 +465,24 @@ class IncidentFormInternal extends Component {
                                                 </Select>
                                             </FormControl>
                                         </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="policeDivision">Police Division</InputLabel>
+                                                <Select
+                                                    value={values.policeDivision}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'policeDivision',
+                                                        id: 'policeDivision',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {this.props.policeDivisions.map((c, k) => (
+                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
                                     </Grid>
                                 </Paper>
 
@@ -546,6 +615,7 @@ const mapStateToProps = (state, ownProps) => {
         incidentId: state.sharedReducer.activeIncident.data ? state.sharedReducer.activeIncident.data.id : null,
         reporterId: state.sharedReducer.activeIncidentReporter ? state.sharedReducer.activeIncidentReporter.id : null,
 
+        channels: state.sharedReducer.channels,
         categories: state.sharedReducer.categories,
         districts: state.sharedReducer.districts,
         provinces: state.sharedReducer.provinces,
@@ -554,6 +624,7 @@ const mapStateToProps = (state, ownProps) => {
         pollingDivisions: state.sharedReducer.pollingDivisions,
         pollingStations: state.sharedReducer.pollingStations,
         policeStations: state.sharedReducer.policeStations,
+        policeDivisions: state.sharedReducer.policeDivisions,
         wards: state.sharedReducer.wards,
         elections: state.sharedReducer.elections,
 
@@ -579,10 +650,13 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(stepForwardIncidentStepper())
         },
 
+        getChannels: () => {
+            dispatch(fetchChannels())
+        },
         getElections: () => {
             dispatch(fetchElections());
         },
-        getcategories: () => {
+        getCategories: () => {
             dispatch(fetchCategories())
         },
         getProvinces: () => {
@@ -595,7 +669,7 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(fetchDivisionalSecretariats())
         },
         getGramaNiladharis: () => {
-            dispatch(fetchGramaNiladharis());
+            dispatch(fetchGramaNiladharis())
         },
         getPollingDivisions: () => {
             dispatch(fetchPollingDivisions())
@@ -605,6 +679,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         getPoliceStations: () => {
             dispatch(fetchPoliceStations())
+        },
+        getPoliceDivisions: () => {
+            dispatch(fetchPoliceDivisions())
         },
         getWards: () => {
             dispatch(fetchWards())
