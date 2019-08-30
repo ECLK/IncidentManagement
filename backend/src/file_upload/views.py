@@ -21,6 +21,7 @@ class FileView(APIView):
 
   parser_classes = (MultiPartParser, FormParser)
   serializer_class = FileSerializer
+  permission_classes = []
 
   def get(self, request, incident_id):
     files = get_incident_file_ids(incident_id)
@@ -37,10 +38,6 @@ class FileView(APIView):
     file_serializer = FileSerializer(data=file_data)
     if file_serializer.is_valid():
       file_serializer.save()
-      # incident = incident_service.get_incident_by_id(incident_id)
-      # uploaded_file = get_file_by_id(file_serializer.data["id"])
-      # event_service.media_attached_event(request.user, incident)
-      # event_service.media_attached_event(request.user, incident, uploaded_file)
       return Response(file_serializer.data, status=status.HTTP_201_CREATED)
     else:
       return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

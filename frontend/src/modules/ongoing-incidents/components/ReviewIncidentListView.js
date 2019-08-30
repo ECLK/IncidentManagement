@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { withRouter } from "react-router-dom";
 import Table from "@material-ui/core/Table";
@@ -18,10 +18,11 @@ import { fetchCategories } from "../../shared/state/Shared.actions";
 
 import moment from "moment";
 import SearchForm from "./SearchForm";
-import { TableFooter, TablePagination, Grid, IconButton } from "@material-ui/core";
+import { TableFooter, TablePagination, Grid, IconButton, Button } from "@material-ui/core";
 import CheckIcon from '@material-ui/icons/CheckCircle';
 import EditIcon from '@material-ui/icons/Edit';
 import AssignIcon from '@material-ui/icons/AssignmentInd';
+import { getIncidents } from "../../../api/incident";
 
 const CustomTableCell = withRouter(
   withStyles(theme => ({
@@ -97,12 +98,27 @@ const styles = theme => ({
   datePicker: {},
   separator: {
     height: "10px"
+  },
+  exportContainer: {
+    marginTop: "20px",
+    marginLeft: "auto"
+  },
+  exportButton: {
+    marginLeft: "10px"
   }
 });
 
 let id = 0;
 
 class ReviewIncidentListView extends React.Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
+      filters: {}
+    }
+  }
+
   componentDidMount() {
     this.props.getCategories();
   }
@@ -111,12 +127,58 @@ class ReviewIncidentListView extends React.Component {
     this.props.getIncidents(this.props.incidentSearchFilter, newPage+1);
   }
 
+  handleSearchClick = (filters, page) => {
+    if(filters){
+      this.setState({
+        filters: filters
+      });
+    }else{
+      this.setState({
+        filters: {}
+      });
+    }
+    
+    this.props.getIncidents(filters, page);
+  }
+
+  handleExportClick = async (exportType) => {
+    const filters = this.state.filters;
+    filters["export"] = exportType;
+
+    try{
+      const response = await getIncidents(filters);
+      const url = window.URL.createObjectURL(new Blob([response]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'incidents.' + exportType);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }catch{
+
+    }
+    
+  }
+  
+
   render() {
     const { classes, pagedIncidents, categories } = this.props;
 
     return (
       <Paper className={classes.root}>
-        <SearchForm categories={categories} {...this.props} />
+        <SearchForm categories={categories} handleSearchClick={this.handleSearchClick} {...this.props} />
+        <Grid container direction={"row"} className={classes.exportContainer}>
+          <Grid item>
+            <Button variant={"contained"} onClick={() => this.handleExportClick("csv")} className={classes.exportButton}>
+              Export as CSV
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button variant={"contained"} onClick={() => this.handleExportClick("pdf")} className={classes.exportButton}>
+              Export as PDF
+            </Button>
+          </Grid>
+        </Grid>
         <Table className={classes.table}>
           <colgroup>
             <col style={{ width: "2%" }} />

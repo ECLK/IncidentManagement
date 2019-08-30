@@ -42,6 +42,18 @@ class IncidentSerializer(serializers.ModelSerializer):
         model = Incident
         exclude = ["created_date"]
 
+    def get_extra_kwargs(self):
+        blocked_list = ["description"]
+        extra_kwargs = super(IncidentSerializer, self).get_extra_kwargs()
+      
+        if self.instance is not None and not isinstance(self.instance, list):
+            for prop in blocked_list:
+                kwargs = extra_kwargs.get(prop, {})
+                kwargs['read_only'] = True
+                extra_kwargs[prop] = kwargs
+        
+        return extra_kwargs
+
 class IncidentPoliceReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = IncidentPoliceReport

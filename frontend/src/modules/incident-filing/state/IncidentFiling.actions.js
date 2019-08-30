@@ -29,6 +29,7 @@ import {
 
 } from './IncidentFiling.types'
 import { createIncident, updateIncident, updateReporter, getIncident, getReporter, uploadFile, uploadFilePublic } from '../../../api/incident';
+import * as publicAPI from '../../../api/public';
 
 import { getActiveIncidentDataSuccess, fetchActiveIncidentData } from '../../shared/state/Shared.actions'
 
@@ -334,7 +335,7 @@ export function publicFileUpload(incidentId, formData) {
     return async (dispatch) => {
         try{
             dispatch(publicFileUpload());
-            const result = await uploadFilePublic(incidentId, formData)
+            const result = await publicAPI.uploadFile(incidentId, formData)
             dispatch(publicFileUploadSuccess())
         }catch(e){
             dispatch(publicFileUploadError())

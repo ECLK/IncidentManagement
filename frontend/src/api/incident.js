@@ -73,6 +73,10 @@ export const getIncidents = async (filters, page=1) => {
       query += "&start_date=" + startDate + "&end_date=" + endDate;
     }
 
+    if(filters.export){
+      query += "&export=" + filters.export;
+    }
+
     return (await handler.get(`/incidents/?${query}`)).data;
 };
 
@@ -122,10 +126,6 @@ export const updateIncidentWorkflow = async (incidentId, workflowType, workflowU
 export const uploadFile = async (incidentId, formData) => {
   const result = await handler.post(`/incidents/${incidentId}/files`, formData)
   return result.data;
-}
-
-export const uploadFilePublic = async (incidentId, formData) => {
-  //handle public file upload
 }
 
 export const attachMedia = async (incidentId, mediaData) => {
