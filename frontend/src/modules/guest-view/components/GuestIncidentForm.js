@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux';
+import moment from 'moment';
 
 import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
@@ -14,7 +15,9 @@ import Typography from '@material-ui/core/Typography';
 import DescriptionSection from './GuestFormDescriptionSection';
 import CategorySection from './GuestFormCatogorySection';
 import FileUploadSection from './GuestFormFileUploadSection';
-import DateTimeSection from './GuestFormDateTimeSection'
+import DateTimeSection from './GuestFormDateTimeSection';
+import LocationSection from './GuestFromLocationSection';
+import ContactSection from './GuestFormContactSection'
 
 
 import {
@@ -24,7 +27,7 @@ import {
     resetIncidentForm,
     incidentFileUpload,
     publicFileUpload
-} from '../state/IncidentFiling.actions'
+} from '../../incident-filing/state/IncidentFiling.actions'
 import {
     fetchElections,
     fetchCategories,
@@ -61,19 +64,30 @@ const styles = theme => ({
 
 const VerticalLinearStepper = (props) => {
 
+
     const [activeStep, setActiveStep] = useState(0);
+    const [skippedSteps, setSkippedSets] = useState(new Set());
     const [incidentDescription, setIncidentDescription] = useState('');
     const [incidentElection, setIncidentElection] = useState('');
     const [incidentCatogory, setIncidentCatogory] = useState('');
     const [incidentFiles, setIncidentFiles] = useState([]);
-    const [incidentDateTime, setIncidentDateTime] = useState({ date: null, time: null });
-    const [incidentLocation, setIncidentLocation] = useState({});
-    const [incidentContact, setIncidentContact] = useState({});
+    const [incidentDateTime, setIncidentDateTime] = useState({
+        date: moment().format('YYYY-MM-DD'),
+        time: moment().format('HH:mm')
+    });
+    const [incidentLocation, setIncidentLocation] = useState('');
+    const [incidentContact, setIncidentContact] = useState({
+        name: '',
+        phone: '',
+        email: ''
+    });
 
     const dispatch = useDispatch()
 
-    const {elections, categories, activeIncident} = useSelector((state)=>(state.sharedReducer))
+    const { elections, categories, activeIncident, activeIncidentReporter } = useSelector((state) => (state.sharedReducer))
     const incidentId = activeIncident.data.id
+    let incidentData = JSON.parse(JSON.stringify(activeIncident.data));
+    let incidentReporterData = JSON.parse(JSON.stringify(activeIncidentReporter))
 
     useEffect(() => {
         dispatch(fetchElections());
@@ -81,19 +95,26 @@ const VerticalLinearStepper = (props) => {
     }, []);
 
     const handleNext = () => {
-        switch(activeStep){
+        switch (activeStep) {
             case 0:
-                dispatch(submitIncidentBasicData({
-                    election: incidentElection,
-                    description: incidentDescription,
-                    title:'Guest user submit'
-                }))
-                break
+                if(incidentId){
+                    break
+                }else{
+                    dispatch(submitIncidentBasicData({
+                        election: incidentElection,
+                        description: incidentDescription,
+                        title: 'Guest user submit'
+                    }))
+                    break
+                }
             case 1:
-                dispatch(fetchUpdateIncident(incidentId, {category:incidentCatogory}))
+                if(incidentCatogory){
+                    incidentData.category = incidentCatogory;
+                    dispatch(fetchUpdateIncident(incidentId, incidentData))
+                }
                 break
             case 2:
-                if(incidentFiles[0]){
+                if (incidentFiles[0]) {
                     const formData = new FormData();
                     formData.append("file", incidentFiles[0]);
                     dispatch(publicFileUpload(incidentId, formData))
@@ -104,9 +125,18 @@ const VerticalLinearStepper = (props) => {
                 break
             case 4:
                 //location
+                if(incidentLocation){
+                    incidentData.location = incidentLocation;
+                    dispatch(fetchUpdateIncident(incidentId, incidentData))
+                }
                 break
-            case 5: 
-                dispatch(fetchUpdateReporter(incidentId, incidentContact))
+            case 5:
+                if(incidentContact.name || incidentContact.phone || incidentContact.email){
+                    incidentReporterData.name = incidentContact.name
+                    incidentReporterData.telephone = incidentContact.phone
+                    incidentReporterData.email = incidentContact.email
+                    dispatch(fetchUpdateReporter(incidentId, activeIncidentReporter.id, incidentContact))
+                }
 
         }
 
@@ -121,15 +151,32 @@ const VerticalLinearStepper = (props) => {
         setActiveStep(0)
     };
 
-
     const steps = [
         'Describe the incident',
         'Select the most suitable category for the incident',
         'Attach files related to incident',
         'When did this happened / will happen?',
         'Where did this happen?',
-        'Your contact details(optional)'
+        'Your contact details'
     ];
+
+    const optionalSteps = new Set([1,2,3,4,5])
+
+    const isStepOptional = step => optionalSteps.has(step);
+
+    const handleSkip = () => {
+        if (!isStepOptional(activeStep)) {
+            throw new Error("You can't skip a step that isn't optional.");
+        }
+        const skipped = new Set(skippedSteps.values());
+        skipped.add(activeStep);
+        setSkippedSets(skipped);
+        setActiveStep(activeStep +1)
+    };
+
+    const isStepSkipped = (step) => {
+        return skippedSteps.has(step);
+    }
 
     const getStepContent = (step) => {
         switch (step) {
@@ -141,14 +188,18 @@ const VerticalLinearStepper = (props) => {
                     selectedElection={incidentElection}
                     elections={elections} />;
             case 1:
-                return <CategorySection 
-                    categories={categories} 
+                return <CategorySection
+                    categories={categories}
                     selectedCategory={incidentCatogory}
                     setSelectedCategory={setIncidentCatogory} />;
             case 2:
-                return <FileUploadSection setSelectedFile={setIncidentFiles}/>;
+                return < FileUploadSection setSelectedFile={setIncidentFiles} />;
             case 3:
-                return < DateTimeSection dateTime={incidentDateTime} setDateTime={setIncidentDateTime}/>
+                return < DateTimeSection dateTime={incidentDateTime} setDateTime={setIncidentDateTime} />
+            case 4:
+                return < LocationSection location={incidentLocation} handledLocationChange={setIncidentLocation} />
+            case 5:
+                return < ContactSection contactDetials={incidentContact} handleContactDetailsChange={setIncidentContact} />
             default:
                 return 'Unknown step';
         }
@@ -159,10 +210,24 @@ const VerticalLinearStepper = (props) => {
     return (
 
         <div className={classes.root}>
+
+            <h3>Report Incident</h3>
+
             <Stepper activeStep={activeStep} orientation="vertical">
-                {steps.map((label, index) => (
-                    <Step key={label}>
-                        <StepLabel>{label}</StepLabel>
+                {steps.map((label, index) => {
+
+                    const props = {};
+                    const labelProps = {};
+                    if (isStepOptional(index)) {
+                      labelProps.optional = <Typography variant="caption">Optional</Typography>;
+                    }
+                    if (isStepSkipped(index)) {
+                      props.completed = false;
+                    }
+
+                    return (
+                    <Step key={label} {...props}>
+                        <StepLabel {...labelProps}>{label}</StepLabel>
                         <StepContent>
                             <Typography>{getStepContent(index)}</Typography>
                             <div className={classes.actionsContainer}>
@@ -174,6 +239,16 @@ const VerticalLinearStepper = (props) => {
                                     >
                                         Back
                                     </Button>
+                                    {isStepOptional(activeStep) && (
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={handleSkip}
+                                            className={classes.button}
+                                        >
+                                            Skip
+                                    </Button>
+                                    )}
                                     <Button
                                         variant="contained"
                                         color="primary"
@@ -185,8 +260,8 @@ const VerticalLinearStepper = (props) => {
                                 </div>
                             </div>
                         </StepContent>
-                    </Step>
-                ))}
+                    </Step>)
+                })}
             </Stepper>
             {activeStep === steps.length && (
                 <Paper square elevation={0} className={classes.resetContainer}>
