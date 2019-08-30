@@ -27,6 +27,14 @@ import {
     PUBLIC_FILE_UPLOAD_SUCCESS,
     PUBLIC_FILE_UPLOAD_ERROR,
 
+    SUBMIT_INTERNAL_INCIDENT,
+    SUBMIT_INTERNAL_INCIDENT_SUCCESS,
+    SUBMIT_INTERNAL_INCIDENT_ERROR,
+
+    UPDATE_INTERNAL_INCIDENT,
+    UPDATE_INTERNAL_INCIDENT_SUCCESS,
+    UPDATE_INTERNAL_INCIDENT_ERROR
+
 } from './IncidentFiling.types'
 import { createIncident, updateIncident, updateReporter, getIncident, getReporter, uploadFile, uploadFilePublic } from '../../../api/incident';
 import * as publicAPI from '../../../api/public';
@@ -339,6 +347,112 @@ export function publicFileUpload(incidentId, formData) {
             dispatch(publicFileUploadSuccess())
         }catch(e){
             dispatch(publicFileUploadError())
+        }
+    }
+}
+
+
+export function requestInternalIncidentData() {
+    return {
+        type: SUBMIT_INTERNAL_INCIDENT,
+        isLoading: true
+    }
+}
+
+export function submitInternalIncidentSuccess(incidentData) {
+    // history.replace({ ...history.location, pathname: `/app/review/${incidentData.id}`});
+
+    return {
+        type: SUBMIT_INTERNAL_INCIDENT_SUCCESS,
+        data: incidentData,
+        error: null,
+        isLoading: false,
+        confirm: {
+          message: "Incident created"
+        }
+    }
+}
+
+export function submitInternalIncidentError(errorResponse) {
+    return {
+        type: SUBMIT_INTERNAL_INCIDENT_ERROR,
+        data: null,
+        error: errorResponse,
+        isLoading: false
+    }
+}
+
+export function submitInternalIncidentData(incidentData) {
+    return async function(dispatch) {
+        dispatch(requestInternalIncidentData());
+        try{
+            const incident = (await createIncident(incidentData)).data;
+            const reporterId = incident.reporter;
+            const reporterUpdate = {
+                "name": incidentData["reporterName"],
+                "reporter_type": incidentData["reporterType"],
+                "email": incidentData["reporterEmail"],
+                "telephone": incidentData["reporterMobile"],
+                "address": incidentData["reporterAddress"],
+            }
+            await updateReporter(reporterId, reporterUpdate);
+            await dispatch(submitInternalIncidentSuccess(incident));
+        }catch(error){
+            await dispatch(submitInternalIncidentError(error));
+        }
+    }
+}
+
+
+export function updateInternalIncidentData() {
+    return {
+        type: UPDATE_INTERNAL_INCIDENT,
+        isLoading: true
+    }
+}
+
+export function updateInternalIncidentSuccess(incidentData) {
+    // history.replace({ ...history.location, pathname: `/app/review/${incidentData.id}`});
+
+    return {
+        type: UPDATE_INTERNAL_INCIDENT_SUCCESS,
+        data: incidentData,
+        error: null,
+        isLoading: false,
+        confirm: {
+          message: "Incident created"
+        }
+    }
+}
+
+export function updateInternalIncidentError(errorResponse) {
+    return {
+        type: UPDATE_INTERNAL_INCIDENT_ERROR,
+        data: null,
+        error: errorResponse,
+        isLoading: false
+    }
+}
+
+export function fetchUpdateInternalIncidentData(incidentId, incidentData) {
+    return async function(dispatch) {
+        dispatch(updateInternalIncidentData());
+        try{
+            const incident = (await updateIncident(incidentId, incidentData)).data;
+            const reporterId = incident.reporter;
+            const reporterUpdate = {
+                "name": incidentData["reporterName"],
+                "reporter_type": incidentData["reporterType"],
+                "email": incidentData["reporterEmail"],
+                "telephone": incidentData["reporterMobile"],
+                "address": incidentData["reporterAddress"],
+            }
+            await updateReporter(reporterId, reporterUpdate);
+            
+            dispatch(updateInternalIncidentSuccess(incident));
+            dispatch(fetchActiveIncidentData(incidentId));
+        }catch(error){
+            dispatch(updateInternalIncidentError(error));
         }
     }
 }

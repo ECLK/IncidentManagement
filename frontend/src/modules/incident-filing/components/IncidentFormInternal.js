@@ -29,7 +29,9 @@ import {
     stepForwardIncidentStepper,
     fetchUpdateReporter,
     fetchUpdateIncident,
-    resetIncidentForm
+    resetIncidentForm,
+    submitInternalIncidentData,
+    fetchUpdateInternalIncidentData
 } from '../state/IncidentFiling.actions'
 import {
     fetchChannels,
@@ -79,8 +81,8 @@ class IncidentFormInternal extends Component {
         channel: "",
         title: "default title",
         description: "",
-        current_status: "OCCURRED",
-        date: "",
+        occurence: "OCCURRED",
+        occured_date: "",
         time: "",
         otherCat: "",
         category: "",
@@ -132,24 +134,58 @@ class IncidentFormInternal extends Component {
     }
 
     handleSubmit = (values, actions) => {
-        this.props.submitIncidentBasicDetails(values);
-        this.props.submitContactDetails()
+        
+
+        const { paramIncidentId } = this.props.match.params
+
+        if(paramIncidentId){
+            this.props.updateInternalIncident(paramIncidentId, values);
+            this.props.history.push(`/app/review/${paramIncidentId}`);
+        }else{
+            this.props.submitInternalIncident(values);
+            this.props.history.push('/app/review');
+        }
+    }
+
+    getInitialValues = () => {
+        const { paramIncidentId } = this.props.match.params
+
+        if(!paramIncidentId){
+            // new incident form
+            return this.state;
+        }
+
+        var initData = { ...this.state, ...this.props.incident };
+        const reporter = this.props.reporter;
+
+        if (reporter) {
+            Object.assign(initData, {
+                "reporterName": reporter.name,
+                "reporterType": reporter.reporter_type,
+                "reporterEmail": reporter.email,
+                "reporterMobile": reporter.telephone,
+                "reporterAddress": reporter.address
+            });
+        }
+
+        return initData;
     }
 
     render() {
         const { classes } = this.props;
-
+        
         return (
             <div className={classes.root}>
                 <Formik
-                    initialValues={this.state}
+                    enableReinitialize={true}
+                    initialValues={this.getInitialValues()}
                     onSubmit={(values, actions) => {
                         this.handleSubmit(values, actions)
                     }}
                     render={
                         ({ handleSubmit, handleChange, handleBlur, values, errors }) => (
                             <form className={classes.container} noValidate autoComplete="off" onSubmit={handleSubmit}>
-
+                                <div style={{display:"none"}}>{this.props.incident.id}</div>
                                 {/* basic incident detail information */}
                                 <Paper className={classes.paper}>
                                     <Grid container spacing={24}>
@@ -176,6 +212,18 @@ class IncidentFormInternal extends Component {
                                         <Grid item xs={12}>
                                             <TextField
                                                 type="text"
+                                                name="title"
+                                                label="title"
+                                                placeholder="Title"
+                                                className={classes.textField}
+                                                value={values.title}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                type="text"
                                                 name="description"
                                                 label="Description"
                                                 placeholder="Press enter for new lines."
@@ -190,10 +238,10 @@ class IncidentFormInternal extends Component {
                                             <FormControl component="fieldset" className={classes.formControl}>
                                                 <FormLabel component="legend">Occurrance</FormLabel>
                                                 <RadioGroup
-                                                    aria-label="Current status"
-                                                    name="current_status"
+                                                    aria-label="Occurence"
+                                                    name="occurence"
                                                     className={classes.group}
-                                                    value={values.current_status}
+                                                    value={values.occurence}
                                                     onChange={handleChange}
                                                     row={true}
                                                 >
@@ -206,25 +254,11 @@ class IncidentFormInternal extends Component {
                                         <Grid item xs={6} sm={3}>
                                             <TextField
                                                 margin="normal"
-                                                id="date"
-                                                label="Date"
-                                                type="date"
-                                                value={values.date}
+                                                id="occured_date"
+                                                label="occured_date"
+                                                type="datetime-local"
+                                                value={values.occured_date}
                                                 InputLabelProps={{ shrink: true }}
-                                                onChange={handleChange}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={6} sm={3}>
-                                            <TextField
-                                                id="time"
-                                                label="Time"
-                                                type="time"
-                                                value={values.time}
-                                                margin="normal"
-                                                InputLabelProps={{ shrink: true }}
-                                                inputProps={{
-                                                    step: 300, // 5 min
-                                                }}
                                                 onChange={handleChange}
                                             />
                                         </Grid>
@@ -541,17 +575,6 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <TextField
-                                                id="reporterLandline"
-                                                name="reporterLandline"
-                                                label="Reporter Landline"
-                                                className={classes.textField}
-                                                value={values.reporterLandline}
-                                                onChange={handleChange}
-                                                margin="normal"
-                                            />
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-                                            <TextField
                                                 id="reporterEmail"
                                                 name="reporterEmail"
                                                 label="Reporter Email"
@@ -637,8 +660,14 @@ const mapDispatchToProps = (dispatch) => {
         submitIncidentBasicDetails: (values) => {
             dispatch(submitIncidentBasicData(values))
         },
+        submitInternalIncident: (values) => {
+            dispatch(submitInternalIncidentData(values))
+        },
         updateIncidentBasicDetails: (incidentId, incidentData) => {
             dispatch(fetchUpdateIncident(incidentId, incidentData));
+        },
+        updateInternalIncident: (incidentId, incidentData) => {
+            dispatch(fetchUpdateInternalIncidentData(incidentId, incidentData));
         },
         submitContactDetails: (incidentId, reporterId, reporterData) => {
             dispatch(fetchUpdateReporter(incidentId, reporterId, reporterData))
@@ -701,7 +730,7 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default compose(
+export default withRouter(compose(
     connect(mapStateToProps, mapDispatchToProps),
     withStyles(styles)
-)(IncidentFormInternal);
+)(IncidentFormInternal));
