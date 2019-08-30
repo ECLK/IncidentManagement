@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
@@ -19,12 +20,6 @@ import DateTimeSection from './GuestFormDateTimeSection';
 import LocationSection from './GuestFromLocationSection';
 import ContactSection from './GuestFormContactSection'
 
-
-import {
-    fetchUpdateReporter,
-    publicFileUpload
-} from '../../incident-filing/state/IncidentFiling.actions'
-
 import {
     fetchElections,
     fetchCategories,
@@ -33,7 +28,8 @@ import {
 import {
     createGuestIncident,
     updateGuestIncident,
-    updateGuestIncidentReporter
+    updateGuestIncidentReporter,
+    uploadFileGuest
 } from '../../incident/state/incidentActions'
 
 const styles = theme => ({
@@ -63,7 +59,7 @@ const VerticalLinearStepper = (props) => {
     const [incidentDescription, setIncidentDescription] = useState('');
     const [incidentElection, setIncidentElection] = useState('');
     const [incidentCatogory, setIncidentCatogory] = useState('');
-    const [incidentFiles, setIncidentFiles] = useState([]);
+    const [incidentFiles, setIncidentFiles] = useState(null);
     const [incidentDateTime, setIncidentDateTime] = useState({
         date: moment().format('YYYY-MM-DD'),
         time: moment().format('HH:mm')
@@ -82,8 +78,6 @@ const VerticalLinearStepper = (props) => {
     const incidentId = activeIncident.data ? activeIncident.data.id : null
     let incidentData = JSON.parse(JSON.stringify(activeIncident.data));
     let incidentReporterData = JSON.parse(JSON.stringify(activeIncidentReporter.data))
-
-    console.log(incidentReporterData)
 
     useEffect(() => {
         dispatch(fetchElections());
@@ -110,10 +104,9 @@ const VerticalLinearStepper = (props) => {
                 }
                 break
             case 2:
-                if (incidentFiles[0]) {
-                    const formData = new FormData();
-                    formData.append("file", incidentFiles[0]);
-                    dispatch(publicFileUpload(incidentId, formData))
+                //file upload
+                if (incidentFiles) {
+                    dispatch(uploadFileGuest(incidentId, incidentFiles))
                 }
                 break
             case 3:
@@ -131,11 +124,12 @@ const VerticalLinearStepper = (props) => {
                 }
                 break
             case 5:
+                //contact details
                 if(incidentContact.name || incidentContact.phone || incidentContact.email){
                     incidentReporterData.name = incidentContact.name;
                     incidentReporterData.telephone = incidentContact.phone;
                     incidentReporterData.email = incidentContact.email;
-                    dispatch(updateGuestIncidentReporter(incidentReporterData.id, incidentContact))
+                    dispatch(updateGuestIncidentReporter(incidentReporterData.id, incidentReporterData))
                 }
 
         }
@@ -206,11 +200,13 @@ const VerticalLinearStepper = (props) => {
     }
 
     const { classes } = props;
+    const GoBackLink = props => <Link to="/" {...props} />
 
     return (
 
         <div className={classes.root}>
 
+            <Button variant="outlined" component={GoBackLink} > Go back </Button>
             <h3>Report Incident</h3>
 
             <Stepper activeStep={activeStep} orientation="vertical">

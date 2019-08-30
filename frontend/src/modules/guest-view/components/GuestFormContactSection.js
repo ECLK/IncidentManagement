@@ -39,7 +39,7 @@ const IncidentContact = (props) => {
                         fullWidth
                         rowsMax="4"
                         value={contactDetials.name}
-                        onChange={(e) => { handleContactDetailsChange({name:e.target.value}) }}
+                        onChange={(e) => { handleContactDetailsChange({...contactDetials, name:e.target.value}) }}
                         className={classes.textField}
                         margin="normal"
                     />
@@ -54,7 +54,7 @@ const IncidentContact = (props) => {
                         fullWidth
                         rowsMax="4"
                         value={contactDetials.phone}
-                        onChange={(e) => { handleContactDetailsChange({phone:e.target.value}) }}
+                        onChange={(e) => { handleContactDetailsChange({ ...contactDetials, phone:e.target.value}) }}
                         className={classes.textField}
                         margin="normal"
                     />
@@ -69,7 +69,7 @@ const IncidentContact = (props) => {
                         fullWidth
                         rowsMax="4"
                         value={contactDetials.email}
-                        onChange={(e) => { handleContactDetailsChange({email:e.target.value}) }}
+                        onChange={(e) => { handleContactDetailsChange({...contactDetials, email:e.target.value}) }}
                         className={classes.textField}
                         margin="normal"
                     />

@@ -112,6 +112,25 @@ export const updateGuestIncidentReporter = (reporterId, reporterData) => {
 
 
 
+//file upload
+export const uploadFileGuestRequest = createAction('INCIDENT/UPLOAD_FILE_GUEST_REQUEST')
+export const uploadFileGuestSuccess = createAction('INCIDENT/UPLOAD_FILE_GUEST_SUCCESS')
+export const uploadFileGuestError = createAction('INCIDENT/UPLOAD_FILE_GUEST_ERROR')
+
+export const uploadFileGuest = (incidentId, formData) => {
+    return async (dispatch) => {
+        dispatch(uploadFileGuestRequest())
+        let result = await incidentsApi.uploadFile(incidentId, formData)
+        const mediaData = {
+            "file_id": result.data.id
+        };
+        result = await publicApi.attachMedia(incidentId, mediaData);
+        dispatch(uploadFileGuestSuccess(result))
+    }
+}
+
+
+
 
 
 

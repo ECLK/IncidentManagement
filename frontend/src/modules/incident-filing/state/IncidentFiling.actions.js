@@ -339,18 +339,6 @@ export function publicFileUploadError() {
     }
 }
 
-export function publicFileUpload(incidentId, formData) {
-    return async (dispatch) => {
-        try{
-            dispatch(publicFileUpload());
-            const result = await publicAPI.uploadFile(incidentId, formData)
-            dispatch(publicFileUploadSuccess())
-        }catch(e){
-            dispatch(publicFileUploadError())
-        }
-    }
-}
-
 
 export function requestInternalIncidentData() {
     return {

@@ -36,6 +36,8 @@ export default function DropZoneBase(props) {
 
     const { handleUpload, setSelectedFiles } = props
 
+    let files = null
+
     const onDrop = useCallback(acceptedFiles => {
         if(setSelectedFiles){
             const formData = new FormData();
@@ -59,7 +61,7 @@ export default function DropZoneBase(props) {
     });
 
 
-    const files = acceptedFiles.map(file => (
+    files = acceptedFiles.map(file => (
         <li key={file.path}>
             {file.path} - {file.size} bytes
         </li>
@@ -82,9 +84,8 @@ export default function DropZoneBase(props) {
                 <input {...getInputProps()} />
                 <p>Drag 'n' drop some files here, or click to select files</p>
             </div>
-
+            <h4>Selected File: {files[0] ? files[0].key : 'None'}</h4>
             {handleUpload && <div style={{ display: 'flex' }}>
-                <h4>Selected File: {files[0] ? files[0].key : 'None'}</h4>
                 <Button disabled={!files[0]} onClick={() => { handleUpload(acceptedFiles) }}>
                     Upload
                 </Button>
