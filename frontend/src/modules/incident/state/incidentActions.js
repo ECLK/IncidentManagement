@@ -7,6 +7,7 @@
 
 import { createAction } from 'redux-starter-kit';
 import * as incidentsApi from '../../../api/incident';
+import * as publicApi from '../../../api/public';
 
 
 //create incident from public endpoint
@@ -18,17 +19,8 @@ export const createGuestIncident = (incidentData) => {
     return async function(dispatch) {
         dispatch(createGuestIncidentRequest());
         try{
-            const response = await incidentsApi.createIncident(incidentData);
-            const _responseData = {
-                incident: response.data,
-                reporter: { 
-                    id:response.data.reporter
-                }
-            };
-            //reloading the incident and reporter
-            dispatch(loadGuestIncident(_responseData.incident.id));
-            dispatch(loadGuestIncidentReporter(_responseData.reporter.id))
-            dispatch(createGuestIncidentSuccess());
+            const response = await publicApi.createIncident(incidentData);
+            dispatch(createGuestIncidentSuccess({data:response.data}));
         }catch(error){
             console.log(error);
             dispatch(createGuestIncidentError(error));
@@ -47,8 +39,8 @@ export const loadGuestIncident = (incidentId) => {
     return async function(dispatch) {
         dispatch(loadGuestIncidentRequest());
         try{
-            const response = await incidentsApi.getIncident(incidentId);
-            dispatch(loadGuestIncidentSuccess({data:response.data}));
+            // const response = await publicApi.getIncident(incidentId);
+            // dispatch(loadGuestIncidentSuccess({data:response.data}));
         }catch(error){
             console.log(error);
             dispatch(loadGuestIncidentError(error));
@@ -69,8 +61,7 @@ export const updateGuestIncident = (incidentId, incidentData) => {
         try{
             const response = await incidentsApi.updateIncident(incidentId, incidentData);
             //reloading incident
-            dispatch(loadGuestIncident(response.data.id));
-            dispatch(updateGuestIncidentSuccess());
+            dispatch(updateGuestIncidentSuccess({data:response.data}));
         }catch(error){
             console.log(error);
             dispatch(updateGuestIncidentError(error));
@@ -109,9 +100,8 @@ export const updateGuestIncidentReporter = (reporterId, reporterData) => {
     return async function(dispatch) {
         dispatch(updateGuestIncidentRequest());
         try{
-            const response = await incidentsApi.updateReporter(reporterId, reporterData);
+            const response = await publicApi.updateReporter(reporterId, reporterData);
             //reloading reporter
-            dispatch(loadGuestIncidentReporter(reporterId))
             dispatch(updateGuestIncidentSuccess({data:response.data}));
         }catch(error){
             console.log(error);

@@ -20,7 +20,7 @@ const reducer = combineReducers({
     ongoingIncidentReducer,
     modalReducer,
     notificationReducer,
-    incident:incidentReducer
+    incident:newIncidentReducer
 })
 
 const store = createStore(

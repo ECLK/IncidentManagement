@@ -21,27 +21,20 @@ import ContactSection from './GuestFormContactSection'
 
 
 import {
-    submitIncidentBasicData,
     fetchUpdateReporter,
-    fetchUpdateIncident,
-    resetIncidentForm,
-    incidentFileUpload,
     publicFileUpload
 } from '../../incident-filing/state/IncidentFiling.actions'
+
 import {
     fetchElections,
     fetchCategories,
-    fetchProvinces,
-    fetchDistricts,
-    fetchDivisionalSecretariats,
-    fetchGramaNiladharis,
-    fetchPollingDivisions,
-    fetchPoliceStations,
-    fetchPollingStations,
-    fetchWards,
-    fetchActiveIncidentData,
-    resetActiveIncident
 } from '../../shared/state/Shared.actions';
+
+import {
+    createGuestIncident,
+    updateGuestIncident,
+    updateGuestIncidentReporter
+} from '../../incident/state/incidentActions'
 
 const styles = theme => ({
     root: {
@@ -83,11 +76,14 @@ const VerticalLinearStepper = (props) => {
     });
 
     const dispatch = useDispatch()
+    const { elections, categories } = useSelector((state) => (state.sharedReducer))
+    const { activeIncident, activeIncidentReporter } = useSelector((state) => (state.incident))
 
-    const { elections, categories, activeIncident, activeIncidentReporter } = useSelector((state) => (state.sharedReducer))
-    const incidentId = activeIncident.data.id
+    const incidentId = activeIncident.data ? activeIncident.data.id : null
     let incidentData = JSON.parse(JSON.stringify(activeIncident.data));
-    let incidentReporterData = JSON.parse(JSON.stringify(activeIncidentReporter))
+    let incidentReporterData = JSON.parse(JSON.stringify(activeIncidentReporter.data))
+
+    console.log(incidentReporterData)
 
     useEffect(() => {
         dispatch(fetchElections());
@@ -100,7 +96,7 @@ const VerticalLinearStepper = (props) => {
                 if(incidentId){
                     break
                 }else{
-                    dispatch(submitIncidentBasicData({
+                    dispatch(createGuestIncident({
                         election: incidentElection,
                         description: incidentDescription,
                         title: 'Guest user submit'
@@ -110,7 +106,7 @@ const VerticalLinearStepper = (props) => {
             case 1:
                 if(incidentCatogory){
                     incidentData.category = incidentCatogory;
-                    dispatch(fetchUpdateIncident(incidentId, incidentData))
+                    dispatch(updateGuestIncident(incidentId, incidentData))
                 }
                 break
             case 2:
@@ -121,21 +117,25 @@ const VerticalLinearStepper = (props) => {
                 }
                 break
             case 3:
-                //datetime
+                if(incidentDateTime.date || incidentDateTime.time){
+                    let dateTime = moment(incidentDateTime.date + " " + incidentDateTime.time, 'YYYY-MM-DD HH:mm').format()
+                    incidentData.occured_date = dateTime;
+                    dispatch(updateGuestIncident(incidentId, incidentData))
+                }
                 break
             case 4:
                 //location
                 if(incidentLocation){
                     incidentData.location = incidentLocation;
-                    dispatch(fetchUpdateIncident(incidentId, incidentData))
+                    dispatch(updateGuestIncident(incidentId, incidentData))
                 }
                 break
             case 5:
                 if(incidentContact.name || incidentContact.phone || incidentContact.email){
-                    incidentReporterData.name = incidentContact.name
-                    incidentReporterData.telephone = incidentContact.phone
-                    incidentReporterData.email = incidentContact.email
-                    dispatch(fetchUpdateReporter(incidentId, activeIncidentReporter.id, incidentContact))
+                    incidentReporterData.name = incidentContact.name;
+                    incidentReporterData.telephone = incidentContact.phone;
+                    incidentReporterData.email = incidentContact.email;
+                    dispatch(updateGuestIncidentReporter(incidentReporterData.id, incidentContact))
                 }
 
         }
