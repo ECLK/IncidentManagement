@@ -2,11 +2,11 @@ import handler from './apiHandler';
 
 export const createIncident = async incidentData => {
     return (await handler.post(`/public/incidents/`, incidentData)).data;
-};
+}
 
 export const updateIncident = async (incidentId, incidentData) => {
     return (await handler.put(`/public/incidents/${incidentId}`, incidentData)).data;
-};
+}
 
 export const updateReporter = async (reporterId, reporterData) => {
     return (await handler.put(`/public/reporters/${reporterId}`, reporterData)).data;

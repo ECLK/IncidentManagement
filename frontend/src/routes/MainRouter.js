@@ -67,7 +67,7 @@ class MainRouter extends Component {
                 <PrivateRoute exact path="/app/ongoing" component={Ongoing}/>
                 <PrivateRoute exact path="/app/review" component={ReviewIncidentListView} />
                 <PrivateRoute exact path="/app/review/:paramIncidentId" component={Ongoing} />
-                <PrivateRoute exact path="/app/review/:paramIncidentId/edit" component={Report} />
+                <PrivateRoute exact path="/app/review/:paramIncidentId/edit" component={IncidentFormInternal} />
               </Switch>
             </PrivateRoute>
 

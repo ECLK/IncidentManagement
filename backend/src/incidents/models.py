@@ -234,12 +234,12 @@ class Incident(models.Model):
 def update_incident_current_status(sender, **kwargs):
     incident_status = kwargs['instance']
     incident = incident_status.incident
-    incident.current_status = incident_status.current_status
+    incident.current_status = incident_status.current_status.name
     incident.save()
 
 # the following signals will update the current status and severity fields
 @receiver(post_save, sender=IncidentSeverity)
-def update_incident_current_status(sender, **kwargs):
+def update_incident_current_severity(sender, **kwargs):
     incident_severity = kwargs['instance']
     incident = incident_severity.incident
     incident.current_severity = incident_severity.current_severity
