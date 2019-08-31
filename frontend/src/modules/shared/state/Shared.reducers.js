@@ -4,6 +4,11 @@ import axios from 'axios';
 import * as localStorage from "../../../utils/localStorage"
 
 import {
+
+    REQUEST_INCIDENT_CHANNELS,
+    REQUEST_INCIDENT_CHANNELS_SUCCESS,
+    REQUEST_INCIDENT_CHANNELS_FAILURE,
+
     REQUEST_INCIDENT_ELECTIONS,
     REQUEST_INCIDENT_ELECTIONS_SUCCESS,
     REQUEST_INCIDENT_ELECTIONS_FAILURE,
@@ -28,6 +33,10 @@ import {
     REQUEST_INCIDENT_GRAMA_NILADHARIS_SUCCESS,
     REQUEST_INCIDENT_GRAMA_NILADHARIS_FAILURE,
 
+    REQUEST_INCIDENT_POLLING_STATIONS,
+    REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS,
+    REQUEST_INCIDENT_POLLING_STATIONS_FAILURE,
+
     REQUEST_INCIDENT_POLLING_DIVISIONS,
     REQUEST_INCIDENT_POLLING_DIVISIONS_SUCCESS,
     REQUEST_INCIDENT_POLLING_DIVISIONS_FAILURE,
@@ -36,9 +45,9 @@ import {
     REQUEST_INCIDENT_POLICE_STATIONS_SUCCESS,
     REQUEST_INCIDENT_POLICE_STATIONS_FAILURE,
 
-    REQUEST_INCIDENT_POLLING_STATIONS,
-    REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS,
-    REQUEST_INCIDENT_POLLING_STATIONS_FAILURE,
+    REQUEST_INCIDENT_POLICE_DIVISIONS,
+    REQUEST_INCIDENT_POLICE_DIVISIONS_SUCCESS,
+    REQUEST_INCIDENT_POLICE_DIVISIONS_FAILURE,
 
     REQUEST_INCIDENT_WARDS,
     REQUEST_INCIDENT_WARDS_SUCCESS,
@@ -64,6 +73,7 @@ import {
 } from './Shared.types'
 
 const initialState = {
+    channels: [],
     elections: [],
     categories: [],
     provinces: [],
@@ -73,7 +83,7 @@ const initialState = {
     pollingDivisions: [],
     pollingStations: [],
     policeStations: [],
-    dsDivisions: [],
+    policeDivisions: [],
     wards: [],
 
     activeIncident: {
@@ -96,7 +106,7 @@ const initialState = {
 
 export default function sharedReducer(state, action) {
     if (typeof state === 'undefined') {
-        let userData = localStorage.read("ECIncidentMangementUser");
+        let userData = localStorage.read("ECIncidentManagementUser");
         if (userData && userData.authenticated) {
             initialState.signedInUser.data = userData.user;
             initialState.signedInUser.isSignedIn = true;
@@ -104,8 +114,18 @@ export default function sharedReducer(state, action) {
         }
         return initialState;
     }
+    
     return produce(state, draft => {
         switch (action.type) {
+
+            case REQUEST_INCIDENT_CHANNELS:
+                return draft
+            case REQUEST_INCIDENT_CHANNELS_SUCCESS:
+                draft.channels = action.data;
+                return draft
+            case REQUEST_INCIDENT_CHANNELS_FAILURE:
+                return draft
+
             case REQUEST_INCIDENT_ELECTIONS:
                 return draft
             case REQUEST_INCIDENT_ELECTIONS_SUCCESS:
@@ -155,6 +175,14 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_GRAMA_NILADHARIS_FAILURE:
                 return draft
 
+            case REQUEST_INCIDENT_POLLING_STATIONS:
+                return draft
+            case REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS:
+                draft.pollingStations = action.data;
+                return draft
+            case REQUEST_INCIDENT_POLLING_STATIONS_FAILURE:
+                return draft
+
             case REQUEST_INCIDENT_POLLING_DIVISIONS:
                 return draft
             case REQUEST_INCIDENT_POLLING_DIVISIONS_SUCCESS:
@@ -171,14 +199,14 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_POLICE_STATIONS_FAILURE:
                 return draft
 
-            case REQUEST_INCIDENT_POLLING_STATIONS:
+            case REQUEST_INCIDENT_POLICE_DIVISIONS:
                 return draft
-            case REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS:
-                draft.pollingStations = action.data;
+            case REQUEST_INCIDENT_POLICE_DIVISIONS_SUCCESS:
+                draft.policeDivisions = action.data;
                 return draft
-            case REQUEST_INCIDENT_POLLING_STATIONS_FAILURE:
+            case REQUEST_INCIDENT_POLICE_DIVISIONS_FAILURE:
                 return draft
-
+    
             case REQUEST_INCIDENT_WARDS:
                 return draft
             case REQUEST_INCIDENT_WARDS_SUCCESS:

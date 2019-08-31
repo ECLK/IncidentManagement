@@ -2,6 +2,8 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
 from django_filters import rest_framework as filters
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 import uuid
 import enum
 from datetime import datetime
@@ -184,37 +186,41 @@ class Incident(models.Model):
 
     response_time = models.IntegerField(default=12)
 
+    occured_date = models.DateTimeField(null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
-    @property
-    def current_status(self, status_type=None):
-        if status_type is None:
-            status = (
-                IncidentStatus.objects.filter(incident=self, approved=True)
-                .order_by("-created_date")
-                .first()
-            )    
-        else:
-            status = (
-                IncidentStatus.objects.filter(incident=self, approved=True, current_status=status_type)
-                .order_by("-created_date")
-                .first()
-            )
+    current_status = models.CharField(max_length=50, default=None, null=True, blank=True)
+    current_severity = models.CharField(max_length=50, default=None, null=True, blank=True)
 
-        if status is not None:
-            return status.current_status
-        return None
+    # @property
+    # def current_status(self, status_type=None):
+    #     if status_type is None:
+    #         status = (
+    #             IncidentStatus.objects.filter(incident=self, approved=True)
+    #             .order_by("-created_date")
+    #             .first()
+    #         )    
+    #     else:
+    #         status = (
+    #             IncidentStatus.objects.filter(incident=self, approved=True, current_status=status_type)
+    #             .order_by("-created_date")
+    #             .first()
+    #         )
 
-    @property
-    def current_severity(self):
-        severity = (
-            IncidentSeverity.objects.filter(incident=self, approved=True)
-            .order_by("-created_date")
-            .first()
-        )
-        if severity is not None:
-            return severity.current_severity
-        return None
+    #     if status is not None:
+    #         return status.current_status
+    #     return None
+
+    # @property
+    # def current_severity(self):
+    #     severity = (
+    #         IncidentSeverity.objects.filter(incident=self, approved=True)
+    #         .order_by("-created_date")
+    #         .first()
+    #     )
+    #     if severity is not None:
+    #         return severity.current_severity
+    #     return None
 
     class Meta:
         ordering = ("created_date",)
@@ -222,6 +228,22 @@ class Incident(models.Model):
         permissions = (
             ("can_change_assignee", "Can directly change assignee"),
         )
+
+# the following signals will update the current status and severity fields
+@receiver(post_save, sender=IncidentStatus)
+def update_incident_current_status(sender, **kwargs):
+    incident_status = kwargs['instance']
+    incident = incident_status.incident
+    incident.current_status = incident_status.current_status.name
+    incident.save()
+
+# the following signals will update the current status and severity fields
+@receiver(post_save, sender=IncidentSeverity)
+def update_incident_current_severity(sender, **kwargs):
+    incident_severity = kwargs['instance']
+    incident = incident_severity.incident
+    incident.current_severity = incident_severity.current_severity
+    incident.save()
 
 class IncidentPoliceReport(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

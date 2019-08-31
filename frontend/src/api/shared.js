@@ -2,6 +2,10 @@
 import handler from './apiHandler'
 import * as mockapi from '../data/mockapi';
 
+export const getChannels = async () => {
+    return (await handler.get('/channels')).data;
+}
+
 export const getCategories = async () => {
     return (await handler.get('/categories')).data;
 }
@@ -23,6 +27,11 @@ export const getGramaNiladharis = async () => {
     return mockapi.getGramaNiladharis();
 }
 
+export const getPollingStations = async () => {
+    // return (await handler.get('/pollingstations')).data;
+    return mockapi.getPollingStations();
+}
+
 export const getPollingDivisions = async () => {
     return mockapi.getPollingDivisions();
 }
@@ -32,9 +41,8 @@ export const getPoliceStations = async () => {
     return mockapi.getPoliceStations();
 }
 
-export const getPollingStations = async () => {
-    // return (await handler.get('/pollingstations')).data;
-    return mockapi.getPollingStations();
+export const getPoliceDivisions = async () => {
+    return mockapi.getPoliceDivisions();
 }
 
 export const getWards = async () => {

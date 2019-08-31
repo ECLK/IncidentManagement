@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import Button from '@material-ui/core/Button';
 
 import { showModal } from '../../../modals/state/modal.actions'
+import { API_BASE_URL } from '../../../../config';
 
 
 const styles = {
@@ -101,9 +102,9 @@ function getActionText(event){
         case "MEDIA_ATTACHED":
             return "attached media";
         case "ENTITY_ASSIGNED":
-            return `assigned ${event.data.user.displayname} to the incident`;
+            return `assigned ${event.data.user.displayName} to the incident`;
         case "ENTITY_REMOVED":
-            return `removed ${event.data.user.displayname} from the incident`
+            return `removed ${event.data.user.displayName} from the incident`
         case "CREATED":
             return ` created the incident`
         case "ACTION_STARTED":
@@ -130,6 +131,8 @@ function hasEventBody(event){
         return true;
     }
     else if(event.action === "ATTRIBUTE_CHANGED"){
+        return true;
+    }else if(event.action === "MEDIA_ATTACHED"){
         return true;
     }
     return false;
@@ -162,6 +165,13 @@ function getSecondaryItem(event){
                     <div>Name: ${descObj.name}</div>
                     <div>Comment: ${descObj.comment}</div><div></div>`
                 )}
+            </div>
+        )
+    }else if(event.action === "MEDIA_ATTACHED"){
+        const file = event.data.media.file;
+        return (
+            <div>
+                <a href={`${API_BASE_URL}/incidents/files/download/${file.id}`}>{file.name}</a>
             </div>
         )
     }
@@ -263,7 +273,9 @@ const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
                         <Button 
                             color="primary" 
                             className={classes.button} 
-                            onClick={() => eventAction(event.id, "APPROVE")}
+                            onClick={() => dispatch(showModal(
+                                            'PROVIDE_ADVICE_MODAL', 
+                                            {  event }))}
                         >
                             Provide Advice
                         </Button>

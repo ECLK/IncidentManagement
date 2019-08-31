@@ -205,46 +205,11 @@ class DomainContainer extends React.Component {
                     open={langMenuOpen}
                     onClose={this.handleLangMenuClose}
                     >
-                    <Toolbar disableGutters={!open}>
-
-                        <Typography variant="h6" color="inherit" className={classes.grow}>
-                            Incident Management
-            
-                            <Button color="inherit" component={HomeLink} className={classes.homeButton}>Home</Button>
-                            <Button color="inherit" component={ReportLink}>Create</Button>
-                            <Button color="inherit" component={ReviewLink}>Review</Button>
-
-                        </Typography>
-
-                        <Button
-                            aria-owns={open ? 'menu-appbar' : undefined}
-                            aria-haspopup="true"
-                            onClick={this.handleLangMenu}
-                            color="inherit"
-                        >
-                            {selectedLanguage}
-                        </Button>
-
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorLang}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={langMenuOpen}
-                            onClose={this.handleLangMenuClose}
-                        >
-                            <MenuItem onClick={() => (this.handleLanguageChange('si'))}>Sinhala</MenuItem>
-                            <MenuItem onClick={() => (this.handleLanguageChange('ta'))}>Tamil</MenuItem>
-                            <MenuItem onClick={() => (this.handleLanguageChange('en'))}>English</MenuItem>
-                        </Menu>
-
-                        <Menu
+                    <MenuItem onClick={() => (this.handleLanguageChange('si'))}>Sinhala</MenuItem>
+                    <MenuItem onClick={() => (this.handleLanguageChange('ta'))}>Tamil</MenuItem>
+                    <MenuItem onClick={() => (this.handleLanguageChange('en'))}>English</MenuItem>
+                </Menu>
+                <Menu
                             id="menu-appbar"
                             anchorEl={anchorEl}
                             anchorOrigin={{
@@ -271,10 +236,6 @@ class DomainContainer extends React.Component {
                             {signedInUser.displayname}
                             <AccountCircle style={{ margin: 5 }} />
                         </Button>
-
-
-                    </Toolbar>
-                </Menu>
             </Toolbar>
         </AppBar>
                 <main

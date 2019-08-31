@@ -182,22 +182,22 @@ class BasicDetailTab extends Component {
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Date </Typography>
-                                    <Typography gutterBottom> <Moment format="YYYY/MM/DD">{incident.createdDate}</Moment> </Typography>
+                                    <Typography gutterBottom> <Moment format="YYYY/MM/DD">{incident.occured_date}</Moment> </Typography>
                                 </Grid>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Time </Typography>
-                                    <Typography gutterBottom> <Moment format="HH:mm">{incident.createdDate}</Moment> </Typography>
+                                    <Typography gutterBottom> <Moment format="HH:mm">{incident.occured_date}</Moment> </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Logged Date </Typography>
-                                    <Typography gutterBottom> <Moment format="YYYY/MM/DD" unix>{incident.createdDate}</Moment> </Typography>
+                                    <Typography gutterBottom> <Moment format="YYYY/MM/DD">{incident.createdDate}</Moment> </Typography>
                                 </Grid>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Logged Time </Typography>
-                                    <Typography gutterBottom> <Moment format="HH:mm" unix>{incident.createdDate}</Moment> </Typography>
+                                    <Typography gutterBottom> <Moment format="HH:mm">{incident.createdDate}</Moment> </Typography>
                                 </Grid>
                             </Grid>
 

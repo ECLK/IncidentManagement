@@ -9,6 +9,9 @@ from django.contrib.auth.models import User
 from ..incidents.serializers import IncidentSerializer, IncidentCommentSerializer
 from ..custom_auth.serializers import UserSerializer
 
+from ..file_upload.models import File
+from ..file_upload.serializers import FileSerializer
+
 class GenericDataRelatedField(serializers.RelatedField):
     def to_representation(self, value):
         if isinstance(value, IncidentComment):
@@ -38,6 +41,16 @@ class GenericDataRelatedField(serializers.RelatedField):
                 "status": {
                     "from_severity_type": value.previous_severity,
                     "to_severity_type": value.current_severity
+                }
+            }
+        elif isinstance(value, File):
+            return {
+                "media": {
+                    "file": {
+                        "id": value.id,
+                        "name": value.original_name,
+                        "extension": value.extension
+                    }
                 }
             }
 

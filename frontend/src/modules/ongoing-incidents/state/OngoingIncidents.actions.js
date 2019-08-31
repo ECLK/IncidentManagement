@@ -481,7 +481,10 @@ export function attachFileSuccess(data) {
       type: INCIDENT_ATTACH_FILE_SUCCESS,
       data: data,
       error: null,
-      isLoading: false
+      isLoading: false,
+      confirm: {
+        message: "Media attached!"
+      }
   }
 }
 
@@ -498,9 +501,13 @@ export function attachFile(incidentId, formData) {
   return async (dispatch) => {
       try{
           dispatch(attachFileRequest());
-          const result = await incidentAPI.uploadFile(incidentId, formData)
-          console.log(result)
+          let result = await incidentAPI.uploadFile(incidentId, formData)
+          const mediaData = {
+            "file_id": result.data.id
+          };
+          result = await incidentAPI.attachMedia(incidentId, mediaData);
           dispatch(attachFileSuccess(result))
+          dispatch(fetchIncidentEventTrail(incidentId))
       }catch(e){
           dispatch(attachFileError())
       }

@@ -19,7 +19,7 @@
 9. Grab another coffee
 10. `docker-compose exec djangoapp python manage.py createsuperuser`
 11. Enter superuser information when prompted
-12. `docker-compose exec djangoapp python manage.py loaddata seed_data.json`
+<!-- 12. `docker-compose exec djangoapp python manage.py loaddata seed_data.json` -->
 13. Server runs at 8000
 
 ## Model writing guidelines
@@ -83,3 +83,37 @@ All responses have the same structure. This is enforced centrally, no need to ch
 3. If there's a reusable logic that involves more than one query to models, send it out to a service method.
 
 4. **Different apps should ONLY communicate through services. Donot invoke view methods of other apps directly**
+
+
+
+### Mock Election - Deployement Process
+
+1. Make fresh install - delete `data` directory
+2. Follow steps under **Docker run** above
+3. Create the following groups first (important that the ranks are kept as given). You can use django admin view for this.
+
+```bash
++-------------------+---------------------+------+
+| name              | permissions         | rank |
++-------------------+---------------------+------+
+| leadership        | can_change_status   | 1    |
+|                   |                     |      |
+|                   | can_change_assignee |      |
++-------------------+---------------------+------+
+| cheif-coordinator | can_change_status   | 2    |
+|                   |                     |      |
+|                   | can_change_assignee |      |
++-------------------+---------------------+------+
+| manager           | can_change_status   | 3    |
+|                   |                     |      |
+|                   | can_change_assignee |      |
++-------------------+---------------------+------+
+| coordinator       |                     | 4    |
++-------------------+---------------------+------+
+| guest             |                     | 5    |
++-------------------+---------------------+------+
+```
+
+4. Create user(s) for each group above. When creating a new user, you can select the group in the same form. Only select one group per user.
+
+5. **IMPORTANT** a mandatory user named *guest* must be created under *guest* group so that public claim filing work as expected. 

@@ -23,6 +23,7 @@ import { LandingPage } from '../modules/guest-view';
 import { Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import { Home } from "../modules/home";
+import GuestIncidentForm from '../modules/guest-view/components/GuestIncidentForm'
 
 class Layout extends React.Component{
   
@@ -66,13 +67,13 @@ class MainRouter extends Component {
                 <PrivateRoute exact path="/app/ongoing" component={Ongoing}/>
                 <PrivateRoute exact path="/app/review" component={ReviewIncidentListView} />
                 <PrivateRoute exact path="/app/review/:paramIncidentId" component={Ongoing} />
-                <PrivateRoute exact path="/app/review/:paramIncidentId/edit" component={Report} />
+                <PrivateRoute exact path="/app/review/:paramIncidentId/edit" component={IncidentFormInternal} />
               </Switch>
             </PrivateRoute>
 
           <Route exact path="/" component={LandingPage} />
           <Route path="/sign-in" component={SignInPage} />
-          <Route path="/report" component={Report} />
+          <Route path="/report" component={GuestIncidentForm} />
           </div>
         </Router>
       </IntlProvider>

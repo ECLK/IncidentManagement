@@ -1,28 +1,220 @@
 [
-    {
-      "model": "common.category",
-      "pk": 1,
-      "fields": {
-        "top_category": "Violence",
-        "sub_category": "Very bad violence",
-        "sn_top_category": "Violence",
-        "sn_sub_category": "Very bad violence",
-        "tm_top_category": "Violence",
-        "tm_sub_category": "Very bad violence",
-        "created_date": "2019-06-27 16:21:56.502965"
-      }
-    },
-    {
-        "model": "common.category",
-        "pk": 2,
-        "fields": {
-          "top_category": "Violence",
-          "sub_category": "Medium violence",
-          "sn_top_category": "Violence",
-          "sn_sub_category": "Medium violence",
-          "tm_top_category": "Violence",
-          "tm_sub_category": "Medium violence",
-          "created_date": "2019-06-27 16:21:56.502965"
-        }
+  {
+    "model": "common.category",
+    "pk": 1,
+    "fields": {
+      "top_category": "Violence",
+      "sub_category": "Verbal intimidation",
+      "sn_top_category": "Violence",
+      "sn_sub_category": "Verbal intimidation",
+      "tm_top_category": "Violence",
+      "tm_sub_category": "Verbal intimidation",
+      "created_date": "2019-06-27 00:00:00.000000"
     }
-  ]
+  },
+  {
+    "model": "common.category",
+    "pk": 2,
+    "fields": {
+      "top_category": "Violence",
+      "sub_category": "Assault",
+      "sn_top_category": "Violence",
+      "sn_sub_category": "Assault",
+      "tm_top_category": "Violence",
+      "tm_sub_category": "Assault",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 3,
+    "fields": {
+      "top_category": "Violence",
+      "sub_category": "Loss of life",
+      "sn_top_category": "Violence",
+      "sn_sub_category": "Loss of life",
+      "tm_top_category": "Violence",
+      "tm_sub_category": "Loss of life",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 4,
+    "fields": {
+      "top_category": "Violence",
+      "sub_category": "Damage to property",
+      "sn_top_category": "Violence",
+      "sn_sub_category": "Damage to property",
+      "tm_top_category": "Violence",
+      "tm_sub_category": "Damage to property",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 5,
+    "fields": {
+      "top_category": "Violence",
+      "sub_category": "Attempted murder",
+      "sn_top_category": "Violence",
+      "sn_sub_category": "Attempted murder",
+      "tm_top_category": "Violence",
+      "tm_sub_category": "Attempted murder",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 6,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Abuse of public property",
+      "sn_top_category": "Violation of election law",
+      "sn_sub_category": "Abuse of public property",
+      "tm_top_category": "Violation of election law",
+      "tm_sub_category": "Abuse of public property",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 7,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Misuse of media",
+      "sn_top_category": "Violation of election law",
+      "sn_sub_category": "Misuse of media",
+      "tm_top_category": "Violation of election law",
+      "tm_sub_category": "Misuse of media",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 8,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Complaints related to postal votes",
+      "sn_top_category": "Violation of election law",
+      "sn_sub_category": "Complaints related to postal votes",
+      "tm_top_category": "Violation of election law",
+      "tm_sub_category": "Complaints related to postal votes",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 9,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Complaint related to polling booth/ electoral materials",
+      "sn_top_category": "Violation of election law",
+      "sn_sub_category": "Complaint related to polling booth/ electoral materials",
+      "tm_top_category": "Violation of election law",
+      "tm_sub_category": "Complaint related to polling booth/ electoral materials",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 10,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Fake news",
+      "sn_top_category": "Violation of election law",
+      "sn_sub_category": "Fake news",
+      "tm_top_category": "Violation of election law",
+      "tm_sub_category": "Fake news",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.channel",
+    "pk": 1,
+    "fields": {
+      "name": "Petitions",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.channel",
+    "pk": 2,
+    "fields": {
+      "name": "Emails",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.channel",
+    "pk": 3,
+    "fields": {
+      "name": "Fax",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.channel",
+    "pk": 4,
+    "fields": {
+      "name": "Phones",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.channel",
+    "pk": 5,
+    "fields": {
+      "name": "SMS",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.channel",
+    "pk": 6,
+    "fields": {
+      "name": "Facebook Messenger",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.channel",
+    "pk": 7,
+    "fields": {
+      "name": "Mobile App",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.channel",
+    "pk": 8,
+    "fields": {
+      "name": "Civil Society",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.channel",
+    "pk": 9,
+    "fields": {
+      "name": "Monitoring organizations",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.channel",
+    "pk": 10,
+    "fields": {
+      "name": "Individuals",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.channel",
+    "pk": 11,
+    "fields": {
+      "name": "Mobile patrolling units",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  }
+]

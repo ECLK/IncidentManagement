@@ -10,19 +10,20 @@ import os
 import urllib
 
 from .serializers import FileSerializer
-
 from .services import ( 
     get_incident_file_ids,
+    get_file_by_id
 )
+from ..events import services as event_service
+from ..incidents import services as incident_service
 
 class FileView(APIView):
 
   parser_classes = (MultiPartParser, FormParser)
   serializer_class = FileSerializer
+  permission_classes = []
 
   def get(self, request, incident_id):
-    # file_ids = get_incident_file_ids(incident_id)
-    # return Response(file_ids, status=status.HTTP_200_OK)
     files = get_incident_file_ids(incident_id)
     serializer = FileSerializer(files, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -32,6 +33,8 @@ class FileView(APIView):
     file_data = request.data
     file_data["incident"] = incident_id
     file_data["extension"] = file_data["file"].name.split('.')[-1]
+    file_data["original_name"] = file_data["file"].name
+
     file_serializer = FileSerializer(data=file_data)
     if file_serializer.is_valid():
       file_serializer.save()
@@ -40,13 +43,11 @@ class FileView(APIView):
       return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class FileDownload(APIView):
-
+  permission_classes = []
   def get(self, request, file_id):
-
-    file_name = str(file_id)
-    ext = request.GET.get('ext', '')
-    file_full_name = file_name + "." + ext
-    file_path = "media/" + file_full_name
+    uploaded_file = get_file_by_id(file_id)
+    file_path = uploaded_file.file.url
+    file_full_name = uploaded_file.original_name
 
     fp = open(file_path, 'rb')
     response = HttpResponse(fp.read())
@@ -60,14 +61,13 @@ class FileDownload(APIView):
         response['Content-Encoding'] = encoding
 
     if u'WebKit' in request.META['HTTP_USER_AGENT']:
-        # Safari 3.0 and Chrome 2.0 accepts UTF-8 encoded string directly.
-        filename_header = 'filename=%s' % file_full_name.encode('utf-8')
+        # Safari 3.0 and Chrome 2.0 
+        filename_header = 'filename=%s' % file_full_name
     elif u'MSIE' in request.META['HTTP_USER_AGENT']:
-        # IE does not support internationalized filename at all.
-        # It can only recognize internationalized URL, so we do the trick via routing rules.
+        # IE does not support internationalized filename at all
         filename_header = ''
     else:
-        # For others like Firefox, we follow RFC2231 (encoding extension in HTTP headers).
-        filename_header = 'filename*=UTF-8\'\'%s' % urllib.parse.quote(file_full_name.encode('utf-8'))
+        # For others like Firefox
+        filename_header = 'filename*=UTF-8\'\'%s' % file_full_name
     response['Content-Disposition'] = 'attachment; ' + filename_header
     return response

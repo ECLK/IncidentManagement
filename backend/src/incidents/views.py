@@ -38,16 +38,22 @@ from .services import (
     incident_verify,
     get_user_by_id,
     get_police_report_by_incident,
-    get_incidents_to_escalate
+    get_incidents_to_escalate,
+    auto_escalate_incidents,
+    attach_media,
+    get_fitlered_incidents_report,
+    get_guest_user
 )
 
 from ..events import services as event_service
+from ..file_upload import services as file_services
+from .exceptions import IncidentException
 
 import json
 
 
 class IncidentResultsSetPagination(PageNumberPagination):
-    page_size = 5
+    page_size = 15
     page_size_query_param = "pageSize"
     max_page_size = 100
 
@@ -115,21 +121,25 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         if param_status is not None:
             try:
                 status_type = StatusType[param_status]
-                incidents = [
-                    incident for incident in incidents if incident.current_status == status_type.name]
+                incidents = incidents.filter(current_status=param_status)
             except Exception as e:
                 return Response("Invalid status", status=status.HTTP_400_BAD_REQUEST)
 
         param_severity = self.request.query_params.get('severity', None)
         if param_severity is not None:
             try:
-                severity_type = SeverityType[param_severity]
-                incidents = [
-                    incident for incident in incidents if incident.current_severity == severity_type.name]
-            except Exception as e:
-                return Response("Invalid severity", status=status.HTTP_400_BAD_REQUEST)
-
+                param_severity = int(param_severity)
+                if param_severity < 1 or param_severity > 10:
+                    raise IncidentException("Severity level must be between 1 - 10")
+                incidents = incidents.filter(current_severity=param_severity)
+            except:
+                raise IncidentException("Severity level must be a number")
         
+        param_export = self.request.query_params.get('export', None)
+        if param_export is not None:
+            # export path will send a different response
+            return get_fitlered_incidents_report(incidents, param_export)
+
         results = self.paginate_queryset(incidents, request, view=self)
         serializer = IncidentSerializer(results, many=True)
         return self.get_paginated_response(serializer.data)
@@ -180,18 +190,21 @@ class IncidentDetail(APIView):
         incident = get_incident_by_id(incident_id)
         serializer = IncidentSerializer(incident, data=request.data)
         incident_police_report = get_police_report_by_incident(incident)
-        incident_police_report_data = request.data
-        incident_police_report_data["incident"] = incident_id
-        incident_police_report_serializer = IncidentPoliceReportSerializer(incident_police_report, data=incident_police_report_data)
         
         if serializer.is_valid():
             serializer.save()
             return_data = serializer.data
-            
-            if incident_police_report_serializer.is_valid():
-                incident_police_report_serializer.save()
-                return_data.update(incident_police_report_serializer.data)
-                return_data["id"] = incident_id
+
+            if incident_police_report is not None:
+                incident_police_report_data = request.data
+                incident_police_report_data["incident"] = incident_id
+                incident_police_report_serializer = IncidentPoliceReportSerializer(incident_police_report, data=incident_police_report_data)
+
+                
+                if incident_police_report_serializer.is_valid():
+                    incident_police_report_serializer.save()
+                    return_data.update(incident_police_report_serializer.data)
+                    return_data["id"] = incident_id
 
             return Response(return_data)
 
@@ -277,7 +290,9 @@ class IncidentWorkflowView(APIView):
 
         elif workflow == "provide-advice":
             comment = json.dumps(request.data['comment'])
-            incident_provide_advice(request.user, incident, comment)
+            start_event_id = request.data['start_event']
+            start_event = event_service.get_event_by_id(start_event_id)
+            incident_provide_advice(request.user, incident, comment, start_event)
 
         elif workflow == "verify":
             comment = json.dumps(request.data['comment'])
@@ -301,9 +316,83 @@ class IncidentWorkflowView(APIView):
 
         return Response("Incident workflow success", status=status.HTTP_200_OK)
 
-class Test(APIView):
+class IncidentMediaView(APIView):
+    def post(self, request, incident_id, format=None):
 
+        incident = get_incident_by_id(incident_id)
+        file_id = request.data['file_id']
+        uploaded_file = file_services.get_file_by_id(file_id)
+        attach_media(request.user, incident, uploaded_file)
+
+        return Response("Incident workflow success", status=status.HTTP_200_OK)
+
+class IncidentAutoEscalate(APIView):
     def get(self, request):
+        escalated_incidents = auto_escalate_incidents()
 
+        return Response(escalated_incidents, status=status.HTTP_200_OK)
+
+class Test(APIView):
+    def get(self, request):
         data = get_incidents_to_escalate()
+
         return Response(data)
+
+# public user views
+
+class IncidentPublicUserView(APIView):
+    permission_classes = []
+    serializer_class = IncidentSerializer
+
+    def post(self, request, format=None):
+        serializer = IncidentSerializer(data=request.data)
+
+        if serializer.is_valid():
+            incident = serializer.save()
+            create_incident_postscript(incident, None)            
+            return_data = serializer.data
+
+            return Response(return_data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request, incident_id, format=None):
+        """
+            Update existing incident
+        """
+        incident = get_incident_by_id(incident_id)
+        serializer = IncidentSerializer(incident, data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return_data = serializer.data
+
+            return Response(return_data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ReporterPublicUserView(APIView):
+    serializer_class = ReporterSerializer
+    permission_classes = []
+
+    def put(self, request, reporter_id, format=None):
+        snippet = get_reporter_by_id(reporter_id)
+        serializer = ReporterSerializer(snippet, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class IncidentMediaPublicUserView(APIView):
+    permission_classes = []
+
+    def post(self, request, incident_id, format=None):
+
+        incident = get_incident_by_id(incident_id)
+        file_id = request.data['file_id']
+        uploaded_file = file_services.get_file_by_id(file_id)
+        attach_media(get_guest_user(), incident, uploaded_file)
+
+        return Response("Incident workflow success", status=status.HTTP_200_OK)
+
+

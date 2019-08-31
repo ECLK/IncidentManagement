@@ -84,16 +84,16 @@ class IncidentLocationDetailsForm extends Component {
                 </FormControl>
 
                 <FormControl className={classes.formControl_ds}>
-                    <InputLabel htmlFor="ds_division_id">District Secretariat (DS) Division</InputLabel>
+                    <InputLabel htmlFor="divisionalSecretariat">District Secretariat (DS) Division</InputLabel>
                     <Select
-                        value={values.ds_division_id}
+                        value={values.divisionalSecretariat}
                         onChange={handleChange}
                         inputProps={{
-                            name: 'ds_division_id',
-                            id: 'ds_division_id',
+                            name: 'divisionalSecretariat',
+                            id: 'divisionalSecretariat',
                         }}
                     >
-                        {this.props.dsDivisions.map((c, k) => (
+                        {this.props.divisionalSecretariats.map((c, k) => (
                             <MenuItem value={k} key={k}>{c}</MenuItem>
                         ))}
                     </Select>

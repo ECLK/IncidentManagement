@@ -21,12 +21,15 @@ const getEventLinks = (events) => {
     let currEvent
     for(i = 0; i<events.length; i++ ){
         currEvent = events[i]
-        switch(currEvent.action){
-            case "ACTION_COMPLETED":
-                eventLinkObj[currEvent.linked_event] = currEvent.id
-            default:
-                break
+        if(currEvent.linked_event){
+            eventLinkObj[currEvent.linked_event] = currEvent.id
         }
+        // switch(currEvent.action){
+        //     case "ACTION_COMPLETED":
+        //         eventLinkObj[currEvent.linked_event] = currEvent.id
+        //     default:
+        //         break
+        // }
     }
     return eventLinkObj
 }
