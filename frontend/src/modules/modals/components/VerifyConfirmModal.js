@@ -14,12 +14,6 @@ import { hideModal  } from '../state/modal.actions'
 import { fetchUpdateWorkflow } from '../../ongoing-incidents/state/OngoingIncidents.actions'
 
 
-var hourlyResponseTimes = []
-for (var i = 1; i < 24; i++) {
-    hourlyResponseTimes.push(i);
-}
-
-
 const VerifyConfirmModal = (props) => {
 
     const dispatch = useDispatch();

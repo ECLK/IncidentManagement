@@ -1,5 +1,4 @@
 
-// EditUserDialog.js
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import React, { Component } from 'react';
@@ -20,10 +19,10 @@ import Paper from '@material-ui/core/Paper';
 import StepContent from '@material-ui/core/StepContent';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import IncidentBasicDetailsForm  from '../../shared/components/IncidentBasicDetailsForm';
-import IncidentLocationDetailsForm  from '../../shared/components/IncidentLocationDetailsForm';
-import IncidentContactDetailsForm  from '../../shared/components/IncidentContactDetailsForm';
-import IncidentReviewDetailsForm  from '../../shared/components/IncidentReviewDetailsForm';
+import IncidentBasicDetailsForm  from './IncidentBasicDetailsForm';
+import IncidentLocationDetailsForm  from './IncidentLocationDetailsForm';
+import IncidentContactDetailsForm  from './IncidentContactDetailsForm';
+import IncidentReviewDetailsForm  from './IncidentReviewDetailsForm';
 
 
 import { 
@@ -32,16 +31,22 @@ import {
     stepForwardIncidentStepper, 
     fetchUpdateReporter, 
     fetchUpdateIncident,
-    resetIncidentForm } from '../state/IncidentFiling.actions'
+    resetIncidentForm 
+} from '../state/IncidentFiling.actions'
 import { 
-    fetchCatogories, 
-    fetchDistricts, 
-    fetchPoliceStations, 
-    fetchPollingStations, 
-    fetchWards, 
+    fetchElections,
+    fetchCategories,
+    fetchProvinces,
+    fetchDistricts,
+    fetchDivisionalSecretariats,
+    fetchGramaNiladharis,
+    fetchPollingDivisions,
+    fetchPoliceStations,
+    fetchPollingStations,
+    fetchWards,
     fetchActiveIncidentData,
-    resetActiveIncident,
-    fetchDSDivisions } from '../../shared/state/Shared.actions';
+    resetActiveIncident
+} from '../../shared/state/Shared.actions';
 
 import Snackbar from '@material-ui/core/Snackbar';
 
@@ -134,15 +139,18 @@ function getSteps() {
             id: 'eclk.incident.management.filing.guest.form.steps.location.details',
             description: 'Submit Incident Location Details',
             defaultMessage: 'Submit Incident Location Details'
-        }, {
+        }, 
+        {
             id: 'eclk.incident.management.filing.guest.form.steps.contact.details',
             description: 'Submit Contact Details',
             defaultMessage: 'Submit Contact Details'
-        }, {
+        }, 
+        {
             id: 'eclk.incident.management.filing.guest.form.steps.review.details',
             description: 'Add additoinal details',
             defaultMessage: 'Add additoinal details'
-        }];
+        }
+    ];
 }
 
 function getStepContent(step, props, formikProps, state) {
@@ -185,12 +193,17 @@ class IndicdentForm extends Component {
     };
 
     componentDidMount() {
-        this.props.getcategories();
+        this.props.getElections();
+        this.props.getCategories();
+        this.props.getProvinces();
         this.props.getDistricts();
+        this.props.getDivisionalSecretariats();
+        this.props.getGramaNiladharis();
+        this.props.getPollingDivisions();
+        this.props.getPollingStations();
         this.props.getPoliceStations();
         this.props.getPollingStations();
         this.props.getWards();
-        this.props.getDSDivisions();
 
         this.props.resetIncidentForm();
 
@@ -497,11 +510,13 @@ const mapStateToProps = (state, ownProps) => {
         categories: state.sharedReducer.categories,
         districts: state.sharedReducer.districts,
         provinces: state.sharedReducer.provinces,
+        divisionalSecretariats: state.sharedReducer.divisionalSecretariats,
+        gramaNiladharis: state.sharedReducer.gramaNiladharis,
+        pollingDivisions: state.sharedReducer.pollingDivisions,
         pollingStations: state.sharedReducer.pollingStations,
         policeStations: state.sharedReducer.policeStations,
         wards: state.sharedReducer.wards,
         elections: state.sharedReducer.elections,
-        dsDivisions: state.sharedReducer.dsDivisions,
 
         ...ownProps
     }
@@ -525,11 +540,26 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(stepForwardIncidentStepper())
         },
 
-        getcategories: () => {
-            dispatch(fetchCatogories())
+        getElections: () => {
+            dispatch(fetchElections());
+        },
+        getCategories: () => {
+            dispatch(fetchCategories())
+        },
+        getProvinces: () => {
+            dispatch(fetchProvinces())
         },
         getDistricts: () => {
             dispatch(fetchDistricts())
+        },
+        getDivisionalSecretariats: () => {
+            dispatch(fetchDivisionalSecretariats())
+        },
+        getGramaNiladharis: () => {
+            dispatch(fetchGramaNiladharis());
+        },
+        getPollingDivisions: () => {
+            dispatch(fetchPollingDivisions());
         },
         getPollingStations: () => {
             dispatch(fetchPollingStations())
@@ -551,9 +581,6 @@ const mapDispatchToProps = (dispatch) => {
 
         resetIncidentForm: () => {
             dispatch(resetIncidentForm())
-        },
-        getDSDivisions: () => {
-            dispatch(fetchDSDivisions());
         }
     }
 }

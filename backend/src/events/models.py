@@ -18,6 +18,7 @@ class EventAction(enum.Enum):
     ENTITY_REMOVED = "Entity removed"
     ACTION_STARTED = "Started Action"
     ACTION_COMPLETED = "Ended Action"
+    MEDIA_ATTACHED = "Media Attached"
 
     def __str__(self):
         return self.name

@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Assignees from '../Assignees';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
-import { getDateDiff } from './utils';
+import { getDateDiff, calculateDeadline } from './utils';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -25,15 +26,18 @@ import HelpIcon from '@material-ui/icons/Help';
 import EditIcon from '@material-ui/icons/Edit';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
-
-
-
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import WhereToVoteIcon from '@material-ui/icons/WhereToVote';
+import SpeackerNotesIcon from '@material-ui/icons/SpeakerNotes';
 
 import IconButton from '@material-ui/core/IconButton';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 //actions
 import { showModal } from '../../../modals/state/modal.actions'
+
+//utils
+import { userCan, USER_ACTIONS } from '../../../utils/userUtils';
 
 const styles = (theme) => ({
     card: {
@@ -52,6 +56,9 @@ const styles = (theme) => ({
     },
     actionButtonIcon: {
         marginRight: theme.spacing.unit * 2
+    },
+    timeLimitOverDue: {
+        color:'red'
     }
 });
 
@@ -77,6 +84,10 @@ const EventActions = (props) => {
 
     const dispatch = useDispatch()
     const activeIncident = useSelector(state => state.sharedReducer.activeIncident.data);
+    const currentUser = useSelector(state => state.sharedReducer.signedInUser.data);
+    const timeLimitInfo = calculateDeadline(activeIncident);
+    const timeLimitText = timeLimitInfo.text;
+    const timeLimitStatus = timeLimitInfo.status;
 
     if (!activeIncident) {
         return null
@@ -92,19 +103,22 @@ const EventActions = (props) => {
                     <Avatar>
                         <PermIdentityIcon />
                     </Avatar>
-                    <ListItemText primary="Current Assignee" secondary={activeIncident.assignees ? activeIncident.assignees[0].displayname : ""} />
-                    <ListItemSecondaryAction>
-                        <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('CHANGE_ASSIGNEE_MODAL', { activeIncident, users })) }}>
-                            <EditIcon />
-                        </IconButton>
-                    </ListItemSecondaryAction>
+                    <ListItemText primary="Assigned to" secondary={activeIncident.assignees ? activeIncident.assignees[0].displayname : ""} />
+                    
+                    {userCan(currentUser, activeIncident, USER_ACTIONS.CHANGE_ASSIGNEE) &&
+                        <ListItemSecondaryAction>
+                            <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('CHANGE_ASSIGNEE_MODAL', { activeIncident, users })) }}>
+                                <EditIcon />
+                            </IconButton>
+                        </ListItemSecondaryAction>
+                    }
                 </ListItem>
 
                 <ListItem>
                     <Avatar>
                         <RestoreIcon />
                     </Avatar>
-                    <ListItemText primary="Time Since last action" secondary={getLastActionTime(props.events)} />
+                    <ListItemText primary="Last action happened" secondary={getLastActionTime(props.events)} />
                 </ListItem>
 
                 <ListItem>
@@ -121,9 +135,16 @@ const EventActions = (props) => {
 
                 <ListItem>
                     <Avatar>
-                        <TimerIcon />
+                        <HourglassEmptyIcon />
                     </Avatar>
-                    <ListItemText primary="Countdown" secondary="1 hour(s) remaining. Ends at 5.30 p.m." />
+                    <ListItemText 
+                        primary="Close this before" 
+                        secondary={timeLimitText}
+                        classes = {{
+                            inset:true,
+                            secondary: calculateDeadline(activeIncident).status === 'OVERDUE' && classes.timeLimitOverDue
+                        }}
+                    />
                 </ListItem>
 
                 <ListItem>
@@ -138,11 +159,13 @@ const EventActions = (props) => {
 
             <Divider variant="middle" className={classes.divider} />
 
-
-            <Button color="primary" size="large" variant='text' className={classes.button} onClick={props.escallateIncident}>
-                <ArrowUpwardIcon className={classes.actionButtonIcon} />
-                Escalate
-            </Button>
+            {userCan(currentUser, activeIncident, USER_ACTIONS.ESCALATE_INCIDENT) && 
+                <Button color="primary" size="large" variant='text' className={classes.button} onClick={props.escallateIncident}>
+                    <ArrowUpwardIcon className={classes.actionButtonIcon} />
+                    Escalate
+                </Button>
+            }
+            
             <Button color="primary" size="large" variant='text' className={classes.button} onClick={()=>{dispatch(showModal('ESCALLATE_OUTSIDE', { incidentId: activeIncident.id }))}}>
                 <SubdirectoryArrowLeftIcon className={classes.actionButtonIcon} />
                 Escalate to outside
@@ -152,13 +175,16 @@ const EventActions = (props) => {
                 Request for advice
             </Button>
             <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('PROVIDE_ADVICE_MODAL', { activeIncident })) }}>
-                <HelpIcon className={classes.actionButtonIcon} />
+                <SpeackerNotesIcon className={classes.actionButtonIcon} />
                 Provide advice
             </Button>
-            <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('CLOSE_MODAL', { activeIncident })) }}>
-                <HelpIcon className={classes.actionButtonIcon} />
-                Close Incident
-            </Button>
+
+            {userCan(currentUser, activeIncident, USER_ACTIONS.CLOSE_INCIDENT) &&
+                <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('CLOSE_MODAL', { activeIncident })) }}>
+                    <WhereToVoteIcon className={classes.actionButtonIcon} />
+                    Close Incident
+                </Button>
+            } 
 
 
         </div>

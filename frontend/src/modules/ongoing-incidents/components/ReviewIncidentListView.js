@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { withRouter } from "react-router-dom";
 import Table from "@material-ui/core/Table";
@@ -14,10 +14,16 @@ import {
   updateIncidentFilters
 } from "../state/OngoingIncidents.actions";
 
-import { fetchCatogories } from "../../shared/state/Shared.actions";
+import { fetchCategories } from "../../shared/state/Shared.actions";
 
 import moment from "moment";
 import SearchForm from "./SearchForm";
+import { TableFooter, TablePagination, Grid, IconButton, Button } from "@material-ui/core";
+import CheckIcon from '@material-ui/icons/CheckCircle';
+import EditIcon from '@material-ui/icons/Edit';
+import AssignIcon from '@material-ui/icons/AssignmentInd';
+import { getIncidents } from "../../../api/incident";
+
 const CustomTableCell = withRouter(
   withStyles(theme => ({
     body: {
@@ -92,21 +98,87 @@ const styles = theme => ({
   datePicker: {},
   separator: {
     height: "10px"
+  },
+  exportContainer: {
+    marginTop: "20px",
+    marginLeft: "auto"
+  },
+  exportButton: {
+    marginLeft: "10px"
   }
 });
 
 let id = 0;
 
 class ReviewIncidentListView extends React.Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
+      filters: {}
+    }
+  }
+
   componentDidMount() {
     this.props.getCategories();
   }
+
+  handlePageChange = (event, newPage) => {
+    this.props.getIncidents(this.props.incidentSearchFilter, newPage+1);
+  }
+
+  handleSearchClick = (filters, page) => {
+    if(filters){
+      this.setState({
+        filters: filters
+      });
+    }else{
+      this.setState({
+        filters: {}
+      });
+    }
+    
+    this.props.getIncidents(filters, page);
+  }
+
+  handleExportClick = async (exportType) => {
+    const filters = this.state.filters;
+    filters["export"] = exportType;
+
+    try{
+      const response = await getIncidents(filters);
+      const url = window.URL.createObjectURL(new Blob([response]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'incidents.' + exportType);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }catch{
+
+    }
+    
+  }
+  
+
   render() {
     const { classes, pagedIncidents, categories } = this.props;
 
     return (
       <Paper className={classes.root}>
-        <SearchForm categories={categories} {...this.props} />
+        <SearchForm categories={categories} handleSearchClick={this.handleSearchClick} {...this.props} />
+        <Grid container direction={"row"} className={classes.exportContainer}>
+          <Grid item>
+            <Button variant={"contained"} onClick={() => this.handleExportClick("csv")} className={classes.exportButton}>
+              Export as CSV
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button variant={"contained"} onClick={() => this.handleExportClick("pdf")} className={classes.exportButton}>
+              Export as PDF
+            </Button>
+          </Grid>
+        </Grid>
         <Table className={classes.table}>
           <colgroup>
             <col style={{ width: "2%" }} />
@@ -127,20 +199,18 @@ class ReviewIncidentListView extends React.Component {
               <CustomTableCell align="center">Title</CustomTableCell>
               <CustomTableCell align="center">Description</CustomTableCell>
               <CustomTableCell align="center">Status</CustomTableCell>
-              <CustomTableCell align="center">Reported Time</CustomTableCell>
+              <CustomTableCell align="center">Severity</CustomTableCell>
               <CustomTableCell align="center">Response Time</CustomTableCell>
               <CustomTableCell align="center">Category</CustomTableCell>
-              <CustomTableCell align="center">Severity</CustomTableCell>
-              <CustomTableCell align="center">Location</CustomTableCell>
+              <CustomTableCell align="center">Last Action At</CustomTableCell>
+              <CustomTableCell align="center">Actions</CustomTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {pagedIncidents.incidents.map(row => (
               <TableRow
-                onClick={() => {
-                  this.props.history.push(`/app/review/${row.id}`);
-                }}
-                hover
+                
+                // hover
                 className={classes.row}
                 key={row.id}
               >
@@ -154,28 +224,61 @@ class ReviewIncidentListView extends React.Component {
                   <p className="description">{row.description}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
-                  <p>{row.status}</p>
+                  <p>{row.currentStatus}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
-                  <div>
-                    {moment(row.createdDate).format(moment.HTML5_FMT.DATE)}
-                  </div>
-                  <div className={classes.separator} />
-                  <div>{moment(row.createdDate).format("hh:mm A")}</div>
+                  <p>{row.currentSeverity}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
-                  <p>{row.responseTimeInHours}</p>
+                  <p>{row.response_time} h</p>
+                </CustomTableCell>
+                <CustomTableCell align="center">
+                  <p>{row.category}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
                   <p>{row.subCategory}</p>
                 </CustomTableCell>
-                <CustomTableCell align="center">{row.severity}</CustomTableCell>
                 <CustomTableCell align="center">
-                  <p>{row.locationName}</p>
+                  <div style={{display:"flex"}}>
+                    {row.currentStatus === "NEW" && (
+                      <IconButton aria-label="delete" className={classes.margin} size="small" color="primary">
+                        <CheckIcon fontSize="inherit" />
+                      </IconButton>
+                    )}
+                    <IconButton aria-label="delete" className={classes.margin} size="small">
+                      <AssignIcon fontSize="inherit" />
+                    </IconButton>
+                    <IconButton aria-label="delete" className={classes.margin} 
+                        size="small"
+                        onClick={() => {
+                          this.props.history.push(`/app/review/${row.id}`);
+                        }} >
+                      <EditIcon fontSize="inherit" />
+                    </IconButton>
+                  </div>
                 </CustomTableCell>
+                
               </TableRow>
             ))}
           </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                colSpan={3}
+                count={pagedIncidents.count}
+                rowsPerPage={15}
+                page={pagedIncidents.pageNumber-1}
+                SelectProps={{
+                  inputProps: { 'aria-label': 'rows per page' },
+                  native: true,
+                }}
+                onChangePage={this.handlePageChange}
+                // onChangeRowsPerPage={handleChangeRowsPerPage}
+                // ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableFooter>
         </Table>
       </Paper>
     );
@@ -195,10 +298,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
   return {
     getCategories: () => {
-      dispatch(fetchCatogories());
+      dispatch(fetchCategories());
     },
-    getIncidents: filters => {
-      dispatch(fetchIncidents(filters));
+    getIncidents: (filters, page) => {
+      dispatch(fetchIncidents(filters, page));
       dispatch(updateIncidentFilters(filters));
     },
     resetFilters: filters => {

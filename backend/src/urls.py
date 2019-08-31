@@ -24,6 +24,10 @@ from .incidents import views as incident_views
 
 from .custom_auth import views as user_views
 
+from .file_upload import views as file_views
+
+from .reporting import views as report_views
+
 # JWT
 from rest_framework_jwt.views import obtain_jwt_token
 
@@ -55,8 +59,22 @@ urlpatterns = [
         "incidents/<uuid:incident_id>/comment",
         incident_views.IncidentCommentView.as_view(),
     ),
-    path("reporters/<int:reporter_id>", incident_views.ReporterDetail.as_view()),
-  
+    path(
+        "incidents/<uuid:incident_id>/attach_media",
+        incident_views.IncidentMediaView.as_view(),
+    ),
+    path(
+        "reporters/<int:reporter_id>", 
+        incident_views.ReporterDetail.as_view(),
+    ),
+    path(
+        "incidents/<uuid:incident_id>/files",
+        file_views.FileView.as_view(),
+    ),
+    path(
+        "incidents/files/download/<int:file_id>",
+        file_views.FileDownload.as_view(),
+    ),
     path(
         "users/",
         user_views.UserList.as_view(),
@@ -64,5 +82,37 @@ urlpatterns = [
     path(
         "incidents/<uuid:incident_id>/workflow/<str:workflow>",
         incident_views.IncidentWorkflowView.as_view()
-    )
+    ),
+    path(
+        "reports/",
+        report_views.ReportingView.as_view(),
+    ),
+    path(
+        "incidents/test",
+        incident_views.Test.as_view()
+    ),
+    path(
+        "incidents/auto-escalate",
+        incident_views.IncidentAutoEscalate.as_view()
+    ),
+
+    # public paths
+
+    path(
+        "public/incidents/",
+        incident_views.IncidentPublicUserView.as_view()
+    ),
+    path(
+        "public/incidents/<uuid:incident_id>", 
+        incident_views.IncidentPublicUserView.as_view()
+    ),
+    path(
+        "public/reporters/<int:reporter_id>", 
+        incident_views.ReporterPublicUserView.as_view()
+    ),
+    path(
+        "public/incidents/<uuid:incident_id>/attach_media", 
+        incident_views.IncidentMediaPublicUserView.as_view()
+    ),
+
 ]

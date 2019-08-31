@@ -6,14 +6,19 @@ from .models import (
     SeverityType,
     Reporter,
     IncidentComment,
+    IncidentPoliceReport,
 )
 from django.contrib.auth.models import User, Group
 
 from ..events import services as event_services
 from ..events.models import Event
+from ..file_upload.models import File
 from django.db import connection
 
 from .exceptions import WorkflowException, IncidentException
+import pandas as pd
+from django.http import HttpResponse
+from xhtml2pdf import pisa
 
 
 def is_valid_incident(incident_id: str) -> bool:
@@ -59,18 +64,27 @@ def get_comments_by_incident(incident: Incident) -> IncidentComment:
     except Exception as e:
         return None
 
+def get_user_group(user: User):
+    user_groups = user.groups.all()
+    if len(user_groups) == 0:
+        raise WorkflowException("No group for current assignee")
+
+    return user_groups[0]
+
+def get_guest_user():
+    try:
+        return User.objects.get(username="guest")
+    except:
+        raise IncidentException("No guest user available")
+
 
 def create_incident_postscript(incident: Incident, user: User) -> None:
     """Function to take care of event, status and severity creation"""
-    status = IncidentStatus(current_status=StatusType.NEW,
-                            incident=incident, approved=True)
-    status.save()
-
-    severity = IncidentSeverity(
-        current_severity=SeverityType.DEFAULT, incident=incident, approved=True
-    )
-    severity.save()
-
+    if user is None:
+        # public user case
+        # if no auth token, then we assign the guest user as public user
+        user = get_guest_user()
+        
     reporter = Reporter()
     reporter.save()
 
@@ -78,8 +92,23 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
     incident.assignee = user
     incident.save()
 
-    event_services.create_incident_event(user, incident)
+    # if the user is from the guest group (public user or data entry operator)
+    # auto escalate it
+    user_group = get_user_group(user)
+    if user_group.name == "guest":
+        print(incident.current_status)
+        incident_escalate(user, incident)
 
+    status = IncidentStatus(current_status=StatusType.NEW,
+                            incident=incident, approved=True)
+    status.save()
+
+    severity = IncidentSeverity(
+        current_severity=10, incident=incident, approved=True
+    )
+    severity.save()
+
+    event_services.create_incident_event(user, incident)
 
 def update_incident_postscript(incident: Incident, user: User) -> None:
     event_services.create_comment_event(user, incident)
@@ -236,8 +265,13 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP"):
     if incident.assignee != user:
         raise WorkflowException("Only current incident assignee can escalate the incident")
     
-    if incident.current_status != StatusType.VERIFIED.name:
-        raise WorkflowException("Incident is not verified")
+    if (
+        # incident.current_status == StatusType.VERIFIED.name 
+        incident.current_status == StatusType.NEW.name
+        or incident.current_status == StatusType.ACTION_PENDING.name
+        or incident.current_status == StatusType.ADVICE_REQESTED.name
+    ) :
+        raise WorkflowException("Incident cannot be escalated")
 
     # find the rank of the current incident assignee
     assignee_groups = incident.assignee.groups.all()
@@ -339,6 +373,9 @@ def incident_complete_external_action(user: User, incident: Incident, comment: s
 
 
 def incident_request_advice(user: User, incident: Incident, assignee: User, comment: str):
+    if incident.current_status == StatusType.ADVICE_REQESTED.name:
+        raise WorkflowException("Incident already has a pending advice request")
+
     status = IncidentStatus(
         current_status=StatusType.ADVICE_REQESTED,
         previous_status=incident.current_status,
@@ -353,7 +390,7 @@ def incident_request_advice(user: User, incident: Incident, assignee: User, comm
     event_services.update_status_with_description_event(user, incident, status, True, comment)
 
 
-def incident_provide_advice(user: User, incident: Incident, advice: str):
+def incident_provide_advice(user: User, incident: Incident, advice: str, start_event: Event):
     if not Incident.objects.filter(linked_individuals__id=user.id).exists():
         raise WorkflowException("User not linked to the given incident")
 
@@ -371,11 +408,14 @@ def incident_provide_advice(user: User, incident: Incident, advice: str):
     # check this
     incident.linked_individuals.remove(user.id)
 
-    event_services.update_status_with_description_event(user, incident, status, True, advice)
+    event_services.provide_advice_event(user, incident, status, advice, start_event)
 
 def incident_verify(user: User, incident: Incident, comment: str):
     if incident.current_status != StatusType.NEW.name:
         raise WorkflowException("Can only verify unverified incidents")
+
+    if incident.assignee != user:
+        raise WorkflowException("Only assignee can verify the incident")
 
     status = IncidentStatus(
         current_status=StatusType.VERIFIED,
@@ -386,3 +426,72 @@ def incident_verify(user: User, incident: Incident, comment: str):
     status.save()
 
     event_services.update_status_with_description_event(user, incident, status, True, comment)
+
+def get_police_report_by_incident(incident: Incident):
+    try:
+        incident_police_report = IncidentPoliceReport.objects.get(incident=incident)
+        # if incident_police_report is None:
+        #     raise IncidentException("No police report associated to the incident")
+    except:
+        # raise IncidentException("No police report associated to the incident")
+        return None
+
+    return incident_police_report
+
+def get_incidents_to_escalate():
+
+    sql = """
+        SELECT b.incident_id, b.current_status, b.created_date
+            FROM incidents_incidentstatus b
+            INNER JOIN (
+              SELECT i.incident_id, max(i.created_date) cdate
+              FROM incidents_incidentstatus i
+              GROUP BY i.incident_id
+            ) c 
+            ON c.incident_id = b.incident_id AND c.cdate = b.created_date
+     	WHERE b.`created_date` >  NOW() - interval 120 minute AND
+                b.`current_status` <> 'CLOSED' AND
+                b.`current_status` <> 'ACTION_PENDING' AND
+                b.`current_status` <> 'NEW' AND
+                b.`current_status` <> 'ADVICE_REQESTED'
+    """
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        incidents = cursor.fetchall()
+
+        return incidents
+
+def auto_escalate_incidents():
+
+    incident_details = get_incidents_to_escalate()
+
+    for incident_detail in incident_details :
+        incident = get_incident_by_id(incident_detail[0])
+        incident_escalate(incident.assignee, incident)
+
+    return incident_details
+
+def attach_media(user:User, incident:Incident, uploaded_file:File):
+    """ Method to indicate media attachment """
+    event_services.media_attached_event(user, incident, uploaded_file)
+
+def get_fitlered_incidents_report(incidents: Incident, output_format: str):
+    dataframe = pd.DataFrame(list(incidents.values("refId", "title", "description", "current_status", "current_severity", "response_time", "category")))
+    dataframe.columns = ["Ref ID", "Title", "Description", "Status", "Severity", "Response Time", "Category"]
+    
+    if output_format == "csv":
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=incidents.csv'
+        dataframe.to_csv(path_or_buf=response,sep=';',float_format='%.2f',index=False,decimal=",")
+        return response
+    
+    if output_format == "pdf":
+        output = dataframe.to_html(float_format='%.2f',index=False)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="incidents.pdf"'
+        pisa.CreatePDF(output, dest=response)
+        return response
+
+    # if it's an unrecognized format, raise exception
+    raise IncidentException("Unrecognized export format '%s'" % output_format)

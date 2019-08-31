@@ -12,10 +12,9 @@ const styles = {
 
 const AvatarView = ({ user, classes }) => (
     <MuiAvatar
-        className={classes.avatar}
         src={
             user
-                ? `https://www.gravatar.com/avatar/${md5(user.email)}?d=retro`
+                ? `https://www.gravatar.com/avatar/${md5(user.displayname)}?d=retro`
                 : `https://www.gravatar.com/avatar/?d=mp`
         }
     />

@@ -1,21 +1,50 @@
 import axios from 'axios';
 
 import {
-    REQUEST_INCIDENT_CATAGORIES,
-    REQUEST_INCIDENT_CATAGORIES_SUCCESS,
+
+    REQUEST_INCIDENT_CHANNELS,
+    REQUEST_INCIDENT_CHANNELS_SUCCESS,
+    REQUEST_INCIDENT_CHANNELS_FAILURE,
+
+    REQUEST_INCIDENT_ELECTIONS,
+    REQUEST_INCIDENT_ELECTIONS_SUCCESS,
+    REQUEST_INCIDENT_ELECTIONS_FAILURE,
+
+    REQUEST_INCIDENT_CATAGORIES, 
+    REQUEST_INCIDENT_CATAGORIES_SUCCESS, 
     REQUEST_INCIDENT_CATAGORIES_FAILURE,
 
-    REQUEST_INCIDENT_DISTRICTS,
-    REQUEST_INCIDENT_DISTRICTS_SUCCESS,
+    REQUEST_INCIDENT_PROVINCES, 
+    REQUEST_INCIDENT_PROVINCES_SUCCESS, 
+    REQUEST_INCIDENT_PROVINCES_FAILURE,
+
+    REQUEST_INCIDENT_DISTRICTS, 
+    REQUEST_INCIDENT_DISTRICTS_SUCCESS, 
     REQUEST_INCIDENT_DISTRICTS_FAILURE,
+
+    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS, 
+    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_SUCCESS, 
+    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_FAILURE,
+
+    REQUEST_INCIDENT_GRAMA_NILADHARIS, 
+    REQUEST_INCIDENT_GRAMA_NILADHARIS_SUCCESS,
+    REQUEST_INCIDENT_GRAMA_NILADHARIS_FAILURE,
+
+    REQUEST_INCIDENT_POLLING_STATIONS,
+    REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS,
+    REQUEST_INCIDENT_POLLING_STATIONS_FAILURE,
+
+    REQUEST_INCIDENT_POLLING_DIVISIONS,
+    REQUEST_INCIDENT_POLLING_DIVISIONS_SUCCESS,
+    REQUEST_INCIDENT_POLLING_DIVISIONS_FAILURE,
 
     REQUEST_INCIDENT_POLICE_STATIONS,
     REQUEST_INCIDENT_POLICE_STATIONS_SUCCESS,
     REQUEST_INCIDENT_POLICE_STATIONS_FAILURE,
 
-    REQUEST_INCIDENT_POLLING_STATIONS,
-    REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS,
-    REQUEST_INCIDENT_POLLING_STATIONS_FAILURE,
+    REQUEST_INCIDENT_POLICE_DIVISIONS,
+    REQUEST_INCIDENT_POLICE_DIVISIONS_SUCCESS,
+    REQUEST_INCIDENT_POLICE_DIVISIONS_FAILURE,
 
     REQUEST_INCIDENT_WARDS,
     REQUEST_INCIDENT_WARDS_SUCCESS,
@@ -37,22 +66,104 @@ import {
 
     RESET_ACTIVE_INCIDENT,
 
-    REQUEST_INCIDENT_DS_DIVISIONS,
-    REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS,
-    REQUEST_INCIDENT_DS_DIVISIONS_FAILURE,
-
 } from './Shared.types'
 
 import { getIncident, getReporter  } from '../../../api/incident';
-import { getCategories, getDistricts, getPoliceStations, getPollingStations, getWards, getDSDivisions } from '../../../api/shared';
+import { 
+    getChannels,
+    getElections,
+    getCategories, 
+    getProvinces, 
+    getDistricts,
+    getDivisionalSecretariats,
+    getGramaNiladharis,
+    getPollingStations, 
+    getPollingDivisions,
+    getPoliceStations, 
+    getPoliceDivisions, 
+    getWards
+} from '../../../api/shared';
 import { signIn } from '../../../api/user';
 import * as localStorage from '../../../utils/localStorage';
+
+
+// get channels
+
+export function requestIncidentChannels() {
+    return {
+        type: REQUEST_INCIDENT_CHANNELS
+    }
+}
+
+export function receiveIncidentChannels(channels) {
+    return {
+        type: REQUEST_INCIDENT_CHANNELS_SUCCESS,
+        data: channels,
+        error: null
+    }
+}
+
+export function receiveIncidentChannelsError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_CHANNELS_FAILURE,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchChannels() {
+    return async function(dispatch) {
+        dispatch(requestIncidentChannels());
+        try {
+            const response = await getChannels();
+            await dispatch(receiveIncidentChannels(response.data));
+        } catch (error) {
+            await dispatch(receiveIncidentChannels(error));
+        }
+    }
+}
+
+// Get Elections
+export function requestIncidentElections() {
+    return {
+        type: REQUEST_INCIDENT_ELECTIONS
+    };
+}
+
+export function receiveIncidentElections(elections) {
+    return {
+        type: REQUEST_INCIDENT_ELECTIONS_SUCCESS,
+        data: elections,
+        error: null
+    }
+}
+
+export function receiveIncidentElectionsError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_ELECTIONS_FAILURE,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchElections() {
+    return async function(dispatch) {
+        dispatch(requestIncidentElections())
+        try {
+            const response = await getElections();
+            await dispatch(receiveIncidentElections(response.data));
+        } catch (error) {
+            await dispatch(receiveIncidentElectionsError(error));
+        }
+    }
+}
 
 // Get Catogories
 
 export function requestIncidentCatogories() {
     return {
         type: REQUEST_INCIDENT_CATAGORIES,
+        isLoading: true
     }
 }
 
@@ -60,7 +171,8 @@ export function recieveIncidentCatogories(catogories) {
     return {
         type: REQUEST_INCIDENT_CATAGORIES_SUCCESS,
         data: catogories,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -68,11 +180,12 @@ export function recieveIncidentCatogoriesError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_CATAGORIES_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
-export function fetchCatogories(){
+export function fetchCategories(){
     return async function(dispatch){
         dispatch(requestIncidentCatogories());
         try{
@@ -84,75 +197,191 @@ export function fetchCatogories(){
     }
 }
 
+// Provinces 
+
+export function requestIncidentProvinces() {
+    return {
+        type: REQUEST_INCIDENT_PROVINCES,
+    };
+}
+
+export function receiveIncidentProvinces(provinces) {
+    return {
+        type: REQUEST_INCIDENT_PROVINCES_SUCCESS,
+        data: provinces,
+        error: null
+    };
+}
+
+export function receiveIncidentProvincesError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_PROVINCES_FAILURE,
+        data: null,
+        error: errorResponse
+    };
+}
+
+export function fetchProvinces() {
+    return async function(dispatch){
+        dispatch(requestIncidentProvinces());
+        try {
+            const response = await getProvinces();
+            await dispatch(receiveIncidentProvinces(response.data));
+        } catch(error) {
+            await dispatch(receiveIncidentProvincesError(error));
+        }
+    };
+}
+
 
 // Get Disticts
 
-export function requestDistricts() {
+export function requestIncidentDistricts() {
     return {
         type: REQUEST_INCIDENT_DISTRICTS,
+        isLoading: true
     }
 }
 
-export function receiveDistricts(response) {
+export function receiveIncidentDistricts(response) {
     return {
         type: REQUEST_INCIDENT_DISTRICTS_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
-export function receiveDistrictsError(errorResponse) {
+export function receiveIncidentDistrictsError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_DISTRICTS_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
 export function fetchDistricts(){
     return async function(dispatch){
-        dispatch(requestDistricts());
+        dispatch(requestIncidentDistricts());
         try{
             const response = await getDistricts();
-            await dispatch(receiveDistricts(response.data));
+            await dispatch(receiveIncidentDistricts(response.data));
         }catch(error){
-            await dispatch(receiveDistrictsError(error));
+            await dispatch(receiveIncidentDistrictsError(error));
         }
     }
 }
 
-// Get Police stations
 
-export function requestPoliceStations() {
+// divisionalSecretariats
+
+export function requestDivisionalSecretariats() {
     return {
-        type: REQUEST_INCIDENT_POLICE_STATIONS,
+        type: REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS,
+        isLoading: true
     }
 }
 
-export function receivePoliceStations(response) {
+export function receiveDivisionalSecretariats(response) {
     return {
-        type: REQUEST_INCIDENT_POLICE_STATIONS_SUCCESS,
+        type: REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_SUCCESS,
+        data: response,
+        error: null,
+        isLoading: false
+    }
+}
+
+export function receiveDivisionalSecretariatsError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_FAILURE,
+        data: null,
+        error: errorResponse,
+        isLoading: false
+    }
+}
+
+export function fetchDivisionalSecretariats() {
+    return async function(dispatch) {
+        dispatch(requestDivisionalSecretariats());
+        try {
+            const response = await getDivisionalSecretariats();
+            dispatch(receiveDivisionalSecretariats(response.data));
+        } catch (error) {
+            dispatch(receiveDivisionalSecretariatsError(error));
+        }
+    }
+}
+
+
+// get Grama Niladharis
+
+export function requestGramaNiladharis() {
+    return {
+        type: REQUEST_INCIDENT_GRAMA_NILADHARIS
+    }
+}
+
+export function receiveGramaNiladharis(response) {
+    return {
+        type: REQUEST_INCIDENT_GRAMA_NILADHARIS_SUCCESS,
         data: response,
         error: null
     }
 }
 
-export function receivePoliceStationsError(errorResponse) {
+export function receiveGramaNiladharisError(errorResponse) {
     return {
-        type: REQUEST_INCIDENT_POLICE_STATIONS_FAILURE,
+        type: REQUEST_INCIDENT_GRAMA_NILADHARIS_FAILURE,
         data: null,
         error: errorResponse
     }
 }
 
-export function fetchPoliceStations(){
+export function fetchGramaNiladharis() {
+    return async function(dispatch) {
+        dispatch(requestGramaNiladharis());
+        try {
+            const response = await getGramaNiladharis();
+            await dispatch(receiveGramaNiladharis(response.data));
+        } catch (error) {
+            await dispatch(receiveGramaNiladharisError(error));
+        }
+    }
+}
+
+// Get Polling Divisions
+
+export function requestPollingDivisions() {
+    return {
+        type: REQUEST_INCIDENT_POLLING_DIVISIONS,
+    }
+}
+
+export function receivePollingDivisions(response) {
+    return {
+        type: REQUEST_INCIDENT_POLLING_DIVISIONS_SUCCESS,
+        data: response,
+        error: null
+    }
+}
+
+export function receivePollingDivisionsError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_POLLING_DIVISIONS_FAILURE,
+        data: null,
+        error: errorResponse
+    }
+}
+
+export function fetchPollingDivisions(){
     return async function(dispatch){
-        dispatch(requestPoliceStations());
+        dispatch(requestPollingDivisions());
         try{
-            const response = await getPoliceStations();
-            await dispatch(receivePoliceStations(response.data));
+            const response = await getPollingDivisions();
+            await dispatch(receivePollingDivisions(response.data));
         }catch(error){
-            await dispatch(receivePoliceStationsError(error));
+            await dispatch(receivePollingDivisionsError(error));
         }
     }
 }
@@ -162,6 +391,7 @@ export function fetchPoliceStations(){
 export function requestPollingStations() {
     return {
         type: REQUEST_INCIDENT_POLLING_STATIONS,
+        isLoading: true
     }
 }
 
@@ -169,7 +399,8 @@ export function receivePollingStations(response) {
     return {
         type: REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -177,7 +408,8 @@ export function receivePollingStationsError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_POLLING_STATIONS_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -193,38 +425,83 @@ export function fetchPollingStations(){
     }
 }
 
-// Get DS Divisions
 
-export function requestDSDivisions() {
+
+// Get Police stations
+
+export function requestPoliceStations() {
     return {
-        type: REQUEST_INCIDENT_DS_DIVISIONS,
+        type: REQUEST_INCIDENT_POLICE_STATIONS,
+        isLoading: true
     }
 }
 
-export function receiveDSDivisions(response) {
+export function receivePoliceStations(response) {
     return {
-        type: REQUEST_INCIDENT_DS_DIVISIONS_SUCCESS,
+        type: REQUEST_INCIDENT_POLICE_STATIONS_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
-export function receiveDSDivisionsError(errorResponse) {
+export function receivePoliceStationsError(errorResponse) {
     return {
-        type: REQUEST_INCIDENT_DS_DIVISIONS_FAILURE,
+        type: REQUEST_INCIDENT_POLICE_STATIONS_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
-export function fetchDSDivisions(){
+export function fetchPoliceStations(){
     return async function(dispatch){
-        dispatch(requestDSDivisions());
+        dispatch(requestPoliceStations());
         try{
-            const response = await getDSDivisions();
-            await dispatch(receiveDSDivisions(response.data));
+            const response = await getPoliceStations();
+            await dispatch(receivePoliceStations(response.data));
         }catch(error){
-            await dispatch(receiveDSDivisionsError(error));
+            await dispatch(receivePoliceStationsError(error));
+        }
+    }
+}
+
+
+// police divisions
+
+export function requestPoliceDivisions() {
+    return {
+        type: REQUEST_INCIDENT_POLICE_DIVISIONS,
+        isLoading: true
+    }
+}
+
+export function receivePoliceDivisions(response) {
+    return {
+        type: REQUEST_INCIDENT_POLICE_DIVISIONS_SUCCESS,
+        data: response,
+        error: null,
+        isLoading: false
+    }
+}
+
+export function receivePoliceDivisionsError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_POLICE_DIVISIONS_FAILURE,
+        data: null,
+        error: errorResponse,
+        isLoading: false
+    }
+}
+
+export function fetchPoliceDivisions(){
+    return async function(dispatch){
+        dispatch(requestPoliceDivisions());
+        try {
+            const response = await getPoliceDivisions();
+            await dispatch(receivePoliceDivisions(response.data));
+        } catch (error) {
+            await dispatch(receivePoliceDivisionsError(error));
         }
     }
 }
@@ -234,6 +511,7 @@ export function fetchDSDivisions(){
 export function requestWards() {
     return {
         type: REQUEST_INCIDENT_WARDS,
+        isLoading: true
     }
 }
 
@@ -241,7 +519,8 @@ export function receiveWards(response) {
     return {
         type: REQUEST_INCIDENT_WARDS_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -249,7 +528,8 @@ export function receiveWardsError(errorResponse) {
     return {
         type: REQUEST_INCIDENT_WARDS_FAILURE,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -271,6 +551,7 @@ export function fetchWards(){
 export function requestActiveIncidentData() {
     return {
         type: ACTIVE_INCIDENT_GET_DATA_REQUEST,
+        isLoading: true
     }
 }
 
@@ -278,7 +559,8 @@ export function getActiveIncidentDataSuccess(response) {
     return {
         type: ACTIVE_INCIDENT_GET_DATA_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -286,7 +568,8 @@ export function getActiveIncidentDataError(errorResponse) {
     return {
         type: ACTIVE_INCIDENT_GET_DATA_ERROR,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
@@ -301,7 +584,6 @@ export function fetchActiveIncidentData(incidentId) {
                 "reporter": responseReporter.data
             }));
         }catch(error){
-            console.log(error);
             dispatch(getActiveIncidentDataError(error));
         }
     }
@@ -313,6 +595,7 @@ export function fetchActiveIncidentData(incidentId) {
 export function requestSignIn() {
     return {
         type: SIGN_IN_REQUEST,
+        isLoading: true
     }
 }
 
@@ -320,7 +603,8 @@ export function requestSignInSuccess(response) {
     return {
         type: SIGN_IN_REQUEST_SUCCESS,
         data: response,
-        error: null
+        error: null,
+        isLoading: false
     }
 }
 
@@ -328,11 +612,13 @@ export function requestSignInError(errorResponse) {
     return {
         type: SIGN_IN_REQUEST_ERROR,
         data: null,
-        error: errorResponse
+        error: errorResponse,
+        isLoading: false
     }
 }
 
 export function fetchSignIn(userName, password) {
+
     return async function (dispatch, getState) {
         dispatch(requestSignIn());
         try{
@@ -345,7 +631,7 @@ export function fetchSignIn(userName, password) {
                 
                 if(signInData.status === "success"){
                     if(getState().sharedReducer.signedInUser.rememberMe){
-                        localStorage.write('ECIncidentMangementUser', signInData.data);
+                        localStorage.write('ECIncidentManagementUser', signInData.data);
                         token = signInData.data.token;
                     }
                 }else{
@@ -354,7 +640,7 @@ export function fetchSignIn(userName, password) {
             }else{
                 token = signInData.token;
             }   
-
+            console.log(signInData, token);
             axios.defaults.headers.common['Authorization'] = "JWT " + token;
             dispatch(requestSignInSuccess(signInData.data));
         }catch(error){
@@ -390,7 +676,7 @@ export function signOutError(error) {
 export function initiateSignOut() {
     return async function (dispatch, getState) {
         try{
-            localStorage.remove('ECIncidentMangementUser');
+            localStorage.remove('ECIncidentManagementUser');
             axios.defaults.headers.common['Authorization'] = null;
             dispatch(signOut())
         }catch(error){

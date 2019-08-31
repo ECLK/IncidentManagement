@@ -1,6 +1,9 @@
 import React from 'react';
-import Dialog from '@material-ui/core/Dialog';
 import { useSelector, useDispatch } from 'react-redux'
+
+import Dialog from '@material-ui/core/Dialog';
+import { withStyles } from '@material-ui/core/styles';
+
 
 import { hideModal } from '../state/modal.actions'
 
@@ -12,6 +15,7 @@ import ChangeAssigneeModal from './ChangeAssigneeModal';
 import RequestAdviceModal from './RequestAdviceModal';
 import ProvideAdviceModal from './ProvideAdviceModal';
 import CloseModal from './CloseModal';
+import CompleteOutsideActionModal from './CompleteOutsideActionModal'
 
 const MODAL_COMPONENTS = {
     'RESPOSE_TIME_EDIT': ResponseTimeEditModal,
@@ -21,11 +25,21 @@ const MODAL_COMPONENTS = {
     'CHANGE_ASSIGNEE_MODAL': ChangeAssigneeModal,
     'REQUEST_ADVICE_MODAL': RequestAdviceModal,
     'PROVIDE_ADVICE_MODAL': ProvideAdviceModal,
-    'CLOSE_MODAL': CloseModal
+    'CLOSE_MODAL': CloseModal,
+    'COMPLETE_OUTSIDE_ACTION_MODAL':CompleteOutsideActionModal
     /* other modals */
 }
 
-const RootModal = () => {
+const styles = theme => ({
+    root : {
+        minWidth: 800
+    }
+})
+
+const RootModal = (props) => {
+
+    const { classes } = props
+
     // this retrieves props from the reducer
     const {modalType, modalProps} = useSelector(state => state.modalReducer)
     const dispatch = useDispatch()
@@ -39,14 +53,18 @@ const RootModal = () => {
     return (
         <div>
             <Dialog
+                classes={{
+                    root:classes.root,
+                    fullWidth:true
+                }}
                 open={modalType?true:false}
                 onClose={()=>{dispatch(hideModal())}}
                 aria-labelledby="form-dialog-title"
             >
-                <ModalContent {...modalProps}/>
+                <ModalContent {...modalProps}  />
             </Dialog>
         </div>
     );
 }
 
-export default RootModal;
+export default withStyles(styles) (RootModal);

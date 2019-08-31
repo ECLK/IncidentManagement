@@ -37,7 +37,8 @@ const initialState = {
   pagedIncidents: {
     incidents: [],
     pages: 1,
-    pageNumber: 1
+    pageNumber: 1,
+    count: 0
   },
   users: [],
   incidentSearchFilter: {
@@ -46,10 +47,12 @@ const initialState = {
     maxResponseTime: "",
     severity: "",
     category: "",
-    startTime: moment(new Date())
-      .subtract(1, "year")
-      .format(moment.HTML5_FMT.DATETIME_LOCAL),
-    endTime: moment(new Date()).format(moment.HTML5_FMT.DATETIME_LOCAL)
+    startTime: "",
+    endTime: ""
+    // startTime: moment(new Date())
+    //   .subtract(1, "year")
+    //   .format(moment.HTML5_FMT.DATETIME_LOCAL),
+    // endTime: moment(new Date()).format(moment.HTML5_FMT.DATETIME_LOCAL)
   }
 };
 
@@ -84,6 +87,15 @@ export default function OngoingIncidentsReducer(state, action) {
 
       case INCIDENT_SEARCH_FILTERS_RESET:
         draft.incidentSearchFilter = initialState.incidentSearchFilter;
+        return draft;
+
+      case REQUEST_WORKFLOW_UPDATE:
+        return draft;
+      
+      case REQUEST_WORKFLOW_UPDATE_SUCCESS:
+        return draft;
+      
+      case REQUEST_WORKFLOW_UPDATE_ERROR:
         return draft;
 
     }

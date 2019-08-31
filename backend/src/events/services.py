@@ -2,6 +2,7 @@
 
 from .models import Event, EventAction, AffectedAttribute
 from ..incidents.models import IncidentStatus
+from ..file_upload.models import File
 from .exceptions import EventException
 
 def get_events_by_incident_id(incident_id: str):
@@ -153,4 +154,21 @@ def complete_action_event(initiator, incident, status, description, start_event)
         linked_event=start_event
     )
 
+def provide_advice_event(initiator, incident, status, description, start_event):
+    create_event(
+        EventAction.ATTRIBUTE_CHANGED,
+        initiator,
+        incident,
+        affected_attribute=AffectedAttribute.STATUS,
+        refered_model=status,
+        description=description,
+        linked_event=start_event
+    )
 
+def media_attached_event(initiator, incident, file):
+    create_event(
+        EventAction.MEDIA_ATTACHED,
+        initiator,
+        incident,
+        refered_model=file
+    )

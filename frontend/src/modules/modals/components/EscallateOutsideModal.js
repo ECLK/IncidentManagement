@@ -7,7 +7,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 
 import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
 
 // react-redux hooks
 import { useDispatch } from 'react-redux'
@@ -41,7 +40,7 @@ const EscallateOutsideModal = (props) => {
 
             <DialogContent>
                 <DialogContentText>
-                    Enter the information of the outide entity.
+                    Describe outide entity.
                 </DialogContentText>
                 
                 <TextField
