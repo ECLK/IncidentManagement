@@ -10,12 +10,14 @@ ENV NODE_ENV=staging
 RUN npm install
 RUN npm run build
 
-FROM nginx:1.15
+CMD ["npm", "run", "start"]
 
-COPY --from=builder /app/build/ /usr/share/nginx/html
-# COPY --from=builder /nginx.conf /etc/nginx/conf.d/default.conf
-# WORKDIR /usr/share/nginx/html/
+# FROM nginx:1.15
 
-EXPOSE 80
+# COPY --from=builder /app/build/ /usr/share/nginx/html
+# # COPY --from=builder /nginx.conf /etc/nginx/conf.d/default.conf
+# # WORKDIR /usr/share/nginx/html/
 
-ENTRYPOINT ["nginx", "-g", "daemon off;"];
+# EXPOSE 80
+
+# ENTRYPOINT ["nginx", "-g", "daemon off;"];
