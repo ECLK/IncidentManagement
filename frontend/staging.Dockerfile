@@ -1,23 +1,19 @@
-FROM tiangolo/node-frontend:10 as builder
-
-ADD ./src /app/src
-COPY package*.json /app/
-COPY ./public /app/public
+# build environment
+FROM node:12.2.0-alpine as build
 WORKDIR /app
-
-ENV NODE_ENV=staging
-
-RUN npm install
+ENV PATH /app/node_modules/.bin:$PATH
+COPY package.json /app/package.json
+COPY src/staging.config.js /app/config.js
+RUN npm install --silent
+RUN npm install react-scripts@3.0.1 -g --silent
+COPY . /app
+RUN cat /app/config.js
 RUN npm run build
 
-CMD ["npm", "run", "start"]
-
-# FROM nginx:1.15
-
-# COPY --from=builder /app/build/ /usr/share/nginx/html
-# # COPY --from=builder /nginx.conf /etc/nginx/conf.d/default.conf
-# # WORKDIR /usr/share/nginx/html/
-
-# EXPOSE 80
-
-# ENTRYPOINT ["nginx", "-g", "daemon off;"];
+# host environment
+FROM nginx:1.16.0-alpine
+COPY --from=build /app/build /usr/share/nginx/html
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx/nginx.conf /etc/nginx/conf.d
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
