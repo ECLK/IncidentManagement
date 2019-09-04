@@ -1,22 +1,17 @@
-FROM tiangolo/node-frontend:10 as builder
-
-ADD ./src /app/src
-COPY package*.json /app/
-COPY ./public /app/public
+# build environment
+FROM node:12.2.0-alpine as build
 WORKDIR /app
-RUN npm install
+ENV PATH /app/node_modules/.bin:$PATH
+COPY package.json /app/package.json
+RUN npm install --silent
+RUN npm install react-scripts@3.0.1 -g --silent
+COPY . /app
 RUN npm run build
 
-FROM nginx:1.15
-
-COPY --from=builder /app/build/ /usr/share/nginx/html
-# COPY --from=builder /nginx.conf /etc/nginx/conf.d/default.conf
-# WORKDIR /usr/share/nginx/html/
-
+# host environment
+FROM nginx:1.16.0-alpine
+COPY --from=build /app/build /usr/share/nginx/html
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx/nginx.conf /etc/nginx/conf.d
 EXPOSE 80
-
-ENTRYPOINT ["nginx", "-g", "daemon off;"];
-# CMD echo 'window._env_ = {}; window._env_.API_BASE ="'${API_BASE}'"' > env-config.js && nginx -g 'daemon off;'
-# CMD ["bash", "-c", "echo 'window._env_.API_BASE = \"$API_BASE\"' > env-config.js && nginx -g 'daemon off;'"]
-# CMD echo ${API_BASE}
-
+CMD ["nginx", "-g", "daemon off;"]
