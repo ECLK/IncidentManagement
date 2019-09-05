@@ -22,11 +22,12 @@ function DatePickers(props) {
     return (
         <form className={classes.container} noValidate>
             <TextField
+                autoFocus
                 id="date"
                 label="Date"
                 type="date"
                 value={dateTime.date}
-                defaultValue="2017-05-24"
+                // defaultValue="2017-05-24"
                 className={classes.textField}
                 InputLabelProps={{
                     shrink: true,

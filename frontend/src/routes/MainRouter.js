@@ -23,7 +23,7 @@ import { LandingPage } from '../modules/guest-view';
 import { Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import { Home } from "../modules/home";
-import GuestIncidentForm from '../modules/incident-filing/components/GuestIncidentForm'
+import GuestIncidentForm from '../modules/guest-view/components/GuestIncidentForm'
 
 class Layout extends React.Component{
   

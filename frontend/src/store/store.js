@@ -10,13 +10,17 @@ import modalReducer from '../modules/modals/state/modal.reducers';
 import { notificationReducer } 
         from '../modules/notifications/state/notifications.reducers';
 
+//new incidents reducer
+import newIncidentReducer from '../modules/incident/state/incidentReducer'
+
 
 const reducer = combineReducers({
     incidentReducer,
     sharedReducer,
     ongoingIncidentReducer,
     modalReducer,
-    notificationReducer
+    notificationReducer,
+    incident:newIncidentReducer
 })
 
 const store = createStore(

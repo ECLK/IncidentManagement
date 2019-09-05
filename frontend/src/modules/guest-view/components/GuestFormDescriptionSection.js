@@ -33,8 +33,11 @@ const  IncidentDescription = (props) =>  {
         return (
             <form className={classes.container} noValidate autoComplete="off">
 
+                <Grid container>
                 
+                <Grid item xs={12}>
                 <TextField
+                    autoFocus
                     id="incidentDescription"
                     label="Description"
                     multiline
@@ -45,8 +48,9 @@ const  IncidentDescription = (props) =>  {
                     className={classes.textField}
                     margin="normal"
                 />
+                </Grid>
 
-                <div>
+                <Grid item xs={12}>
                 <TextField
                     id="election"
                     select
@@ -68,7 +72,9 @@ const  IncidentDescription = (props) =>  {
                         </MenuItem>
                     ))}
                 </TextField>
-                </div>
+                </Grid>
+
+                </Grid>
 
             </form>
         );
