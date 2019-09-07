@@ -78,10 +78,10 @@ const styles = theme => ({
 class IncidentFormInternal extends Component {
 
     state = {
-        channel: "",
+        infoChannel: "",
         title: "default title",
         description: "",
-        occurence: "OCCURRED",
+        occurrence: "OCCURRED",
         occured_date: "",
         time: "",
         otherCat: "",
@@ -192,13 +192,13 @@ class IncidentFormInternal extends Component {
                                         <Grid item xs={12}>
                                             <Grid item xs={12} sm={6}>
                                                 <FormControl className={classes.formControl}>
-                                                    <InputLabel htmlFor="channel">Received Mode</InputLabel>
+                                                    <InputLabel htmlFor="infoChannel">Received Mode</InputLabel>
                                                     <Select
-                                                        value={values.channel}
+                                                        value={values.infoChannel}
                                                         onChange={handleChange}
                                                         inputProps={{
-                                                            name: 'channel',
-                                                            id: 'channel',
+                                                            name: 'infoChannel',
+                                                            id: 'infoChannel',
                                                         }}
                                                     >
                                                         {this.props.channels.map((c, k) => (
@@ -236,12 +236,12 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <FormControl component="fieldset" className={classes.formControl}>
-                                                <FormLabel component="legend">Occurrance</FormLabel>
+                                                <FormLabel component="legend">Occurence</FormLabel>
                                                 <RadioGroup
-                                                    aria-label="Occurence"
-                                                    name="occurence"
+                                                    name="occurrence"
+                                                    id="occurrence"
                                                     className={classes.group}
-                                                    value={values.occurence}
+                                                    value={values.occurrence}
                                                     onChange={handleChange}
                                                     row={true}
                                                 >

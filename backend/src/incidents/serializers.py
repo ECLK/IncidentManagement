@@ -26,15 +26,23 @@ class IncidentSerializer(serializers.ModelSerializer):
     currentStatus = serializers.ReadOnlyField(source="current_status")
     currentSeverity = serializers.ReadOnlyField(source="current_severity")
 
-    # policeStation = serializers.IntegerField(source="police_station", required=False, allow_null=True)
-    # pollingStation = serializers.IntegerField(source="polling_station", required=False, allow_null=True)
+    divisionalSecretariat = serializers.CharField(source="ds_division", required=False, allow_null=True)
+    gramaNiladhari = serializers.CharField(source="grama_niladhari", required=False, allow_null=True)
+
+    pollingDivision = serializers.CharField(source="polling_division", required=False, allow_null=True) 
+    pollingStation = serializers.CharField(source="polling_station", required=False, allow_null=True)
+
+    policeDivision = serializers.CharField(source="police_division", required=False, allow_null=True)
+    policeStation = serializers.CharField(source="police_station", required=False, allow_null=True)
+
+    reporterConsent = serializers.BooleanField(source="complainer_consent", required=False)
+
     createdDate = serializers.ReadOnlyField(source="created_date")
 
     assignee = UserSerializer(read_only=True)
 
     # refId = serializers.CharField(required=False)
     # election = serializers.CharField(required=False)
-
 
     # reporter = ReporterSerializer()
 
