@@ -7,10 +7,12 @@ from .serializers import CategorySerializer, ChannelSerializer, DistrictSerializ
 class CategoryList(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = []
 
 class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = []
 
 
 class ChannelList(generics.ListCreateAPIView):
