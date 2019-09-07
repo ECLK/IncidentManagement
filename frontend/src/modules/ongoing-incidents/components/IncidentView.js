@@ -298,21 +298,21 @@ class LocationTab extends Component {
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Province </Typography>
-                                    <Typography variant="" gutterBottom> {incident.district ? incident.district.province : ""} </Typography>
+                                    <Typography variant="" gutterBottom> {incident.province ? incident.province : ""} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> District </Typography>
-                                    <Typography gutterBottom> {incident.district ? incident.district.name : ""}</Typography>
+                                    <Typography gutterBottom> {incident.district ? incident.district : ""}</Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Polling Division </Typography>
-                                    <Typography gutterBottom> {incident.ds_division} </Typography>
+                                    <Typography gutterBottom> {incident.pollingDivision} </Typography>
                                 </Grid>
                             </Grid>
 
