@@ -210,6 +210,11 @@ const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
                                     event.data.status.to_status_type === "ADVICE_REQESTED" &&
                                     eventLinks[event.id]===undefined )
 
+    let initiator = "Public User";
+    if(event.initiator && event.initiator.userName !== "guest"){
+        initiator = event.initiator.displayname;
+    }
+
     return (
     <li className={classes.eventItem}>
         <div className={classes.eventItemDetails}>
@@ -219,7 +224,7 @@ const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
             <div className={classes.eventItemUserDetails}>
                 <div className={classes.truncate}>
                     <strong>
-                        {event.initiator ? event.initiator.displayname : 'Anonymous'}
+                        {initiator}
                     </strong>{' '}
                      {getActionText(event)}
                     <span> ({getDateDiff(event)})</span>

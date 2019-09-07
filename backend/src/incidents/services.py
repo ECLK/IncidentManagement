@@ -348,7 +348,7 @@ def incident_close(user: User, incident: Incident, comment: str):
 def incident_escalate_external_action(user: User, incident: Incident, comment: str):
     # new event
     status = IncidentStatus(
-        current_status=StatusType.ACTION_PENDING,
+        current_status=StatusType.ACTION_TAKEN,
         previous_status=incident.current_status,
         incident=incident,
         approved=True
