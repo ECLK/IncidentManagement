@@ -28,6 +28,8 @@ import ConfirmNotification from '../../../notifications/components/ConfirmNotifi
 import LoadingNotification from '../../../notifications/components/LoadingNotification';
 import Breadcrumbs from '../Breadcrumbs'
 
+import { userCan, USER_ACTIONS } from '../../../utils/userUtils';
+
 const HomeLink = props => <Link to="/app/home" {...props} />
 const ReportLink = props => <Link to="/app/incident" {...props} />
 const ReviewLink = props => <Link to="/app/review" {...props} />
@@ -176,10 +178,16 @@ class DomainContainer extends React.Component {
                         color="inherit" component={HomeLink} className={classes.homeButton}>Home</Button>
                     <Button variant={selectedMainSection==='report'?'outlined': 'flat'} 
                         color="inherit" component={ReportLink}>Create</Button>
-                    <Button variant={selectedMainSection==='review'?'outlined': 'flat'} 
-                        color="inherit" component={ReviewLink}>Review</Button>
-                    <Button variant={selectedMainSection==='reports'?'outlined': 'flat'} 
-                        color="inherit" component={StaticReportLink}>Reports</Button>
+                    
+                    {userCan(signedInUser, null, USER_ACTIONS.REVIEW_INCIDENTS) && (
+                        <Button variant={selectedMainSection==='review'?'outlined': 'flat'} 
+                            color="inherit" component={ReviewLink}>Review</Button>
+                    )}
+                    
+                    {userCan(signedInUser, null, USER_ACTIONS.VIEW_REPORTS) && (
+                        <Button variant={selectedMainSection==='reports'?'outlined': 'flat'} 
+                            color="inherit" component={StaticReportLink}>Reports</Button>
+                    )}
 
                 </Typography>
 

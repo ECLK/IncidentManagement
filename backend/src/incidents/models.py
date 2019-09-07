@@ -227,6 +227,8 @@ class Incident(models.Model):
 
         permissions = (
             ("can_change_assignee", "Can directly change assignee"),
+            ("can_review_incidents", "Can review created incidents"),
+            ("can_view_incident_reports", "Can view inciddent reports")
         )
 
 # the following signals will update the current status and severity fields
