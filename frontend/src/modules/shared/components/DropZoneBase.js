@@ -82,7 +82,7 @@ export default function DropZoneBase(props) {
         <section className="container">
             <div {...getRootProps({ style })}>
                 <input {...getInputProps()} />
-                <p>Drag 'n' drop some files here, or click to select files</p>
+                <p>Drag and drop your file(s) here or click to select files</p>
             </div>
             <h4>Selected File: {files[0] ? files[0].key : 'None'}</h4>
             {handleUpload && <div style={{ display: 'flex' }}>

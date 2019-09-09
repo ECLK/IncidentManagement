@@ -118,7 +118,7 @@ const EventActions = (props) => {
                     <Avatar>
                         <RestoreIcon />
                     </Avatar>
-                    <ListItemText primary="Last action happened" secondary={getLastActionTime(props.events)} />
+                    <ListItemText primary="Last actioned at" secondary={getLastActionTime(props.events)} />
                 </ListItem>
 
                 <ListItem>
