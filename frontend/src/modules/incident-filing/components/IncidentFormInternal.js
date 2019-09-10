@@ -213,7 +213,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 type="text"
                                                 name="title"
-                                                label="title"
+                                                label="Title"
                                                 placeholder="Title"
                                                 className={classes.textField}
                                                 value={values.title}
@@ -236,7 +236,7 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <FormControl component="fieldset" className={classes.formControl}>
-                                                <FormLabel component="legend">Occurence</FormLabel>
+                                                <FormLabel component="legend">Occurrence</FormLabel>
                                                 <RadioGroup
                                                     name="occurrence"
                                                     id="occurrence"
@@ -255,7 +255,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 margin="normal"
                                                 id="occured_date"
-                                                label="occured_date"
+                                                label="Incident date"
                                                 type="datetime-local"
                                                 value={values.occured_date}
                                                 InputLabelProps={{ shrink: true }}
@@ -284,7 +284,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 type="text"
                                                 name="otherCat"
-                                                label="If Other(Specify Here)"
+                                                label="If Other, please describe here"
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
                                                 value={values.otherCat}
@@ -594,8 +594,7 @@ class IncidentFormInternal extends Component {
                                                         onChange={handleChange}
                                                     />
                                                 }
-                                                label="Yes. Complainer give concent to share his/her details outside 
-                                                in order to support complaint to be processed."
+                                                label="Complainer gives consent to the Election Commission to share his /her details with an external organization in order to support the processing of the complaint"
                                             />
                                         </Grid>
                                     </Grid>

@@ -143,7 +143,7 @@ function SearchForm(props) {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-                <Typography>Advance Search</Typography>
+                <Typography>Advanced Search</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={8}>

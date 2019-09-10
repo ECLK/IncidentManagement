@@ -174,7 +174,7 @@ class BasicDetailTab extends Component {
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
-                                    <Typography variant="caption" className={classes.label}> Occurence </Typography>
+                                    <Typography variant="caption" className={classes.label}> Occurrence </Typography>
                                     <Typography gutterBottom> {incident.occurence} </Typography>
                                 </Grid>
                             </Grid>
@@ -185,7 +185,7 @@ class BasicDetailTab extends Component {
                                     <Typography gutterBottom> <Moment format="YYYY/MM/DD">{incident.occured_date}</Moment> </Typography>
                                 </Grid>
                                 <Grid item xs>
-                                    <Typography variant="caption" className={classes.label}> Time </Typography>
+                                    <Typography variant="caption" className={classes.label}> Incident Time </Typography>
                                     <Typography gutterBottom> <Moment format="HH:mm">{incident.occured_date}</Moment> </Typography>
                                 </Grid>
                             </Grid>
