@@ -315,13 +315,13 @@ class LocationTab extends Component {
                                     <Typography gutterBottom> {incident.pollingDivision} </Typography>
                                 </Grid>
                             </Grid>
-
+{/* 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Ward </Typography>
                                     <Typography gutterBottom> {incident.ward} </Typography>
                                 </Grid>
-                            </Grid>
+                            </Grid> */}
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
