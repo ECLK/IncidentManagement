@@ -135,8 +135,9 @@ class Incident(models.Model):
 
     title = models.CharField(max_length=200)
     description = models.TextField()
+    category = models.CharField(max_length=200, blank=True, null=True)
 
-    # the occurence flag of the incident - check enums for more details
+    # the occurrence flag of the incident - check enums for more details
     occurrence = models.CharField(
         max_length=50,
         choices=[(tag.name, tag.value) for tag in Occurrence],
@@ -146,16 +147,6 @@ class Incident(models.Model):
 
     # getting the elections from a separate service
     election = models.CharField(max_length=200, blank=True)
-
-    polling_station = models.CharField(max_length=200, blank=True, null=True)
-    ds_division = models.CharField(max_length=200, blank=True, null=True)
-    ward = models.CharField(max_length=200, blank=True, null=True)
-    category = models.CharField(max_length=200, blank=True, null=True)
-    police_station = models.CharField(max_length=200, blank=True, null=True)
-    di_division = models.CharField(max_length=200, blank=True, null=True)
-    police_division = models.CharField(max_length=200, blank=True, null=True)
-    district = models.CharField(max_length=200, blank=True, null=True)
-    province = models.CharField(max_length=200, blank=True, null=True)
 
     # the medium through which the incident was reported
     infoChannel = models.CharField(max_length=200, null=True, blank=True)
@@ -179,8 +170,24 @@ class Incident(models.Model):
     # location related details
     location = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
+    city = models.CharField(max_length=200, null=True, blank=True)
     coordinates = models.CharField(max_length=200, null=True, blank=True)
+
+    province = models.CharField(max_length=200, blank=True, null=True)
+    district = models.CharField(max_length=200, blank=True, null=True)
+
+    ds_division = models.CharField(max_length=200, blank=True, null=True)
+    grama_niladhari = models.CharField(max_length=200, blank=True, null=True)
+
+    polling_division = models.CharField(max_length=200, blank=True, null=True)
+    polling_station = models.CharField(max_length=200, blank=True, null=True)
+
+    police_division = models.CharField(max_length=200, blank=True, null=True)
+    police_station = models.CharField(max_length=200, blank=True, null=True)
     
+    ward = models.CharField(max_length=200, blank=True, null=True)
+    di_division = models.CharField(max_length=200, blank=True, null=True)
+
 
     complainer_consent = models.BooleanField(default=False, null=True, blank=True)
 
@@ -227,6 +234,8 @@ class Incident(models.Model):
 
         permissions = (
             ("can_change_assignee", "Can directly change assignee"),
+            ("can_review_incidents", "Can review created incidents"),
+            ("can_view_incident_reports", "Can view inciddent reports")
         )
 
 # the following signals will update the current status and severity fields

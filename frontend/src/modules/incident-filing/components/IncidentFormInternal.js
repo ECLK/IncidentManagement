@@ -78,10 +78,10 @@ const styles = theme => ({
 class IncidentFormInternal extends Component {
 
     state = {
-        channel: "",
+        infoChannel: "",
         title: "default title",
         description: "",
-        occurence: "OCCURRED",
+        occurrence: "OCCURRED",
         occured_date: "",
         time: "",
         otherCat: "",
@@ -192,13 +192,13 @@ class IncidentFormInternal extends Component {
                                         <Grid item xs={12}>
                                             <Grid item xs={12} sm={6}>
                                                 <FormControl className={classes.formControl}>
-                                                    <InputLabel htmlFor="channel">Received Mode</InputLabel>
+                                                    <InputLabel htmlFor="infoChannel">Received Mode</InputLabel>
                                                     <Select
-                                                        value={values.channel}
+                                                        value={values.infoChannel}
                                                         onChange={handleChange}
                                                         inputProps={{
-                                                            name: 'channel',
-                                                            id: 'channel',
+                                                            name: 'infoChannel',
+                                                            id: 'infoChannel',
                                                         }}
                                                     >
                                                         {this.props.channels.map((c, k) => (
@@ -213,7 +213,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 type="text"
                                                 name="title"
-                                                label="title"
+                                                label="Title"
                                                 placeholder="Title"
                                                 className={classes.textField}
                                                 value={values.title}
@@ -236,12 +236,12 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <FormControl component="fieldset" className={classes.formControl}>
-                                                <FormLabel component="legend">Occurrance</FormLabel>
+                                                <FormLabel component="legend">Occurrence</FormLabel>
                                                 <RadioGroup
-                                                    aria-label="Occurence"
-                                                    name="occurence"
+                                                    name="occurrence"
+                                                    id="occurrence"
                                                     className={classes.group}
-                                                    value={values.occurence}
+                                                    value={values.occurrence}
                                                     onChange={handleChange}
                                                     row={true}
                                                 >
@@ -255,7 +255,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 margin="normal"
                                                 id="occured_date"
-                                                label="occured_date"
+                                                label="Incident date"
                                                 type="datetime-local"
                                                 value={values.occured_date}
                                                 InputLabelProps={{ shrink: true }}
@@ -274,7 +274,7 @@ class IncidentFormInternal extends Component {
                                                     }}
                                                 >
                                                     {this.props.categories.map((c, k) => (
-                                                        <MenuItem value={c.id} key={k}>{c.sub_category}</MenuItem>
+                                                        <MenuItem value={c.sub_category} key={k}>{c.sub_category}</MenuItem>
                                                     ))}
                                                     <MenuItem value="Other"> Other </MenuItem>
                                                 </Select>
@@ -284,7 +284,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 type="text"
                                                 name="otherCat"
-                                                label="If Other(Specify Here)"
+                                                label="If Other, please describe here"
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
                                                 value={values.otherCat}
@@ -304,7 +304,7 @@ class IncidentFormInternal extends Component {
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.elections.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
+                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
@@ -386,7 +386,7 @@ class IncidentFormInternal extends Component {
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.provinces.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
+                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
@@ -404,7 +404,7 @@ class IncidentFormInternal extends Component {
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.districts.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
+                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
@@ -422,7 +422,7 @@ class IncidentFormInternal extends Component {
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.divisionalSecretariats.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
+                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
@@ -440,7 +440,7 @@ class IncidentFormInternal extends Component {
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.gramaNiladharis.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
+                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
@@ -458,7 +458,7 @@ class IncidentFormInternal extends Component {
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.pollingDivisions.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
+                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
@@ -476,7 +476,7 @@ class IncidentFormInternal extends Component {
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.pollingStations.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
+                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
@@ -494,7 +494,7 @@ class IncidentFormInternal extends Component {
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.policeStations.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
+                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
@@ -512,7 +512,7 @@ class IncidentFormInternal extends Component {
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.policeDivisions.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
+                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
@@ -594,8 +594,7 @@ class IncidentFormInternal extends Component {
                                                         onChange={handleChange}
                                                     />
                                                 }
-                                                label="Yes. Complainer give concent to share his/her details outside 
-                                                in order to support complaint to be processed."
+                                                label="Complainer gives consent to the Election Commission to share his /her details with an external organization in order to support the processing of the complaint"
                                             />
                                         </Grid>
                                     </Grid>

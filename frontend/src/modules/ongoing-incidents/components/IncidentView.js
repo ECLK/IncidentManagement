@@ -174,7 +174,7 @@ class BasicDetailTab extends Component {
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
-                                    <Typography variant="caption" className={classes.label}> Occurence </Typography>
+                                    <Typography variant="caption" className={classes.label}> Occurrence </Typography>
                                     <Typography gutterBottom> {incident.occurence} </Typography>
                                 </Grid>
                             </Grid>
@@ -185,7 +185,7 @@ class BasicDetailTab extends Component {
                                     <Typography gutterBottom> <Moment format="YYYY/MM/DD">{incident.occured_date}</Moment> </Typography>
                                 </Grid>
                                 <Grid item xs>
-                                    <Typography variant="caption" className={classes.label}> Time </Typography>
+                                    <Typography variant="caption" className={classes.label}> Incident Time </Typography>
                                     <Typography gutterBottom> <Moment format="HH:mm">{incident.occured_date}</Moment> </Typography>
                                 </Grid>
                             </Grid>
@@ -298,30 +298,30 @@ class LocationTab extends Component {
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Province </Typography>
-                                    <Typography variant="" gutterBottom> {incident.district ? incident.district.province : ""} </Typography>
+                                    <Typography variant="" gutterBottom> {incident.province ? incident.province : ""} </Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> District </Typography>
-                                    <Typography gutterBottom> {incident.district ? incident.district.name : ""}</Typography>
+                                    <Typography gutterBottom> {incident.district ? incident.district : ""}</Typography>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Polling Division </Typography>
-                                    <Typography gutterBottom> {incident.ds_division} </Typography>
+                                    <Typography gutterBottom> {incident.pollingDivision} </Typography>
                                 </Grid>
                             </Grid>
-
+{/* 
                             <Grid container spacing={24}>
                                 <Grid item xs>
                                     <Typography variant="caption" className={classes.label}> Ward </Typography>
                                     <Typography gutterBottom> {incident.ward} </Typography>
                                 </Grid>
-                            </Grid>
+                            </Grid> */}
 
                             <Grid container spacing={24}>
                                 <Grid item xs>

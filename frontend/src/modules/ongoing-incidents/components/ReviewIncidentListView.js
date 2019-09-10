@@ -202,7 +202,7 @@ class ReviewIncidentListView extends React.Component {
               <CustomTableCell align="center">Severity</CustomTableCell>
               <CustomTableCell align="center">Response Time</CustomTableCell>
               <CustomTableCell align="center">Category</CustomTableCell>
-              <CustomTableCell align="center">Last Action At</CustomTableCell>
+              <CustomTableCell align="center">Last Actioned At</CustomTableCell>
               <CustomTableCell align="center">Actions</CustomTableCell>
             </TableRow>
           </TableHead>
@@ -240,16 +240,17 @@ class ReviewIncidentListView extends React.Component {
                 </CustomTableCell>
                 <CustomTableCell align="center">
                   <div style={{display:"flex"}}>
-                    {row.currentStatus === "NEW" && (
+                    {/* {row.currentStatus === "NEW" && (
                       <IconButton aria-label="delete" className={classes.margin} size="small" color="primary">
                         <CheckIcon fontSize="inherit" />
                       </IconButton>
                     )}
                     <IconButton aria-label="delete" className={classes.margin} size="small">
                       <AssignIcon fontSize="inherit" />
-                    </IconButton>
+                    </IconButton> */}
                     <IconButton aria-label="delete" className={classes.margin} 
                         size="small"
+                        title="Manage Incident"
                         onClick={() => {
                           this.props.history.push(`/app/review/${row.id}`);
                         }} >
