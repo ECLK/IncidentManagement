@@ -555,9 +555,10 @@ class NavTabs extends Component {
     };
 
     componentDidMount() {
-        if (this.props.paramIncidentId) {
-            this.props.getIncident(this.props.paramIncidentId);
-            this.props.getEvents(this.props.paramIncidentId);
+        const incidentId = this.props.match.params.paramIncidentId;
+        if (incidentId) {
+            this.props.getIncident(incidentId);
+            this.props.getEvents(incidentId);
         }
         this.scrollToTop()
         this.props.getUsers();

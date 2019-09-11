@@ -8,7 +8,6 @@ import i18n from "../translation/i18n.js";
 
 import {Report} from "../modules/incident-filing";
 import IncidentFormInternal from "../modules/incident-filing/components/IncidentFormInternal";
-import {Ongoing} from "../modules/ongoing-incidents";
 
 import { ReportList, ReportViewer } from "../modules/reporting";
 
@@ -24,6 +23,7 @@ import { Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import { Home } from "../modules/home";
 import GuestIncidentForm from '../modules/guest-view/components/GuestIncidentForm'
+import IncidentView from "../modules/ongoing-incidents/components/IncidentView";
 
 class Layout extends React.Component{
   
@@ -64,9 +64,8 @@ class MainRouter extends Component {
                 <PrivateRoute exact path="/app/reports/view" component={ReportViewer} /> 
                 <PrivateRoute exact path="/app/incident" component={IncidentFormInternal} /> 
                 <PrivateRoute exact path="/app/incident/:paramIncidentId" component={IncidentFormInternal} /> 
-                <PrivateRoute exact path="/app/ongoing" component={Ongoing}/>
                 <PrivateRoute exact path="/app/review" component={ReviewIncidentListView} />
-                <PrivateRoute exact path="/app/review/:paramIncidentId" component={Ongoing} />
+                <PrivateRoute exact path="/app/review/:paramIncidentId" component={IncidentView} />
                 <PrivateRoute exact path="/app/review/:paramIncidentId/edit" component={IncidentFormInternal} />
               </Switch>
             </PrivateRoute>
