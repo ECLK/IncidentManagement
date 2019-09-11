@@ -1,5 +1,6 @@
 from rest_framework import mixins
 from rest_framework import generics
+from django.db.models import F
 
 from .models import Category, Channel, District, PoliceStation, PollingStation, DSDivision, Ward
 from .serializers import CategorySerializer, ChannelSerializer, DistrictSerializer, PoliceStationSerializer, PollingStationSerializer, DSDivisionSerializer, WardSerializer
@@ -16,7 +17,7 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ChannelList(generics.ListCreateAPIView):
-    queryset = Channel.objects.all()
+    queryset = Channel.objects.all().order_by(F('order').asc(nulls_last=True))
     serializer_class = ChannelSerializer
 
 class DistrictList(generics.ListCreateAPIView):

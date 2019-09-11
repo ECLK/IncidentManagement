@@ -13,9 +13,31 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { hideModal  } from '../state/modal.actions'
 import { fetchUpdateWorkflow } from '../../ongoing-incidents/state/OngoingIncidents.actions'
+import { TextField } from '@material-ui/core';
 
+const hourlyResponseTimes = []
+for (var i = 1; i < 24; i++) {
+    hourlyResponseTimes.push(i);
+}
+
+const onSubmitClick = (dispatch, incidentId, comment, responseTime) => {
+    if(comment === "" || responseTime === null){
+        // show error because mandatory
+        return;
+    }
+
+    dispatch(fetchUpdateWorkflow(incidentId, "escalate", {
+        comment: {
+            comment: comment,
+            responseTime: responseTime
+        }
+    } ));
+    dispatch(hideModal());
+}
 
 const EscalateModal = (props) => {
+    const [comment, setComment] = useState("");
+    const [responseTime, setResponseTime] = useState(null);
 
     const dispatch = useDispatch();
     
@@ -23,21 +45,47 @@ const EscalateModal = (props) => {
         <div>
             <DialogTitle id="form-dialog-title">Escalate Incident</DialogTitle>
             <DialogContent>
-                <DialogContentText>
+                {/* <DialogContentText>
                     This would escalate the incident to upper level 
+                </DialogContentText> */}
+
+                <DialogContentText>
+                    Comment
                 </DialogContentText>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    type="email"
+                    value={comment}
+                    onChange={(e)=>{setComment(e.target.value)}}
+                    fullWidth
+                    multiline
+                />
+
+                <DialogContentText>
+                    Response Time
+                </DialogContentText>
+                <Select
+                    value={responseTime}
+                    name="responseTime"
+                    displayEmpty
+                    onChange={(e)=>{setResponseTime(e.target.value)}}
+                >
+                    <MenuItem value="" disabled>
+                        N/A
+                        </MenuItem>
+                    {hourlyResponseTimes.map((value, index) => {
+                        return (<MenuItem key={index} value={value}>{value}</MenuItem>)
+                    })}
+                </Select> <DialogContentText>hours</DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={()=>{dispatch(hideModal())}} color="secondary">
                     Close
                 </Button>
                 <Button 
-                    onClick={ () =>
-                        {
-                            dispatch(fetchUpdateWorkflow(props.incidentId, "escalate", {}));
-                            dispatch(hideModal())
-                        }
-                    } 
+                    onClick={() => onSubmitClick(dispatch, props.incidentId, comment, responseTime)} 
                     color="primary">
                     Escalate
                 </Button>

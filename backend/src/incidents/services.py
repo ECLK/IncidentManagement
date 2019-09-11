@@ -103,10 +103,10 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
                             incident=incident, approved=True)
     status.save()
 
-    severity = IncidentSeverity(
-        current_severity=10, incident=incident, approved=True
-    )
-    severity.save()
+    # severity = IncidentSeverity(
+    #     current_severity=10, incident=incident, approved=True
+    # )
+    # severity.save()
 
     event_services.create_incident_event(user, incident)
 
@@ -261,7 +261,7 @@ def incident_auto_assign(incident: Incident, user_group: Group):
             raise WorkflowException("Error in finding auto assignment")
 
 
-def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP"):
+def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP", comment=None):
     if incident.assignee != user:
         raise WorkflowException("Only current incident assignee can escalate the incident")
     
@@ -290,7 +290,7 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP"):
         raise WorkflowException("Can't escalate %s from here" % escalate_dir)
 
     assignee = incident_auto_assign(incident, next_group)
-    event_services.create_assignment_event(user, incident, assignee)
+    event_services.create_assignment_event(user, incident, assignee, comment)
 
 
 def incident_change_assignee(user: User, incident: Incident, assignee: User):

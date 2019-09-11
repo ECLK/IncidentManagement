@@ -32,6 +32,10 @@ import {
     uploadFileGuest
 } from '../../incident/state/incidentActions'
 
+import {
+    moveStepper
+} from '../state/guestViewActions'
+
 const styles = theme => ({
     root: {
         width: '90%',
@@ -54,15 +58,14 @@ const styles = theme => ({
 const VerticalLinearStepper = (props) => {
 
 
-    const [activeStep, setActiveStep] = useState(0);
     const [skippedSteps, setSkippedSets] = useState(new Set());
-    const [incidentDescription, setIncidentDescription] = useState('');
+    const [incidentDescription, setIncidentDescription] = useState(null);
     const [incidentElection, setIncidentElection] = useState('');
     const [incidentCatogory, setIncidentCatogory] = useState('');
     const [incidentFiles, setIncidentFiles] = useState(null);
     const [incidentDateTime, setIncidentDateTime] = useState({
-        date: moment().format('YYYY-MM-DD'),
-        time: moment().format('HH:mm')
+        date: null,
+        time: null
     });
     const [incidentLocation, setIncidentLocation] = useState('');
     const [incidentContact, setIncidentContact] = useState({
@@ -71,92 +74,132 @@ const VerticalLinearStepper = (props) => {
         email: ''
     });
 
-    const dispatch = useDispatch()
-    const { elections, categories } = useSelector((state) => (state.sharedReducer))
-    const { activeIncident, activeIncidentReporter } = useSelector((state) => (state.incident))
+    const dispatch = useDispatch();
+    const { elections, categories } = useSelector((state) => (state.sharedReducer));
+    const { activeIncident, activeIncidentReporter } = useSelector((state) => (state.incident));
+    const { activeStep } = useSelector((state) => (state.guestView));
 
-    const incidentId = activeIncident.data ? activeIncident.data.id : null
-    let incidentData = JSON.parse(JSON.stringify(activeIncident.data));
-    let incidentReporterData = JSON.parse(JSON.stringify(activeIncidentReporter.data))
+    const incidentId = activeIncident && activeIncident.data ? activeIncident.data.id : null
+    let incidentData = incidentId ? JSON.parse(JSON.stringify(activeIncident.data)): {};
+    let incidentReporterData = incidentId ? JSON.parse(JSON.stringify(activeIncidentReporter.data)) : null;
 
     useEffect(() => {
         dispatch(fetchElections());
         dispatch(fetchCategories());
     }, []);
 
-    const handleNext = () => {
-        switch (activeStep) {
-            case 0:
-                if(incidentId){
-                    break
-                }else{
+    const stepDefinitions = {
+
+        0:{
+            title:'Describe the incident',
+            content:<>
+                    <DescriptionSection
+                        handledDescriptionChange={setIncidentDescription}
+                        handleElectionChange={setIncidentElection}
+                        description={incidentDescription}
+                        selectedElection={incidentElection}
+                        elections={elections} />
+                    <div style={{height:20}}></div>
+                    < DateTimeSection 
+                        dateTime={incidentDateTime} 
+                        setDateTime={setIncidentDateTime} />
+                    </>,
+            handler: () => {
+                //description and date time are mandatory
+                //asssumed that once this step is completed user won't be able to update description or datetime
+                if(!incidentId && incidentDateTime.date && incidentDateTime.time){
+                    let dateTime = moment(
+                                        incidentDateTime.date + " " + 
+                                        incidentDateTime.time, 'YYYY-MM-DD HH:mm'
+                                    ).format()
                     dispatch(createGuestIncident({
                         election: incidentElection,
                         description: incidentDescription,
-                        title: 'Guest user submit'
+                        title: 'Guest user submit',
+                        occured_date: dateTime
                     }))
-                    break
+                }else{
+                    if( incidentDescription && incidentDateTime.date && incidentDateTime.time){
+                        dispatch(updateGuestIncident(incidentId, {election: incidentElection,}))
+                    }
                 }
-            case 1:
-                if(incidentCatogory){
-                    incidentData.category = incidentCatogory;
-                    dispatch(updateGuestIncident(incidentId, incidentData))
-                }
-                break
-            case 2:
-                //file upload
-                if (incidentFiles) {
-                    dispatch(uploadFileGuest(incidentId, incidentFiles))
-                }
-                break
-            case 3:
-                if(incidentDateTime.date || incidentDateTime.time){
-                    let dateTime = moment(incidentDateTime.date + " " + incidentDateTime.time, 'YYYY-MM-DD HH:mm').format()
-                    incidentData.occured_date = dateTime;
-                    dispatch(updateGuestIncident(incidentId, incidentData))
-                }
-                break
-            case 4:
-                //location
+            }
+        },
+
+        1:{
+            title:'Where did this happen?',
+            content: < LocationSection 
+                        location={incidentLocation} 
+                        handledLocationChange={setIncidentLocation} />,
+            handler: () => {
                 if(incidentLocation){
                     incidentData.location = incidentLocation;
                     dispatch(updateGuestIncident(incidentId, incidentData))
                 }
-                break
-            case 5:
-                //contact details
+            }
+        },
+
+        2:{
+            title:'Attach files related to incident',
+            content: < FileUploadSection setSelectedFile={setIncidentFiles} />,
+            handler: () => {
+                if (incidentFiles) {
+                    dispatch(uploadFileGuest(incidentId, incidentFiles))
+                }
+            }
+        },
+
+        3:{
+            title:'Your contact details',
+            content: < ContactSection 
+                        contactDetials={incidentContact} 
+                        handleContactDetailsChange={setIncidentContact} />,
+            handler: () => {
                 if(incidentContact.name || incidentContact.phone || incidentContact.email){
                     incidentReporterData.name = incidentContact.name;
                     incidentReporterData.telephone = incidentContact.phone;
                     incidentReporterData.email = incidentContact.email;
                     dispatch(updateGuestIncidentReporter(incidentReporterData.id, incidentReporterData))
                 }
+            }
+        },
 
-        }
+        4:{
+            title:'Select the most suitable category for the incident',
+            content: <CategorySection
+                        categories={categories}
+                        selectedCategory={incidentCatogory}
+                        setSelectedCategory={setIncidentCatogory} />,
+            handler: () => {
+                if(incidentCatogory){
+                    incidentData.category = incidentCatogory;
+                    dispatch(updateGuestIncident(incidentId, incidentData))
+                }else{
+                    dispatch(moveStepper({step:activeStep+1})) 
+                }
+            }
+        },
+        
+    }
 
-        setActiveStep(activeStep + 1)
-    };
+    let steps = [];
 
-    const handleBack = () => {
-        setActiveStep(activeStep - 1)
-    };
-
-    const handleReset = () => {
-        setActiveStep(0)
-    };
-
-    const steps = [
-        'Describe the incident',
-        'Select the most suitable category for the incident',
-        'Attach files related to incident',
-        'When did this happened / will happen?',
-        'Where did this happen?',
-        'Your contact details'
-    ];
+    Object.keys(stepDefinitions).forEach(function(stepNumber) {
+        steps[stepNumber] = stepDefinitions[stepNumber].title
+    });
 
     const optionalSteps = new Set([1,2,3,4,5])
 
     const isStepOptional = step => optionalSteps.has(step);
+
+    const handleBack = () => {
+        dispatch(moveStepper({step:activeStep-1}))
+    };
+
+    const handleReset = () => {
+        dispatch(moveStepper({step:0}))
+
+    };
 
     const handleSkip = () => {
         if (!isStepOptional(activeStep)) {
@@ -165,38 +208,22 @@ const VerticalLinearStepper = (props) => {
         const skipped = new Set(skippedSteps.values());
         skipped.add(activeStep);
         setSkippedSets(skipped);
-        setActiveStep(activeStep +1)
+        dispatch(moveStepper({step:activeStep+1}))
+
     };
+
+    const handleNext = () => {
+        //each step handler will dispatch relevant incident update/create actions.
+        //guest reducer will catch the each success action and increment the active step
+        stepDefinitions[activeStep].handler()
+    }
 
     const isStepSkipped = (step) => {
         return skippedSteps.has(step);
     }
 
     const getStepContent = (step) => {
-        switch (step) {
-            case 0:
-                return <DescriptionSection
-                    handledDescriptionChange={setIncidentDescription}
-                    handleElectionChange={setIncidentElection}
-                    description={incidentDescription}
-                    selectedElection={incidentElection}
-                    elections={elections} />;
-            case 1:
-                return <CategorySection
-                    categories={categories}
-                    selectedCategory={incidentCatogory}
-                    setSelectedCategory={setIncidentCatogory} />;
-            case 2:
-                return < FileUploadSection setSelectedFile={setIncidentFiles} />;
-            case 3:
-                return < DateTimeSection dateTime={incidentDateTime} setDateTime={setIncidentDateTime} />
-            case 4:
-                return < LocationSection location={incidentLocation} handledLocationChange={setIncidentLocation} />
-            case 5:
-                return < ContactSection contactDetials={incidentContact} handleContactDetailsChange={setIncidentContact} />
-            default:
-                return 'Unknown step';
-        }
+        return stepDefinitions[step].content
     }
 
     const { classes } = props;
@@ -206,7 +233,7 @@ const VerticalLinearStepper = (props) => {
 
         <div className={classes.root}>
 
-            <Button variant="outlined" component={GoBackLink} > Go back </Button>
+            <Button variant="outlined" component={GoBackLink} > Back </Button>
             <h3>Report Incident</h3>
 
             <Stepper activeStep={activeStep} orientation="vertical">
@@ -261,10 +288,7 @@ const VerticalLinearStepper = (props) => {
             </Stepper>
             {activeStep === steps.length && (
                 <Paper square elevation={0} className={classes.resetContainer}>
-                    <Typography>All steps completed - you&apos;re finished</Typography>
-                    <Button onClick={handleReset} className={classes.button}>
-                        Reset
-                    </Button>
+                    <Typography>Your complaint has been submitted successfully</Typography>
                 </Paper>
             )}
         </div>

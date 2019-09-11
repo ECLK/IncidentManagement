@@ -10,17 +10,10 @@ import Tabs from '@material-ui/core/Tabs';
 import NoSsr from '@material-ui/core/NoSsr';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import Modal from '@material-ui/core/Modal';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import ButtonBase from '@material-ui/core/ButtonBase';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Grow from '@material-ui/core/Grow';
-import Popper from '@material-ui/core/Popper';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
-import VerifyIncidentConfirm from './IncidentActions/VerifyIncidentConfirm';
 import EditIcon from '@material-ui/icons/Edit';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 
@@ -555,9 +548,10 @@ class NavTabs extends Component {
     };
 
     componentDidMount() {
-        if (this.props.paramIncidentId) {
-            this.props.getIncident(this.props.paramIncidentId);
-            this.props.getEvents(this.props.paramIncidentId);
+        const incidentId = this.props.match.params.paramIncidentId;
+        if (incidentId) {
+            this.props.getIncident(incidentId);
+            this.props.getEvents(incidentId);
         }
         this.scrollToTop()
         this.props.getUsers();
@@ -644,29 +638,42 @@ class NavTabs extends Component {
                                     events={this.props.events}
                                     resolveEvent={this.onResolveEvent}
                                 />
-                                <div className={classes.textEditorWrapper}>
-                                    <Editor/>
-                                    <DropZone/>
-                                </div>
+                                {activeIncident.currentStatus !== 'CLOSED'  && 
+                                    <div className={classes.textEditorWrapper}>
+                                        <Editor/>
+                                        <DropZone/>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </Grid>
                     <Grid item xs={3}>
                         <div className={classes.sidePane}>
                             <div className={classes.editButtonWrapper}>
-                                {activeIncident.currentStatus !== 'NEW'?
-                                    <ButtonBase disabled variant="outlined"  size="large" color="secondary" className={classes.verifiedButton} >
-                                        <DoneOutlineIcon className={classes.verifiedIcon}/>
-                                        VERIFIED
-                                    </ButtonBase>:
-                                    <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick} className={classes.editButton} >
-                                        Verify
-                                    </Button>
+                                {activeIncident.currentStatus !== 'CLOSED' && 
+                                    <>
+                                        {activeIncident.currentStatus !== 'NEW' &&
+                                            <ButtonBase disabled variant="outlined"  size="large" color="secondary" className={classes.verifiedButton} >
+                                                <DoneOutlineIcon className={classes.verifiedIcon}/>
+                                                VERIFIED
+                                            </ButtonBase>
+                                        }
+                                        {activeIncident.currentStatus === 'NEW' &&
+                                            <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick} className={classes.editButton} >
+                                                Verify
+                                            </Button>
+                                        }
+                                        <Button component={EditIncidentLink} variant="outlined" size="large" color="primary" className={classes.editButton} >
+                                            <EditIcon className={classes.editIcon} />
+                                            Edit
+                                        </Button>
+                                    </>
                                 }
-                                <Button component={EditIncidentLink} variant="outlined" size="large" color="primary" className={classes.editButton} >
-                                    <EditIcon className={classes.editIcon} />
-                                    Edit
-                                </Button>
+                                {activeIncident.currentStatus === 'CLOSED' && 
+                                    <ButtonBase disabled variant="outlined"  size="large" color="primary" className={classes.verifiedButton} >
+                                        CLOSED
+                                    </ButtonBase>
+                                }
                             </div>
                             <EventActions
                                 activeIncident={activeIncident}
@@ -683,8 +690,6 @@ class NavTabs extends Component {
 
                     </Grid>
                 </Grid>
-
-                <VerifyIncidentConfirm open={verifyIncidentDialogOpen} handleClose={this.handleVerifyIncidentDialogClose} />
             </NoSsr>
         );
     }
