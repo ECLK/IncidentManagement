@@ -103,10 +103,10 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
                             incident=incident, approved=True)
     status.save()
 
-    severity = IncidentSeverity(
-        current_severity=10, incident=incident, approved=True
-    )
-    severity.save()
+    # severity = IncidentSeverity(
+    #     current_severity=10, incident=incident, approved=True
+    # )
+    # severity.save()
 
     event_services.create_incident_event(user, incident)
 

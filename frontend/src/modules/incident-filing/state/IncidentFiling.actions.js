@@ -36,7 +36,7 @@ import {
     UPDATE_INTERNAL_INCIDENT_ERROR
 
 } from './IncidentFiling.types'
-import { createIncident, updateIncident, updateReporter, getIncident, getReporter, uploadFile, uploadFilePublic } from '../../../api/incident';
+import { createIncident, updateIncident, updateReporter, getIncident, getReporter, uploadFile, uploadFilePublic, attachMedia } from '../../../api/incident';
 import * as publicAPI from '../../../api/public';
 
 import { getActiveIncidentDataSuccess, fetchActiveIncidentData } from '../../shared/state/Shared.actions'
@@ -370,7 +370,7 @@ export function submitInternalIncidentError(errorResponse) {
     }
 }
 
-export function submitInternalIncidentData(incidentData) {
+export function submitInternalIncidentData(incidentData, fileData) {
     return async function(dispatch) {
         dispatch(requestInternalIncidentData());
         try{
@@ -384,9 +384,19 @@ export function submitInternalIncidentData(incidentData) {
                 "address": incidentData["reporterAddress"],
             }
             await updateReporter(reporterId, reporterUpdate);
-            await dispatch(submitInternalIncidentSuccess(incident));
+
+            // upload file
+            if(fileData){
+                let result = await uploadFile(incident.id, fileData);
+                const mediaData = {
+                    "file_id": result.data.id
+                  };
+                result = await attachMedia(incident.id, mediaData);
+            }
+
+            dispatch(submitInternalIncidentSuccess(incident));
         }catch(error){
-            await dispatch(submitInternalIncidentError(error));
+            dispatch(submitInternalIncidentError(error));
         }
     }
 }
