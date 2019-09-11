@@ -20,8 +20,13 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
-
+import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
+
+import green from '@material-ui/core/colors/green';
+import red from '@material-ui/core/colors/red';
+import orange from '@material-ui/core/colors/orange';
+import yellow from '@material-ui/core/colors/yellow';
 
 import {
     submitIncidentBasicData,
@@ -73,6 +78,28 @@ const styles = theme => ({
     button: {
         margin: theme.spacing.unit,
     },
+    radioItem: {
+        margin: 0,
+    },
+    severityHigh: {
+        color: red[600],
+        '&$checked': {
+            color: red[500],
+        },
+    },
+    severityMedium: {
+        color: orange[600],
+        '&$checked': {
+            color: orange[500],
+        },
+    },
+    severityLow: {
+        color: yellow[600],
+        '&$checked': {
+            color: yellow[500],
+        },
+    },
+    checked: {},
 })
 
 class IncidentFormInternal extends Component {
@@ -124,24 +151,24 @@ class IncidentFormInternal extends Component {
 
         this.props.resetIncidentForm();
 
-        const {paramIncidentId} = this.props.match.params
+        const { paramIncidentId } = this.props.match.params
 
         if (paramIncidentId) {
             this.props.getIncident(paramIncidentId);
-        }else{
+        } else {
             this.props.resetActiveIncident();
         }
     }
 
     handleSubmit = (values, actions) => {
-        
+
 
         const { paramIncidentId } = this.props.match.params
 
-        if(paramIncidentId){
+        if (paramIncidentId) {
             this.props.updateInternalIncident(paramIncidentId, values);
             this.props.history.push(`/app/review/${paramIncidentId}`);
-        }else{
+        } else {
             this.props.submitInternalIncident(values);
             this.props.history.push('/app/review');
         }
@@ -150,7 +177,7 @@ class IncidentFormInternal extends Component {
     getInitialValues = () => {
         const { paramIncidentId } = this.props.match.params
 
-        if(!paramIncidentId){
+        if (!paramIncidentId) {
             // new incident form
             return this.state;
         }
@@ -173,7 +200,7 @@ class IncidentFormInternal extends Component {
 
     render() {
         const { classes } = this.props;
-        
+
         return (
             <div className={classes.root}>
                 <Formik
@@ -185,9 +212,12 @@ class IncidentFormInternal extends Component {
                     render={
                         ({ handleSubmit, handleChange, handleBlur, values, errors }) => (
                             <form className={classes.container} noValidate autoComplete="off" onSubmit={handleSubmit}>
-                                <div style={{display:"none"}}>{this.props.incident.id}</div>
+                                <div style={{ display: "none" }}>{this.props.incident.id}</div>
                                 {/* basic incident detail information */}
                                 <Paper className={classes.paper}>
+                                    <Typography variant="h5" gutterBottom>
+                                        Basic Information
+                                    </Typography>
                                     <Grid container spacing={24}>
                                         <Grid item xs={12}>
                                             <Grid item xs={12} sm={6}>
@@ -245,9 +275,9 @@ class IncidentFormInternal extends Component {
                                                     onChange={handleChange}
                                                     row={true}
                                                 >
-                                                    <FormControlLabel value="OCCURRED" control={<Radio />} label="Occurred" />
-                                                    <FormControlLabel value="OCCURRING" control={<Radio />} label="Occurring" />
-                                                    <FormControlLabel value="WILL_OCCUR" control={<Radio />} label="Will Occur" />
+                                                    <FormControlLabel value="OCCURRED" control={<Radio color="primary" />} label="Occurred" />
+                                                    <FormControlLabel value="OCCURRING" control={<Radio color="primary" />} label="Occurring" />
+                                                    <FormControlLabel value="WILL_OCCUR" control={<Radio color="primary" />} label="Will Occur" />
                                                 </RadioGroup>
                                             </FormControl>
                                         </Grid>
@@ -310,28 +340,165 @@ class IncidentFormInternal extends Component {
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
-                                            <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="severity" >Severity</InputLabel>
-                                                <Select
+                                            <FormControl component="fieldset" className={classes.formControl}>
+                                                <FormLabel component="legend">Severity</FormLabel>
+                                                <RadioGroup
+                                                    name="severity"
+                                                    id="severity"
                                                     value={values.severity}
                                                     onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'severity',
-                                                        id: 'severity',
-                                                    }}
+                                                    row
                                                 >
-                                                    <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    <MenuItem value={1} key={1}>1</MenuItem>
-                                                    <MenuItem value={2} key={2}>2</MenuItem>
-                                                    <MenuItem value={3} key={3}>3</MenuItem>
-                                                    <MenuItem value={4} key={4}>4</MenuItem>
-                                                    <MenuItem value={5} key={5}>5</MenuItem>
-                                                    <MenuItem value={6} key={6}>6</MenuItem>
-                                                    <MenuItem value={7} key={7}>7</MenuItem>
-                                                    <MenuItem value={8} key={8}>8</MenuItem>
-                                                    <MenuItem value={9} key={9}>9</MenuItem>
-                                                    <MenuItem value={10} key={10}>10</MenuItem>
-                                                </Select>
+                                                    <FormControlLabel
+                                                        value="1"
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityLow,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                            />
+                                                        }
+                                                        label="1"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityLow,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="2"
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityLow,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                            />
+                                                        }
+                                                        label="2"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityLow,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="3"
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityLow,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                            />
+                                                        }
+                                                        label="3"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityLow,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="4"
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityMedium,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                            />
+                                                        }
+                                                        label="4"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityMedium,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="5"
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityMedium,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                            />
+                                                        }
+                                                        label="5"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityMedium,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="6"
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityMedium,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                            />
+                                                        }
+                                                        label="6"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityMedium,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="7"
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityHigh,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                            />
+                                                        }
+                                                        label="7"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityHigh,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="8"
+                                                        control={<Radio className={classes.severityHigh} />}
+                                                        label="8"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityHigh,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="9"
+                                                        control={<Radio className={classes.severityHigh} />}
+                                                        label="9"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityHigh,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="10"
+                                                        control={<Radio className={classes.severityHigh} />}
+                                                        label="10"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityHigh,
+                                                        }}
+                                                    />
+                                                </RadioGroup>
                                             </FormControl>
                                         </Grid>
 
@@ -341,6 +508,9 @@ class IncidentFormInternal extends Component {
 
                                 {/* Incident location information */}
                                 <Paper className={classes.paper}>
+                                    <Typography variant="h5" gutterBottom>
+                                        Location Information
+                                    </Typography>
                                     <Grid container spacing={24}>
                                         <Grid item xs={12}>
                                             <TextField
@@ -429,24 +599,6 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="gramaNiladhari">Grama Niladhari Division</InputLabel>
-                                                <Select
-                                                    value={values.gramaNiladhari}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'gramaNiladhari',
-                                                        id: 'gramaNiladhari',
-                                                    }}
-                                                >
-                                                    <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.gramaNiladharis.map((c, k) => (
-                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
-                                                    ))}
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
-                                        <Grid item xs={12} sm={4}>
-                                            <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="pollingDivision">Polling Division</InputLabel>
                                                 <Select
                                                     value={values.pollingDivision}
@@ -476,6 +628,24 @@ class IncidentFormInternal extends Component {
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.pollingStations.map((c, k) => (
+                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="gramaNiladhari">Grama Niladhari Division</InputLabel>
+                                                <Select
+                                                    value={values.gramaNiladhari}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'gramaNiladhari',
+                                                        id: 'gramaNiladhari',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {this.props.gramaNiladharis.map((c, k) => (
                                                         <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
                                                     ))}
                                                 </Select>
@@ -522,12 +692,15 @@ class IncidentFormInternal extends Component {
 
                                 {/* contact information of the complianer */}
                                 <Paper className={classes.paper}>
+                                    <Typography variant="h5" gutterBottom>
+                                        Complainer Information
+                                    </Typography>
                                     <Grid container spacing={24}>
                                         <Grid item xs={12} sm={6}>
                                             <TextField
                                                 id="reporterName"
                                                 name="reporterName"
-                                                label="Reporter Name"
+                                                label="Complainer Name"
                                                 className={classes.textField}
                                                 value={values.reporterName}
                                                 onChange={handleChange}
@@ -536,7 +709,7 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl} >
-                                                <InputLabel htmlFor="reporterType">Reporter Type</InputLabel>
+                                                <InputLabel htmlFor="reporterType">Complainer Type</InputLabel>
                                                 <Select
                                                     value={values.reporterType}
                                                     onChange={handleChange}
@@ -555,7 +728,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 id="reporterAddress"
                                                 name="reporterAddress"
-                                                label="Reporter Address"
+                                                label="Complainer Address"
                                                 className={classes.textField}
                                                 value={values.reporterAddress}
                                                 onChange={handleChange}
@@ -566,7 +739,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 id="reporterMobile"
                                                 name="reporterMobile"
-                                                label="Reporter Mobile"
+                                                label="Complainer Mobile"
                                                 className={classes.textField}
                                                 value={values.reporterMobile}
                                                 onChange={handleChange}
@@ -577,7 +750,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 id="reporterEmail"
                                                 name="reporterEmail"
-                                                label="Reporter Email"
+                                                label="Complainer Email"
                                                 className={classes.textField}
                                                 value={values.reporterEmail}
                                                 onChange={handleChange}
@@ -587,14 +760,14 @@ class IncidentFormInternal extends Component {
                                         <Grid item xs={12} >
                                             <FormControlLabel
                                                 control={
-                                                    <Checkbox 
+                                                    <Checkbox
                                                         id="reporterConsent"
                                                         name="reporterConsent"
-                                                        checked={values.reporterConsent} 
+                                                        checked={values.reporterConsent}
                                                         onChange={handleChange}
                                                     />
                                                 }
-                                                label="Complainer gives consent to the Election Commission to share his /her details with an external organization in order to support the processing of the complaint"
+                                                label="Complainer details can be shared with external parties."
                                             />
                                         </Grid>
                                     </Grid>
