@@ -59,6 +59,9 @@ const styles = (theme) => ({
     },
     timeLimitOverDue: {
         color:'red'
+    },
+    button: {
+        textAlign: "left"
     }
 });
 
@@ -174,10 +177,10 @@ const EventActions = (props) => {
                 <HelpIcon className={classes.actionButtonIcon} />
                 Request for advice
             </Button>
-            <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('PROVIDE_ADVICE_MODAL', { activeIncident })) }}>
+            {/* <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('PROVIDE_ADVICE_MODAL', { activeIncident })) }}>
                 <SpeackerNotesIcon className={classes.actionButtonIcon} />
                 Provide advice
-            </Button>
+            </Button> */}
 
             {userCan(currentUser, activeIncident, USER_ACTIONS.CLOSE_INCIDENT) &&
                 <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('CLOSE_MODAL', { activeIncident })) }}>

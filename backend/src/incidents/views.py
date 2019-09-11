@@ -309,7 +309,10 @@ class IncidentWorkflowView(APIView):
             incident_change_assignee(request.user, incident, assignee)
 
         elif workflow == "escalate":
-            incident_escalate(request.user, incident)
+            # comment is actually an object
+            # comment: { comment: "text", responseTime: 1 }
+            comment = json.dumps(request.data['comment'])
+            incident_escalate(request.user, incident, comment=comment)
 
         else:
             return Response("Invalid workflow", status=status.HTTP_400_BAD_REQUEST)

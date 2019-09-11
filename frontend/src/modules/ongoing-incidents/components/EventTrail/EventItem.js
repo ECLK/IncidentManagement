@@ -61,7 +61,7 @@ function getStatusChangeText(event) {
             return `escallated the incident to outside entity`
         case 'ACTION_TAKEN':
             return 'action taken'
-        case 'Close':
+        case 'CLOSED':
             return 'closed the incident'
         default:
             return 'performed an unknown status change'
@@ -118,24 +118,17 @@ function getActionText(event){
 
 
 function hasEventBody(event){
-    if(event.action === "COMMENTED"){
-        return true;
-    }
-    else if(event.action === "OUTCOME_ADDED"){
-        return true;
-    }
-    else if(event.action === "ACTION_STARTED"){
-        return true;
-    }
-    else if(event.action === "ACTION_COMPLETED"){
-        return true;
-    }
-    else if(event.action === "ATTRIBUTE_CHANGED"){
-        return true;
-    }else if(event.action === "MEDIA_ATTACHED"){
-        return true;
-    }
-    return false;
+    const actionsWithBody = [
+        "COMMENTED",
+        "OUTCOME_ADDED",
+        "ACTION_STARTED",
+        "ACTION_COMPLETED",
+        "ATTRIBUTE_CHANGED",
+        "MEDIA_ATTACHED",
+        "ENTITY_ASSIGNED"
+    ];
+
+    return actionsWithBody.indexOf(event.action) !== -1;
 }
 
 
@@ -174,29 +167,44 @@ function getSecondaryItem(event){
                 <a href={`${API_BASE_URL}/incidents/files/download/${file.id}`}>{file.name}</a>
             </div>
         )
+    }else if(event.action === "ENTITY_ASSIGNED"){
+        let descObj = JSON.parse(event.description)
+
+        if(descObj){
+            return (
+                <div>
+                    <div><b>Response Time:</b> {descObj.responseTime} hours</div>
+                    <div><b>Comment:</b><br /> {descObj.comment}</div>
+                </div>
+            )
+        }
+        return (
+            "No Comment"
+        )
     }
     return (<></>);
 }
 
 
 function getDateDiff(event){
-    const hours = moment(new Date().getTime()).diff(event.createdDate, "hours");
+    return moment(event.createdDate).format("hh:mm A");
+    // const hours = moment(new Date().getTime()).diff(event.createdDate, "hours");
 
-    if(hours < 24){
-        if(hours === 0){
-            return "a moment ago";
-        }
-        return `${hours} hours ago`;
-    }else if(hours < 720){
-        const days = moment(new Date().getTime()).diff(event.createdDate, "days");
-        return `${days} days ago`;
-    }else if(hours < 8640){
-        const months = moment(new Date().getTime()).diff(event.createdDate, "months");
-        return `${months} months ago`; 
-    }else{
-        const years = moment(new Date().getTime()).diff(event.createdDate, "years")
-        return `${years} years ago`;
-    }
+    // if(hours < 24){
+    //     if(hours === 0){
+    //         return "a moment ago";
+    //     }
+    //     return `${hours} hours ago`;
+    // }else if(hours < 720){
+    //     const days = moment(new Date().getTime()).diff(event.createdDate, "days");
+    //     return `${days} days ago`;
+    // }else if(hours < 8640){
+    //     const months = moment(new Date().getTime()).diff(event.createdDate, "months");
+    //     return `${months} months ago`; 
+    // }else{
+    //     const years = moment(new Date().getTime()).diff(event.createdDate, "years")
+    //     return `${years} years ago`;
+    // }
 }
 
 
