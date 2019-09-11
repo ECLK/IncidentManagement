@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-import { Table, TableHead, TableRow, TableCell, TableBody, withStyles, TableFooter, TablePagination } from '@material-ui/core';
 import { withRouter } from 'react-router';
 import IncidentList from './IncidentList';
 import { getIncidents } from '../../../api/incident';
