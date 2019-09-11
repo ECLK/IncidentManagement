@@ -21,7 +21,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
-
 import Checkbox from '@material-ui/core/Checkbox';
 
 import {
@@ -74,6 +73,9 @@ const styles = theme => ({
     button: {
         margin: theme.spacing.unit,
     },
+    radioItem: {
+        margin: 0,
+    },
 })
 
 class IncidentFormInternal extends Component {
@@ -125,24 +127,24 @@ class IncidentFormInternal extends Component {
 
         this.props.resetIncidentForm();
 
-        const {paramIncidentId} = this.props.match.params
+        const { paramIncidentId } = this.props.match.params
 
         if (paramIncidentId) {
             this.props.getIncident(paramIncidentId);
-        }else{
+        } else {
             this.props.resetActiveIncident();
         }
     }
 
     handleSubmit = (values, actions) => {
-        
+
 
         const { paramIncidentId } = this.props.match.params
 
-        if(paramIncidentId){
+        if (paramIncidentId) {
             this.props.updateInternalIncident(paramIncidentId, values);
             this.props.history.push(`/app/review/${paramIncidentId}`);
-        }else{
+        } else {
             this.props.submitInternalIncident(values);
             this.props.history.push('/app/review');
         }
@@ -151,7 +153,7 @@ class IncidentFormInternal extends Component {
     getInitialValues = () => {
         const { paramIncidentId } = this.props.match.params
 
-        if(!paramIncidentId){
+        if (!paramIncidentId) {
             // new incident form
             return this.state;
         }
@@ -174,7 +176,7 @@ class IncidentFormInternal extends Component {
 
     render() {
         const { classes } = this.props;
-        
+
         return (
             <div className={classes.root}>
                 <Formik
@@ -186,7 +188,7 @@ class IncidentFormInternal extends Component {
                     render={
                         ({ handleSubmit, handleChange, handleBlur, values, errors }) => (
                             <form className={classes.container} noValidate autoComplete="off" onSubmit={handleSubmit}>
-                                <div style={{display:"none"}}>{this.props.incident.id}</div>
+                                <div style={{ display: "none" }}>{this.props.incident.id}</div>
                                 {/* basic incident detail information */}
                                 <Paper className={classes.paper}>
                                     <Typography variant="h5" gutterBottom>
@@ -249,9 +251,9 @@ class IncidentFormInternal extends Component {
                                                     onChange={handleChange}
                                                     row={true}
                                                 >
-                                                    <FormControlLabel value="OCCURRED" control={<Radio />} label="Occurred" />
-                                                    <FormControlLabel value="OCCURRING" control={<Radio />} label="Occurring" />
-                                                    <FormControlLabel value="WILL_OCCUR" control={<Radio />} label="Will Occur" />
+                                                    <FormControlLabel value="OCCURRED" control={<Radio color="primary" />} label="Occurred" />
+                                                    <FormControlLabel value="OCCURRING" control={<Radio color="primary" />} label="Occurring" />
+                                                    <FormControlLabel value="WILL_OCCUR" control={<Radio color="primary" />} label="Will Occur" />
                                                 </RadioGroup>
                                             </FormControl>
                                         </Grid>
@@ -314,28 +316,86 @@ class IncidentFormInternal extends Component {
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
-                                            <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="severity" >Severity</InputLabel>
-                                                <Select
+                                            <FormControl component="fieldset" className={classes.formControl}>
+                                                <FormLabel component="legend">Severity</FormLabel>
+                                                <RadioGroup
+                                                    name="severity"
+                                                    id="severity"
                                                     value={values.severity}
                                                     onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'severity',
-                                                        id: 'severity',
-                                                    }}
+                                                    row
                                                 >
-                                                    <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    <MenuItem value={1} key={1}>1</MenuItem>
-                                                    <MenuItem value={2} key={2}>2</MenuItem>
-                                                    <MenuItem value={3} key={3}>3</MenuItem>
-                                                    <MenuItem value={4} key={4}>4</MenuItem>
-                                                    <MenuItem value={5} key={5}>5</MenuItem>
-                                                    <MenuItem value={6} key={6}>6</MenuItem>
-                                                    <MenuItem value={7} key={7}>7</MenuItem>
-                                                    <MenuItem value={8} key={8}>8</MenuItem>
-                                                    <MenuItem value={9} key={9}>9</MenuItem>
-                                                    <MenuItem value={10} key={10}>10</MenuItem>
-                                                </Select>
+                                                    <FormControlLabel
+                                                        value="1"
+                                                        control={<Radio color="primary" />}
+                                                        label="1"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="2"
+                                                        control={<Radio color="primary" />}
+                                                        label="2"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="3"
+                                                        control={<Radio color="primary" />}
+                                                        label="3"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="4"
+                                                        control={<Radio color="primary" />}
+                                                        label="4"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="5"
+                                                        control={<Radio color="primary" />}
+                                                        label="5"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="6"
+                                                        control={<Radio color="primary" />}
+                                                        label="6"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="7"
+                                                        control={<Radio color="primary" />}
+                                                        label="7"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="8"
+                                                        control={<Radio color="primary" />}
+                                                        label="8"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="9"
+                                                        control={<Radio color="primary" />}
+                                                        label="9"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="10"
+                                                        control={<Radio color="primary" />}
+                                                        label="10"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                    />
+                                                </RadioGroup>
                                             </FormControl>
                                         </Grid>
 
@@ -597,10 +657,10 @@ class IncidentFormInternal extends Component {
                                         <Grid item xs={12} >
                                             <FormControlLabel
                                                 control={
-                                                    <Checkbox 
+                                                    <Checkbox
                                                         id="reporterConsent"
                                                         name="reporterConsent"
-                                                        checked={values.reporterConsent} 
+                                                        checked={values.reporterConsent}
                                                         onChange={handleChange}
                                                     />
                                                 }
