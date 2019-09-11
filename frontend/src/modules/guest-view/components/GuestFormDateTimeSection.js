@@ -27,12 +27,11 @@ function DatePickers(props) {
                 label="Date"
                 type="date"
                 value={dateTime.date}
-                // defaultValue="2017-05-24"
                 className={classes.textField}
                 InputLabelProps={{
                     shrink: true,
                 }}
-                onChange={(e)=>{setDateTime({date:e.target.value})}}
+                onChange={(e)=>{setDateTime({...dateTime, date:e.target.value})}}
             />
 
             <TextField
@@ -40,12 +39,11 @@ function DatePickers(props) {
                 label="Time"
                 type="time"
                 value={dateTime.time}
-                defaultValue="07:30"
                 className={classes.textField}
                 InputLabelProps={{
                     shrink: true,
                 }}
-                onChange={(e)=>{setDateTime({date:e.target.value})}}
+                onChange={(e)=>{setDateTime({ ...dateTime, time:e.target.value})}}
             />
         </form>
     );
