@@ -23,6 +23,11 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 
+import green from '@material-ui/core/colors/green';
+import red from '@material-ui/core/colors/red';
+import orange from '@material-ui/core/colors/orange';
+import yellow from '@material-ui/core/colors/yellow';
+
 import {
     submitIncidentBasicData,
     stepBackwardIncidentStepper,
@@ -76,6 +81,25 @@ const styles = theme => ({
     radioItem: {
         margin: 0,
     },
+    severityHigh: {
+        color: red[600],
+        '&$checked': {
+            color: red[500],
+        },
+    },
+    severityMedium: {
+        color: orange[600],
+        '&$checked': {
+            color: orange[500],
+        },
+    },
+    severityLow: {
+        color: yellow[600],
+        '&$checked': {
+            color: yellow[500],
+        },
+    },
+    checked: {},
 })
 
 class IncidentFormInternal extends Component {
@@ -327,73 +351,152 @@ class IncidentFormInternal extends Component {
                                                 >
                                                     <FormControlLabel
                                                         value="1"
-                                                        control={<Radio color="primary" />}
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityLow,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                            />
+                                                        }
                                                         label="1"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityLow,
+                                                        }}
                                                     />
                                                     <FormControlLabel
                                                         value="2"
-                                                        control={<Radio color="primary" />}
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityLow,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                            />
+                                                        }
                                                         label="2"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityLow,
+                                                        }}
                                                     />
                                                     <FormControlLabel
                                                         value="3"
-                                                        control={<Radio color="primary" />}
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityLow,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                            />
+                                                        }
                                                         label="3"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityLow,
+                                                        }}
                                                     />
                                                     <FormControlLabel
                                                         value="4"
-                                                        control={<Radio color="primary" />}
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityMedium,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                            />
+                                                        }
                                                         label="4"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityMedium,
+                                                        }}
                                                     />
                                                     <FormControlLabel
                                                         value="5"
-                                                        control={<Radio color="primary" />}
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityMedium,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                            />
+                                                        }
                                                         label="5"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityMedium,
+                                                        }}
                                                     />
                                                     <FormControlLabel
                                                         value="6"
-                                                        control={<Radio color="primary" />}
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityMedium,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                            />
+                                                        }
                                                         label="6"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityMedium,
+                                                        }}
                                                     />
                                                     <FormControlLabel
                                                         value="7"
-                                                        control={<Radio color="primary" />}
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityHigh,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                            />
+                                                        }
                                                         label="7"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityHigh,
+                                                        }}
                                                     />
                                                     <FormControlLabel
                                                         value="8"
-                                                        control={<Radio color="primary" />}
+                                                        control={<Radio className={classes.severityHigh} />}
                                                         label="8"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityHigh,
+                                                        }}
                                                     />
                                                     <FormControlLabel
                                                         value="9"
-                                                        control={<Radio color="primary" />}
+                                                        control={<Radio className={classes.severityHigh} />}
                                                         label="9"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityHigh,
+                                                        }}
                                                     />
                                                     <FormControlLabel
                                                         value="10"
-                                                        control={<Radio color="primary" />}
+                                                        control={<Radio className={classes.severityHigh} />}
                                                         label="10"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityHigh,
+                                                        }}
                                                     />
                                                 </RadioGroup>
                                             </FormControl>
