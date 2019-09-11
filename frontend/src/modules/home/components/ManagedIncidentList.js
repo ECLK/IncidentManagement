@@ -27,7 +27,11 @@ export function ManagedIncidentList({ filters, history }){
             pageNumber={currentPage-1}
             count={count}
             handleRowClick={incidentId => history.push(`/app/review/${incidentId}`)}
-            handlePageChange={(evt, newPage) => callAPI(newPage+1)}
+            handlePageChange={(evt, newPage) =>  { 
+                setCurrentPage(newPage+1)
+                callAPI(newPage+1)
+            }
+            }
         />
     )
 }
