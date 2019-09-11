@@ -33,12 +33,14 @@ const styles = theme => ({
   }
 });
 
-class ReviewIncidentListView extends React.Component {
+class ArchiveIncidentListView extends React.Component {
   constructor(props){
     super(props);
 
     this.state = {
-      filters: {}
+      filters: {
+        show_closed: true
+      }
     }
   }
 
@@ -51,15 +53,15 @@ class ReviewIncidentListView extends React.Component {
   }
 
   handleSearchClick = (filters, page) => {
-    if(filters){
-      this.setState({
-        filters: filters
-      });
-    }else{
-      this.setState({
-        filters: {}
-      });
+    if(!filters){
+      filters = {
+      };
     }
+    filters["show_closed"] = true;
+    this.setState({
+      filters: filters
+    });
+    
     this.props.getIncidents(filters, page);
   }
 
@@ -91,8 +93,9 @@ class ReviewIncidentListView extends React.Component {
         <SearchForm 
           categories={categories} 
           handleSearchClick={this.handleSearchClick} 
-          showClosed={false}
-          {...this.props} />
+          showClosed={true}
+          {...this.props} 
+        />
         <Grid container direction={"row"} className={classes.exportContainer}>
           <Grid item>
             <Button variant={"contained"} onClick={() => this.handleExportClick("csv")} className={classes.exportButton}>
@@ -149,4 +152,4 @@ export default compose(
     mapDispatchToProps
   ),
   withStyles(styles)
-)(ReviewIncidentListView);
+)(ArchiveIncidentListView);

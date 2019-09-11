@@ -24,7 +24,8 @@ const breadcrumbNameMap = {
     '/app/review': 'Review',
     '/app/review/incident': 'Incident',
     '/app/review/incident/edit': 'Edit',
-    '/app/reports':'Reports'
+    '/app/reports':'Reports',
+    '/app/archive':'Archive'
 };
 
 function SimpleBreadcrumbs(props) {

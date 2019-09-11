@@ -75,7 +75,6 @@ const styles = theme => ({
 
 function SearchForm(props) {
   const filterIncidents = values => {
-    console.log(values);
     props.handleSearchClick(values);
   };
 
@@ -88,7 +87,6 @@ function SearchForm(props) {
     <Formik
       initialValues={props.incidentSearchFilter}
       onSubmit={(values, { setSubmitting }) => {
-        console.log(values);
         let preparedValues = {
           ...values,
           startTime: values.startTime !== "" ? moment(values.startTime).toDate() : null,

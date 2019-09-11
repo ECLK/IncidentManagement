@@ -59,6 +59,9 @@ const styles = (theme) => ({
     },
     timeLimitOverDue: {
         color:'red'
+    },
+    button: {
+        textAlign: "left"
     }
 });
 
@@ -105,7 +108,7 @@ const EventActions = (props) => {
                     </Avatar>
                     <ListItemText primary="Assigned to" secondary={activeIncident.assignees ? activeIncident.assignees[0].displayname : ""} />
                     
-                    {userCan(currentUser, activeIncident, USER_ACTIONS.CHANGE_ASSIGNEE) &&
+                    {activeIncident.currentStatus !== 'CLOSED' && userCan(currentUser, activeIncident, USER_ACTIONS.CHANGE_ASSIGNEE) &&
                         <ListItemSecondaryAction>
                             <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('CHANGE_ASSIGNEE_MODAL', { activeIncident, users })) }}>
                                 <EditIcon />
@@ -126,11 +129,13 @@ const EventActions = (props) => {
                         <AccessTimeIcon />
                     </Avatar>
                     <ListItemText primary="Close within" secondary={activeIncident.response_time + " hours."} />
-                    <ListItemSecondaryAction>
-                        <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('RESPOSE_TIME_EDIT', { activeIncident })) }}>
-                            <EditIcon />
-                        </IconButton>
-                    </ListItemSecondaryAction>
+                    {activeIncident.currentStatus !== 'CLOSED'  && 
+                        <ListItemSecondaryAction>
+                            <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('RESPOSE_TIME_EDIT', { activeIncident })) }}>
+                                <EditIcon />
+                            </IconButton>
+                        </ListItemSecondaryAction>
+                    }
                 </ListItem>
 
                 <ListItem>
@@ -159,34 +164,36 @@ const EventActions = (props) => {
 
             <Divider variant="middle" className={classes.divider} />
 
-            {userCan(currentUser, activeIncident, USER_ACTIONS.ESCALATE_INCIDENT) && 
-                <Button color="primary" size="large" variant='text' className={classes.button} onClick={props.escallateIncident}>
-                    <ArrowUpwardIcon className={classes.actionButtonIcon} />
-                    Escalate
+            {activeIncident.currentStatus !== 'CLOSED'  && 
+                <>
+                {userCan(currentUser, activeIncident, USER_ACTIONS.ESCALATE_INCIDENT) && 
+                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={props.escallateIncident}>
+                        <ArrowUpwardIcon className={classes.actionButtonIcon} />
+                        Escalate
+                    </Button>
+                }
+                
+                <Button color="primary" size="large" variant='text' className={classes.button} onClick={()=>{dispatch(showModal('ESCALLATE_OUTSIDE', { incidentId: activeIncident.id }))}}>
+                    <SubdirectoryArrowLeftIcon className={classes.actionButtonIcon} />
+                    Escalate to outside
                 </Button>
+                <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REQUEST_ADVICE_MODAL', { activeIncident, users })) }}>
+                    <HelpIcon className={classes.actionButtonIcon} />
+                    Request for advice
+                </Button>
+                {/* <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('PROVIDE_ADVICE_MODAL', { activeIncident })) }}>
+                    <SpeackerNotesIcon className={classes.actionButtonIcon} />
+                    Provide advice
+                </Button> */}
+
+                {userCan(currentUser, activeIncident, USER_ACTIONS.CLOSE_INCIDENT) &&
+                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('CLOSE_MODAL', { activeIncident })) }}>
+                        <WhereToVoteIcon className={classes.actionButtonIcon} />
+                        Close Incident
+                    </Button>
+                } 
+                </>
             }
-            
-            <Button color="primary" size="large" variant='text' className={classes.button} onClick={()=>{dispatch(showModal('ESCALLATE_OUTSIDE', { incidentId: activeIncident.id }))}}>
-                <SubdirectoryArrowLeftIcon className={classes.actionButtonIcon} />
-                Escalate to outside
-            </Button>
-            <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REQUEST_ADVICE_MODAL', { activeIncident, users })) }}>
-                <HelpIcon className={classes.actionButtonIcon} />
-                Request for advice
-            </Button>
-            <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('PROVIDE_ADVICE_MODAL', { activeIncident })) }}>
-                <SpeackerNotesIcon className={classes.actionButtonIcon} />
-                Provide advice
-            </Button>
-
-            {userCan(currentUser, activeIncident, USER_ACTIONS.CLOSE_INCIDENT) &&
-                <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('CLOSE_MODAL', { activeIncident })) }}>
-                    <WhereToVoteIcon className={classes.actionButtonIcon} />
-                    Close Incident
-                </Button>
-            } 
-
-
         </div>
     );
 }
