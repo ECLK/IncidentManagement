@@ -11,6 +11,7 @@ const styles = theme => ({
     textField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
+        marginBottom: theme.spacing.unit*2,
         width: 200,
     },
 });
@@ -32,6 +33,7 @@ function DatePickers(props) {
                     shrink: true,
                 }}
                 onChange={(e)=>{setDateTime({...dateTime, date:e.target.value})}}
+                helperText="mm/dd/yyyy"
             />
 
             <TextField

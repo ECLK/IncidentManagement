@@ -98,11 +98,11 @@ export const updateGuestIncidentReporterError = createAction('INCIDENT/UPDATE_GU
 
 export const updateGuestIncidentReporter = (reporterId, reporterData) => {
     return async function(dispatch) {
-        dispatch(updateGuestIncidentRequest());
+        dispatch(updateGuestIncidentReporterRequest());
         try{
             const response = await publicApi.updateReporter(reporterId, reporterData);
             //reloading reporter
-            dispatch(updateGuestIncidentSuccess({data:response.data}));
+            dispatch(updateGuestIncidentReporterSuccess({data:response.data}));
         }catch(error){
             console.log(error);
             dispatch(updateGuestIncidentError(error));

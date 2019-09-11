@@ -51,6 +51,9 @@ const incidentReducer = createReducer(initialState, {
     },
     [updateGuestIncidentSuccess] : (state, action) => {
         state.activeIncident.data = action.payload.data
+    },
+    [updateGuestIncidentReporterSuccess] : (state, action) => {
+        state.activeIncidentReporter.data = action.payload.data
     }
 
 })
