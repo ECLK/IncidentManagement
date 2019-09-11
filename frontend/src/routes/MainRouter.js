@@ -24,6 +24,7 @@ import { FormattedMessage } from 'react-intl';
 import { Home } from "../modules/home";
 import GuestIncidentForm from '../modules/guest-view/components/GuestIncidentForm'
 import IncidentView from "../modules/ongoing-incidents/components/IncidentView";
+import ArchiveIncidentListView from "../modules/ongoing-incidents/components/ArchiveIncidentListView";
 
 class Layout extends React.Component{
   
@@ -67,6 +68,7 @@ class MainRouter extends Component {
                 <PrivateRoute exact path="/app/review" component={ReviewIncidentListView} />
                 <PrivateRoute exact path="/app/review/:paramIncidentId" component={IncidentView} />
                 <PrivateRoute exact path="/app/review/:paramIncidentId/edit" component={IncidentFormInternal} />
+                <PrivateRoute exact path="/app/archive" component={ArchiveIncidentListView} />
               </Switch>
             </PrivateRoute>
 
