@@ -4,7 +4,7 @@
 2. `pip install -r requirements.txt`
 3. `python manage.py migrate`
 4. `python manage.py createsuperuser --email admin@example.com --username admin`
-5. `python manage.py runserver` or to make accessible through LAN use `python manage.py runserver 0.0.0.0:8000` and add your LAN IP to `ALLOWED_HOSTS` in the  `settings.py` along with  `localhost`. ( `ALLOWED_HOSTS = ["localhost", "192.168.8.160"]`)
+5. `python manage.py runserver` or to make accessible through LAN use `python manage.py runserver 0.0.0.0:8000` and add your LAN IP to `ALLOWED_HOSTS` in the `settings.py` along with `localhost`. ( `ALLOWED_HOSTS = ["localhost", "192.168.8.160"]`)
 
 ## Docker run
 
@@ -13,14 +13,14 @@
 3. `docker-compose build`
 4. `docker-compose up`
 5. Go grab a coffee until mysql and django initialize
-6. Open a new terminal, navigate to `backend` 
+6. Open a new terminal, navigate to `backend`
 7. `docker-compose exec djangoapp python manage.py makemigrations`
 8. `docker-compose exec djangoapp python manage.py migrate`
 9. Grab another coffee
 10. `docker-compose exec djangoapp python manage.py createsuperuser`
 11. Enter superuser information when prompted
-<!-- 12. `docker-compose exec djangoapp python manage.py loaddata seed_data.json` -->
-13. Server runs at 8000
+    <!-- 12. `docker-compose exec djangoapp python manage.py loaddata seed_data.json` -->
+12. Server runs at 8000
 
 ## Model writing guidelines
 
@@ -29,10 +29,9 @@
 2. for small strings use, models.CharField
 
 3. Foreign key referencing -> name the FK field as the object  
-    ex: Book refering to Author ir Book.author (not Book.author_id)
+   ex: Book refering to Author ir Book.author (not Book.author_id)
 
 4. Can have one FK to refer to multiple models, check Event model for example
-
 
 ## Serializers
 
@@ -50,10 +49,9 @@
 
 7. Can have additional fields with serializers as well
 
-
 ## Errors
 
-1. >django.core.exceptions.ImproperlyConfigured: The included URLconf 'src.urls' does not appear to have any patterns in it. If you see valid patterns in the file then the issue is probably caused by a circular import.
+1. > django.core.exceptions.ImproperlyConfigured: The included URLconf 'src.urls' does not appear to have any patterns in it. If you see valid patterns in the file then the issue is probably caused by a circular import.
 
 This usually means your file being imported has some error, type or something.
 It can literally mean an error somewhere in the code, don't know why it pops up.
@@ -73,7 +71,6 @@ All responses have the same structure. This is enforced centrally, no need to ch
 }
 ```
 
-
 ### Services
 
 1. Services contain the domain model / business logic
@@ -83,8 +80,6 @@ All responses have the same structure. This is enforced centrally, no need to ch
 3. If there's a reusable logic that involves more than one query to models, send it out to a service method.
 
 4. **Different apps should ONLY communicate through services. Donot invoke view methods of other apps directly**
-
-
 
 ### Mock Election - Deployement Process
 
@@ -116,4 +111,6 @@ All responses have the same structure. This is enforced centrally, no need to ch
 
 4. Create user(s) for each group above. When creating a new user, you can select the group in the same form. Only select one group per user.
 
-5. **IMPORTANT** a mandatory user named *guest* must be created under *guest* group so that public claim filing work as expected. 
+5. **IMPORTANT** a mandatory user named _guest_ must be created under _guest_ group so that public claim filing work as expected.
+
+6. Create user per group
