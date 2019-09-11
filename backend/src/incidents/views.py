@@ -134,6 +134,14 @@ class IncidentList(APIView, IncidentResultsSetPagination):
                 incidents = incidents.filter(current_severity=param_severity)
             except:
                 raise IncidentException("Severity level must be a number")
+
+        param_closed = self.request.query_params.get('show_closed', None)
+
+        if param_closed is not None and param_closed == "true":
+            # by default CLOSED incidents are not shown
+            incidents = incidents.filter(current_status=StatusType.CLOSED.name)
+        else:
+            incidents = incidents.exclude(current_status=StatusType.CLOSED.name)
         
         param_export = self.request.query_params.get('export', None)
         if param_export is not None:

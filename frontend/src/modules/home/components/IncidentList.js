@@ -89,6 +89,7 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
             <col style={{ width: "20%" }} />
             <col style={{ width: "45%" }} />
             <col style={{ width: "5%" }} />
+            <col style={{ width: "5%" }} />
             <col style={{ width: "15%" }} />
             <col style={{ width: "2%" }} />
           </colgroup>
@@ -99,6 +100,7 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
               <CustomTableCell align="center">Title</CustomTableCell>
               <CustomTableCell align="center">Description</CustomTableCell>
               <CustomTableCell align="center">Status</CustomTableCell>
+              <CustomTableCell align="center">Severity</CustomTableCell>
               <CustomTableCell align="center">Response Time</CustomTableCell>
               <CustomTableCell align="center">Category</CustomTableCell>
               <CustomTableCell align="center">Last Action At</CustomTableCell>
@@ -125,6 +127,9 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
                   <p>{row.currentStatus}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
+                  <p>{row.currentSeverity}</p>
+                </CustomTableCell>
+                <CustomTableCell align="center">
                   <p>{row.response_time} h</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
@@ -133,6 +138,28 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
                 <CustomTableCell align="center">
                   <p>{row.subCategory}</p>
                 </CustomTableCell>
+
+                {/* <CustomTableCell align="center">
+                  <div style={{display:"flex"}}>
+                    {row.currentStatus === "NEW" && (
+                      <IconButton aria-label="delete" className={classes.margin} size="small" color="primary">
+                        <CheckIcon fontSize="inherit" />
+                      </IconButton>
+                    )}
+                    <IconButton aria-label="delete" className={classes.margin} size="small">
+                      <AssignIcon fontSize="inherit" />
+                    </IconButton>
+                    <IconButton aria-label="delete" className={classes.margin} 
+                        size="small"
+                        title="Manage Incident"
+                        onClick={() => {
+                          this.props.history.push(`/app/review/${row.id}`);
+                        }} >
+                      <EditIcon fontSize="inherit" />
+                    </IconButton>
+                  </div>
+                </CustomTableCell> */}
+
               </TableRow>
             ))}
           </TableBody>
@@ -140,7 +167,7 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
             {/* {pagination && ( */}
                 <TableRow>
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={[15]}
                     colSpan={3}
                     count={count}
                     rowsPerPage={15}
