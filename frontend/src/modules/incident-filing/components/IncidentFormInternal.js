@@ -55,6 +55,7 @@ import {
     resetActiveIncident
 } from '../../shared/state/Shared.actions';
 import DropZoneBase from '../../shared/components/DropZoneBase';
+import moment from 'moment';
 
 const styles = theme => ({
     root: {
@@ -167,6 +168,10 @@ class IncidentFormInternal extends Component {
 
         const { paramIncidentId } = this.props.match.params
 
+        if(values.occured_date){
+            values.occured_date = moment(values.occured_date).format()
+        }
+
         if (paramIncidentId) {
             this.props.updateInternalIncident(paramIncidentId, values);
             this.props.history.push(`/app/review/${paramIncidentId}`);
@@ -197,6 +202,10 @@ class IncidentFormInternal extends Component {
             });
         }
 
+        if(initData.occured_date){
+            initData.occured_date = moment(initData.occured_date).format("YYYY-MM-DDTHH:mm")
+        }
+
         return initData;
     }
 
@@ -210,10 +219,12 @@ class IncidentFormInternal extends Component {
         const { classes } = this.props;
         const { paramIncidentId } = this.props.match.params
 
+        const reinit = paramIncidentId ? true : false;
+
         return (
             <div className={classes.root}>
                 <Formik
-                    // enableReinitialize={true}
+                    enableReinitialize={reinit}
                     initialValues={this.getInitialValues()}
                     onSubmit={(values, actions) => {
                         this.handleSubmit(values, actions)
