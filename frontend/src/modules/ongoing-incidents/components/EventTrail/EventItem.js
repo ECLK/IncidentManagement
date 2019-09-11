@@ -143,6 +143,18 @@ function getSecondaryItem(event){
         event.action === "ATTRIBUTE_CHANGED" || 
         event.action === "ACTION_COMPLETED"
        ) {
+        if(event.data.status && event.data.status.to_status_type === "CLOSED"){
+            let descObj = JSON.parse(event.description);
+            return (
+                <div>
+                    <div><b>Assignee(s)/ contact point(s):</b><br/> {descObj.assignee}</div><br/>
+                    <div><b>Name of external entities /internal entities:</b><br /> {descObj.entities}</div><br/>
+                    <div><b>Department(s), if any:</b><br /> {descObj.departments}</div><br/>
+                    <div><b>Name of individual(s), if any:</b><br /> {descObj.individuals}</div><br/>
+                    <div><b>Additional remarks:</b><br /> {descObj.remark}</div>
+                </div>
+            )
+        }
         return (
             <div>
                 { ReactHtmlParser(event.description)}
@@ -154,9 +166,9 @@ function getSecondaryItem(event){
         return (
             <div>
                 { ReactHtmlParser(`
-                    <div>Entity: ${descObj.entity}</div>
-                    <div>Name: ${descObj.name}</div>
-                    <div>Comment: ${descObj.comment}</div><div></div>`
+                    <div>Entity:<br/> ${descObj.entity}</div><br/>
+                    <div>Name:<br/> ${descObj.name}</div><br/>
+                    <div>Comment:<br/> ${descObj.comment}</div><div></div>`
                 )}
             </div>
         )
@@ -173,7 +185,7 @@ function getSecondaryItem(event){
         if(descObj){
             return (
                 <div>
-                    <div><b>Response Time:</b> {descObj.responseTime} hours</div>
+                    <div><b>Response Time:</b><br/> {descObj.responseTime} hours</div><br/>
                     <div><b>Comment:</b><br /> {descObj.comment}</div>
                 </div>
             )

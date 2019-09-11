@@ -638,29 +638,42 @@ class NavTabs extends Component {
                                     events={this.props.events}
                                     resolveEvent={this.onResolveEvent}
                                 />
-                                <div className={classes.textEditorWrapper}>
-                                    <Editor/>
-                                    <DropZone/>
-                                </div>
+                                {activeIncident.currentStatus !== 'CLOSED'  && 
+                                    <div className={classes.textEditorWrapper}>
+                                        <Editor/>
+                                        <DropZone/>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </Grid>
                     <Grid item xs={3}>
                         <div className={classes.sidePane}>
                             <div className={classes.editButtonWrapper}>
-                                {activeIncident.currentStatus !== 'NEW'?
-                                    <ButtonBase disabled variant="outlined"  size="large" color="secondary" className={classes.verifiedButton} >
-                                        <DoneOutlineIcon className={classes.verifiedIcon}/>
-                                        VERIFIED
-                                    </ButtonBase>:
-                                    <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick} className={classes.editButton} >
-                                        Verify
-                                    </Button>
+                                {activeIncident.currentStatus !== 'CLOSED' && 
+                                    <>
+                                        {activeIncident.currentStatus !== 'NEW' &&
+                                            <ButtonBase disabled variant="outlined"  size="large" color="secondary" className={classes.verifiedButton} >
+                                                <DoneOutlineIcon className={classes.verifiedIcon}/>
+                                                VERIFIED
+                                            </ButtonBase>
+                                        }
+                                        {activeIncident.currentStatus === 'NEW' &&
+                                            <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick} className={classes.editButton} >
+                                                Verify
+                                            </Button>
+                                        }
+                                        <Button component={EditIncidentLink} variant="outlined" size="large" color="primary" className={classes.editButton} >
+                                            <EditIcon className={classes.editIcon} />
+                                            Edit
+                                        </Button>
+                                    </>
                                 }
-                                <Button component={EditIncidentLink} variant="outlined" size="large" color="primary" className={classes.editButton} >
-                                    <EditIcon className={classes.editIcon} />
-                                    Edit
-                                </Button>
+                                {activeIncident.currentStatus === 'CLOSED' && 
+                                    <ButtonBase disabled variant="outlined"  size="large" color="primary" className={classes.verifiedButton} >
+                                        CLOSED
+                                    </ButtonBase>
+                                }
                             </div>
                             <EventActions
                                 activeIncident={activeIncident}
