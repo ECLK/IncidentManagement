@@ -99,6 +99,7 @@ const VerticalLinearStepper = (props) => {
                         description={incidentDescription}
                         selectedElection={incidentElection}
                         elections={elections} />
+                    <div style={{height:20}}></div>
                     < DateTimeSection 
                         dateTime={incidentDateTime} 
                         setDateTime={setIncidentDateTime} />
