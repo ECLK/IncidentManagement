@@ -15,6 +15,9 @@ class Category(models.Model):
     
 class Channel(models.Model):
     name = models.CharField(max_length=200)
+    sn_name = models.CharField(max_length=200, null=True, blank=True)
+    tm_name = models.CharField(max_length=200,null=True, blank=True)
+    order = models.IntegerField(unique=True, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:

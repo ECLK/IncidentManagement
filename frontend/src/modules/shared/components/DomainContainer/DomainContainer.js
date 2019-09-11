@@ -34,6 +34,7 @@ const HomeLink = props => <Link to="/app/home" {...props} />
 const ReportLink = props => <Link to="/app/incident" {...props} />
 const ReviewLink = props => <Link to="/app/review" {...props} />
 const StaticReportLink = props => <Link to="/app/reports" {...props} />
+const ArchiveLink = props => <Link to="/app/archive" {...props} />
 
 
 const drawerWidth = 240;
@@ -187,6 +188,11 @@ class DomainContainer extends React.Component {
                     {userCan(signedInUser, null, USER_ACTIONS.VIEW_REPORTS) && (
                         <Button variant={selectedMainSection==='reports'?'outlined': 'flat'} 
                             color="inherit" component={StaticReportLink}>Reports</Button>
+                    )}
+
+                    {userCan(signedInUser, null, USER_ACTIONS.REVIEW_INCIDENTS) && (
+                        <Button variant={selectedMainSection==='archive'?'outlined': 'flat'} 
+                            color="inherit" component={ArchiveLink}>Archive</Button>
                     )}
 
                 </Typography>

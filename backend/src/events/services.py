@@ -105,12 +105,13 @@ def create_outcome_event(initiator, incident, comment):
                     refered_model=comment
                 )
 
-def create_assignment_event(initiator, incident, assignee):
+def create_assignment_event(initiator, incident, assignee, description=None):
     create_event(
                     EventAction.ENTITY_ASSIGNED,
                     initiator, 
                     incident, 
-                    refered_model=assignee
+                    refered_model=assignee,
+                    description=description
                 )
 
 def update_status_with_description_event(initiator, incident, status, is_approved, description):

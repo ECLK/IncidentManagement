@@ -112,7 +112,7 @@ const MarkAsOutComeSelect = (props) => {
     return (
         <FormControlLabel
             style={{marginLeft:10}}
-            label="Mark as Outcome"
+            label="Incident Resolution"
             control={
                 <Switch
                     checked={props.isOutcome}

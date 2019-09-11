@@ -134,6 +134,14 @@ class IncidentList(APIView, IncidentResultsSetPagination):
                 incidents = incidents.filter(current_severity=param_severity)
             except:
                 raise IncidentException("Severity level must be a number")
+
+        param_closed = self.request.query_params.get('show_closed', None)
+
+        if param_closed is not None and param_closed == "true":
+            # by default CLOSED incidents are not shown
+            incidents = incidents.filter(current_status=StatusType.CLOSED.name)
+        else:
+            incidents = incidents.exclude(current_status=StatusType.CLOSED.name)
         
         param_export = self.request.query_params.get('export', None)
         if param_export is not None:
@@ -309,7 +317,10 @@ class IncidentWorkflowView(APIView):
             incident_change_assignee(request.user, incident, assignee)
 
         elif workflow == "escalate":
-            incident_escalate(request.user, incident)
+            # comment is actually an object
+            # comment: { comment: "text", responseTime: 1 }
+            comment = json.dumps(request.data['comment'])
+            incident_escalate(request.user, incident, comment=comment)
 
         else:
             return Response("Invalid workflow", status=status.HTTP_400_BAD_REQUEST)
