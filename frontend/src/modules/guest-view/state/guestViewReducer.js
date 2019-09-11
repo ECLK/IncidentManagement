@@ -32,7 +32,7 @@ import {
 
 const initialState = {
     isLoading: false,
-    activeStep: 4
+    activeStep: 0
 }
 
 const incidentReducer = createReducer(initialState, {
