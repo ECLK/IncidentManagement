@@ -119,7 +119,7 @@ const VerticalLinearStepper = (props) => {
                     }))
                 }else{
                     if( incidentDescription && incidentDateTime.date && incidentDateTime.time){
-                        dispatch(updateGuestIncident({election: incidentElection,}))
+                        dispatch(updateGuestIncident(incidentId, {election: incidentElection,}))
                     }
                 }
             }
