@@ -100,6 +100,12 @@ const styles = theme => ({
         },
     },
     checked: {},
+    langCats : {
+        display: "flex",
+        "& div": {
+            padding: "0 3px"
+        }
+    }
 })
 
 class IncidentFormInternal extends Component {
@@ -304,7 +310,15 @@ class IncidentFormInternal extends Component {
                                                     }}
                                                 >
                                                     {this.props.categories.map((c, k) => (
-                                                        <MenuItem value={c.sub_category} key={k}>{c.sub_category}</MenuItem>
+                                                        <MenuItem value={c.sub_category} key={k}>
+                                                            <div className={classes.langCats}>
+                                                                <div>{c.sub_category}</div>
+                                                                <div>|</div>
+                                                                <div> {c.sn_sub_category}</div>
+                                                                <div>|</div>
+                                                                <div> {c.tm_sub_category}</div>
+                                                            </div>
+                                                        </MenuItem>
                                                     ))}
                                                     <MenuItem value="Other"> Other </MenuItem>
                                                 </Select>
