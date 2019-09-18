@@ -410,7 +410,7 @@ def incident_provide_advice(user: User, incident: Incident, advice: str, start_e
 
     event_services.provide_advice_event(user, incident, status, advice, start_event)
 
-def incident_verify(user: User, incident: Incident, comment: str):
+def incident_verify(user: User, incident: Incident, comment: str, proof: bool):
     if incident.current_status != StatusType.NEW.name:
         raise WorkflowException("Can only verify unverified incidents")
 
@@ -424,6 +424,10 @@ def incident_verify(user: User, incident: Incident, comment: str):
         approved=True
     )
     status.save()
+    
+    if proof :
+        incident.proof = True
+        incident.save()
 
     event_services.update_status_with_description_event(user, incident, status, True, comment)
 
