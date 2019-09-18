@@ -41,6 +41,12 @@ class SeverityType(enum.Enum):
     def __str__(self):
         return self.name
 
+class IncidentType(enum.Enum):
+    INQUIRY = "Inquiry"
+    COMPLAINT = "Complaint"
+
+    def __str__(self):
+        return self.name
 
 class Reporter(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
@@ -143,6 +149,11 @@ class Incident(models.Model):
         choices=[(tag.name, tag.value) for tag in Occurrence],
         null=True,
         blank=True,
+    )
+    incidentType = models.CharField(
+        max_length=50,
+        choices=[(tag.name, tag.value) for tag in IncidentType],
+        default=IncidentType.COMPLAINT,
     )
 
     # getting the elections from a separate service
