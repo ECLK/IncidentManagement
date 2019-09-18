@@ -29,27 +29,6 @@ export const createGuestIncident = (incidentData) => {
 }
 
 
-
-//load incident from public endpoint
-export const loadGuestIncidentRequest = createAction('INCIDENT/LOAD_GUEST_INCIDENT_REQUEST');
-export const loadGuestIncidentSuccess = createAction('INCIDENT/LOAD_GUEST_INCIDENT_SUCCESS');
-export const loadGuestIncidentError = createAction('INCIDENT/LOAD_GUEST_INCIDENT_ERROR');
-
-export const loadGuestIncident = (incidentId) => {
-    return async function(dispatch) {
-        dispatch(loadGuestIncidentRequest());
-        try{
-            // const response = await publicApi.getIncident(incidentId);
-            // dispatch(loadGuestIncidentSuccess({data:response.data}));
-        }catch(error){
-            console.log(error);
-            dispatch(loadGuestIncidentError(error));
-        }
-    }
-}
-
-
-
 //update incident from public endpoint
 export const updateGuestIncidentRequest = createAction('INCIDENT/UPDATE_GUEST_INCIDENT_REQUEST');
 export const updateGuestIncidentSuccess = createAction('INCIDENT/UPDATE_GUEST_INCIDENT_SUCCESS');
@@ -68,27 +47,6 @@ export const updateGuestIncident = (incidentId, incidentData) => {
         }
     }
 }
-
-
-
-//load incident reporter from public endpoint
-export const loadGuestIncidentReporterRequest = createAction('INCIDENT/LOAD_GUEST_INCIDENT_REPORTER_REQUEST');
-export const loadGuestIncidentReporterSuccess = createAction('INCIDENT/LOAD_GUEST_INCIDENT_REPORTER_SUCCESS');
-export const loadGuestIncidentReporterError = createAction('INCIDENT/LOAD_GUEST_INCIDENT_REPORTER_ERROR');
-
-export const loadGuestIncidentReporter = (reporterId) => {
-    return async function(dispatch) {
-        dispatch(loadGuestIncidentReporterRequest());
-        try{
-            const response = await incidentsApi.getReporter(reporterId);
-            dispatch(loadGuestIncidentReporterSuccess({data:response.data}));
-        }catch(error){
-            console.log(error);
-            dispatch(loadGuestIncidentReporterError({error}));
-        }
-    }
-}
-
 
 
 //update incident from public endpoint
