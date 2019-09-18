@@ -56,7 +56,9 @@ class Reporter(models.Model):
     reporter_type = models.CharField(max_length=200, null=True, blank=True)
     email = models.CharField(max_length=200, null=True, blank=True)
     telephone = models.CharField(max_length=200, null=True, blank=True)
+    mobile = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
+    unique_id = models.UUIDField(default=uuid.uuid4, editable=False)
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:

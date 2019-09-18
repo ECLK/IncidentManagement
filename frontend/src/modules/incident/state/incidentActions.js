@@ -29,27 +29,6 @@ export const createGuestIncident = (incidentData) => {
 }
 
 
-
-//load incident from public endpoint
-export const loadGuestIncidentRequest = createAction('INCIDENT/LOAD_GUEST_INCIDENT_REQUEST');
-export const loadGuestIncidentSuccess = createAction('INCIDENT/LOAD_GUEST_INCIDENT_SUCCESS');
-export const loadGuestIncidentError = createAction('INCIDENT/LOAD_GUEST_INCIDENT_ERROR');
-
-export const loadGuestIncident = (incidentId) => {
-    return async function(dispatch) {
-        dispatch(loadGuestIncidentRequest());
-        try{
-            // const response = await publicApi.getIncident(incidentId);
-            // dispatch(loadGuestIncidentSuccess({data:response.data}));
-        }catch(error){
-            console.log(error);
-            dispatch(loadGuestIncidentError(error));
-        }
-    }
-}
-
-
-
 //update incident from public endpoint
 export const updateGuestIncidentRequest = createAction('INCIDENT/UPDATE_GUEST_INCIDENT_REQUEST');
 export const updateGuestIncidentSuccess = createAction('INCIDENT/UPDATE_GUEST_INCIDENT_SUCCESS');
@@ -104,7 +83,6 @@ export const updateGuestIncidentReporter = (reporterId, reporterData) => {
             //reloading reporter
             dispatch(updateGuestIncidentReporterSuccess({data:response.data}));
         }catch(error){
-            console.log(error);
             dispatch(updateGuestIncidentError(error));
         }
     }
@@ -126,6 +104,26 @@ export const uploadFileGuest = (incidentId, formData) => {
         };
         result = await publicApi.attachMedia(incidentId, mediaData);
         dispatch(uploadFileGuestSuccess(result))
+    }
+}
+
+//load incident by unique id
+export const loadGuestIncidentRequest = createAction('INCIDENT/LOAD_GUEST_INCIDENT_REQUEST')
+export const loadGuestIncidentSuccess = createAction('INCIDENT/LOAD_GUEST_INCIDENT_SUCCESS')
+export const loadGuestIncidentError = createAction('INCIDENT/LOAD_GUEST_INCIDENT_ERROR')
+
+export const loadGuestIncident = (uniqueId) => {
+    return async (dispatch) => {
+        dispatch(loadGuestIncidentRequest())
+        try{
+            const loadData = {
+                "unique_id": uniqueId
+            };
+            const result = await publicApi.loadIncident(loadData);
+            dispatch(loadGuestIncidentSuccess(result))
+        }catch(error){
+            dispatch(loadGuestIncidentError(error));
+        }
     }
 }
 
