@@ -114,5 +114,9 @@ urlpatterns = [
         "public/incidents/<uuid:incident_id>/attach_media", 
         incident_views.IncidentMediaPublicUserView.as_view()
     ),
+    path(
+        "public/reporter/get_incident", 
+        incident_views.IncidentViewPublicUserView.as_view()
+    ),
 
 ]
