@@ -36,6 +36,7 @@ from .services import (
     incident_request_advice,
     incident_provide_advice,
     incident_verify,
+    incident_invalidate,
     get_user_by_id,
     get_police_report_by_incident,
     get_incidents_to_escalate,
@@ -306,6 +307,10 @@ class IncidentWorkflowView(APIView):
             comment = json.dumps(request.data['comment'])
             incident_verify(request.user, incident, comment)
             incident_escalate(request.user, incident)
+
+        elif workflow == "invalidate":
+            comment = json.dumps(request.data['comment'])
+            incident_invalidate(request.user, incident, comment)
 
         elif workflow == "assign":
             if not request.user.has_perm("incidents.can_change_assignee"):

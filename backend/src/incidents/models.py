@@ -25,6 +25,7 @@ class StatusType(enum.Enum):
     ADVICE_PROVIDED = "Advice Provided"
     ADVICE_REQESTED = "Advice Requested"
     VERIFIED = "Verified"
+    INVALIDATED = "Invalidated"
 
     def __str__(self):
         return self.name
@@ -201,6 +202,7 @@ class Incident(models.Model):
 
 
     complainer_consent = models.BooleanField(default=False, null=True, blank=True)
+    proof = models.BooleanField(default=False)
 
     response_time = models.IntegerField(default=12)
 
@@ -209,36 +211,6 @@ class Incident(models.Model):
 
     current_status = models.CharField(max_length=50, default=None, null=True, blank=True)
     current_severity = models.CharField(max_length=50, default=None, null=True, blank=True)
-
-    # @property
-    # def current_status(self, status_type=None):
-    #     if status_type is None:
-    #         status = (
-    #             IncidentStatus.objects.filter(incident=self, approved=True)
-    #             .order_by("-created_date")
-    #             .first()
-    #         )    
-    #     else:
-    #         status = (
-    #             IncidentStatus.objects.filter(incident=self, approved=True, current_status=status_type)
-    #             .order_by("-created_date")
-    #             .first()
-    #         )
-
-    #     if status is not None:
-    #         return status.current_status
-    #     return None
-
-    # @property
-    # def current_severity(self):
-    #     severity = (
-    #         IncidentSeverity.objects.filter(incident=self, approved=True)
-    #         .order_by("-created_date")
-    #         .first()
-    #     )
-    #     if severity is not None:
-    #         return severity.current_severity
-    #     return None
 
     class Meta:
         ordering = ("created_date",)

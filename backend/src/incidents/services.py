@@ -427,6 +427,23 @@ def incident_verify(user: User, incident: Incident, comment: str):
 
     event_services.update_status_with_description_event(user, incident, status, True, comment)
 
+def incident_invalidate(user: User, incident: Incident, comment: str):
+    if incident.current_status != StatusType.NEW.name:
+        raise WorkflowException("Only NEW incidents can be verified")
+
+    if incident.assignee != user:
+        raise WorkflowException("Only assignee can verify the incident")
+
+    status = IncidentStatus(
+        previous_status=incident.current_status,
+        current_status=StatusType.INVALIDATED,
+        incident=incident,
+        approved=True
+    )
+    status.save()
+
+    event_services.update_status_with_description_event(user, incident, status, True, comment)
+
 def get_police_report_by_incident(incident: Incident):
     try:
         incident_police_report = IncidentPoliceReport.objects.get(incident=incident)
