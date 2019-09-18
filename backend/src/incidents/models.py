@@ -204,7 +204,7 @@ class Incident(models.Model):
 
 
     complainer_consent = models.BooleanField(default=False, null=True, blank=True)
-    proof = models.BooleanField(default=False)
+    proof = models.BooleanField(default=False, null=True)
 
     response_time = models.IntegerField(default=12)
 
