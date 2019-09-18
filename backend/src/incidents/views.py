@@ -51,6 +51,8 @@ from .services import (
 from ..events import services as event_service
 from ..file_upload import services as file_services
 from .exceptions import IncidentException
+from ..renderer import CustomJSONRenderer
+from rest_framework.renderers import JSONRenderer
 
 import json
 
@@ -205,7 +207,8 @@ class IncidentDetail(APIView):
         if serializer.is_valid():
             # store the revision
             revision_serializer = IncidentSerializer(incident)
-            revision = json.dumps(Response(revision_serializer.data))
+            json_renderer = JSONRenderer()
+            revision = json_renderer.render(revision_serializer.data)
 
             serializer.save()
             return_data = serializer.data
