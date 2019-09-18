@@ -38,7 +38,7 @@ export const updateGuestIncident = (incidentId, incidentData) => {
     return async function(dispatch) {
         dispatch(updateGuestIncidentRequest());
         try{
-            const response = await incidentsApi.updateIncident(incidentId, incidentData);
+            const response = await publicApi.updateIncident(incidentId, incidentData);
             //reloading incident
             dispatch(updateGuestIncidentSuccess({data:response.data}));
         }catch(error){
@@ -87,9 +87,9 @@ export const uploadFileGuest = (incidentId, formData) => {
 }
 
 //load incident by unique id
-export const loadGuestIncidentRequest = createAction('INCIDENT/LOAD_GUEST_INCIDENT_REQUEST')
-export const loadGuestIncidentSuccess = createAction('INCIDENT/LOAD_GUEST_INCIDENT_SUCCESS')
-export const loadGuestIncidentError = createAction('INCIDENT/LOAD_GUEST_INCIDENT_ERROR')
+export const loadGuestIncidentRequest = createAction('INCIDENT/LOAD_GUEST_INCIDENT_REQUEST');
+export const loadGuestIncidentSuccess = createAction('INCIDENT/LOAD_GUEST_INCIDENT_SUCCESS');
+export const loadGuestIncidentError = createAction('INCIDENT/LOAD_GUEST_INCIDENT_ERROR');
 
 export const loadGuestIncident = (uniqueId) => {
     return async (dispatch) => {
@@ -107,12 +107,5 @@ export const loadGuestIncident = (uniqueId) => {
 }
 
 
-
-
-
-
-
-
-
-
-
+//reset state
+export const resetIncidentState = createAction('INCIDENT/RESET_INCIDENT_STATE');
