@@ -110,8 +110,8 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
 
     event_services.create_incident_event(user, incident)
 
-def update_incident_postscript(incident: Incident, user: User) -> None:
-    event_services.create_comment_event(user, incident)
+def update_incident_postscript(incident: Incident, user: User, revision: str) -> None:
+    event_services.update_incident_event(user, incident, revision)
 
 
 def update_incident_status(
@@ -427,6 +427,23 @@ def incident_verify(user: User, incident: Incident, comment: str):
 
     event_services.update_status_with_description_event(user, incident, status, True, comment)
 
+def incident_invalidate(user: User, incident: Incident, comment: str):
+    if incident.current_status != StatusType.NEW.name:
+        raise WorkflowException("Only NEW incidents can be verified")
+
+    if incident.assignee != user:
+        raise WorkflowException("Only assignee can verify the incident")
+
+    status = IncidentStatus(
+        previous_status=incident.current_status,
+        current_status=StatusType.INVALIDATED,
+        incident=incident,
+        approved=True
+    )
+    status.save()
+
+    event_services.update_status_with_description_event(user, incident, status, True, comment)
+
 def get_police_report_by_incident(incident: Incident):
     try:
         incident_police_report = IncidentPoliceReport.objects.get(incident=incident)
@@ -495,3 +512,15 @@ def get_fitlered_incidents_report(incidents: Incident, output_format: str):
 
     # if it's an unrecognized format, raise exception
     raise IncidentException("Unrecognized export format '%s'" % output_format)
+
+def get_incident_by_reporter_unique_id(unique_id):
+    try:
+        reporter = Reporter.objects.get(unique_id=unique_id)
+        if reporter is None:
+            raise IncidentException("Invalid unique id")
+
+        incident = Incident.objects.get(reporter=reporter)
+    except:
+        raise IncidentException("Invalid unique id")
+
+    return incident

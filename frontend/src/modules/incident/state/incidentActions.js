@@ -62,7 +62,6 @@ export const updateGuestIncidentReporter = (reporterId, reporterData) => {
             //reloading reporter
             dispatch(updateGuestIncidentReporterSuccess({data:response.data}));
         }catch(error){
-            console.log(error);
             dispatch(updateGuestIncidentError(error));
         }
     }
@@ -84,6 +83,26 @@ export const uploadFileGuest = (incidentId, formData) => {
         };
         result = await publicApi.attachMedia(incidentId, mediaData);
         dispatch(uploadFileGuestSuccess(result))
+    }
+}
+
+//load incident by unique id
+export const loadGuestIncidentRequest = createAction('INCIDENT/LOAD_GUEST_INCIDENT_REQUEST')
+export const loadGuestIncidentSuccess = createAction('INCIDENT/LOAD_GUEST_INCIDENT_SUCCESS')
+export const loadGuestIncidentError = createAction('INCIDENT/LOAD_GUEST_INCIDENT_ERROR')
+
+export const loadGuestIncident = (uniqueId) => {
+    return async (dispatch) => {
+        dispatch(loadGuestIncidentRequest())
+        try{
+            const loadData = {
+                "unique_id": uniqueId
+            };
+            const result = await publicApi.loadIncident(loadData);
+            dispatch(loadGuestIncidentSuccess(result))
+        }catch(error){
+            dispatch(loadGuestIncidentError(error));
+        }
     }
 }
 

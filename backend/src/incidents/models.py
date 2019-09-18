@@ -25,6 +25,7 @@ class StatusType(enum.Enum):
     ADVICE_PROVIDED = "Advice Provided"
     ADVICE_REQESTED = "Advice Requested"
     VERIFIED = "Verified"
+    INVALIDATED = "Invalidated"
 
     def __str__(self):
         return self.name
@@ -41,6 +42,12 @@ class SeverityType(enum.Enum):
     def __str__(self):
         return self.name
 
+class IncidentType(enum.Enum):
+    INQUIRY = "Inquiry"
+    COMPLAINT = "Complaint"
+
+    def __str__(self):
+        return self.name
 
 class Reporter(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
@@ -49,7 +56,9 @@ class Reporter(models.Model):
     reporter_type = models.CharField(max_length=200, null=True, blank=True)
     email = models.CharField(max_length=200, null=True, blank=True)
     telephone = models.CharField(max_length=200, null=True, blank=True)
+    mobile = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
+    unique_id = models.UUIDField(default=uuid.uuid4, editable=False)
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -144,6 +153,11 @@ class Incident(models.Model):
         null=True,
         blank=True,
     )
+    incidentType = models.CharField(
+        max_length=50,
+        choices=[(tag.name, tag.value) for tag in IncidentType],
+        default=IncidentType.COMPLAINT,
+    )
 
     # getting the elections from a separate service
     election = models.CharField(max_length=200, blank=True)
@@ -190,6 +204,7 @@ class Incident(models.Model):
 
 
     complainer_consent = models.BooleanField(default=False, null=True, blank=True)
+    proof = models.BooleanField(default=False)
 
     response_time = models.IntegerField(default=12)
 
@@ -198,36 +213,6 @@ class Incident(models.Model):
 
     current_status = models.CharField(max_length=50, default=None, null=True, blank=True)
     current_severity = models.CharField(max_length=50, default=None, null=True, blank=True)
-
-    # @property
-    # def current_status(self, status_type=None):
-    #     if status_type is None:
-    #         status = (
-    #             IncidentStatus.objects.filter(incident=self, approved=True)
-    #             .order_by("-created_date")
-    #             .first()
-    #         )    
-    #     else:
-    #         status = (
-    #             IncidentStatus.objects.filter(incident=self, approved=True, current_status=status_type)
-    #             .order_by("-created_date")
-    #             .first()
-    #         )
-
-    #     if status is not None:
-    #         return status.current_status
-    #     return None
-
-    # @property
-    # def current_severity(self):
-    #     severity = (
-    #         IncidentSeverity.objects.filter(incident=self, approved=True)
-    #         .order_by("-created_date")
-    #         .first()
-    #     )
-    #     if severity is not None:
-    #         return severity.current_severity
-    #     return None
 
     class Meta:
         ordering = ("created_date",)
