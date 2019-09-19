@@ -32,7 +32,8 @@ import {
 
 const initialState = {
     isLoading: false,
-    activeStep: 0
+    activeStep: 0,
+    isFinished: false
 }
 
 const incidentReducer = createReducer(initialState, {
@@ -48,7 +49,11 @@ const incidentReducer = createReducer(initialState, {
         state.isLoading = true;
     },
     [updateGuestIncidentSuccess] : (state, action) => {
-        state.activeStep = state.activeStep + 1
+        if(state.activeStep===4){
+            //indicates view that the stepper reached  the end
+            state.isFinished = true;
+        }
+        state.activeStep = state.activeStep + 1;
         state.isLoading = false;
     },
     [updateGuestIncidentReporterRequest] : (state, action) => {

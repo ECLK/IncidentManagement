@@ -24,13 +24,12 @@ function GuestFormSuccessPage(props) {
         switch(action){
             case 'edit':
                 props.history.push(`/report`);
-                dispatch(moveStepper({step:1}))
+                dispatch(moveStepper({step:0}))
                 break;
             case 'status':
                 props.history.push(`/status`);
                 break;
             case 'create':
-                //clear active incident
                 dispatch(resetIncidentState())
                 dispatch(moveStepper({step:0}))
                 props.history.push(`/report`);
