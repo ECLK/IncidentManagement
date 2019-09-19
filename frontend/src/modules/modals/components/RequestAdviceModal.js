@@ -39,7 +39,7 @@ const RequestAdviceModal = (props) => {
 
     return (
         <div>
-            <DialogTitle id="form-dialog-title">Change Resopse Time</DialogTitle>
+            <DialogTitle id="form-dialog-title">Request for advice</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     Select assignee for the incident

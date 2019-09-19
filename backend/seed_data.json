@@ -5,10 +5,10 @@
     "fields": {
       "top_category": "Violence",
       "sub_category": "Verbal intimidation",
-      "sn_top_category": "Violence",
-      "sn_sub_category": "Verbal intimidation",
-      "tm_top_category": "Violence",
-      "tm_sub_category": "Verbal intimidation",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "වාචිකව බියගැන්වීම",
+      "tm_top_category": "வன்முறை",
+      "tm_sub_category": "வாய்மொழி மிரட்டல்",
       "created_date": "2019-06-27 00:00:00.000000"
     }
   },
@@ -18,10 +18,10 @@
     "fields": {
       "top_category": "Violence",
       "sub_category": "Assault",
-      "sn_top_category": "Violence",
-      "sn_sub_category": "Assault",
-      "tm_top_category": "Violence",
-      "tm_sub_category": "Assault",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "පහරදීම",
+      "tm_top_category": "வன்முறை",
+      "tm_sub_category": "தாக்குதல்",
       "created_date": "2019-06-27 00:00:00.000000"
     }
   },
@@ -31,9 +31,9 @@
     "fields": {
       "top_category": "Violence",
       "sub_category": "Loss of life",
-      "sn_top_category": "Violence",
-      "sn_sub_category": "Loss of life",
-      "tm_top_category": "Violence",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "ජීවිත හානි",
+      "tm_top_category": "வன்முறை",
       "tm_sub_category": "Loss of life",
       "created_date": "2019-06-27 00:00:00.000000"
     }
@@ -44,10 +44,10 @@
     "fields": {
       "top_category": "Violence",
       "sub_category": "Damage to property",
-      "sn_top_category": "Violence",
-      "sn_sub_category": "Damage to property",
-      "tm_top_category": "Violence",
-      "tm_sub_category": "Damage to property",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "දේපලවලට හානි කිරීම",
+      "tm_top_category": "வன்முறை",
+      "tm_sub_category": "சொத்து சேதம்",
       "created_date": "2019-06-27 00:00:00.000000"
     }
   },
@@ -56,11 +56,11 @@
     "pk": 5,
     "fields": {
       "top_category": "Violence",
-      "sub_category": "Attempted murder",
-      "sn_top_category": "Violence",
-      "sn_sub_category": "Attempted murder",
-      "tm_top_category": "Violence",
-      "tm_sub_category": "Attempted murder",
+      "sub_category": "Firing",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "වෙඩි තැබීම",
+      "tm_top_category": "வன்முறை",
+      "tm_sub_category": "படப்பிடிப்பு",
       "created_date": "2019-06-27 00:00:00.000000"
     }
   },
@@ -68,12 +68,12 @@
     "model": "common.category",
     "pk": 6,
     "fields": {
-      "top_category": "Violation of election law",
-      "sub_category": "Abuse of public property",
-      "sn_top_category": "Violation of election law",
-      "sn_sub_category": "Abuse of public property",
-      "tm_top_category": "Violation of election law",
-      "tm_sub_category": "Abuse of public property",
+      "top_category": "Violence",
+      "sub_category": "Damage to banners, posters etc.",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "පෝස්ටර් බැනර් ආදියට හානි කිරීම",
+      "tm_top_category": "வன்முறை",
+      "tm_sub_category": "சுவரொட்டி பதாகைகளுக்கு சேதம்",
       "created_date": "2019-06-27 00:00:00.000000"
     }
   },
@@ -81,12 +81,12 @@
     "model": "common.category",
     "pk": 7,
     "fields": {
-      "top_category": "Violation of election law",
-      "sub_category": "Misuse of media",
-      "sn_top_category": "Violation of election law",
-      "sn_sub_category": "Misuse of media",
-      "tm_top_category": "Violation of election law",
-      "tm_sub_category": "Misuse of media",
+      "top_category": "Violence",
+      "sub_category": "Riots",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "කෝලහල කිරීම",
+      "tm_top_category": "வன்முறை",
+      "tm_sub_category": "கலவரம்",
       "created_date": "2019-06-27 00:00:00.000000"
     }
   },
@@ -94,12 +94,12 @@
     "model": "common.category",
     "pk": 8,
     "fields": {
-      "top_category": "Violation of election law",
-      "sub_category": "Complaints related to postal votes",
-      "sn_top_category": "Violation of election law",
-      "sn_sub_category": "Complaints related to postal votes",
-      "tm_top_category": "Violation of election law",
-      "tm_sub_category": "Complaints related to postal votes",
+      "top_category": "Violence",
+      "sub_category": "Rape",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "ස්ත්‍රී දූෂණ",
+      "tm_top_category": "வன்முறை",
+      "tm_sub_category": "கற்பழிப்பு",
       "created_date": "2019-06-27 00:00:00.000000"
     }
   },
@@ -107,12 +107,12 @@
     "model": "common.category",
     "pk": 9,
     "fields": {
-      "top_category": "Violation of election law",
-      "sub_category": "Complaint related to polling booth/ electoral materials",
-      "sn_top_category": "Violation of election law",
-      "sn_sub_category": "Complaint related to polling booth/ electoral materials",
-      "tm_top_category": "Violation of election law",
-      "tm_sub_category": "Complaint related to polling booth/ electoral materials",
+      "top_category": "Violence",
+      "sub_category": "House breaking and theft",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "ගෙවල් බිඳීම හා සොරකම",
+      "tm_top_category": "வன்முறை",
+      "tm_sub_category": "கொள்ளை மற்றும் திருட்டு",
       "created_date": "2019-06-27 00:00:00.000000"
     }
   },
@@ -120,12 +120,311 @@
     "model": "common.category",
     "pk": 10,
     "fields": {
+      "top_category": "Violence",
+      "sub_category": "Attempted murder",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "මැරීමට තැත් කිරීම",
+      "tm_top_category": "வன்முறை",
+      "tm_sub_category": "இறக்க முயற்சிக்கிறது",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 11,
+    "fields": {
+      "top_category": "Violence",
+      "sub_category": "Attempted murder by shooting",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "වෙඩි තබා මැරීමට තැත් කිරීම",
+      "tm_top_category": "வன்முறை",
+      "tm_sub_category": "நீங்களே சுட முயற்சிக்கிறீர்கள்",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 12,
+    "fields": {
+      "top_category": "Violence",
+      "sub_category": "Attempted murder by throwing a bomb",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "බෝම්බ ගසා මැරීමට තැත් කිරීම",
+      "tm_top_category": "வன்முறை",
+      "tm_sub_category": "குண்டு வைக்க முயற்சிக்கிறது",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 13,
+    "fields": {
+      "top_category": "Violence",
+      "sub_category": "Arson",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "ගිනි තැබීම",
+      "tm_top_category": "வன்முறை",
+      "tm_sub_category": "தீ",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 14,
+    "fields": {
+      "top_category": "Violence",
+      "sub_category": "V.C.G. Hurt",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "V.C.G. Hurt",
+      "tm_top_category": "வன்முறை",
+      "tm_sub_category": "V.C.G. Hurt",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 15,
+    "fields": {
+      "top_category": "Violence",
+      "sub_category": "Abduction",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "පැහැරගෙන යාම",
+      "tm_top_category": "வன்முறை",
+      "tm_sub_category": "கடத்தல்",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 16,
+    "fields": {
+      "top_category": "Violence",
+      "sub_category": "Intimidation by bombs",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "බෝම්බ පෙන්වා බිය ගැන්වීම",
+      "tm_top_category": "வன்முறை",
+      "tm_sub_category": "குண்டுகள் மற்றும் மிரட்டல்",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 17,
+    "fields": {
+      "top_category": "Violence",
+      "sub_category": "Mob attack",
+      "sn_top_category": "ප්‍රචණ්ඩත්වය",
+      "sn_sub_category": "මැර ප්‍රහාර එල්ල කිරීම",
+      "tm_top_category": "வன்முறை",
+      "tm_sub_category": "குண்டர் தாக்குதல்கள்",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 18,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Abuse of public property",
+      "sn_top_category": "මැතිවරණ නීතිය උල්ලංගණය කිරීම",
+      "sn_sub_category": "පොදු දේපල අයථා පරිහරණය",
+      "tm_top_category": "தேர்தல் சட்டத்தை மீறுதல்",
+      "tm_sub_category": "பொது சொத்தின் தவறான பயன்பாடு",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 19,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Abuse of public building",
+      "sn_top_category": "මැතිවරණ නීතිය උල්ලංගණය කිරීම",
+      "sn_sub_category": "පොදු ගොඩනැගිලි අයථා පරිහරණය",
+      "tm_top_category": "தேர்தல் சட்டத்தை மீறுதல்",
+      "tm_sub_category": "பொது கட்டிடங்களின் தவறான பயன்பாடு",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 20,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Involvement of Public Officers",
+      "sn_top_category": "මැතිවරණ නීතිය උල්ලංගණය කිරීම",
+      "sn_sub_category": "රාජ්‍ය නිලධාරින් දේශපාලන කටයුතු වලට යොදවා ගැනීම",
+      "tm_top_category": "தேர்தல் சட்டத்தை மீறுதல்",
+      "tm_sub_category": "அரசியல் நடவடிக்கைகளுக்கு அரசு அதிகாரிகளை நியமித்தல்",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 21,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Misuse of media",
+      "sn_top_category": "මැතිවරණ නීතිය උල්ලංගණය කිරීම",
+      "sn_sub_category": "මාධ්‍ය අවභාවිතය",
+      "tm_top_category": "தேர்தல் சட்டத்தை மீறுதல்",
+      "tm_sub_category": "ஊடகங்கள் தவறாகப் பயன்படுத்தப்படுகின்றன",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 22,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Distribution of goods/ treatment of goods",
+      "sn_top_category": "මැතිවරණ නීතිය උල්ලංගණය කිරීම",
+      "sn_sub_category": "ද්‍රව්‍ය බෙදාහැරීම/ පරිත්‍යාග කිරීම",
+      "tm_top_category": "தேர்தல் சட்டத்தை மீறுதல்",
+      "tm_sub_category": "பொருட்களின் விநியோகம் / நன்கொடை",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 23,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Illegal posters, cutouts, banners",
+      "sn_top_category": "මැතිවරණ නීතිය උල්ලංගණය කිරීම",
+      "sn_sub_category": "නීති විරෝධි පෝස්ටර්, කටවුට්, බැනර් ප්‍රදර්ශනය",
+      "tm_top_category": "தேர்தல் சட்டத்தை மீறுதல்",
+      "tm_sub_category": "சட்டவிரோத சுவரொட்டிகள், கட்அவுட்கள் மற்றும் பேனர்கள் காட்சி",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 24,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Meeting, ralies etc.",
+      "sn_top_category": "මැතිවරණ නීතිය උල්ලංගණය කිරීම",
+      "sn_sub_category": "රැස්වීම්, පෙළපාලි පැවැත්වීම",
+      "tm_top_category": "தேர்தல் சட்டத்தை மீறுதல்",
+      "tm_sub_category": "கூட்டங்கள், அணிவகுப்புகளை நடத்துதல்",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 25,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Appoinments, Promotions of officers",
+      "sn_top_category": "මැතිවරණ නීතිය උල්ලංගණය කිරීම",
+      "sn_sub_category": "නිලධාරින් පත් කිරීම, උසස් කිරීම",
+      "tm_top_category": "தேர்தல் சட்டத்தை மீறுதல்",
+      "tm_sub_category": "அதிகாரிகளின் நியமனம் மற்றும் பதவி உயர்வு",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 26,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Obstructions to propaganda",
+      "sn_top_category": "මැතිවරණ නීතිය උල්ලංගණය කිරීම",
+      "sn_sub_category": "ප්‍රචාරක කටයුතු වලට  බාධා කිරීම",
+      "tm_top_category": "தேர்தல் சட்டத்தை மீறுதல்",
+      "tm_sub_category": "விளம்பரம் தடை",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 27,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Complaints related to postal votes",
+      "sn_top_category": "මැතිවරණ නීතිය උල්ලංගණය කිරීම",
+      "sn_sub_category": "තැපැල් ඡන්ද වලට අදාල පැමිණිලි ",
+      "tm_top_category": "தேர்தல் சட்டத்தை மீறுதல்",
+      "tm_sub_category": "அஞ்சல் வாக்களிப்பு தொடர்பான புகார்கள்",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 28,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Hate speech",
+      "sn_top_category": "මැතිවරණ නීතිය උල්ලංගණය කිරීම",
+      "sn_sub_category": "වෛරී ප්‍රකාශ",
+      "tm_top_category": "தேர்தல் சட்டத்தை மீறுதல்",
+      "tm_sub_category": "வெறுக்கத்தக்க பேச்சு",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 29,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Complaint related to polling booth/ electoral materials",
+      "sn_top_category": "මැතිවරණ නීතිය උල්ලංගණය කිරීම",
+      "sn_sub_category": "ඡන්දපොළ/ මැතිවරණ ද්‍රව්‍ය පිළිබඳ පැමිණිලි",
+      "tm_top_category": "தேர்தல் சட்டத்தை மீறுதல்",
+      "tm_sub_category": "வாக்குப்பதிவு / தேர்தல் பொருட்கள் குறித்த புகார்கள்",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 30,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Disinformation",
+      "sn_top_category": "මැතිවරණ නීතිය උල්ලංගණය කිරීම",
+      "sn_sub_category": "අසත්‍ය ප්‍රචාර",
+      "tm_top_category": "தேர்தல் சட்டத்தை மீறுதல்",
+      "tm_sub_category": "தவறான பிரச்சாரம்",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 31,
+    "fields": {
       "top_category": "Violation of election law",
       "sub_category": "Fake news",
-      "sn_top_category": "Violation of election law",
-      "sn_sub_category": "Fake news",
-      "tm_top_category": "Violation of election law",
-      "tm_sub_category": "Fake news",
+      "sn_top_category": "මැතිවරණ නීතිය උල්ලංගණය කිරීම",
+      "sn_sub_category": "ව්‍යාජ පුවත් මැවීම",
+      "tm_top_category": "தேர்தல் சட்டத்தை மீறுதல்",
+      "tm_sub_category": "போலி செய்திகளை உருவாக்குதல்",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 32,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "By relegious leaders involving propaganda",
+      "sn_top_category": "මැතිවරණ නීතිය උල්ලංගණය කිරීම",
+      "sn_sub_category": "ආගමික නායකයන් හරහා ප්‍රචාරණ කටයුතු කිරීම",
+      "tm_top_category": "தேர்தல் சட்டத்தை மீறுதல்",
+      "tm_sub_category": "மதத் தலைவர்கள் மூலம் பிரச்சாரம்",
+      "created_date": "2019-06-27 00:00:00.000000"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 33,
+    "fields": {
+      "top_category": "Violation of election law",
+      "sub_category": "Use of religious place and occasions for propaganda",
+      "sn_top_category": "මැතිවරණ නීතිය උල්ලංගණය කිරීම",
+      "sn_sub_category": "දේශපාලන ප්‍රචාරක කටයුතු ස﻿ඳහා ආගමික ස්ථාන හා උත්සව යොදා ගැනීම",
+      "tm_top_category": "தேர்தல் சட்டத்தை மீறுதல்",
+      "tm_sub_category": "அரசியல் பிரச்சாரங்களுக்கு மத இடங்களையும் விழாக்களையும் பயன்படுத்துதல்",
       "created_date": "2019-06-27 00:00:00.000000"
     }
   },

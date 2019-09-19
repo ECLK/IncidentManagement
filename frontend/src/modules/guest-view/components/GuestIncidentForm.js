@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import { withRouter } from "react-router";
 
 import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
@@ -127,7 +128,7 @@ const VerticalLinearStepper = (props) => {
         },
 
         1:{
-            title:'Where did this happen?',
+            title:'Describe the location',
             content: < LocationSection 
                         location={incidentLocation} 
                         handledLocationChange={setIncidentLocation} />,
@@ -177,6 +178,7 @@ const VerticalLinearStepper = (props) => {
                 }else{
                     dispatch(moveStepper({step:activeStep+1})) 
                 }
+                props.history.push('/report/success')
             }
         },
         
@@ -233,7 +235,7 @@ const VerticalLinearStepper = (props) => {
 
         <div className={classes.root}>
 
-            <Button variant="outlined" component={GoBackLink} > Back </Button>
+            <Button variant="outlined" onClick={()=>{window.history.back();}}> Back </Button>
             <h3>Report Incident</h3>
 
             <Stepper activeStep={activeStep} orientation="vertical">
@@ -242,7 +244,11 @@ const VerticalLinearStepper = (props) => {
                     const props = {};
                     const labelProps = {};
                     if (isStepOptional(index)) {
-                      labelProps.optional = <Typography variant="caption">Optional</Typography>;
+                        if(index===3){
+                            labelProps.optional = <Typography variant="caption">Optional - you may submit your complaint anonymously. If you choose to do so, you will not be able to obtain status updates from the Election Commission of Sri Lanka</Typography>;
+                        }else{
+                            labelProps.optional = <Typography variant="caption">Optional</Typography>;
+                        }
                     }
                     if (isStepSkipped(index)) {
                       props.completed = false;
@@ -299,4 +305,4 @@ VerticalLinearStepper.propTypes = {
     classes: PropTypes.object,
 };
 
-export default withStyles(styles)(VerticalLinearStepper);
+export default withRouter (withStyles(styles)(VerticalLinearStepper));

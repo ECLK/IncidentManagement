@@ -22,6 +22,7 @@ from .serializers import (
 from .services import (
     get_incident_by_id,
     create_incident_postscript,
+    update_incident_postscript,
     update_incident_status,
     update_incident_severity,
     get_reporter_by_id,
@@ -36,18 +37,22 @@ from .services import (
     incident_request_advice,
     incident_provide_advice,
     incident_verify,
+    incident_invalidate,
     get_user_by_id,
     get_police_report_by_incident,
     get_incidents_to_escalate,
     auto_escalate_incidents,
     attach_media,
     get_fitlered_incidents_report,
-    get_guest_user
+    get_guest_user,
+    get_incident_by_reporter_unique_id
 )
 
 from ..events import services as event_service
 from ..file_upload import services as file_services
 from .exceptions import IncidentException
+from ..renderer import CustomJSONRenderer
+from rest_framework.renderers import JSONRenderer
 
 import json
 
@@ -200,6 +205,11 @@ class IncidentDetail(APIView):
         incident_police_report = get_police_report_by_incident(incident)
         
         if serializer.is_valid():
+            # store the revision
+            revision_serializer = IncidentSerializer(incident)
+            json_renderer = JSONRenderer()
+            revision = json_renderer.render(revision_serializer.data)
+
             serializer.save()
             return_data = serializer.data
 
@@ -213,8 +223,10 @@ class IncidentDetail(APIView):
                     incident_police_report_serializer.save()
                     return_data.update(incident_police_report_serializer.data)
                     return_data["id"] = incident_id
+            
+            update_incident_postscript(incident, request.user, revision)
 
-            return Response(return_data)
+            return Response(return_data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -304,8 +316,13 @@ class IncidentWorkflowView(APIView):
 
         elif workflow == "verify":
             comment = json.dumps(request.data['comment'])
-            incident_verify(request.user, incident, comment)
+            proof = json.dumps(request.data['proof'])
+            incident_verify(request.user, incident, comment, proof)
             incident_escalate(request.user, incident)
+
+        elif workflow == "invalidate":
+            comment = json.dumps(request.data['comment'])
+            incident_invalidate(request.user, incident, comment)
 
         elif workflow == "assign":
             if not request.user.has_perm("incidents.can_change_assignee"):
@@ -350,7 +367,8 @@ class Test(APIView):
         return Response(data)
 
 # public user views
-
+# todo
+# check guest user here
 class IncidentPublicUserView(APIView):
     permission_classes = []
     serializer_class = IncidentSerializer
@@ -405,5 +423,17 @@ class IncidentMediaPublicUserView(APIView):
         attach_media(get_guest_user(), incident, uploaded_file)
 
         return Response("Incident workflow success", status=status.HTTP_200_OK)
+
+class IncidentViewPublicUserView(APIView):
+    permission_classes = []
+
+    def post(self, request):
+        # enter the unique code and retrieve the corresponding incident
+        # send the incident back
+        # get incident for public user
+        unique_id = request.data['unique_id']
+        incident = get_incident_by_reporter_unique_id(unique_id)
+        serializer = IncidentSerializer(incident)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
