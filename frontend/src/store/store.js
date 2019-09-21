@@ -11,7 +11,8 @@ import { notificationReducer }
         from '../modules/notifications/state/notifications.reducers';
 
 //new incidents reducer
-import newIncidentReducer from '../modules/incident/state/incidentReducer'
+import newIncidentReducer from '../modules/incident/state/incidentReducer';
+import guestViewReducer from '../modules/guest-view/state/guestViewReducer';
 
 
 const reducer = combineReducers({
@@ -20,7 +21,8 @@ const reducer = combineReducers({
     ongoingIncidentReducer,
     modalReducer,
     notificationReducer,
-    incident:newIncidentReducer
+    incident:newIncidentReducer,
+    guestView:guestViewReducer
 })
 
 const store = createStore(

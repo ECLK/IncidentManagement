@@ -46,11 +46,12 @@ def create_incident_event(initiator, incident):
                     incident
                 )
 
-def update_incident_event(initiator, incident):
+def update_incident_event(initiator, incident, revision):
     create_event(
                     EventAction.GENERIC_UPDATE,
                     initiator, 
-                    incident
+                    incident,
+                    description=revision
                 )
 
 def update_incident_status_event(initiator, incident, status, is_approved):

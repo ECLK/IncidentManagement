@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-import { Table, TableHead, TableRow, TableCell, TableBody, withStyles, TableFooter, TablePagination } from '@material-ui/core';
 import { withRouter } from 'react-router';
 import IncidentList from './IncidentList';
 import { getIncidents } from '../../../api/incident';
@@ -27,7 +25,11 @@ export function ManagedIncidentList({ filters, history }){
             pageNumber={currentPage-1}
             count={count}
             handleRowClick={incidentId => history.push(`/app/review/${incidentId}`)}
-            handlePageChange={(evt, newPage) => callAPI(newPage+1)}
+            handlePageChange={(evt, newPage) =>  { 
+                setCurrentPage(newPage+1)
+                callAPI(newPage+1)
+            }
+            }
         />
     )
 }

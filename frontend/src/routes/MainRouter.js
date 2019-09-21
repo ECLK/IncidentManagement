@@ -25,6 +25,7 @@ import { Home } from "../modules/home";
 import GuestIncidentForm from '../modules/guest-view/components/GuestIncidentForm'
 import IncidentView from "../modules/ongoing-incidents/components/IncidentView";
 import ArchiveIncidentListView from "../modules/ongoing-incidents/components/ArchiveIncidentListView";
+import GuestIncidentFormSuccessPage from "../modules/guest-view/components/GuestFormSuccessPage"
 
 class Layout extends React.Component{
   
@@ -74,7 +75,8 @@ class MainRouter extends Component {
 
           <Route exact path="/" component={LandingPage} />
           <Route path="/sign-in" component={SignInPage} />
-          <Route path="/report" component={GuestIncidentForm} />
+          <Route exact path="/report" component={GuestIncidentForm} />
+          <Route exact path="/report/success" component={GuestIncidentFormSuccessPage} />
           </div>
         </Router>
       </IntlProvider>

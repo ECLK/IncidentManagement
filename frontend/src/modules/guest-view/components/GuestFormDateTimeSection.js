@@ -11,6 +11,7 @@ const styles = theme => ({
     textField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
+        marginBottom: theme.spacing.unit*2,
         width: 200,
     },
 });
@@ -27,12 +28,12 @@ function DatePickers(props) {
                 label="Date"
                 type="date"
                 value={dateTime.date}
-                // defaultValue="2017-05-24"
                 className={classes.textField}
                 InputLabelProps={{
                     shrink: true,
                 }}
-                onChange={(e)=>{setDateTime({date:e.target.value})}}
+                onChange={(e)=>{setDateTime({...dateTime, date:e.target.value})}}
+                helperText="mm/dd/yyyy"
             />
 
             <TextField
@@ -40,12 +41,11 @@ function DatePickers(props) {
                 label="Time"
                 type="time"
                 value={dateTime.time}
-                defaultValue="07:30"
                 className={classes.textField}
                 InputLabelProps={{
                     shrink: true,
                 }}
-                onChange={(e)=>{setDateTime({date:e.target.value})}}
+                onChange={(e)=>{setDateTime({ ...dateTime, time:e.target.value})}}
             />
         </form>
     );

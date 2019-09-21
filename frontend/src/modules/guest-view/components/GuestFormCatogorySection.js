@@ -2,10 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Radio from '@material-ui/core/Radio';
 import Paper from '@material-ui/core/Paper';
 
 const styles = theme => ({
@@ -31,6 +27,9 @@ const styles = theme => ({
   control: {
     padding: theme.spacing.unit * 2,
   },
+  categoryText: {
+    textAlign:'center'
+  }
 });
 
 const CatogorySection = (props) => {
@@ -54,7 +53,7 @@ const CatogorySection = (props) => {
                 <Paper 
                     className={ selectedCategory===value.id? classes.paperSelected : classes.paper} 
                     onClick={()=>{setSelectedCategory(value.id)}}>
-                    <h3>{value.sub_category}</h3>
+                    <h3 className={classes.categoryText}>{value.sub_category}</h3>
                 </Paper>
               </Grid>
             ))}

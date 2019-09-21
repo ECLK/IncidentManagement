@@ -54,6 +54,8 @@ import {
     fetchActiveIncidentData,
     resetActiveIncident
 } from '../../shared/state/Shared.actions';
+import DropZoneBase from '../../shared/components/DropZoneBase';
+import moment from 'moment';
 
 const styles = theme => ({
     root: {
@@ -102,6 +104,12 @@ const styles = theme => ({
     checked: {},
     hide: {
         display: "none",
+    },
+    langCats : {
+        display: "flex",
+        "& div": {
+            padding: "0 3px"
+        }
     }
 })
 
@@ -136,6 +144,7 @@ class IncidentFormInternal extends Component {
         reporterMobile: "",
         reporterLandline: "",
         reporterEmail: "",
+        file: null
     }
 
     componentDidMount() {
@@ -168,11 +177,15 @@ class IncidentFormInternal extends Component {
 
         const { paramIncidentId } = this.props.match.params
 
+        if(values.occured_date){
+            values.occured_date = moment(values.occured_date).format()
+        }
+
         if (paramIncidentId) {
             this.props.updateInternalIncident(paramIncidentId, values);
             this.props.history.push(`/app/review/${paramIncidentId}`);
         } else {
-            this.props.submitInternalIncident(values);
+            this.props.submitInternalIncident(values, this.state.file);
             this.props.history.push('/app/review');
         }
     }
@@ -198,6 +211,10 @@ class IncidentFormInternal extends Component {
             });
         }
 
+        if(initData.occured_date){
+            initData.occured_date = moment(initData.occured_date).format("YYYY-MM-DDTHH:mm")
+        }
+
         return initData;
     }
 
@@ -207,13 +224,22 @@ class IncidentFormInternal extends Component {
         });
     }
 
+    handleFileSelect = (selectedFile) => {
+        this.setState({
+            file: selectedFile
+        })
+    }
+
     render() {
         const { classes } = this.props;
+        const { paramIncidentId } = this.props.match.params
+
+        const reinit = paramIncidentId ? true : false;
 
         return (
             <div className={classes.root}>
                 <Formik
-                    enableReinitialize={true}
+                    enableReinitialize={reinit}
                     initialValues={this.getInitialValues()}
                     onSubmit={(values, actions) => {
                         this.handleSubmit(values, actions)
@@ -333,7 +359,15 @@ class IncidentFormInternal extends Component {
                                                     }}
                                                 >
                                                     {this.props.categories.map((c, k) => (
-                                                        <MenuItem value={c.sub_category} key={k}>{c.sub_category}</MenuItem>
+                                                        <MenuItem value={c.sub_category} key={k}>
+                                                            <div className={classes.langCats}>
+                                                                <div>{c.sub_category}</div>
+                                                                <div>|</div>
+                                                                <div> {c.sn_sub_category}</div>
+                                                                <div>|</div>
+                                                                <div> {c.tm_sub_category}</div>
+                                                            </div>
+                                                        </MenuItem>
                                                     ))}
                                                     <MenuItem value="Other"> Other </MenuItem>
                                                 </Select>
@@ -530,7 +564,13 @@ class IncidentFormInternal extends Component {
                                                 </RadioGroup>
                                             </FormControl>
                                         </Grid>
-
+                                        
+                                        { !paramIncidentId && 
+                                            <Grid item>
+                                                <InputLabel htmlFor="election" >Upload File</InputLabel>
+                                                <DropZoneBase setSelectedFiles={this.handleFileSelect} />
+                                            </Grid>
+                                        }
 
                                     </Grid>
                                 </Paper>
@@ -861,8 +901,8 @@ const mapDispatchToProps = (dispatch) => {
         submitIncidentBasicDetails: (values) => {
             dispatch(submitIncidentBasicData(values))
         },
-        submitInternalIncident: (values) => {
-            dispatch(submitInternalIncidentData(values))
+        submitInternalIncident: (values, fileData) => {
+            dispatch(submitInternalIncidentData(values, fileData))
         },
         updateIncidentBasicDetails: (incidentId, incidentData) => {
             dispatch(fetchUpdateIncident(incidentId, incidentData));
