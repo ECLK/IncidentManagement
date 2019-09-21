@@ -102,6 +102,9 @@ const styles = theme => ({
         },
     },
     checked: {},
+    hide: {
+        display: "none",
+    },
     langCats : {
         display: "flex",
         "& div": {
@@ -215,6 +218,12 @@ class IncidentFormInternal extends Component {
         return initData;
     }
 
+    onButtonClick = (value) => {
+        this.setState({
+            infoChannel: value
+        });
+    }
+
     handleFileSelect = (selectedFile) => {
         this.setState({
             file: selectedFile
@@ -246,6 +255,26 @@ class IncidentFormInternal extends Component {
                                     </Typography>
                                     <Grid container spacing={24}>
                                         <Grid item xs={12}>
+                                            {this.props.channels.map((c, k) => (
+                                                <Button
+                                                    variant="contained"
+                                                    color={(this.state.infoChannel === c.id) ? "primary" : ""}
+                                                    className={classes.button}
+                                                    onClick={() => { this.onButtonClick(c.id) }}
+                                                >
+                                                    {c.name}
+                                                </Button>
+                                            ))}
+
+                                            {/* testbox to keep value of channel selected */}
+                                            <TextField
+                                                id="infoChannel"
+                                                name="infoChannel"
+                                                className={classes.hide}
+                                                value={this.state.infoChannel}
+                                            />
+                                        </Grid>
+                                        {/* <Grid item xs={12}>
                                             <Grid item xs={12} sm={6}>
                                                 <FormControl className={classes.formControl}>
                                                     <InputLabel htmlFor="infoChannel">Received Mode</InputLabel>
@@ -264,7 +293,7 @@ class IncidentFormInternal extends Component {
                                                     </Select>
                                                 </FormControl>
                                             </Grid>
-                                        </Grid>
+                                        </Grid> */}
                                         <Grid item xs={12}>
                                             <TextField
                                                 type="text"
