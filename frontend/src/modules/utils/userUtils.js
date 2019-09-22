@@ -6,7 +6,9 @@ export const USER_ACTIONS = {
     CLOSE_INCIDENT: "CLOSE_INCIDENT",
 
     REVIEW_INCIDENTS: "REVIEW_INCIDENTS",
-    VIEW_REPORTS: "VIEW_REPORTS"
+    VIEW_REPORTS: "VIEW_REPORTS",
+
+    RUN_WORKFLOW: "RUN_WORKFLOW"
 }
 
 function findPermission(permissionList, permission){
@@ -45,6 +47,8 @@ export function userCan(user, incident, action){
         if(findPermission(user.userPermissions, "incidents.can_view_incident_reports")){
             return true;
         }
+    }else if(action === USER_ACTIONS.RUN_WORKFLOW){
+        return user.isStaff;
     }
 
     return false;

@@ -12,6 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
     isActive = serializers.CharField(source="is_active")
     displayname = serializers.SerializerMethodField('get_full_name')
     userPermissions = serializers.SerializerMethodField('get_group_permissions')
+    isStaff = serializers.CharField(source="is_staff")
 
     def get_full_name(self, obj):
         return obj.first_name + " " + obj.last_name
@@ -21,6 +22,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('uid', 'userName', 'displayname', 'isActive', 'userPermissions')
+        fields = ('uid', 'userName', 'displayname', 'isActive', 'userPermissions', 'isStaff')
         # fields = "__all__"
 

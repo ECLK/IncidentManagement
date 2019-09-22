@@ -211,8 +211,13 @@ class Incident(models.Model):
     occured_date = models.DateTimeField(null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
+    # old severity mapping
     current_status = models.CharField(max_length=50, default=None, null=True, blank=True)
     current_severity = models.CharField(max_length=50, default=None, null=True, blank=True)
+
+    # new severity mapping
+    # alternative of issue #180
+    severity = models.IntegerField(default=None, null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(10)])
 
     class Meta:
         ordering = ("created_date",)
