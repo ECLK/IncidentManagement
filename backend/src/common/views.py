@@ -2,8 +2,8 @@ from rest_framework import mixins
 from rest_framework import generics
 from django.db.models import F
 
-from .models import Category, Channel, District, PoliceStation, PollingStation, DSDivision, Ward
-from .serializers import CategorySerializer, ChannelSerializer, DistrictSerializer, PoliceStationSerializer, PollingStationSerializer, DSDivisionSerializer, WardSerializer
+from .models import Category, Channel, District, PoliceStation, PollingStation, DSDivision, GNDivision, Ward
+from .serializers import CategorySerializer, ChannelSerializer, DistrictSerializer, PoliceStationSerializer, PollingStationSerializer, DSDivisionSerializer, GNDivisionSerializer, WardSerializer
 
 class CategoryList(generics.ListCreateAPIView):
     queryset = Category.objects.all()
@@ -35,6 +35,10 @@ class PollingStationList(generics.ListCreateAPIView):
 class DSDivisionList(generics.ListCreateAPIView):
     queryset = DSDivision.objects.all()
     serializer_class = DSDivisionSerializer
+
+class GNDivisionList(generics.ListCreateAPIView):
+    queryset = GNDivision.objects.all()
+    serializer_class = GNDivisionSerializer
 
 class WardList(generics.ListCreateAPIView):
     queryset = Ward.objects.all()
