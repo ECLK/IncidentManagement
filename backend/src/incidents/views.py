@@ -316,7 +316,8 @@ class IncidentWorkflowView(APIView):
 
         elif workflow == "verify":
             comment = json.dumps(request.data['comment'])
-            incident_verify(request.user, incident, comment)
+            proof = json.dumps(request.data['proof'])
+            incident_verify(request.user, incident, comment, proof)
             incident_escalate(request.user, incident)
 
         elif workflow == "invalidate":

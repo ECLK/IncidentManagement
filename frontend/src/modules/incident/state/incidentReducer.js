@@ -9,17 +9,15 @@ import {
     updateGuestIncidentSuccess,
     updateGuestIncidentError,
 
-    loadGuestIncidentReporterRequest,
-    loadGuestIncidentReporterSuccess,
-    loadGuestIncidentReporterError,
-
     updateGuestIncidentReporterRequest,
     updateGuestIncidentReporterSuccess,
     updateGuestIncidentReporterError,
 
     loadGuestIncidentRequest,
     loadGuestIncidentSuccess,
-    loadGuestIncidentError
+    loadGuestIncidentError,
+
+    resetIncidentState,
 
 } from './incidentActions'
 
@@ -45,10 +43,6 @@ const incidentReducer = createReducer(initialState, {
             id:action.payload.data.reporter
         }
     },
-    [loadGuestIncidentSuccess] : (state, action) => {
-        state.activeIncident.isLoading = false
-        state.activeIncident.data = action.payload.data
-    },
     [updateGuestIncidentSuccess] : (state, action) => {
         state.activeIncident.data = action.payload.data
     },
@@ -58,13 +52,12 @@ const incidentReducer = createReducer(initialState, {
     [loadGuestIncidentRequest]: (state, action) => {
         state.activeIncident.isLoading = true;
     },
-    [loadGuestIncidentReporterSuccess]: (state, action) => {
-        state.activeIncident = action.payload;
-        state.activeIncident.isLoading = false;
-    },
     [loadGuestIncidentError]: (state, action) => {
         state.activeIncident.isLoading = false;
         state.activeIncident.error = action.payload;
+    },
+    [resetIncidentState] : (state, action) => {
+        state  = initialState
     }
 
 })

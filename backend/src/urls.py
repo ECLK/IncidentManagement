@@ -49,6 +49,7 @@ urlpatterns = [
     path("pollingstations/", common_views.PollingStationList.as_view()),
     path("policestations/", common_views.PoliceStationList.as_view()),
     path("dsdivisions/", common_views.DSDivisionList.as_view()),
+    path("gndivisions/", common_views.GNDivisionList.as_view()),
 
 
     path("incidents/", incident_views.IncidentList.as_view()),

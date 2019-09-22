@@ -5,7 +5,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
-
+import Checkbox from '@material-ui/core/Checkbox';
 
 // react-redux hooks
 import { useDispatch } from 'react-redux'
@@ -20,6 +20,7 @@ const VerifyConfirmModal = (props) => {
     const {incidentId} = props;
     
     const [comment, setComment] = useState("");
+    let proof = false;
 
     return (
         <div>
@@ -38,6 +39,12 @@ const VerifyConfirmModal = (props) => {
               fullWidth
               multiline
             />
+            <Checkbox
+              id="proof"
+              onChange={(e)=>{
+                  proof = !proof
+              }}
+            /> Verified with Proofs
           </DialogContent>
             <DialogActions>
                 <Button onClick={()=>{dispatch(hideModal())}} color="primary">
@@ -45,7 +52,7 @@ const VerifyConfirmModal = (props) => {
                 </Button>
                 <Button 
                     onClick={()=>{
-                        dispatch(fetchUpdateWorkflow(incidentId,'verify', {comment}))
+                        dispatch(fetchUpdateWorkflow(incidentId,'verify', {comment, proof}))
                         dispatch(hideModal())
                     }
                     } 
