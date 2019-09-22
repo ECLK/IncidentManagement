@@ -4,6 +4,8 @@
   "eclk.incident.management.report.incidents": "සිදුවීමක් වාර්තා කරන්න",
   "eclk.incident.management.ongoing.incidents": "සිදුවීම් කළමනාකරණය",
   "eclk.incident.management.check.incident.status": "පෙර යොමු කල සිදුවීම්",
+  "eclk.incident.management.report.incidents.description": "විස්තර",
+  "eclk.incident.management.report.incidents.election": "මැතිවරණය",
 
   "eclk.incident.management.historic.reports": "සිදුවීම් වාර්තා",
 
