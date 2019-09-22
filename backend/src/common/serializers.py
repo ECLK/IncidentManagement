@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Channel, District, PoliceStation, PollingStation, DSDivision, Ward
+from .models import Category, Channel, District, PoliceStation, PollingStation, DSDivision, GNDivision, Ward
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,6 +32,10 @@ class DSDivisionSerializer(serializers.ModelSerializer):
         model = DSDivision
         fields = "__all__"
 
+class GNDivisionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GNDivision
+        fields = "__all__"
 class WardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ward

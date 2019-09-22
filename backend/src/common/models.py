@@ -24,7 +24,7 @@ class Channel(models.Model):
         ordering = ('id',)
     
 class District(models.Model):
-    code = models.CharField(max_length=36, null=True, blank=True)
+    code = models.CharField(max_length=36, null=True, blank=True, unique=True)
     name = models.CharField(max_length=200)
     province = models.CharField(max_length=200)
     sn_name = models.CharField(max_length=200)
@@ -37,7 +37,7 @@ class District(models.Model):
         ordering = ('id',)
 
 class PoliceStation(models.Model):
-    code = models.CharField(max_length=36, null=True, blank=True)
+    code = models.CharField(max_length=36, null=True, blank=True, unique=True)
     name = models.CharField(max_length=200)
     division = models.CharField(max_length=200, default=None)
     sn_name = models.CharField(max_length=200, null=True, blank=True)
@@ -51,7 +51,7 @@ class PoliceStation(models.Model):
         ordering = ('id',)
     
 class PollingStation(models.Model):
-    code = models.CharField(max_length=36, null=True, blank=True)
+    code = models.CharField(max_length=36, null=True, blank=True, unique=True)
     name = models.CharField(max_length=200)
     division = models.CharField(max_length=200)
     sn_name = models.CharField(max_length=200, null=True, blank=True)
@@ -65,7 +65,7 @@ class PollingStation(models.Model):
         ordering = ('id',)
 
 class DSDivision(models.Model):
-    code = models.CharField(max_length=36, null=True, blank=True)
+    code = models.CharField(max_length=36, null=True, blank=True, unique=True)
     name = models.CharField(max_length=200)
     sn_name = models.CharField(max_length=200, null=True, blank=True)
     tm_name = models.CharField(max_length=200, null=True, blank=True)
@@ -76,7 +76,7 @@ class DSDivision(models.Model):
         ordering = ('id',)
 
 class GNDivision(models.Model):
-    code = models.CharField(max_length=36, null=True, blank=True)
+    code = models.CharField(max_length=36, null=True, blank=True, unique=True)
     name = models.CharField(max_length=200)
     sn_name = models.CharField(max_length=200, null=True, blank=True)
     tm_name = models.CharField(max_length=200, null=True, blank=True)
@@ -87,7 +87,7 @@ class GNDivision(models.Model):
         ordering = ('id',)
 
 class Ward(models.Model):
-    code = models.CharField(max_length=36, null=True, blank=True)
+    code = models.CharField(max_length=36, null=True, blank=True, unique=True)
     name = models.CharField(max_length=200)
     sn_name = models.CharField(max_length=200, null=True, blank=True)
     tm_name = models.CharField(max_length=200, null=True, blank=True)
