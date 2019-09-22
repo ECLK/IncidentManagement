@@ -31,6 +31,7 @@ import {
 import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
 import { EventActions } from './EventTrail'
 import {showModal} from '../../modals/state/modal.actions'
+import { userCan, USER_ACTIONS } from '../../utils/userUtils';
 
 const styles = theme => ({
     label: {
@@ -140,22 +141,6 @@ class NavTabs extends Component {
         this.props.resolveEventApproval(activeIncident.id, eventId, decision);
     }
 
-    handleToggle = () => {
-        this.setState(state => ({ open: !state.open }));
-    };
-
-    handleClose = event => {
-        if (this.anchorEl.contains(event.target)) {
-            return;
-        }
-
-        this.setState({ open: false });
-    };
-
-    handleMouseLeave = event => {
-        this.setState({ open: false })
-    }
-
     onVerifyClick = () => {
         this.props.showVerifyConfirmation(this.props.activeIncident.id)
     }
@@ -206,16 +191,20 @@ class NavTabs extends Component {
                             <div className={classes.editButtonWrapper}>
                                 {activeIncident.currentStatus !== 'CLOSED' && 
                                     <>
-                                        {activeIncident.currentStatus !== 'NEW' &&
-                                            <ButtonBase disabled variant="outlined"  size="large" color="secondary" className={classes.verifiedButton} >
-                                                <DoneOutlineIcon className={classes.verifiedIcon}/>
-                                                VERIFIED
-                                            </ButtonBase>
-                                        }
-                                        {activeIncident.currentStatus === 'NEW' &&
-                                            <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick} className={classes.editButton} >
-                                                Verify
-                                            </Button>
+                                        {userCan(activeUser, activeIncident, USER_ACTIONS.RUN_WORKFLOW) &&
+                                            <>
+                                            {activeIncident.currentStatus !== 'NEW' &&
+                                                <ButtonBase disabled variant="outlined"  size="large" color="secondary" className={classes.verifiedButton} >
+                                                    <DoneOutlineIcon className={classes.verifiedIcon}/>
+                                                    VERIFIED
+                                                </ButtonBase>
+                                            }
+                                            {activeIncident.currentStatus === 'NEW' &&
+                                                <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick} className={classes.editButton} >
+                                                    Verify
+                                                </Button>
+                                            }
+                                            </>
                                         }
                                         <Button component={EditIncidentLink} variant="outlined" size="large" color="primary" className={classes.editButton} >
                                             <EditIcon className={classes.editIcon} />
