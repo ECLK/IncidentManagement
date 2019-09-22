@@ -22,6 +22,10 @@ import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
@@ -105,7 +109,7 @@ const styles = theme => ({
     hide: {
         display: "none",
     },
-    langCats : {
+    langCats: {
         display: "flex",
         "& div": {
             padding: "0 3px"
@@ -144,7 +148,20 @@ class IncidentFormInternal extends Component {
         reporterMobile: "",
         reporterLandline: "",
         reporterEmail: "",
-        file: null
+        file: null,
+
+        // police info
+        nature_of_incident: "",
+        complainers_name: "",
+        complainers_address: "",
+        victims_name: "",
+        victims_address: "",
+        respondents_name: "",
+        respondents_address: "",
+        no_of_vehicles_arrested: null,
+        steps_taken: "",
+        court_case_no: "",
+
     }
 
     componentDidMount() {
@@ -177,7 +194,7 @@ class IncidentFormInternal extends Component {
 
         const { paramIncidentId } = this.props.match.params
 
-        if(values.occured_date){
+        if (values.occured_date) {
             values.occured_date = moment(values.occured_date).format()
         }
 
@@ -211,7 +228,7 @@ class IncidentFormInternal extends Component {
             });
         }
 
-        if(initData.occured_date){
+        if (initData.occured_date) {
             initData.occured_date = moment(initData.occured_date).format("YYYY-MM-DDTHH:mm")
         }
 
@@ -242,6 +259,7 @@ class IncidentFormInternal extends Component {
                     enableReinitialize={reinit}
                     initialValues={this.getInitialValues()}
                     onSubmit={(values, actions) => {
+                        console.log(values)
                         this.handleSubmit(values, actions)
                     }}
                     render={
@@ -544,8 +562,8 @@ class IncidentFormInternal extends Component {
                                                 </RadioGroup>
                                             </FormControl>
                                         </Grid>
-                                        
-                                        { !paramIncidentId && 
+
+                                        {!paramIncidentId &&
                                             <Grid item>
                                                 <InputLabel htmlFor="election" >Upload File</InputLabel>
                                                 <DropZoneBase setSelectedFiles={this.handleFileSelect} />
@@ -821,6 +839,144 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                     </Grid>
                                 </Paper>
+
+                                {/* police details */}
+                                <div className={classes.root}>
+                                    <ExpansionPanel>
+                                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                            <Typography varient="h5">Police Information</Typography>
+                                        </ExpansionPanelSummary>
+                                        <ExpansionPanelDetails>
+                                            <Grid container spacing={24}>
+                                                <Grid item xs={12} sm={12}>
+                                                    <TextField
+                                                        id="nature_of_incident"
+                                                        name="nature_of_incident"
+                                                        label="Nature of Incident"
+                                                        className={classes.textField}
+                                                        value={values.nature_of_incident}
+                                                        onChange={handleChange}
+                                                        margin="normal"
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12} sm={6}>
+                                                    <TextField
+                                                        id="complainers_name"
+                                                        name="complainers_name"
+                                                        label="Complainer Name"
+                                                        className={classes.textField}
+                                                        value={values.complainers_name}
+                                                        onChange={handleChange}
+                                                        margin="normal"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={4}>
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="complainers_address"
+                                                        name="complainers_address"
+                                                        label="Complainers Address"
+                                                        className={classes.textField}
+                                                        value={values.complainers_address}
+                                                        onChange={handleChange}
+                                                        margin="normal"
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12} sm={6}>
+                                                    <TextField
+                                                        id="victims_name"
+                                                        name="victims_name"
+                                                        label="Victims Name"
+                                                        className={classes.textField}
+                                                        value={values.victims_name}
+                                                        onChange={handleChange}
+                                                        margin="normal"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={4}>
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="victims_address"
+                                                        name="victims_address"
+                                                        label="Victims Address"
+                                                        className={classes.textField}
+                                                        value={values.victims_address}
+                                                        onChange={handleChange}
+                                                        margin="normal"
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12} sm={6}>
+                                                    <TextField
+                                                        id="respondents_name"
+                                                        name="respondents_name"
+                                                        label="Respondants Name"
+                                                        className={classes.textField}
+                                                        value={values.respondents_name}
+                                                        onChange={handleChange}
+                                                        margin="normal"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={4}>
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="respondents_address"
+                                                        name="respondents_address"
+                                                        label="Respondents Address"
+                                                        className={classes.textField}
+                                                        value={values.respondents_address}
+                                                        onChange={handleChange}
+                                                        margin="normal"
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12} sm={6}>
+                                                    <TextField
+                                                        id="no_of_vehicles_arrested"
+                                                        name="no_of_vehicles_arrested"
+                                                        label="No. of Vehicles Arrested"
+                                                        className={classes.textField}
+                                                        value={values.no_of_vehicles_arrested}
+                                                        onChange={handleChange}
+                                                        margin="normal"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={6}></Grid>
+
+                                                <Grid item xs={12} sm={12}>
+                                                    <TextField
+                                                        id="steps_taken"
+                                                        name="steps_taken"
+                                                        label="Steps taken"
+                                                        className={classes.textField}
+                                                        value={values.steps_taken}
+                                                        onChange={handleChange}
+                                                        margin="normal"
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12} sm={6}>
+                                                    <TextField
+                                                        id="court_case_no"
+                                                        name="court_case_no"
+                                                        label="Court Case Number"
+                                                        className={classes.textField}
+                                                        value={values.court_case_no}
+                                                        onChange={handleChange}
+                                                        margin="normal"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={6}></Grid>
+
+                                            </Grid>
+                                        </ExpansionPanelDetails>
+                                    </ExpansionPanel>
+                                </div>
 
                                 {/* action panel */}
                                 <Grid container spacing={24}>
