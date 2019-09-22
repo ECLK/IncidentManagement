@@ -68,6 +68,10 @@ const incidentReducer = createReducer(initialState, {
         state.isLoading = false;
     },
     [moveStepper]  : (state, action) => {
+        if(state.activeStep===4){
+            //indicates view that the stepper reached  the end
+            state.isFinished = true;
+        }
         state.activeStep = action.payload.step
     },
 

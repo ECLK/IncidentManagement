@@ -2,7 +2,6 @@ import React from 'react';
 import { withRouter } from "react-router";
 import {useDispatch} from 'react-redux';
 
-
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 
@@ -23,8 +22,9 @@ function GuestFormSuccessPage(props) {
     const handleButtonClick = (action) => {
         switch(action){
             case 'edit':
-                props.history.push(`/report`);
-                dispatch(moveStepper({step:0}))
+                // dispatch(moveStepper({step:0}))
+                console.log('guest success edit click', props)
+                props.history.push("/report");
                 break;
             case 'status':
                 props.history.push(`/status`);
