@@ -8,21 +8,11 @@
  *   You CANNOT use import/export in this file.
  */
 
-import enTranslationMessages  from './keys/en.json';
-import siTranslationMessages from './keys/si.json';
-import taTranslationMessages from './keys/ta.json';
+import enTranslationMessages from "./keys/en.json";
+import siTranslationMessages from "./keys/si.json";
+import taTranslationMessages from "./keys/ta.json";
 
-import enLocaleData from 'react-intl/locale-data/en';
-import siLocaleData from 'react-intl/locale-data/si';
-import taLocaleData from 'react-intl/locale-data/ta';
-import {addLocaleData} from 'react-intl';
-
-addLocaleData(enLocaleData);
-addLocaleData(siLocaleData);
-addLocaleData(taLocaleData);
-
-
-const DEFAULT_LOCALE = 'en';
+const DEFAULT_LOCALE = "en";
 
 // prettier-ignore
 const appLocales = [
@@ -47,9 +37,9 @@ const formatTranslationMessages = (locale, messages) => {
 };
 
 const translationMessages = {
-  en: formatTranslationMessages('en', enTranslationMessages),
-  si: formatTranslationMessages('si', siTranslationMessages),
-  ta: formatTranslationMessages('ta', taTranslationMessages),
+  en: formatTranslationMessages("en", enTranslationMessages),
+  si: formatTranslationMessages("si", siTranslationMessages),
+  ta: formatTranslationMessages("ta", taTranslationMessages)
 };
 
 export default {
@@ -57,4 +47,4 @@ export default {
   formatTranslationMessages,
   translationMessages,
   DEFAULT_LOCALE
-}
+};
