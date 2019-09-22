@@ -2,6 +2,8 @@
   "eclk.incident.management.incidents": "Incidents",
   "eclk.incident.management.incidents.reporting.system": "Election Incidents Reporting System",
   "eclk.incident.management.report.incidents": "Report an Incident",
+  "eclk.incident.management.report.incidents.description": "Description",
+  "eclk.incident.management.report.incidents.election": "Election",
   "eclk.incident.management.check.incident.status": "Check Status on Incident",
   "eclk.incident.management.historic.reports": "Incident Reports",
 
