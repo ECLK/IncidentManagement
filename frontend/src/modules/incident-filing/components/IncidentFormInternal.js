@@ -269,7 +269,7 @@ class IncidentFormInternal extends Component {
                                             {this.props.channels.map((c, k) => (
                                                 <Button
                                                     variant="contained"
-                                                    color={(this.state.infoChannel === c.id) ? "primary" : ""}
+                                                    color={(values.infoChannel === c.id) ? "primary" : ""}
                                                     className={classes.button}
                                                     onClick={() => { setFieldValue("infoChannel", c.id, false) }}
                                                 >
