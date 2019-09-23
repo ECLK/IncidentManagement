@@ -199,7 +199,16 @@ class IncidentDetail(APIView):
             return Response("Invalid incident id", status=status.HTTP_404_NOT_FOUND)
 
         serializer = IncidentSerializer(incident)
-        return Response(serializer.data)
+        incident_data = serializer.data
+        
+        police_report = get_police_report_by_incident(incident)
+        if police_report is not None:
+            police_report_data = IncidentPoliceReportSerializer(police_report).data
+            for key in police_report_data:
+                if key != "id" and key != "incident":
+                    incident_data[key] = police_report_data[key]
+
+        return Response(incident_data)
 
     def put(self, request, incident_id, format=None):
         """

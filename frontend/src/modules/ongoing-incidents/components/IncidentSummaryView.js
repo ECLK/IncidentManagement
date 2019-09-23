@@ -358,7 +358,7 @@ function PoliceTab(props){
     );
 }
 
-function SummaryTabView({classes, incident, election, category}){
+function SummaryTabView({classes, incident, reporter, election, category}){
     const [currentTab, setCurrentTab] = useState(0);
 
     return (
@@ -372,7 +372,7 @@ function SummaryTabView({classes, incident, election, category}){
 
             {currentTab === 0 && <TabContainer> <BasicDetailTab classes={classes} incident={incident} election={election} category={category} /> </TabContainer>}
             {currentTab === 1 && <TabContainer> <LocationTab classes={classes} incident={incident} /> </TabContainer>}
-            {currentTab === 2 && <TabContainer> <ContactTab classes={classes} reporter={incident} /> </TabContainer>}
+            {currentTab === 2 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
             {currentTab === 3 && <TabContainer> <PoliceTab classes={classes} incident={incident} /> </TabContainer>}
         </div>
     )

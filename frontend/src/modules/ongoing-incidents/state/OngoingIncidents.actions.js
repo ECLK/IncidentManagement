@@ -48,7 +48,7 @@ import {
 
 import * as incidentAPI from "../../../api/incident";
 
-import { getAllUsers } from "../../../api/user";
+import { getAllUsers, getStaffUsers } from "../../../api/user";
 
 import { fetchActiveIncidentData } from "../../shared/state/Shared.actions";
 
@@ -319,7 +319,8 @@ export function fetchAllUsers() {
   return async function(dispatch) {
     dispatch(requestAllUsers());
     try {
-      const response = await getAllUsers();
+      // const response = await getAllUsers();
+      const response = await getStaffUsers();
       dispatch(requestAllUsersSuccess(response.data));
     } catch (error) {
       dispatch(requestAllUsersError(error));
