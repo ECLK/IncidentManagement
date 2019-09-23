@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { withRouter } from "react-router";
 import { withStyles } from '@material-ui/core/styles';
 import { Formik } from 'formik';
+import DivisionAutoComplete from './DivisionAutocomplete';
 
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -610,7 +611,7 @@ class IncidentFormInternal extends Component {
                                                 </Select>
                                             </FormControl>
                                         </Grid>
-                                        <Grid item xs={12} sm={4}>
+                                        {/* <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="district">Districts</InputLabel>
                                                 <Select
@@ -626,6 +627,11 @@ class IncidentFormInternal extends Component {
                                                         <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
                                                     ))}
                                                 </Select>
+                                            </FormControl>
+                                        </Grid> */}
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                            <DivisionAutoComplete className={classes.textField}  value={values.district} suggestions={this.props.districts} handleChangeAutocomplete={handleChange} />         
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
