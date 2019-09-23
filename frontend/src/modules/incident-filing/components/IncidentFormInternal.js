@@ -105,7 +105,7 @@ const styles = theme => ({
     hide: {
         display: "none",
     },
-    langCats : {
+    langCats: {
         display: "flex",
         "& div": {
             padding: "0 3px"
@@ -116,8 +116,9 @@ const styles = theme => ({
 class IncidentFormInternal extends Component {
 
     state = {
+        incidentType: "COMPLAINT",
         infoChannel: "",
-        title: "default title",
+        title: "Internal: ",
         description: "",
         occurrence: "OCCURRED",
         occured_date: "",
@@ -177,7 +178,7 @@ class IncidentFormInternal extends Component {
 
         const { paramIncidentId } = this.props.match.params
 
-        if(values.occured_date){
+        if (values.occured_date) {
             values.occured_date = moment(values.occured_date).format()
         }
 
@@ -211,7 +212,7 @@ class IncidentFormInternal extends Component {
             });
         }
 
-        if(initData.occured_date){
+        if (initData.occured_date) {
             initData.occured_date = moment(initData.occured_date).format("YYYY-MM-DDTHH:mm")
         }
 
@@ -254,6 +255,22 @@ class IncidentFormInternal extends Component {
                                         Basic Information
                                     </Typography>
                                     <Grid container spacing={24}>
+                                        <Grid item xs={12}>
+                                            <FormControl component="fieldset" className={classes.formControl}>
+                                                <FormLabel component="legend">Type</FormLabel>
+                                                <RadioGroup
+                                                    id="incidentType"
+                                                    name="incidentType"
+                                                    className={classes.group}
+                                                    value={values.incidentType}
+                                                    onChange={handleChange}
+                                                    row
+                                                >
+                                                    <FormControlLabel value="COMPLAINT" control={<Radio color="primary" />} label="Complaint" />
+                                                    <FormControlLabel value="INQUIRY" control={<Radio color="primary" />} label="Inquiry" />
+                                                </RadioGroup>
+                                            </FormControl>
+                                        </Grid>
                                         <Grid item xs={12}>
                                             {this.props.channels.map((c, k) => (
                                                 <Button
@@ -544,8 +561,8 @@ class IncidentFormInternal extends Component {
                                                 </RadioGroup>
                                             </FormControl>
                                         </Grid>
-                                        
-                                        { !paramIncidentId && 
+
+                                        {!paramIncidentId &&
                                             <Grid item>
                                                 <InputLabel htmlFor="election" >Upload File</InputLabel>
                                                 <DropZoneBase setSelectedFiles={this.handleFileSelect} />
@@ -814,6 +831,7 @@ class IncidentFormInternal extends Component {
                                                         name="reporterConsent"
                                                         checked={values.reporterConsent}
                                                         onChange={handleChange}
+                                                        color="primary"
                                                     />
                                                 }
                                                 label="Complainer details can be shared with external parties."
