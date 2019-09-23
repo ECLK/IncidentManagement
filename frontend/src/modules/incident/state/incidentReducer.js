@@ -57,7 +57,16 @@ const incidentReducer = createReducer(initialState, {
         state.activeIncident.error = action.payload;
     },
     [resetIncidentState] : (state, action) => {
-        state  = initialState
+        state.activeIncident = {
+            data:null,
+            isLoading:false,
+            error:null
+        }
+        state.activeIncidentReporter = {
+            data:null,
+            isLoading:false,
+            error:null
+        }
     }
 
 })

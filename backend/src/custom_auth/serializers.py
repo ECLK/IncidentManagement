@@ -1,10 +1,15 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import User, Permission, Group
 
 class PermissionSerializer(serializers.ModelSerializer): 
     class Meta:
         model = Permission
         fields = ('name', 'codename')
+
+class GroupSerializer(serializers.ModelSerializer): 
+    class Meta:
+        model = Group
+        fields = ('name')
 
 class UserSerializer(serializers.ModelSerializer):
     uid = serializers.IntegerField(source="id")
