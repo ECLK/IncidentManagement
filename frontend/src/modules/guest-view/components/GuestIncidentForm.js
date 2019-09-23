@@ -78,7 +78,7 @@ const VerticalLinearStepper = (props) => {
     const dispatch = useDispatch();
     const { elections, categories } = useSelector((state) => (state.sharedReducer));
     const { activeIncident, activeIncidentReporter } = useSelector((state) => (state.incident));
-    const { activeStep } = useSelector((state) => (state.guestView));
+    const { activeStep, isFinished } = useSelector((state) => (state.guestView));
 
     const incidentId = activeIncident && activeIncident.data ? activeIncident.data.id : null
     let incidentData = incidentId ? JSON.parse(JSON.stringify(activeIncident.data)): {};
@@ -178,7 +178,6 @@ const VerticalLinearStepper = (props) => {
                 }else{
                     dispatch(moveStepper({step:activeStep+1})) 
                 }
-                props.history.push('/report/success')
             }
         },
         
@@ -230,6 +229,10 @@ const VerticalLinearStepper = (props) => {
 
     const { classes } = props;
     const GoBackLink = props => <Link to="/" {...props} />
+
+    if(isFinished){
+        props.history.push('/report/success')
+    }
 
     return (
 
