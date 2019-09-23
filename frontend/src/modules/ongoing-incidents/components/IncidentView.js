@@ -157,7 +157,8 @@ class NavTabs extends Component {
         const { classes, postComment, activeIncident,
             reporter, changeStatus, changeSeverity,
             activeUser, users, getUsers,
-            setIncidentAssignee, events
+            setIncidentAssignee, events,
+            districts
         } = this.props;
 
         const EditIncidentLink = props => <Link to={`/app/review/${activeIncident.id}/edit`} {...props} />
@@ -172,6 +173,7 @@ class NavTabs extends Component {
                                 category={this.state.category}
                                 election={this.state.election}
                                 reporter={reporter}
+                                districts={districts}
                             />
                             <div>
                                 <EventList
@@ -248,6 +250,7 @@ const mapStateToProps = (state, ownProps) => {
         events: state.ongoingIncidentReducer.events,
         activeIncident: state.sharedReducer.activeIncident.data,
         reporter: state.sharedReducer.activeIncidentReporter,
+        districts: state.sharedReducer.districts,
         activeUser: state.sharedReducer.signedInUser.data,
         users: state.ongoingIncidentReducer.users,
         ...ownProps
