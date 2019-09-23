@@ -165,6 +165,7 @@ const EventActions = (props) => {
             <Divider variant="middle" className={classes.divider} />
 
             {activeIncident.currentStatus !== 'CLOSED'  && 
+              userCan(currentUser, activeIncident, USER_ACTIONS.RUN_WORKFLOW) && 
                 <>
                 {userCan(currentUser, activeIncident, USER_ACTIONS.ESCALATE_INCIDENT) && 
                     <Button color="primary" size="large" variant='text' className={classes.button} onClick={props.escallateIncident}>
