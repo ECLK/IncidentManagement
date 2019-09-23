@@ -281,7 +281,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 id="infoChannel"
                                                 name="infoChannel"
-                                                className={classes.textField}
+                                                className={classes.hide}
                                                 value={values.infoChannel}
                                                 onChange={handleChange}
                                             />
