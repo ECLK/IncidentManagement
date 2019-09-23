@@ -219,12 +219,6 @@ class IncidentFormInternal extends Component {
         return initData;
     }
 
-    onButtonClick = (value) => {
-        this.setState({
-            infoChannel: value
-        });
-    }
-
     handleFileSelect = (selectedFile) => {
         this.setState({
             file: selectedFile
@@ -246,7 +240,7 @@ class IncidentFormInternal extends Component {
                         this.handleSubmit(values, actions)
                     }}
                     render={
-                        ({ handleSubmit, handleChange, handleBlur, values, errors }) => (
+                        ({ handleSubmit, handleChange, handleBlur, values, errors, setFieldValue }) => (
                             <form className={classes.container} noValidate autoComplete="off" onSubmit={handleSubmit}>
                                 <div style={{ display: "none" }}>{this.props.incident.id}</div>
                                 {/* basic incident detail information */}
@@ -277,7 +271,7 @@ class IncidentFormInternal extends Component {
                                                     variant="contained"
                                                     color={(this.state.infoChannel === c.id) ? "primary" : ""}
                                                     className={classes.button}
-                                                    onClick={() => { this.onButtonClick(c.id) }}
+                                                    onClick={() => { setFieldValue("infoChannel", c.id, false) }}
                                                 >
                                                     {c.name}
                                                 </Button>
@@ -287,8 +281,9 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 id="infoChannel"
                                                 name="infoChannel"
-                                                className={classes.hide}
-                                                value={this.state.infoChannel}
+                                                className={classes.textField}
+                                                value={values.infoChannel}
+                                                onChange={handleChange}
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
