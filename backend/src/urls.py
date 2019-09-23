@@ -52,7 +52,7 @@ urlpatterns = [
     path("pollingdivisions/", common_views.PollingDivisionList.as_view()),
     
     path("policestations/", common_views.PoliceStationList.as_view()),
-    path("policedivision/", common_views.PoliceDivisionList.as_view()),
+    path("policedivisions/", common_views.PoliceDivisionList.as_view()),
 
     path("dsdivisions/", common_views.DSDivisionList.as_view()),
     path("gndivisions/", common_views.GNDivisionList.as_view()),
