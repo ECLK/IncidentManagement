@@ -46,7 +46,7 @@ const ReportList = ({classes, ...props}) =>{
                     onClick={() => {
                         props.history.push(`/app/reports/view?report=category_wise_summary_report`);
                     }} >
-                    Caategory-wise Summary Report
+                    Category-wise Summary Report
                 </TableCell>
             </TableRow>
         </TableBody>
