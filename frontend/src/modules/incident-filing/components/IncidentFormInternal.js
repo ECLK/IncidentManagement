@@ -169,7 +169,6 @@ class IncidentFormInternal extends Component {
         this.props.getChannels();
         this.props.getElections();
         this.props.getCategories();
-        this.props.getProvinces();
         this.props.getDistricts();
         this.props.getDivisionalSecretariats();
         this.props.getGramaNiladharis();
@@ -634,9 +633,13 @@ class IncidentFormInternal extends Component {
                                                     }}
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.provinces.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
-                                                    ))}
+                                                    {this.props.districts.allCodes.map((c, k) => {
+                                                        let currDistrict = this.props.districts.byCode[c]
+                                                        return currDistrict.name ==='NONE' && 
+                                                            <MenuItem value={currDistrict.code} key={k}>
+                                                                {currDistrict.province}
+                                                            </MenuItem>
+                                                    })}
                                                 </Select>
                                             </FormControl>
                                         </Grid>
@@ -652,9 +655,13 @@ class IncidentFormInternal extends Component {
                                                     }}
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.districts.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
-                                                    ))}
+                                                    {this.props.districts.allCodes.map((c, k) => {
+                                                        let currDistrict = this.props.districts.byCode[c]
+                                                        return currDistrict.name !== 'NONE' && 
+                                                            <MenuItem value={currDistrict.code} key={k}>
+                                                                {currDistrict.name}
+                                                            </MenuItem>
+                                                    })}
                                                 </Select>
                                             </FormControl>
                                         </Grid>

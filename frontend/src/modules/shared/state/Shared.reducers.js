@@ -77,7 +77,10 @@ const initialState = {
     elections: [],
     categories: [],
     provinces: [],
-    districts: [],
+    districts: {
+        byCode:{},
+        allCodes:[]
+    },
     divisionalSecretariats: [],
     gramaNiladharis: [],
     pollingDivisions: [],
@@ -153,7 +156,15 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_DISTRICTS:
                 return draft
             case REQUEST_INCIDENT_DISTRICTS_SUCCESS:
-                draft.districts = action.data;
+                let districData = {
+                    byCode: {},
+                    allCodes : []
+                };
+                action.data.reduce((accumulator, currValue) => {
+                    districData.byCode[currValue.code] = currValue;
+                    districData.allCodes.push(currValue.code);
+                },0)
+                draft.districts = districData;
                 // draft.provinces = [...new Set(action.data.map(item => item.province))];
                 return draft
             case REQUEST_INCIDENT_DISTRICTS_FAILURE:
