@@ -32,19 +32,19 @@ export function userCan(user, incident, action){
 
     // hierarchy based rules
     if(action === USER_ACTIONS.CHANGE_ASSIGNEE){
-        if(findPermission(user.userPermissions, "incidents.can_change_assignee")){
+        if(findPermission(user.userPermissions, "can_change_assignee")){
             return true;
         }
     }else if(action === USER_ACTIONS.CLOSE_INCIDENT){
-        if(findPermission(user.userPermissions, "incidents.can_change_status")){
+        if(findPermission(user.userPermissions, "can_change_status")){
             return true;
         }
     }else if(action === USER_ACTIONS.REVIEW_INCIDENTS){
-        if(findPermission(user.userPermissions, "incidents.can_review_incidents")){
+        if(findPermission(user.userPermissions, "can_review_incidents")){
             return true;
         }
     }else if(action === USER_ACTIONS.VIEW_REPORTS){
-        if(findPermission(user.userPermissions, "incidents.can_view_incident_reports")){
+        if(findPermission(user.userPermissions, "can_view_incident_reports")){
             return true;
         }
     }else if(action === USER_ACTIONS.RUN_WORKFLOW){

@@ -6,6 +6,7 @@ import numpy as np
 
 from ..incidents.models import Incident
 
+
 def get_totals_by_category():
     sql = """
             SELECT usr.id, COUNT(incident.id) as incident_count FROM `auth_user` as usr 
@@ -24,7 +25,47 @@ def get_totals_by_category():
         return []
 
 
-def get_DI_Division_summary():
+def get_summary_by(name):
+    item_list = set(Incident.objects.all().values_list(name, flat=True))
+
+    sql2 = ", ".join(
+        map(lambda c: "MAX(CASE WHEN (" + name + " = '%s') THEN 1 ELSE NULL END) AS '%s'" % (c, c), item_list))
+    sql1 = ", ".join(map(lambda c: "COUNT(items.`%s`) as '%s'" % (c, c), item_list))
+
+    sql = """
+            SELECT 
+                incident.province,
+                incident.di_division,
+                incident.police_division,
+                %s
+            FROM incidents_incident incident,
+            ( 
+                SELECT
+                id,
+                %s
+                FROM incidents_incident
+                GROUP BY id
+            ) as items 
+            WHERE items.id = incident.id
+            GROUP BY incident.province, incident.di_division, incident.police_division
+        """ % (sql1, sql2)
+
+    # headers = [ cat.n]
+    dataframe = pd.read_sql_query(sql, connection)
+
+    dataframe.sort_values(by=['province', 'di_division'], inplace=True)
+    dataframe.set_index(['province', 'di_division', 'police_division'], inplace=True)
+    dataframe.fillna(value=0, inplace=True)
+    dataframe.columns = item_list
+
+    dataframe['Total'] = dataframe.sum(axis=1)
+
+    dataframe.index.names = ["Province", "DI Division", "Police Division"]
+
+    return dataframe.to_html()
+
+
+def get_police_division_summary():
     sql = """
           SELECT 
             incident.province,
@@ -70,43 +111,29 @@ def get_DI_Division_summary():
 
     return dataframe.to_html()
 
+
 def get_category_summary():
-    categories = set(Incident.objects.all().values_list('category', flat=True))
-    
-    sql2 = ", ".join(map(lambda c : "MAX(CASE WHEN (category = '%s') THEN 1 ELSE NULL END) AS '%s'" % (c,c), categories))
-    sql1 = ", ".join(map(lambda c : "COUNT(cats.`%s`) as '%s'" % (c,c), categories))
+    return get_summary_by("category")
 
-    sql = """
-            SELECT 
-                incident.province,
-                incident.di_division,
-                incident.police_division,
-                %s
-            FROM incidents_incident incident,
-            ( 
-                SELECT
-                id,
-                %s
-                FROM incidents_incident
-                GROUP BY id
-            ) as cats 
-            WHERE cats.id = incident.id
-            GROUP BY incident.province, incident.di_division, incident.police_division
-        """ % (sql1, sql2)
 
-    # headers = [ cat.n]
-    dataframe = pd.read_sql_query(sql, connection)
-    
-    dataframe.sort_values(by=['province', 'di_division'], inplace=True)
-    dataframe.set_index(['province', 'di_division', 'police_division'], inplace=True)
-    dataframe.fillna(value=0, inplace=True)
-    dataframe.columns = categories
+def get_district_summary():
+    return get_summary_by("district")
 
-    dataframe['Total'] = dataframe.sum(axis=1)
 
-    dataframe.index.names = ["Province", "DI Division", "Police Division"]
-    
-    return dataframe.to_html()
+def get_mode_summary():
+    return get_summary_by("infoChannel")
+
+
+def get_severity_summary():
+    return get_summary_by("severity")
+
+
+def get_subcategory_summary():
+    return get_summary_by("category")
+
+
+def get_status_summary():
+    return get_summary_by("current_status")
 
 
 def apply_style(html, title):

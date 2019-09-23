@@ -12,7 +12,7 @@ import Select from '@material-ui/core/Select';
 import { useDispatch } from 'react-redux'
 
 import { hideModal  } from '../state/modal.actions'
-import { fetchUpdateIncident } from '../../incident-filing/state/IncidentFiling.actions'
+import { fetchUpdateInternalIncidentData } from '../../incident-filing/state/IncidentFiling.actions'
 
 
 var hourlyResponseTimes = []
@@ -58,7 +58,7 @@ const ResponseTimeEditModal = (props) => {
                     onClick={()=>{
                         var activeIncidentUpdate = {...activeIncident}
                         activeIncidentUpdate.response_time = allocatedTime
-                        dispatch(fetchUpdateIncident(activeIncident.id, activeIncidentUpdate))
+                        dispatch(fetchUpdateInternalIncidentData(activeIncident.id, activeIncidentUpdate))
                         dispatch(hideModal())
                     }
                     } 

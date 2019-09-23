@@ -33,11 +33,6 @@ import orange from '@material-ui/core/colors/orange';
 import yellow from '@material-ui/core/colors/yellow';
 
 import {
-    submitIncidentBasicData,
-    stepBackwardIncidentStepper,
-    stepForwardIncidentStepper,
-    fetchUpdateReporter,
-    fetchUpdateIncident,
     resetIncidentForm,
     submitInternalIncidentData,
     fetchUpdateInternalIncidentData
@@ -203,7 +198,7 @@ class IncidentFormInternal extends Component {
             this.props.history.push(`/app/review/${paramIncidentId}`);
         } else {
             this.props.submitInternalIncident(values, this.state.file);
-            this.props.history.push('/app/review');
+            // this.props.history.push('/app/review');
         }
     }
 
@@ -1054,26 +1049,11 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        submitIncidentBasicDetails: (values) => {
-            dispatch(submitIncidentBasicData(values))
-        },
         submitInternalIncident: (values, fileData) => {
             dispatch(submitInternalIncidentData(values, fileData))
         },
-        updateIncidentBasicDetails: (incidentId, incidentData) => {
-            dispatch(fetchUpdateIncident(incidentId, incidentData));
-        },
         updateInternalIncident: (incidentId, incidentData) => {
             dispatch(fetchUpdateInternalIncidentData(incidentId, incidentData));
-        },
-        submitContactDetails: (incidentId, reporterId, reporterData) => {
-            dispatch(fetchUpdateReporter(incidentId, reporterId, reporterData))
-        },
-        stepBackward: () => {
-            dispatch(stepBackwardIncidentStepper())
-        },
-        stepForward: () => {
-            dispatch(stepForwardIncidentStepper())
         },
 
         getChannels: () => {
