@@ -120,8 +120,9 @@ const styles = theme => ({
 class IncidentFormInternal extends Component {
 
     state = {
+        incidentType: "COMPLAINT",
         infoChannel: "",
-        title: "default title",
+        title: "Internal: ",
         description: "",
         occurrence: "OCCURRED",
         occured_date: "",
@@ -235,12 +236,6 @@ class IncidentFormInternal extends Component {
         return initData;
     }
 
-    onButtonClick = (value) => {
-        this.setState({
-            infoChannel: value
-        });
-    }
-
     handleFileSelect = (selectedFile) => {
         this.setState({
             file: selectedFile
@@ -263,7 +258,7 @@ class IncidentFormInternal extends Component {
                         this.handleSubmit(values, actions)
                     }}
                     render={
-                        ({ handleSubmit, handleChange, handleBlur, values, errors }) => (
+                        ({ handleSubmit, handleChange, handleBlur, values, errors, setFieldValue }) => (
                             <form className={classes.container} noValidate autoComplete="off" onSubmit={handleSubmit}>
                                 <div style={{ display: "none" }}>{this.props.incident.id}</div>
                                 {/* basic incident detail information */}
@@ -273,12 +268,28 @@ class IncidentFormInternal extends Component {
                                     </Typography>
                                     <Grid container spacing={24}>
                                         <Grid item xs={12}>
+                                            <FormControl component="fieldset" className={classes.formControl}>
+                                                <FormLabel component="legend">Type</FormLabel>
+                                                <RadioGroup
+                                                    id="incidentType"
+                                                    name="incidentType"
+                                                    className={classes.group}
+                                                    value={values.incidentType}
+                                                    onChange={handleChange}
+                                                    row
+                                                >
+                                                    <FormControlLabel value="COMPLAINT" control={<Radio color="primary" />} label="Complaint" />
+                                                    <FormControlLabel value="INQUIRY" control={<Radio color="primary" />} label="Inquiry" />
+                                                </RadioGroup>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12}>
                                             {this.props.channels.map((c, k) => (
                                                 <Button
                                                     variant="contained"
                                                     color={(this.state.infoChannel === c.id) ? "primary" : ""}
                                                     className={classes.button}
-                                                    onClick={() => { this.onButtonClick(c.id) }}
+                                                    onClick={() => { setFieldValue("infoChannel", c.id, false) }}
                                                 >
                                                     {c.name}
                                                 </Button>
@@ -288,8 +299,9 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 id="infoChannel"
                                                 name="infoChannel"
-                                                className={classes.hide}
-                                                value={this.state.infoChannel}
+                                                className={classes.textField}
+                                                value={values.infoChannel}
+                                                onChange={handleChange}
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
@@ -832,6 +844,7 @@ class IncidentFormInternal extends Component {
                                                         name="reporterConsent"
                                                         checked={values.reporterConsent}
                                                         onChange={handleChange}
+                                                        color="primary"
                                                     />
                                                 }
                                                 label="Complainer details can be shared with external parties."
