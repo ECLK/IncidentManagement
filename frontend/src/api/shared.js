@@ -11,38 +11,43 @@ export const getCategories = async () => {
 }
 
 export const getProvinces = async () => {
-    return mockapi.getProvinces();
+    return (await handler.get('/provinces')).data;
+    // return mockapi.getProvinces();
 }
 
 export const getDistricts = async () => {
-    // return (await handler.get('/districts')).data;
-    return mockapi.getDistricts();
+    return (await handler.get('/districts')).data;
+    // return mockapi.getDistricts();
 }
 
 export const getDivisionalSecretariats = async () => {
-    return mockapi.getDivisionalSecretariats();
+    return (await handler.get('/dsdivisions')).data;
+    // return mockapi.getDivisionalSecretariats();
 }
 
 export const getGramaNiladharis = async () => {
-    return mockapi.getGramaNiladharis();
+    return (await handler.get('/gndivisions')).data;
+    // return mockapi.getGramaNiladharis();
 }
 
 export const getPollingStations = async () => {
-    // return (await handler.get('/pollingstations')).data;
-    return mockapi.getPollingStations();
+    return (await handler.get('/pollingstations')).data;
+    // return mockapi.getPollingStations();
 }
 
 export const getPollingDivisions = async () => {
-    return mockapi.getPollingDivisions();
+    return (await handler.get('/pollingdivisions')).data;
+    // return mockapi.getPollingDivisions();
 }
 
 export const getPoliceStations = async () => {
-    // return (await handler.get('/policestations')).data;
-    return mockapi.getPoliceStations();
+    return (await handler.get('/policestations')).data;
+    // return mockapi.getPoliceStations();
 }
 
 export const getPoliceDivisions = async () => {
-    return mockapi.getPoliceDivisions();
+    return (await handler.get('/policedivisions')).data;
+    // return mockapi.getPoliceDivisions();
 }
 
 export const getWards = async () => {
