@@ -21,33 +21,33 @@ export const getDistricts = async () => {
 }
 
 export const getDivisionalSecretariats = async () => {
-    return (await handler.get('/dsdivisions')).data;
-    // return mockapi.getDivisionalSecretariats();
+    // return (await handler.get('/dsdivisions')).data;
+    return mockapi.getDivisionalSecretariats();
 }
 
 export const getGramaNiladharis = async () => {
-    return (await handler.get('/gndivisions')).data;
-    // return mockapi.getGramaNiladharis();
+    // return (await handler.get('/gndivisions')).data;
+    return mockapi.getGramaNiladharis();
 }
 
 export const getPollingStations = async () => {
-    return (await handler.get('/pollingstations')).data;
-    // return mockapi.getPollingStations();
+    // return (await handler.get('/pollingstations')).data;
+    return mockapi.getPollingStations();
 }
 
 export const getPollingDivisions = async () => {
-    return (await handler.get('/pollingdivisions')).data;
-    // return mockapi.getPollingDivisions();
+    // return (await handler.get('/pollingdivisions')).data;
+    return mockapi.getPollingDivisions();
 }
 
 export const getPoliceStations = async () => {
-    return (await handler.get('/policestations')).data;
-    // return mockapi.getPoliceStations();
+    // return (await handler.get('/policestations')).data;
+    return mockapi.getPoliceStations();
 }
 
 export const getPoliceDivisions = async () => {
-    return (await handler.get('/policedivisions')).data;
-    // return mockapi.getPoliceDivisions();
+    // return (await handler.get('/policedivisions')).data;
+    return mockapi.getPoliceDivisions();
 }
 
 export const getWards = async () => {

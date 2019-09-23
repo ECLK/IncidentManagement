@@ -158,7 +158,13 @@ class NavTabs extends Component {
             reporter, changeStatus, changeSeverity,
             activeUser, users, getUsers,
             setIncidentAssignee, events,
-            districts
+            districts,
+            divisionalSecretariats,
+            gramaNiladharis,
+            pollingDivisions,
+            pollingStations,
+            policeStations,
+            policeDivisions,
         } = this.props;
 
         const EditIncidentLink = props => <Link to={`/app/review/${activeIncident.id}/edit`} {...props} />
@@ -174,6 +180,12 @@ class NavTabs extends Component {
                                 election={this.state.election}
                                 reporter={reporter}
                                 districts={districts}
+                                divisionalSecretariats = {divisionalSecretariats}
+                                gramaNiladharis = {gramaNiladharis}
+                                pollingDivisions = {pollingDivisions}
+                                pollingStations = {pollingStations}
+                                policeStations = {policeStations}
+                                policeDivisions = {policeDivisions}
                             />
                             <div>
                                 <EventList
@@ -251,6 +263,14 @@ const mapStateToProps = (state, ownProps) => {
         activeIncident: state.sharedReducer.activeIncident.data,
         reporter: state.sharedReducer.activeIncidentReporter,
         districts: state.sharedReducer.districts,
+
+        provinces: [],
+        divisionalSecretariats: state.sharedReducer.divisionalSecretariats ,
+        gramaNiladharis: state.sharedReducer.gramaNiladharis ,
+        pollingDivisions: state.sharedReducer.pollingDivisions ,
+        pollingStations: state.sharedReducer.pollingStations ,
+        policeStations: state.sharedReducer.policeStations ,
+        policeDivisions: state.sharedReducer.policeDivisions ,
         activeUser: state.sharedReducer.signedInUser.data,
         users: state.ongoingIncidentReducer.users,
         ...ownProps
