@@ -171,6 +171,7 @@ class NavTabs extends Component {
                                 incident={activeIncident}
                                 category={this.state.category}
                                 election={this.state.election}
+                                reporter={reporter}
                             />
                             <div>
                                 <EventList
