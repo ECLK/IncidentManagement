@@ -33,6 +33,9 @@ const styles = theme => ({
   },
   cardText: {
     textAlign: "center"
+  },
+  hide: {
+    display: "none",
   }
 });
 
@@ -88,8 +91,9 @@ function HomePage(props) {
         alignItems="center"
         justify="center"
         style={{ minHeight: "80vh" }}
+        className={classes.hide}
       >
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3} >
           <Card className={classes.card}>
             <Link to="/report">
               <CardActionArea>
@@ -154,7 +158,13 @@ function HomePage(props) {
         </Grid>
       </Grid>
 
-      <Grid container spacing={24}>
+      <Grid
+        container
+        spacing={24}
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: "80vh" }}
+      >
         <Grid xs={12}>
           <Typography
             variant="h5"
