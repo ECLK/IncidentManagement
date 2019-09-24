@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { withStyles, Tabs } from '@material-ui/core';
+import { elections } from '../../../data/elections';
 
 
 function TabContainer(props) {
@@ -42,7 +43,7 @@ const styles = theme => ({
  * Basic Information TabView - (1)
  */
 function BasicDetailTab(props){
-    const { classes, incident, election } = props;
+    const { classes, incident, elections, categories, channels } = props;
 
     return (
         <div>
@@ -111,14 +112,18 @@ function BasicDetailTab(props){
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography className={classes.label}> Election </Typography>
-                                <Typography variant="h6" gutterBottom> {election.name} </Typography>
+                                <Typography variant="h6" gutterBottom> 
+                                { elections.map((value, index)=>(value.code===incident.election?value.name:null)) } 
+                                </Typography>
                             </Grid>
                         </Grid>
 
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Category </Typography>
-                                <Typography gutterBottom> {incident.category} </Typography>
+                                <Typography gutterBottom> 
+                                { categories.map((value, index)=>(value.id==incident.category?value.sub_category:null)) }
+                                 </Typography>
                             </Grid>
                             {/* <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Sub Category </Typography>
@@ -129,7 +134,9 @@ function BasicDetailTab(props){
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Information Channel </Typography>
-                                <Typography gutterBottom> {incident.infoChannel} </Typography>
+                                <Typography gutterBottom> 
+                                { channels.map((value, index)=>(value.id==incident.infoChannel?value.name:null)) }
+                                </Typography>
                             </Grid>
                         </Grid>
 
@@ -383,7 +390,7 @@ function PoliceTab(props){
 function SummaryTabView(props){
 
     const {
-        classes, incident, reporter, election, category, 
+        classes, incident, reporter, elections, category, 
         districts,
         divisionalSecretariats,
         gramaNiladharis,
@@ -391,6 +398,8 @@ function SummaryTabView(props){
         pollingStations,
         policeStations,
         policeDivisions,
+        categories, 
+        channels
     } = props
 
     const [currentTab, setCurrentTab] = useState(0);
@@ -405,7 +414,9 @@ function SummaryTabView(props){
             </Tabs>
 
             {currentTab === 0 && <TabContainer> 
-                <BasicDetailTab classes={classes} incident={incident} election={election} category={category}
+                <BasicDetailTab classes={classes} incident={incident} elections={elections} category={category}
+                    categories={categories} 
+                    channels={channels}
                     
                 /> </TabContainer>}
             {currentTab === 1 && <TabContainer> 
