@@ -6,6 +6,10 @@ export const getAllUsers = async () => {
     return (await handler.get(`/users/`)).data;
 }
 
+export const getStaffUsers = async() => {
+    return (await handler.get(`/users/?type=staff`)).data;
+}
+
 export const signIn = async (username, password) => {
     // return mockapi.signIn(username, password);
     return handler.post('/auth-jwt/', { username, password })

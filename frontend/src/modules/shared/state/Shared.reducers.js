@@ -70,20 +70,57 @@ import {
     RESET_ACTIVE_INCIDENT,
 
 
-} from './Shared.types'
+} from './Shared.types';
+
+
+// transforms arrays from backend to objects. 
+// this helps to maintain better state shape.
+
+const transformArray = (array) => {
+    let transformedData = {
+        byCode: {},
+        allCodes : []
+    };
+    array.reduce((accumulator, currValue) => {
+        transformedData.byCode[currValue.code] = currValue;
+        transformedData.allCodes.push(currValue.code);
+    },0)
+    return transformedData;
+}
 
 const initialState = {
     channels: [],
     elections: [],
     categories: [],
     provinces: [],
-    districts: [],
-    divisionalSecretariats: [],
-    gramaNiladharis: [],
-    pollingDivisions: [],
-    pollingStations: [],
-    policeStations: [],
-    policeDivisions: [],
+    districts: {
+        byCode:{},
+        allCodes:[]
+    },
+    divisionalSecretariats: {
+        byCode:{},
+        allCodes:[]
+    },
+    gramaNiladharis: {
+        byCode:{},
+        allCodes:[]
+    },
+    pollingDivisions: {
+        byCode:{},
+        allCodes:[]
+    },
+    pollingStations: {
+        byCode:{},
+        allCodes:[]
+    },
+    policeStations: {
+        byCode:{},
+        allCodes:[]
+    },
+    policeDivisions: {
+        byCode:{},
+        allCodes:[]
+    },
     wards: [],
 
     activeIncident: {
@@ -153,8 +190,7 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_DISTRICTS:
                 return draft
             case REQUEST_INCIDENT_DISTRICTS_SUCCESS:
-                draft.districts = action.data;
-                // draft.provinces = [...new Set(action.data.map(item => item.province))];
+                draft.districts = transformArray(action.data);
                 return draft
             case REQUEST_INCIDENT_DISTRICTS_FAILURE:
                 return draft
@@ -162,7 +198,7 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS:
                 return draft
             case REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_SUCCESS:
-                draft.divisionalSecretariats = action.data;
+                draft.divisionalSecretariats = transformArray(action.data);
                 return draft
             case REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_FAILURE:
                 return draft
@@ -170,7 +206,7 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_GRAMA_NILADHARIS:
                 return draft
             case REQUEST_INCIDENT_GRAMA_NILADHARIS_SUCCESS:
-                draft.gramaNiladharis = action.data;
+                draft.gramaNiladharis = transformArray(action.data);
                 return draft
             case REQUEST_INCIDENT_GRAMA_NILADHARIS_FAILURE:
                 return draft
@@ -178,7 +214,7 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_POLLING_STATIONS:
                 return draft
             case REQUEST_INCIDENT_POLLING_STATIONS_SUCCESS:
-                draft.pollingStations = action.data;
+                draft.pollingStations = transformArray(action.data);
                 return draft
             case REQUEST_INCIDENT_POLLING_STATIONS_FAILURE:
                 return draft
@@ -186,7 +222,7 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_POLLING_DIVISIONS:
                 return draft
             case REQUEST_INCIDENT_POLLING_DIVISIONS_SUCCESS:
-                draft.pollingDivisions = action.data;
+                draft.pollingDivisions = transformArray(action.data);
                 return draft
             case REQUEST_INCIDENT_POLLING_DIVISIONS_FAILURE:
                 return draft
@@ -194,7 +230,7 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_POLICE_STATIONS:
                 return draft
             case REQUEST_INCIDENT_POLICE_STATIONS_SUCCESS:
-                draft.policeStations = action.data;
+                draft.policeStations = transformArray(action.data);
                 return draft
             case REQUEST_INCIDENT_POLICE_STATIONS_FAILURE:
                 return draft
@@ -202,7 +238,7 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_POLICE_DIVISIONS:
                 return draft
             case REQUEST_INCIDENT_POLICE_DIVISIONS_SUCCESS:
-                draft.policeDivisions = action.data;
+                draft.policeDivisions = transformArray(action.data);
                 return draft
             case REQUEST_INCIDENT_POLICE_DIVISIONS_FAILURE:
                 return draft

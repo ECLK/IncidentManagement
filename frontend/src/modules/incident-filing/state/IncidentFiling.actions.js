@@ -1,17 +1,4 @@
 import {
-    SUBMIT_INCIDENT,
-    INCIDENT_BASIC_DATA_SUBMIT_REQUEST,
-    INCIDENT_BASIC_DATA_SUBMIT_SUCCESS,
-    INCIDENT_BASIC_DATA_SUBMIT_ERROR,
-    INCIDENT_STEPPER_FORWARD,
-    INCIDENT_STEPPER_BACKWARD,
-    
-    INCIDENT_BASIC_DATA_UPDATE_REQUEST,
-    INCIDENT_BASIC_DATA_UPDATE_SUCCESS,
-    INCIDENT_BASIC_DATA_UPDATE_ERROR,
-    INCIDENT_REPORTER_UPDATE_REQUEST,
-    INCIDENT_REPORTER_UPDATE_SUCCESS,
-    INCIDENT_REPORTER_UPDATE_ERROR,
 
     INCIDENT_GET_DATA_REQUEST,
     INCIDENT_GET_DATA_SUCCESS,
@@ -41,189 +28,7 @@ import * as publicAPI from '../../../api/public';
 
 import { getActiveIncidentDataSuccess, fetchActiveIncidentData } from '../../shared/state/Shared.actions'
 
-import history from '../../../routes/history';
-
-// Form Submission
-
-export function stepForwardIncidentStepper() {
-    return {
-        type: INCIDENT_STEPPER_FORWARD,
-    }
-}
-
-export function stepBackwardIncidentStepper() {
-    return {
-        type: INCIDENT_STEPPER_BACKWARD,
-    }
-}
-
-export function requestIncidentSubmit() {
-    return {
-        type: INCIDENT_BASIC_DATA_SUBMIT_REQUEST,
-        isLoading: true
-    }
-}
-
-export function recieveIncidentSubmitSuccess(submitResponse) {
-    history.replace({ ...history.location, pathname: `/app/report/${submitResponse.incident.id}`});
-
-    return {
-        type: INCIDENT_BASIC_DATA_SUBMIT_SUCCESS,
-        data: submitResponse,
-        error: null,
-        isLoading: false,
-        confirm: {
-          message: "Incident submitted"
-        }
-    }
-}
-
-export function recieveIncidentSubmitError(errorResponse) {
-    return {
-        type: INCIDENT_BASIC_DATA_SUBMIT_ERROR,
-        data: null,
-        error: errorResponse,
-        isLoading: false
-    }
-}
-
-export function submitIncidentBasicData(incidentData) {
-    return async function(dispatch) {
-        dispatch(requestIncidentSubmit());
-        try{
-            const response = await createIncident(incidentData);
-            const _transform = {
-                incident: response.data,
-                reporter: { 
-                    id:response.data.reporter
-                }
-            };
-
-            await dispatch(getActiveIncidentDataSuccess(_transform));
-            await dispatch(recieveIncidentSubmitSuccess(_transform));
-            await dispatch(stepForwardIncidentStepper());
-        }catch(error){
-            console.log(error);
-            await dispatch(recieveIncidentSubmitError(error));
-        }
-    }
-}
-
-// Update incident
-
-export function requestIncidentUpdate() {
-    return {
-        type: INCIDENT_BASIC_DATA_UPDATE_REQUEST,
-        isLoading: true
-    }
-}
-
-export function recieveIncidentUpdateSuccess(submitResponse) {
-    return {
-        type: INCIDENT_BASIC_DATA_UPDATE_SUCCESS,
-        data: submitResponse,
-        error: null,
-        isLoading: false,
-        confirm: {
-          message: "Incident updated"
-        }
-    }
-}
-
-export function recieveIncidentUpdateError(errorResponse) {
-    return {
-        type: INCIDENT_BASIC_DATA_UPDATE_ERROR,
-        data: null,
-        error: errorResponse,
-        isLoading: false
-    }
-}
-
-export function fetchUpdateIncident(incidentId, incidentData) {
-    return async function (dispatch) {
-        dispatch(requestIncidentUpdate());
-        try{
-            const updatableFields = [
-                "address",
-                "category",
-                "coordinates",
-                "description",
-                "district",
-                "ds_division",
-                "infoChannel",
-                "location",
-                "occurrence",
-                "police_station",
-                "polling_station",
-                "title",
-                "ward",
-                "response_time",
-
-                "refId",
-                "election"
-            ];
-            const incidentUpdate = updatableFields.reduce((a, e) => (a[e] = incidentData[e], a), {});
-
-            const response = await updateIncident(incidentId, incidentUpdate);
-            dispatch(recieveIncidentUpdateSuccess(response.data));
-            dispatch(fetchActiveIncidentData(incidentId));
-            dispatch(stepForwardIncidentStepper());
-        }catch(error){
-            await dispatch(recieveIncidentUpdateError(error));
-        }
-    }
-}
-
-// Update reporter
-
-export function requestReporterUpdate() {
-    return {
-        type: INCIDENT_REPORTER_UPDATE_REQUEST,
-        isLoading: true
-    }
-}
-
-export function recieveReporterUpdateSuccess(response) {
-    return {
-        type: INCIDENT_REPORTER_UPDATE_SUCCESS,
-        data: response,
-        error: null,
-        isLoading: false,
-        confirm: {
-          message: "Reporter updated"
-        }
-    }
-}
-
-export function recieveReporterUpdateError(errorResponse) {
-    return {
-        type: INCIDENT_REPORTER_UPDATE_ERROR,
-        data: null,
-        error: errorResponse,
-        isLoading: false
-    }
-}
-
-export function fetchUpdateReporter(incidentId, reporterId, reporterData) {
-    return async function (dispatch) {
-        dispatch(requestReporterUpdate());
-        try{
-            const reporterUpdate = {
-                "name": reporterData["reporter_name"],
-                "reporter_type": reporterData["reporter_type"],
-                "email": reporterData["reporter_email"],
-                "telephone": reporterData["reporter_telephone"],
-                "address": reporterData["reporter_address"],
-            }
-            const response = await updateReporter(reporterId, reporterUpdate);
-            await dispatch(recieveReporterUpdateSuccess(response.data));
-            await dispatch(fetchActiveIncidentData(incidentId));
-            await dispatch(stepForwardIncidentStepper());
-        }catch(error){
-            await dispatch(recieveReporterUpdateError(error));
-        }
-    }
-}
+import { history } from '../../../routes/history';
 
 // get Incident
 
@@ -395,6 +200,7 @@ export function submitInternalIncidentData(incidentData, fileData) {
             }
 
             dispatch(submitInternalIncidentSuccess(incident));
+            history.push(`/app/review/${incident.id}`);
         }catch(error){
             dispatch(submitInternalIncidentError(error));
         }
@@ -418,7 +224,7 @@ export function updateInternalIncidentSuccess(incidentData) {
         error: null,
         isLoading: false,
         confirm: {
-          message: "Incident created"
+          message: "Incident updated"
         }
     }
 }

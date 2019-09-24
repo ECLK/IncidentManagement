@@ -142,12 +142,20 @@ function BasicDetailTab(props){
     );
 }
 
+const resolveLocationName = (locationId, locatoinData )=> {
+    if(locationId && locatoinData.byCode[locationId]){
+        return locatoinData.byCode[locationId].name 
+    }else{
+        return ""
+    }
+}
+
 /**
  * Location Information TabView - (2)
  */
 function LocationTab(props){
 
-    const { classes, incident } = props;
+    const { classes, incident, districts, pollingDivisions, policeStations } = props;
 
     return (
         <div>
@@ -187,21 +195,33 @@ function LocationTab(props){
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Province </Typography>
-                                <Typography variant="" gutterBottom> {incident.province ? incident.province : ""} </Typography>
+                                <Typography variant="" gutterBottom> 
+                                    {
+                                        incident.province && districts.byCode[incident.province] ? 
+                                        districts.byCode[incident.province].province : ""
+                                    } 
+                                </Typography>
                             </Grid>
                         </Grid>
 
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> District </Typography>
-                                <Typography gutterBottom> {incident.district ? incident.district : ""}</Typography>
+                                <Typography variant="" gutterBottom> 
+                                    {
+                                        incident.district && districts.byCode[incident.district] ? 
+                                        districts.byCode[incident.district].name : ""
+                                    } 
+                                </Typography>
                             </Grid>
                         </Grid>
 
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Polling Division </Typography>
-                                <Typography gutterBottom> {incident.pollingDivision} </Typography>
+                                <Typography gutterBottom>
+                                {resolveLocationName(incident.pollingDivision, pollingDivisions)}
+                                </Typography>
                             </Grid>
                         </Grid>
                         {/* 
@@ -215,7 +235,9 @@ function LocationTab(props){
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Police Station </Typography>
-                                <Typography gutterBottom> {incident.policeStation} </Typography>
+                                <Typography gutterBottom> 
+                                {   resolveLocationName(incident.policeStation, policeStations)}
+                                </Typography>
                             </Grid>
                         </Grid>
 
@@ -278,8 +300,8 @@ function ContactTab(props){
 /**
  * Review Summary TabView - (4)
  */
-function ReviewTab(props){
-    const { classes, incident } = this.props;
+function PoliceTab(props){
+    const { classes, incident } = props;
 
     return (
         <div>
@@ -289,65 +311,67 @@ function ReviewTab(props){
 
                         <Grid container spacing={24}>
                             <Grid item xs>
-                                <Typography className={classes.label}> Incident Ref ID </Typography>
-                                <Typography variant="h4" gutterBottom> {incident.refId} </Typography>
+                                <Typography className={classes.label}> Nature of incident  </Typography>
+                                <Typography variant="h6" gutterBottom> {incident.nature_of_incident} </Typography>
                             </Grid>
                         </Grid>
 
                         <Grid container spacing={24}>
                             <Grid item xs>
-                                <Typography variant="caption" className={classes.label}> Status </Typography>
-                                <Typography gutterBottom> {incident.status} </Typography>
+                                <Typography className={classes.label}> Complainers Name </Typography>
+                                <Typography variant="h6" gutterBottom> {incident.complainers_name} </Typography>
+                            </Grid>
+                            <Grid item xs>
+                                <Typography className={classes.label}> Complainers Address </Typography>
+                                <Typography variant="h6" gutterBottom> {incident.complainers_address} </Typography>
                             </Grid>
                         </Grid>
 
                         <Grid container spacing={24}>
                             <Grid item xs>
-                                <Typography variant="caption" className={classes.label}> Severity </Typography>
-                                <Typography gutterBottom> {incident.severity} </Typography>
+                                <Typography className={classes.label}> Victims Name </Typography>
+                                <Typography variant="h6" gutterBottom> {incident.victims_name} </Typography>
+                            </Grid>
+                            <Grid item xs>
+                                <Typography className={classes.label}> Victims Address </Typography>
+                                <Typography variant="h6" gutterBottom> {incident.victims_address} </Typography>
                             </Grid>
                         </Grid>
 
                         <Grid container spacing={24}>
                             <Grid item xs>
-                                <Typography variant="caption" className={classes.label}> Time since creation </Typography>
-                                <Typography gutterBottom> 10 hours </Typography>
+                                <Typography className={classes.label}> Respondents Name </Typography>
+                                <Typography variant="h6" gutterBottom> {incident.respondents_name} </Typography>
                             </Grid>
                             <Grid item xs>
-                                <Typography variant="caption" className={classes.label}> Given reponse time </Typography>
-                                <Typography gutterBottom> 24 hours </Typography>
-                            </Grid>
-                        </Grid>
-
-
-                    </Paper>
-                </Grid>
-            </Grid>
-
-
-            <Grid container spacing={24}>
-                <Grid item xs={12}>
-                    <Paper elevation={1} className={classes.paper}>
-
-                        <Grid container spacing={24}>
-                            <Grid item xs>
-                                <Typography variant="caption" className={classes.label}> Time since last action </Typography>
-                                <Typography gutterBottom> 4 hours ago </Typography>
+                                <Typography className={classes.label}> Respondents Address </Typography>
+                                <Typography variant="h6" gutterBottom> {incident.respondents_address} </Typography>
                             </Grid>
                         </Grid>
 
                         <Grid container spacing={24}>
                             <Grid item xs>
-                                <Typography variant="caption" className={classes.label}> Last assigned </Typography>
-                                <Typography gutterBottom> M Ekanayake (Police) </Typography>
+                                <Typography className={classes.label}> No. of Vehicles Arrested </Typography>
+                                <Typography variant="h6" gutterBottom> {incident.no_of_vehicles_arrested} </Typography>
                             </Grid>
                         </Grid>
 
                         <Grid container spacing={24}>
                             <Grid item xs>
-
+                                <Typography className={classes.label}> Steps Taken  </Typography>
+                                <Typography variant="h6" gutterBottom> {incident.steps_taken} </Typography>
                             </Grid>
                         </Grid>
+
+                        <Grid container spacing={24}>
+                            <Grid item xs>
+                                <Typography className={classes.label}> Court Case Number  </Typography>
+                                <Typography variant="h6" gutterBottom> {incident.court_case_no} </Typography>
+                            </Grid>
+                        </Grid>
+
+                        
+
 
                     </Paper>
                 </Grid>
@@ -356,7 +380,19 @@ function ReviewTab(props){
     );
 }
 
-function SummaryTabView({classes, incident, election, category}){
+function SummaryTabView(props){
+
+    const {
+        classes, incident, reporter, election, category, 
+        districts,
+        divisionalSecretariats,
+        gramaNiladharis,
+        pollingDivisions,
+        pollingStations,
+        policeStations,
+        policeDivisions,
+    } = props
+
     const [currentTab, setCurrentTab] = useState(0);
 
     return (
@@ -365,12 +401,25 @@ function SummaryTabView({classes, incident, election, category}){
                 <LinkTab label="Basic Information" href="page1" />
                 <LinkTab label="Location Information" href="page2" />
                 <LinkTab label="Contact Information" href="page3" />
+                <LinkTab label="Police Information" href="page4" />
             </Tabs>
 
-            {currentTab === 0 && <TabContainer> <BasicDetailTab classes={classes} incident={incident} election={election} category={category} /> </TabContainer>}
-            {currentTab === 1 && <TabContainer> <LocationTab classes={classes} incident={incident} /> </TabContainer>}
-            {currentTab === 2 && <TabContainer> <ContactTab classes={classes} reporter={incident} /> </TabContainer>}
-            {currentTab === 3 && <TabContainer> <ReviewTab classes={classes} incident={incident} /> </TabContainer>}
+            {currentTab === 0 && <TabContainer> 
+                <BasicDetailTab classes={classes} incident={incident} election={election} category={category}
+                    
+                /> </TabContainer>}
+            {currentTab === 1 && <TabContainer> 
+                <LocationTab classes={classes} incident={incident} 
+                    districts={districts}
+                    divisionalSecretariats = {divisionalSecretariats}
+                    gramaNiladharis = {gramaNiladharis}
+                    pollingDivisions = {pollingDivisions}
+                    pollingStations = {pollingStations}
+                    policeStations = {policeStations}
+                    policeDivisions = {policeDivisions}
+                /> </TabContainer>}
+            {currentTab === 2 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
+            {currentTab === 3 && <TabContainer> <PoliceTab classes={classes} incident={incident} /> </TabContainer>}
         </div>
     )
 }

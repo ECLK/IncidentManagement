@@ -35,7 +35,7 @@
 
 ## Serializers
 
-1. Serializers are like servies
+1. Serializers are like services
 
 2. We can select which fields to show and which ones to neglect in API responses
 
