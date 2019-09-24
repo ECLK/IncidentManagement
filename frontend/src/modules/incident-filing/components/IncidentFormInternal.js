@@ -816,7 +816,7 @@ class IncidentFormInternal extends Component {
                                 </Paper>
 
                                 {/* police details */}
-                                <div className={classes.root}>
+                                <div className={classes.hide}>
                                     <ExpansionPanel>
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                             <Typography varient="h5">Police Information</Typography>
