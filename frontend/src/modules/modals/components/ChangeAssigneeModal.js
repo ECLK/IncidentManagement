@@ -24,7 +24,7 @@ const ChangeAssigneeModal = (props) => {
 
     return (
         <div>
-            <DialogTitle id="form-dialog-title">Change Resopse Time</DialogTitle>
+            <DialogTitle id="form-dialog-title">Change Assignee</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     Select assignee for the incident

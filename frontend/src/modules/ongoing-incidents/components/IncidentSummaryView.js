@@ -133,7 +133,7 @@ function BasicDetailTab(props){
 
                         <Grid container spacing={24}>
                             <Grid item xs>
-                                <Typography variant="caption" className={classes.label}> Information Channel </Typography>
+                                <Typography variant="caption" className={classes.label}> Received Mode </Typography>
                                 <Typography gutterBottom> 
                                 { channels.map((value, index)=>(value.id==incident.infoChannel?value.name:null)) }
                                 </Typography>
@@ -184,12 +184,12 @@ function LocationTab(props){
                             </Grid>
                         </Grid>
 
-                        <Grid container spacing={24}>
+                        {/* <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Coordinates </Typography>
                                 <Typography gutterBottom> {incident.coordinates} </Typography>
                             </Grid>
-                        </Grid>
+                        </Grid> */}
 
                     </Paper>
                 </Grid>
@@ -223,14 +223,14 @@ function LocationTab(props){
                             </Grid>
                         </Grid>
 
-                        <Grid container spacing={24}>
+                        {/* <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Polling Division </Typography>
                                 <Typography gutterBottom>
                                 {resolveLocationName(incident.pollingDivision, pollingDivisions)}
                                 </Typography>
                             </Grid>
-                        </Grid>
+                        </Grid> */}
                         {/* 
                         <Grid container spacing={24}>
                             <Grid item xs>
@@ -239,14 +239,14 @@ function LocationTab(props){
                             </Grid>
                         </Grid> */}
 
-                        <Grid container spacing={24}>
+                        {/* <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Police Station </Typography>
                                 <Typography gutterBottom> 
                                 {   resolveLocationName(incident.policeStation, policeStations)}
                                 </Typography>
                             </Grid>
-                        </Grid>
+                        </Grid> */}
 
                     </Paper>
                 </Grid>
@@ -410,7 +410,7 @@ function SummaryTabView(props){
                 <LinkTab label="Basic Information" href="page1" />
                 <LinkTab label="Location Information" href="page2" />
                 <LinkTab label="Contact Information" href="page3" />
-                <LinkTab label="Police Information" href="page4" />
+                {/* <LinkTab label="Police Information" href="page4" /> */}
             </Tabs>
 
             {currentTab === 0 && <TabContainer> 
