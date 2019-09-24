@@ -157,7 +157,14 @@ class NavTabs extends Component {
         const { classes, postComment, activeIncident,
             reporter, changeStatus, changeSeverity,
             activeUser, users, getUsers,
-            setIncidentAssignee, events
+            setIncidentAssignee, events,
+            districts,
+            divisionalSecretariats,
+            gramaNiladharis,
+            pollingDivisions,
+            pollingStations,
+            policeStations,
+            policeDivisions,
         } = this.props;
 
         const EditIncidentLink = props => <Link to={`/app/review/${activeIncident.id}/edit`} {...props} />
@@ -172,6 +179,13 @@ class NavTabs extends Component {
                                 category={this.state.category}
                                 election={this.state.election}
                                 reporter={reporter}
+                                districts={districts}
+                                divisionalSecretariats = {divisionalSecretariats}
+                                gramaNiladharis = {gramaNiladharis}
+                                pollingDivisions = {pollingDivisions}
+                                pollingStations = {pollingStations}
+                                policeStations = {policeStations}
+                                policeDivisions = {policeDivisions}
                             />
                             <div>
                                 <EventList
@@ -248,6 +262,15 @@ const mapStateToProps = (state, ownProps) => {
         events: state.ongoingIncidentReducer.events,
         activeIncident: state.sharedReducer.activeIncident.data,
         reporter: state.sharedReducer.activeIncidentReporter,
+        districts: state.sharedReducer.districts,
+
+        provinces: [],
+        divisionalSecretariats: state.sharedReducer.divisionalSecretariats ,
+        gramaNiladharis: state.sharedReducer.gramaNiladharis ,
+        pollingDivisions: state.sharedReducer.pollingDivisions ,
+        pollingStations: state.sharedReducer.pollingStations ,
+        policeStations: state.sharedReducer.policeStations ,
+        policeDivisions: state.sharedReducer.policeDivisions ,
         activeUser: state.sharedReducer.signedInUser.data,
         users: state.ongoingIncidentReducer.users,
         ...ownProps

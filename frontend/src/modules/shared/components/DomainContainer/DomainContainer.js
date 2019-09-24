@@ -177,7 +177,7 @@ class DomainContainer extends React.Component {
                     <Button 
                         variant={selectedMainSection==='home'?'outlined': 'flat'} 
                         color="inherit" component={HomeLink} className={classes.homeButton}>Home</Button>
-                    <Button variant={selectedMainSection==='report'?'outlined': 'flat'} 
+                    <Button variant={selectedMainSection==='incident'?'outlined': 'flat'} 
                         color="inherit" component={ReportLink}>Create</Button>
                     
                     {userCan(signedInUser, null, USER_ACTIONS.REVIEW_INCIDENTS) && (

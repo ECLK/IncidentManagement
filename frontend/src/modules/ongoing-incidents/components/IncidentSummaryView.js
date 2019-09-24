@@ -142,12 +142,20 @@ function BasicDetailTab(props){
     );
 }
 
+const resolveLocationName = (locationId, locatoinData )=> {
+    if(locationId && locatoinData.byCode[locationId]){
+        return locatoinData.byCode[locationId].name 
+    }else{
+        return ""
+    }
+}
+
 /**
  * Location Information TabView - (2)
  */
 function LocationTab(props){
 
-    const { classes, incident } = props;
+    const { classes, incident, districts, pollingDivisions, policeStations } = props;
 
     return (
         <div>
@@ -187,21 +195,33 @@ function LocationTab(props){
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Province </Typography>
-                                <Typography variant="" gutterBottom> {incident.province ? incident.province : ""} </Typography>
+                                <Typography variant="" gutterBottom> 
+                                    {
+                                        incident.province && districts.byCode[incident.province] ? 
+                                        districts.byCode[incident.province].province : ""
+                                    } 
+                                </Typography>
                             </Grid>
                         </Grid>
 
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> District </Typography>
-                                <Typography gutterBottom> {incident.district ? incident.district : ""}</Typography>
+                                <Typography variant="" gutterBottom> 
+                                    {
+                                        incident.district && districts.byCode[incident.district] ? 
+                                        districts.byCode[incident.district].name : ""
+                                    } 
+                                </Typography>
                             </Grid>
                         </Grid>
 
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Polling Division </Typography>
-                                <Typography gutterBottom> {incident.pollingDivision} </Typography>
+                                <Typography gutterBottom>
+                                {resolveLocationName(incident.pollingDivision, pollingDivisions)}
+                                </Typography>
                             </Grid>
                         </Grid>
                         {/* 
@@ -215,7 +235,9 @@ function LocationTab(props){
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Police Station </Typography>
-                                <Typography gutterBottom> {incident.policeStation} </Typography>
+                                <Typography gutterBottom> 
+                                {   resolveLocationName(incident.policeStation, policeStations)}
+                                </Typography>
                             </Grid>
                         </Grid>
 
@@ -358,7 +380,19 @@ function PoliceTab(props){
     );
 }
 
-function SummaryTabView({classes, incident, reporter, election, category}){
+function SummaryTabView(props){
+
+    const {
+        classes, incident, reporter, election, category, 
+        districts,
+        divisionalSecretariats,
+        gramaNiladharis,
+        pollingDivisions,
+        pollingStations,
+        policeStations,
+        policeDivisions,
+    } = props
+
     const [currentTab, setCurrentTab] = useState(0);
 
     return (
@@ -370,8 +404,20 @@ function SummaryTabView({classes, incident, reporter, election, category}){
                 <LinkTab label="Police Information" href="page4" />
             </Tabs>
 
-            {currentTab === 0 && <TabContainer> <BasicDetailTab classes={classes} incident={incident} election={election} category={category} /> </TabContainer>}
-            {currentTab === 1 && <TabContainer> <LocationTab classes={classes} incident={incident} /> </TabContainer>}
+            {currentTab === 0 && <TabContainer> 
+                <BasicDetailTab classes={classes} incident={incident} election={election} category={category}
+                    
+                /> </TabContainer>}
+            {currentTab === 1 && <TabContainer> 
+                <LocationTab classes={classes} incident={incident} 
+                    districts={districts}
+                    divisionalSecretariats = {divisionalSecretariats}
+                    gramaNiladharis = {gramaNiladharis}
+                    pollingDivisions = {pollingDivisions}
+                    pollingStations = {pollingStations}
+                    policeStations = {policeStations}
+                    policeDivisions = {policeDivisions}
+                /> </TabContainer>}
             {currentTab === 2 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
             {currentTab === 3 && <TabContainer> <PoliceTab classes={classes} incident={incident} /> </TabContainer>}
         </div>

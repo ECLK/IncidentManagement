@@ -11,19 +11,22 @@ export const getCategories = async () => {
 }
 
 export const getProvinces = async () => {
-    return mockapi.getProvinces();
+    return (await handler.get('/provinces')).data;
+    // return mockapi.getProvinces();
 }
 
 export const getDistricts = async () => {
-    // return (await handler.get('/districts')).data;
-    return mockapi.getDistricts();
+    return (await handler.get('/districts')).data;
+    // return mockapi.getDistricts();
 }
 
 export const getDivisionalSecretariats = async () => {
+    // return (await handler.get('/dsdivisions')).data;
     return mockapi.getDivisionalSecretariats();
 }
 
 export const getGramaNiladharis = async () => {
+    // return (await handler.get('/gndivisions')).data;
     return mockapi.getGramaNiladharis();
 }
 
@@ -33,6 +36,7 @@ export const getPollingStations = async () => {
 }
 
 export const getPollingDivisions = async () => {
+    // return (await handler.get('/pollingdivisions')).data;
     return mockapi.getPollingDivisions();
 }
 
@@ -42,6 +46,7 @@ export const getPoliceStations = async () => {
 }
 
 export const getPoliceDivisions = async () => {
+    // return (await handler.get('/policedivisions')).data;
     return mockapi.getPoliceDivisions();
 }
 

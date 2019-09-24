@@ -33,11 +33,6 @@ import orange from '@material-ui/core/colors/orange';
 import yellow from '@material-ui/core/colors/yellow';
 
 import {
-    submitIncidentBasicData,
-    stepBackwardIncidentStepper,
-    stepForwardIncidentStepper,
-    fetchUpdateReporter,
-    fetchUpdateIncident,
     resetIncidentForm,
     submitInternalIncidentData,
     fetchUpdateInternalIncidentData
@@ -59,6 +54,7 @@ import {
     resetActiveIncident
 } from '../../shared/state/Shared.actions';
 import DropZoneBase from '../../shared/components/DropZoneBase';
+import IntlSelect from './IntlSelect';
 import moment from 'moment';
 
 const styles = theme => ({
@@ -169,7 +165,6 @@ class IncidentFormInternal extends Component {
         this.props.getChannels();
         this.props.getElections();
         this.props.getCategories();
-        this.props.getProvinces();
         this.props.getDistricts();
         this.props.getDivisionalSecretariats();
         this.props.getGramaNiladharis();
@@ -204,7 +199,7 @@ class IncidentFormInternal extends Component {
             this.props.history.push(`/app/review/${paramIncidentId}`);
         } else {
             this.props.submitInternalIncident(values, this.state.file);
-            this.props.history.push('/app/review');
+            // this.props.history.push('/app/review');
         }
     }
 
@@ -634,9 +629,13 @@ class IncidentFormInternal extends Component {
                                                     }}
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.provinces.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
-                                                    ))}
+                                                    {this.props.districts.allCodes.map((c, k) => {
+                                                        let currDistrict = this.props.districts.byCode[c]
+                                                        return currDistrict.name ==='NONE' && 
+                                                            <MenuItem value={currDistrict.code} key={k}>
+                                                                {currDistrict.province}
+                                                            </MenuItem>
+                                                    })}
                                                 </Select>
                                             </FormControl>
                                         </Grid>
@@ -652,118 +651,80 @@ class IncidentFormInternal extends Component {
                                                     }}
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.districts.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
-                                                    ))}
+                                                    {this.props.districts.allCodes.map((c, k) => {
+                                                        let currDistrict = this.props.districts.byCode[c]
+                                                        return currDistrict.name !== 'NONE' && 
+                                                            <MenuItem value={currDistrict.code} key={k}>
+                                                                {currDistrict.name}
+                                                            </MenuItem>
+                                                    })}
                                                 </Select>
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="divisionalSecretariat">Divisional Secretariat</InputLabel>
-                                                <Select
+                                                <IntlSelect
                                                     value={values.divisionalSecretariat}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'divisionalSecretariat',
-                                                        id: 'divisionalSecretariat',
-                                                    }}
-                                                >
-                                                    <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.divisionalSecretariats.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
-                                                    ))}
-                                                </Select>
+                                                    handleChange={handleChange}
+                                                    name='divisionalSecretariat'
+                                                    dataObj = {this.props.divisionalSecretariats}
+                                                />
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="pollingDivision">Polling Division</InputLabel>
-                                                <Select
+                                                <IntlSelect
                                                     value={values.pollingDivision}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'pollingDivision',
-                                                        id: 'pollingDivision',
-                                                    }}
-                                                >
-                                                    <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.pollingDivisions.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
-                                                    ))}
-                                                </Select>
+                                                    handleChange={handleChange}
+                                                    name='pollingDivision'
+                                                    dataObj = {this.props.pollingDivisions}
+                                                />
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="pollingStation">Polling Station</InputLabel>
-                                                <Select
+                                                <IntlSelect
                                                     value={values.pollingStation}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'pollingStation',
-                                                        id: 'pollingStation',
-                                                    }}
-                                                >
-                                                    <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.pollingStations.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
-                                                    ))}
-                                                </Select>
+                                                    handleChange={handleChange}
+                                                    name='pollingStation'
+                                                    dataObj = {this.props.pollingStations}
+                                                />
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="gramaNiladhari">Grama Niladhari Division</InputLabel>
-                                                <Select
+                                                <IntlSelect
                                                     value={values.gramaNiladhari}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'gramaNiladhari',
-                                                        id: 'gramaNiladhari',
-                                                    }}
-                                                >
-                                                    <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.gramaNiladharis.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
-                                                    ))}
-                                                </Select>
+                                                    handleChange={handleChange}
+                                                    name='gramaNiladhari'
+                                                    dataObj = {this.props.gramaNiladharis}
+                                                />
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="policeStation">Police Station</InputLabel>
-                                                <Select
+                                                <IntlSelect
                                                     value={values.policeStation}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'policeStation',
-                                                        id: 'policeStation',
-                                                    }}
-                                                >
-                                                    <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.policeStations.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
-                                                    ))}
-                                                </Select>
+                                                    handleChange={handleChange}
+                                                    name='policeStation'
+                                                    dataObj = {this.props.policeStations}
+                                                />
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="policeDivision">Police Division</InputLabel>
-                                                <Select
+                                                <IntlSelect
                                                     value={values.policeDivision}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'policeDivision',
-                                                        id: 'policeDivision',
-                                                    }}
-                                                >
-                                                    <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.policeDivisions.map((c, k) => (
-                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
-                                                    ))}
-                                                </Select>
+                                                    handleChange={handleChange}
+                                                    name='policeDivision'
+                                                    dataObj = {this.props.policeDivisions}
+                                                />
                                             </FormControl>
                                         </Grid>
                                     </Grid>
@@ -1047,26 +1008,11 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        submitIncidentBasicDetails: (values) => {
-            dispatch(submitIncidentBasicData(values))
-        },
         submitInternalIncident: (values, fileData) => {
             dispatch(submitInternalIncidentData(values, fileData))
         },
-        updateIncidentBasicDetails: (incidentId, incidentData) => {
-            dispatch(fetchUpdateIncident(incidentId, incidentData));
-        },
         updateInternalIncident: (incidentId, incidentData) => {
             dispatch(fetchUpdateInternalIncidentData(incidentId, incidentData));
-        },
-        submitContactDetails: (incidentId, reporterId, reporterData) => {
-            dispatch(fetchUpdateReporter(incidentId, reporterId, reporterData))
-        },
-        stepBackward: () => {
-            dispatch(stepBackwardIncidentStepper())
-        },
-        stepForward: () => {
-            dispatch(stepForwardIncidentStepper())
         },
 
         getChannels: () => {
