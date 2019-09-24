@@ -11,7 +11,7 @@ from .services import get_police_division_summary, apply_style, get_category_sum
 
 class ReportingView(APIView):
     """
-    Incident Resoruce
+    Incident Resource
     """
 
     def get(self, request, format=None):

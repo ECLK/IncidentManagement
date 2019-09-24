@@ -5,24 +5,23 @@ import pandas as pd
 import numpy as np
 
 from ..incidents.models import Incident
+from ..common.models import Category
 
 
-def get_totals_by_category():
-    sql = """
-            SELECT usr.id, COUNT(incident.id) as incident_count FROM `auth_user` as usr 
-            LEFT JOIN incidents_incident as incident on incident.assignee_id = usr.id 
-            INNER JOIN auth_user_groups on usr.id = auth_user_groups.user_id
-            INNER JOIN auth_group as grp on grp.id = auth_user_groups.group_id
-            WHERE grp.rank = %d
-            GROUP BY usr.id
-            ORDER BY incident_count ASC
-          """
+def get_data_frame(sql, columns):
+    # headers = [ cat.n]
+    dataframe = pd.read_sql_query(sql, connection)
 
-    with connection.cursor() as cursor:
-        cursor.execute(sql)
-        row = cursor.fetchone()
+    dataframe.sort_values(by=['province', 'di_division'], inplace=True)
+    dataframe.set_index(['province', 'di_division', 'police_division'], inplace=True)
+    dataframe.fillna(value=0, inplace=True)
+    dataframe.columns = columns
 
-        return []
+    dataframe['Total'] = dataframe.sum(axis=1)
+
+    dataframe.index.names = ["Province", "DI Division", "Police Division"]
+
+    return dataframe.to_html()
 
 
 def get_summary_by(name):
@@ -50,19 +49,7 @@ def get_summary_by(name):
             GROUP BY incident.province, incident.di_division, incident.police_division
         """ % (sql1, sql2)
 
-    # headers = [ cat.n]
-    dataframe = pd.read_sql_query(sql, connection)
-
-    dataframe.sort_values(by=['province', 'di_division'], inplace=True)
-    dataframe.set_index(['province', 'di_division', 'police_division'], inplace=True)
-    dataframe.fillna(value=0, inplace=True)
-    dataframe.columns = item_list
-
-    dataframe['Total'] = dataframe.sum(axis=1)
-
-    dataframe.index.names = ["Province", "DI Division", "Police Division"]
-
-    return dataframe.to_html()
+    return get_data_frame(sql, item_list)
 
 
 def get_police_division_summary():
@@ -113,7 +100,33 @@ def get_police_division_summary():
 
 
 def get_category_summary():
-    return get_summary_by("category")
+    # join category table into incident table on subcategory
+    item_list = set(Category.objects.all().values_list("top_category", flat=True))
+
+    sql2 = ", ".join(
+        map(lambda c: "MAX(CASE WHEN (top_category = '%s') THEN 1 ELSE NULL END) AS '%s'" % (c, c),
+            item_list))
+    sql1 = ", ".join(map(lambda c: "COUNT(items.`%s`) as '%s'" % (c, c), item_list))
+
+    sql = """
+                SELECT 
+                    incident.province,
+                    incident.di_division,
+                    incident.police_division,
+                    %s
+                FROM incidents_incident incident,
+                ( 
+                    SELECT
+                    id, sub_category, top_category,
+                    %s
+                    FROM common_category
+                    GROUP BY id
+                ) as items 
+                WHERE items.sub_category LIKE incident.category
+                GROUP BY incident.province, incident.di_division, incident.police_division
+            """ % (sql1, sql2)
+
+    return get_data_frame(sql, item_list)
 
 
 def get_district_summary():
@@ -129,7 +142,7 @@ def get_severity_summary():
 
 
 def get_subcategory_summary():
-    return get_summary_by("category")
+    return get_summary_by("category")  # subcategory is saved in incident entity as category
 
 
 def get_status_summary():
