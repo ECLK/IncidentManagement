@@ -36,7 +36,7 @@ const EscallateOutsideModal = (props) => {
 
     return (
         <div>
-            <DialogTitle id="form-dialog-title">Escalate to Outside Entity: </DialogTitle>
+            <DialogTitle id="form-dialog-title">Refer to organization entity: </DialogTitle>
 
             <DialogContent>
                 <DialogContentText>
@@ -99,7 +99,7 @@ const EscallateOutsideModal = (props) => {
                     }
                     } 
                     color="primary">
-                    Escalate to Outside
+                    Refer to organization 
                 </Button>
             </DialogActions>
         </div>

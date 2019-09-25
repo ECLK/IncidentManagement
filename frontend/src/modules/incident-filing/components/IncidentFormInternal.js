@@ -279,7 +279,7 @@ class IncidentFormInternal extends Component {
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12}>
-                                            <FormLabel component="legend">Receive Modes*</FormLabel>
+                                            <FormLabel component="legend">Incident receipt mode*</FormLabel>
                                             {this.props.channels.map((c, k) => (
                                                 <Button
                                                     variant="contained"
@@ -346,7 +346,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 margin="normal"
                                                 id="occured_date"
-                                                label="Incident date*"
+                                                label="Incident date and time*"
                                                 type="datetime-local"
                                                 value={values.occured_date}
                                                 InputLabelProps={{ shrink: true }}
@@ -642,7 +642,7 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="district">Districts</InputLabel>
+                                                <InputLabel htmlFor="district">District</InputLabel>
                                                 <Select
                                                     value={values.district}
                                                     onChange={handleChange}
