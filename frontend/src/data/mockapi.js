@@ -36,28 +36,28 @@ export function getDistricts() {
 export function getDivisionalSecretariats() {
     return {
         status: 200,
-        data: divisionalSecretariats
+        data: []
     };
 }
 
 export function getGramaNiladharis() {
     return {
         status: 200,
-        data: gramaNiladharis
+        data: []
     }
 }
 
 export function getPollingStations() {
     return {
         status: 200,
-        data: polling_stations
+        data: []
     };
 }
 
 export function getPollingDivisions() {
     return {
         status: 200,
-        data: polling_divisions
+        data: []
     };
 }
 
@@ -65,14 +65,14 @@ export function getPollingDivisions() {
 export function getPoliceStations() {
     return {
         status: 200,
-        data: police_stations
+        data: []
     }
 }
 
 export function getPoliceDivisions() {
     return {
         status: 200,
-        data: police_divisions
+        data: []
     }
 }
 

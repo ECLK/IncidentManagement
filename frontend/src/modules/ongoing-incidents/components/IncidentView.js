@@ -165,6 +165,9 @@ class NavTabs extends Component {
             pollingStations,
             policeStations,
             policeDivisions,
+            elections,
+            channels,
+            categories,
         } = this.props;
 
         const EditIncidentLink = props => <Link to={`/app/review/${activeIncident.id}/edit`} {...props} />
@@ -186,6 +189,9 @@ class NavTabs extends Component {
                                 pollingStations = {pollingStations}
                                 policeStations = {policeStations}
                                 policeDivisions = {policeDivisions}
+                                elections ={elections}
+                                channels = {channels}
+                                categories = {categories}
                             />
                             <div>
                                 <EventList
@@ -271,6 +277,10 @@ const mapStateToProps = (state, ownProps) => {
         pollingStations: state.sharedReducer.pollingStations ,
         policeStations: state.sharedReducer.policeStations ,
         policeDivisions: state.sharedReducer.policeDivisions ,
+        channels: state.sharedReducer.channels ,
+        elections: state.sharedReducer.elections ,
+        categories: state.sharedReducer.categories,
+
         activeUser: state.sharedReducer.signedInUser.data,
         users: state.ongoingIncidentReducer.users,
         ...ownProps

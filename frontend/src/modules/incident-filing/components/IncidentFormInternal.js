@@ -264,7 +264,7 @@ class IncidentFormInternal extends Component {
                                     <Grid container spacing={24}>
                                         <Grid item xs={12}>
                                             <FormControl component="fieldset" className={classes.formControl}>
-                                                <FormLabel component="legend">Type</FormLabel>
+                                                <FormLabel component="legend">Type*</FormLabel>
                                                 <RadioGroup
                                                     id="incidentType"
                                                     name="incidentType"
@@ -279,6 +279,7 @@ class IncidentFormInternal extends Component {
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12}>
+                                            <FormLabel component="legend">Receive Modes*</FormLabel>
                                             {this.props.channels.map((c, k) => (
                                                 <Button
                                                     variant="contained"
@@ -303,7 +304,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 type="text"
                                                 name="title"
-                                                label="Title"
+                                                label="Title*"
                                                 placeholder="Title"
                                                 className={classes.textField}
                                                 value={values.title}
@@ -315,7 +316,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 type="text"
                                                 name="description"
-                                                label="Description"
+                                                label="Description*"
                                                 placeholder="Press enter for new lines."
                                                 className={classes.textField}
                                                 multiline
@@ -326,7 +327,7 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <FormControl component="fieldset" className={classes.formControl}>
-                                                <FormLabel component="legend">Occurrence</FormLabel>
+                                                <FormLabel component="legend">Occurrence*</FormLabel>
                                                 <RadioGroup
                                                     name="occurrence"
                                                     id="occurrence"
@@ -345,7 +346,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 margin="normal"
                                                 id="occured_date"
-                                                label="Incident date"
+                                                label="Incident date*"
                                                 type="datetime-local"
                                                 value={values.occured_date}
                                                 InputLabelProps={{ shrink: true }}
@@ -354,7 +355,7 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="category">Category</InputLabel>
+                                                <InputLabel htmlFor="category">Category*</InputLabel>
                                                 <Select
                                                     value={values.category}
                                                     onChange={handleChange}
@@ -391,7 +392,7 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="election" >Election</InputLabel>
+                                                <InputLabel htmlFor="election" >Election*</InputLabel>
                                                 <Select
                                                     value={values.election}
                                                     onChange={handleChange}
@@ -815,7 +816,7 @@ class IncidentFormInternal extends Component {
                                 </Paper>
 
                                 {/* police details */}
-                                <div className={classes.root}>
+                                <div className={classes.hide}>
                                     <ExpansionPanel>
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                             <Typography varient="h5">Police Information</Typography>
@@ -956,7 +957,7 @@ class IncidentFormInternal extends Component {
                                 <Grid container spacing={24}>
                                     <Grid item xs={12} style={{ textAlign: "center" }}>
                                         <Button variant="contained" className={classes.button}> Cancel</Button>
-                                        <Button type="submit" variant="contained" color="primary" className={classes.button}> Sumbit</Button>
+                                        <Button type="submit" variant="contained" color="primary" className={classes.button}> Submit</Button>
                                     </Grid>
                                 </Grid>
                             </form>
