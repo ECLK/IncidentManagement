@@ -29,16 +29,16 @@ const ReportList = ({classes, ...props}) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    <TableRow
-                        hover
-                    >
-                        <TableCell
-                            onClick={() => {
-                                props.history.push(`/app/reports/view?report=police_division_summary_report`);
-                            }}>
-                            Police Division Summary Report
-                        </TableCell>
-                    </TableRow>
+                    {/*<TableRow*/}
+                        {/*hover*/}
+                    {/*>*/}
+                        {/*<TableCell*/}
+                            {/*onClick={() => {*/}
+                                {/*props.history.push(`/app/reports/view?report=police_division_summary_report`);*/}
+                            {/*}}>*/}
+                            {/*Police Division Summary Report*/}
+                        {/*</TableCell>*/}
+                    {/*</TableRow>*/}
                     <TableRow
                         hover
                     >
@@ -47,16 +47,6 @@ const ReportList = ({classes, ...props}) => {
                                 props.history.push(`/app/reports/view?report=category_wise_summary_report`);
                             }}>
                             Category-wise Summary Report
-                        </TableCell>
-                    </TableRow>
-                    <TableRow
-                        hover
-                    >
-                        <TableCell
-                            onClick={() => {
-                                props.history.push(`/app/reports/view?report=district_wise_summary_report`);
-                            }}>
-                            District-wise Summary Report
                         </TableCell>
                     </TableRow>
                     <TableRow
