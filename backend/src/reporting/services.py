@@ -4,65 +4,9 @@ from django.db import connection
 import pandas as pd
 import numpy as np
 
+from ..common.models import Category, Channel
 from ..incidents.models import Incident
-
-
-def get_totals_by_category():
-    sql = """
-            SELECT usr.id, COUNT(incident.id) as incident_count FROM `auth_user` as usr 
-            LEFT JOIN incidents_incident as incident on incident.assignee_id = usr.id 
-            INNER JOIN auth_user_groups on usr.id = auth_user_groups.user_id
-            INNER JOIN auth_group as grp on grp.id = auth_user_groups.group_id
-            WHERE grp.rank = %d
-            GROUP BY usr.id
-            ORDER BY incident_count ASC
-          """
-
-    with connection.cursor() as cursor:
-        cursor.execute(sql)
-        row = cursor.fetchone()
-
-        return []
-
-
-def get_summary_by(name):
-    item_list = set(Incident.objects.all().values_list(name, flat=True))
-
-    sql2 = ", ".join(
-        map(lambda c: "MAX(CASE WHEN (" + name + " = '%s') THEN 1 ELSE NULL END) AS '%s'" % (c, c), item_list))
-    sql1 = ", ".join(map(lambda c: "COUNT(items.`%s`) as '%s'" % (c, c), item_list))
-
-    sql = """
-            SELECT 
-                incident.province,
-                incident.di_division,
-                incident.police_division,
-                %s
-            FROM incidents_incident incident,
-            ( 
-                SELECT
-                id,
-                %s
-                FROM incidents_incident
-                GROUP BY id
-            ) as items 
-            WHERE items.id = incident.id
-            GROUP BY incident.province, incident.di_division, incident.police_division
-        """ % (sql1, sql2)
-
-    # headers = [ cat.n]
-    dataframe = pd.read_sql_query(sql, connection)
-
-    dataframe.sort_values(by=['province', 'di_division'], inplace=True)
-    dataframe.set_index(['province', 'di_division', 'police_division'], inplace=True)
-    dataframe.fillna(value=0, inplace=True)
-    dataframe.columns = item_list
-
-    dataframe['Total'] = dataframe.sum(axis=1)
-
-    dataframe.index.names = ["Province", "DI Division", "Police Division"]
-
-    return dataframe.to_html()
+from .functions import get_data_frame, get_summary_by
 
 
 def get_police_division_summary():
@@ -113,65 +57,110 @@ def get_police_division_summary():
 
 
 def get_category_summary():
-    return get_summary_by("category")
+    # join category table into incident table on subcategory
+    item_list = set(Category.objects.all().values_list("top_category", flat=True))
 
+    sql2 = ", ".join(
+        map(lambda c: "MAX(CASE WHEN (top_category = '%s') THEN 1 ELSE NULL END) AS '%s'" % (c, c),
+            item_list))
+    sql1 = ", ".join(map(lambda c: "COUNT(items.`%s`) as '%s'" % (c, c), item_list))
 
-def get_district_summary():
-    return get_summary_by("district")
+    sql = """
+                SELECT 
+                    incident.district,
+                    %s
+                FROM incidents_incident incident,
+                ( 
+                    SELECT
+                    id,
+                    %s
+                    FROM common_category
+                    GROUP BY id
+                ) as items 
+                WHERE items.id LIKE incident.category
+                GROUP BY incident.district
+            """ % (sql1, sql2)
+
+    return get_data_frame(sql, item_list)
 
 
 def get_mode_summary():
-    return get_summary_by("infoChannel")
+    item_list = set(Channel.objects.all().values_list("name", flat=True))
+
+    sql2 = ", ".join(
+        map(lambda c: "MAX(CASE WHEN (name = '%s') THEN 1 ELSE NULL END) AS '%s'" % (c, c),
+            item_list))
+    sql1 = ", ".join(map(lambda c: "COUNT(items.`%s`) as '%s'" % (c, c), item_list))
+
+    sql = """
+                        SELECT 
+                            incident.district,
+                            %s
+                        FROM incidents_incident incident,
+                        ( 
+                            SELECT
+                            id, name,
+                            %s
+                            FROM common_channel
+                            GROUP BY id
+                        ) as items 
+                        WHERE items.id LIKE incident.category
+                        GROUP BY incident.district
+                    """ % (sql1, sql2)
+    return get_data_frame(sql, item_list)
 
 
 def get_severity_summary():
-    return get_summary_by("severity")
+    item_list = set(Incident.objects.all().values_list("severity", flat=True))
+
+    sql2 = ", ".join(
+        map(lambda c: "0" if c is None else "MAX(CASE WHEN (severity = '%s') THEN 1 ELSE NULL END) AS '%s'" % (c, c), item_list))
+    sql1 = ", ".join(map(lambda c: "0" if c is None else "COUNT(items.`%s`) as '%s'" % (c, c), item_list))
+
+    sql = """
+                SELECT 
+                    incident.district,
+                    %s
+                FROM incidents_incident incident,
+                ( 
+                    SELECT
+                    id,
+                    %s
+                    FROM incidents_incident
+                    GROUP BY id
+                ) as items 
+                WHERE items.id = incident.id
+                GROUP BY incident.district
+            """ % (sql1, sql2)
+
+    return get_data_frame(sql, item_list)
 
 
 def get_subcategory_summary():
-    return get_summary_by("category")
+    item_list = set(Category.objects.all().values_list("sub_category", flat=True))
+
+    sql2 = ", ".join(
+        map(lambda c: "MAX(CASE WHEN (sub_category = '%s') THEN 1 ELSE NULL END) AS '%s'" % (c, c),
+            item_list))
+    sql1 = ", ".join(map(lambda c: "COUNT(items.`%s`) as '%s'" % (c, c), item_list))
+
+    sql = """
+                    SELECT 
+                        incident.district,
+                        %s
+                    FROM incidents_incident incident,
+                    ( 
+                        SELECT
+                        id,
+                        %s
+                        FROM common_category
+                        GROUP BY id
+                    ) as items 
+                    WHERE items.id LIKE incident.category
+                    GROUP BY incident.district
+                """ % (sql1, sql2)
+    return get_data_frame(sql, item_list)
 
 
 def get_status_summary():
     return get_summary_by("current_status")
-
-
-def apply_style(html, title):
-    html = """
-        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-        <html>
-            <head>
-                <style type="text/css">
-                    .dataframe{
-                        text-align: center;
-                        table-layout: fixed;
-                        width: 100%%;
-                        word-wrap: break-word;
-                    }
-
-                    .dataframe td{
-                        padding-top: 5px;
-                    }
-
-                    .dataframe th{
-                        text-align: left;
-                        padding-top: 5px;
-                        margin-left: 5px;
-                    }
-
-                    .dataframe thead th{
-                        text-align: center;
-                        padding-top: 5px;
-                    }
-                </style>
-            </head>
-            <body>
-                <h1 align=center>%s</h1>
-                <div>
-                    %s
-                </div>
-            </body>
-        </html>
-           """ % (title, html)
-
-    return html
