@@ -44,7 +44,7 @@ const VerifyConfirmModal = (props) => {
               onChange={(e)=>{
                   proof = !proof
               }}
-            /> Verified with Proofs
+            /> verified with proof
           </DialogContent>
             <DialogActions>
                 <Button onClick={()=>{dispatch(hideModal())}} color="primary">
