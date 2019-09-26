@@ -283,7 +283,7 @@ class IncidentFormInternal extends Component {
                                             {this.props.channels.map((c, k) => (
                                                 <Button
                                                     variant="contained"
-                                                    color={(values.infoChannel === c.id) ? "primary" : ""}
+                                                    color={(values.infoChannel == c.id) ? "primary" : ""}
                                                     className={classes.button}
                                                     onClick={() => { setFieldValue("infoChannel", c.id, false) }}
                                                 >
@@ -426,6 +426,7 @@ class IncidentFormInternal extends Component {
                                                                     root: classes.severityLow,
                                                                     checked: classes.checked,
                                                                 }}
+                                                                checked={(values.severity == "1") ? true : false }
                                                             />
                                                         }
                                                         label="1"
@@ -443,6 +444,7 @@ class IncidentFormInternal extends Component {
                                                                     root: classes.severityLow,
                                                                     checked: classes.checked,
                                                                 }}
+                                                                checked={(values.severity == "2") ? true : false }
                                                             />
                                                         }
                                                         label="2"
@@ -460,6 +462,7 @@ class IncidentFormInternal extends Component {
                                                                     root: classes.severityLow,
                                                                     checked: classes.checked,
                                                                 }}
+                                                                checked={(values.severity == "3") ? true : false }
                                                             />
                                                         }
                                                         label="3"
@@ -477,6 +480,7 @@ class IncidentFormInternal extends Component {
                                                                     root: classes.severityMedium,
                                                                     checked: classes.checked,
                                                                 }}
+                                                                checked={(values.severity == "4") ? true : false }
                                                             />
                                                         }
                                                         label="4"
@@ -494,6 +498,7 @@ class IncidentFormInternal extends Component {
                                                                     root: classes.severityMedium,
                                                                     checked: classes.checked,
                                                                 }}
+                                                                checked={(values.severity == "5") ? true : false }
                                                             />
                                                         }
                                                         label="5"
@@ -511,6 +516,7 @@ class IncidentFormInternal extends Component {
                                                                     root: classes.severityMedium,
                                                                     checked: classes.checked,
                                                                 }}
+                                                                checked={(values.severity == "6") ? true : false }
                                                             />
                                                         }
                                                         label="6"
@@ -528,6 +534,7 @@ class IncidentFormInternal extends Component {
                                                                     root: classes.severityHigh,
                                                                     checked: classes.checked,
                                                                 }}
+                                                                checked={(values.severity == "7") ? true : false }
                                                             />
                                                         }
                                                         label="7"
@@ -539,7 +546,13 @@ class IncidentFormInternal extends Component {
                                                     />
                                                     <FormControlLabel
                                                         value="8"
-                                                        control={<Radio className={classes.severityHigh} />}
+                                                        control={<Radio 
+                                                            classes={{
+                                                                root: classes.severityHigh,
+                                                                checked: classes.checked,
+                                                            }}
+                                                            checked={(values.severity == "8") ? true : false }
+                                                            />}
                                                         label="8"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
@@ -549,7 +562,13 @@ class IncidentFormInternal extends Component {
                                                     />
                                                     <FormControlLabel
                                                         value="9"
-                                                        control={<Radio className={classes.severityHigh} />}
+                                                        control={<Radio 
+                                                            classes={{
+                                                                root: classes.severityHigh,
+                                                                checked: classes.checked,
+                                                            }}
+                                                            checked={(values.severity == "9") ? true : false }
+                                                            />}
                                                         label="9"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
@@ -559,7 +578,13 @@ class IncidentFormInternal extends Component {
                                                     />
                                                     <FormControlLabel
                                                         value="10"
-                                                        control={<Radio className={classes.severityHigh} />}
+                                                        control={<Radio 
+                                                            classes={{
+                                                                root: classes.severityHigh,
+                                                                checked: classes.checked,
+                                                            }}
+                                                            checked={(values.severity == "10") ? true : false }
+                                                            />}
                                                         label="10"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
@@ -632,7 +657,7 @@ class IncidentFormInternal extends Component {
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.districts.allCodes.map((c, k) => {
                                                         let currDistrict = this.props.districts.byCode[c]
-                                                        return currDistrict.name ==='NONE' && 
+                                                        return currDistrict.name === 'NONE' &&
                                                             <MenuItem value={currDistrict.code} key={k}>
                                                                 {currDistrict.province}
                                                             </MenuItem>
@@ -654,7 +679,7 @@ class IncidentFormInternal extends Component {
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.districts.allCodes.map((c, k) => {
                                                         let currDistrict = this.props.districts.byCode[c]
-                                                        return currDistrict.name !== 'NONE' && 
+                                                        return currDistrict.name !== 'NONE' &&
                                                             <MenuItem value={currDistrict.code} key={k}>
                                                                 {currDistrict.name}
                                                             </MenuItem>
@@ -669,7 +694,7 @@ class IncidentFormInternal extends Component {
                                                     value={values.divisionalSecretariat}
                                                     handleChange={handleChange}
                                                     name='divisionalSecretariat'
-                                                    dataObj = {this.props.divisionalSecretariats}
+                                                    dataObj={this.props.divisionalSecretariats}
                                                 />
                                             </FormControl>
                                         </Grid>
@@ -680,7 +705,7 @@ class IncidentFormInternal extends Component {
                                                     value={values.pollingDivision}
                                                     handleChange={handleChange}
                                                     name='pollingDivision'
-                                                    dataObj = {this.props.pollingDivisions}
+                                                    dataObj={this.props.pollingDivisions}
                                                 />
                                             </FormControl>
                                         </Grid>
@@ -691,7 +716,7 @@ class IncidentFormInternal extends Component {
                                                     value={values.pollingStation}
                                                     handleChange={handleChange}
                                                     name='pollingStation'
-                                                    dataObj = {this.props.pollingStations}
+                                                    dataObj={this.props.pollingStations}
                                                 />
                                             </FormControl>
                                         </Grid>
@@ -702,7 +727,7 @@ class IncidentFormInternal extends Component {
                                                     value={values.gramaNiladhari}
                                                     handleChange={handleChange}
                                                     name='gramaNiladhari'
-                                                    dataObj = {this.props.gramaNiladharis}
+                                                    dataObj={this.props.gramaNiladharis}
                                                 />
                                             </FormControl>
                                         </Grid>
@@ -713,7 +738,7 @@ class IncidentFormInternal extends Component {
                                                     value={values.policeStation}
                                                     handleChange={handleChange}
                                                     name='policeStation'
-                                                    dataObj = {this.props.policeStations}
+                                                    dataObj={this.props.policeStations}
                                                 />
                                             </FormControl>
                                         </Grid>
@@ -724,7 +749,7 @@ class IncidentFormInternal extends Component {
                                                     value={values.policeDivision}
                                                     handleChange={handleChange}
                                                     name='policeDivision'
-                                                    dataObj = {this.props.policeDivisions}
+                                                    dataObj={this.props.policeDivisions}
                                                 />
                                             </FormControl>
                                         </Grid>
