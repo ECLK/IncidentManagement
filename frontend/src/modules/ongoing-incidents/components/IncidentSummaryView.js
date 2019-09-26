@@ -75,7 +75,7 @@ function BasicDetailTab(props){
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Occurrence </Typography>
-                                <Typography gutterBottom> {incident.occurence} </Typography>
+                                <Typography gutterBottom> { (incident.occurrence) ? incident.occurrence.replace(/_/g,' ') : incident.occurrence } </Typography>
                             </Grid>
                         </Grid>
 
