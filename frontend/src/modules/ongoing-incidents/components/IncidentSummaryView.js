@@ -39,6 +39,13 @@ const styles = theme => ({
     }
 });
 
+// dictionary map for occurrence
+const occurrence = {
+    "OCCURRED" : "Occurred",
+    "OCCURRING" : "Occurring",
+    "WILL_OCCUR" : "Will Occur"
+}
+
 /**
  * Basic Information TabView - (1)
  */
@@ -75,7 +82,7 @@ function BasicDetailTab(props){
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Occurrence </Typography>
-                                <Typography gutterBottom> { (incident.occurrence) ? incident.occurrence.replace(/_/g,' ') : incident.occurrence } </Typography>
+                                <Typography gutterBottom> { occurrence[incident.occurrence] } </Typography>
                             </Grid>
                         </Grid>
 
