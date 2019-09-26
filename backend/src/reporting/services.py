@@ -14,7 +14,7 @@ def get_category_summary():
 
 
 def get_mode_summary():
-    return get_summary_by(Channel, "name", "common_channel", "incident.category")
+    return get_summary_by(Channel, "name", "common_channel", "incident.infoChannel")
 
 
 def get_severity_summary():

@@ -1,11 +1,8 @@
 from django.db import connection
 import pandas as pd
 
-from ..incidents.models import Incident
-
 
 def get_data_frame(sql, columns):
-    # headers = [ cat.n]
     dataframe = pd.read_sql_query(sql, connection)
 
     dataframe.sort_values(by=['district'], inplace=True)
@@ -32,7 +29,7 @@ def get_summary_by(entity, name, table_name, table_field):
 
     sql2 = ", ".join(
         map(lambda c: "0" if c is None else "MAX(CASE WHEN (" + name + " = '%s') THEN 1 ELSE NULL END) AS '%s'" % (
-        c, c), item_list))
+            c, c), item_list))
     sql1 = ", ".join(map(lambda c: "0" if c is None else "COUNT(items.`%s`) as '%s'" % (c, c), item_list))
 
     sql = """
