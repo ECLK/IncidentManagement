@@ -27,28 +27,30 @@ def get_data_frame(sql, columns):
     return dataframe.to_html()
 
 
-def get_summary_by(name):
-    item_list = set(Incident.objects.all().values_list(name, flat=True))
+def get_summary_by(entity, name, table_name, table_field):
+    item_list = set(entity.objects.all().values_list(name, flat=True))
 
     sql2 = ", ".join(
-        map(lambda c: "MAX(CASE WHEN (" + name + " = '%s') THEN 1 ELSE NULL END) AS '%s'" % (c, c), item_list))
-    sql1 = ", ".join(map(lambda c: "COUNT(items.`%s`) as '%s'" % (c, c), item_list))
+        map(lambda c: "0" if c is None else "MAX(CASE WHEN (" + name + " = '%s') THEN 1 ELSE NULL END) AS '%s'" % (
+        c, c), item_list))
+    sql1 = ", ".join(map(lambda c: "0" if c is None else "COUNT(items.`%s`) as '%s'" % (c, c), item_list))
 
     sql = """
             SELECT 
-                incident.district,
-                %s
-            FROM incidents_incident incident,
+                    IFNULL(d.name,"Unassigned") as district,
+                    %s
+                FROM incidents_incident incident LEFT JOIN common_district d 
+                ON incident.district = d.code,
             ( 
                 SELECT
                 id,
                 %s
-                FROM incidents_incident
+                FROM %s
                 GROUP BY id
             ) as items 
-            WHERE items.id = incident.id
+            WHERE items.id LIKE %s
             GROUP BY incident.district
-        """ % (sql1, sql2)
+        """ % (sql1, sql2, table_name, table_field)
 
     return get_data_frame(sql, item_list)
 
