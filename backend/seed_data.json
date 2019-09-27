@@ -173,7 +173,7 @@
     "pk": 14,
     "fields": {
       "top_category": "Election Violence",
-      "sub_category": "Thuggery",
+      "sub_category": "Mob Attack",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
       "sn_sub_category": "මැර ප්‍රහාර එල්ල කිරීම",
       "tm_top_category": "தேர்தல் வன்முறைகள்",
@@ -199,7 +199,7 @@
     "pk": 16,
     "fields": {
       "top_category": "Violation of election law",
-      "sub_category": "Misuse of public building",
+      "sub_category": "Misuse of a public building",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "පොදු ගොඩනැගිලි අයථා පරිහරණය",
       "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
@@ -225,7 +225,7 @@
     "pk": 18,
     "fields": {
       "top_category": "Violation of election law",
-      "sub_category": "Misuse of media",
+      "sub_category": "Misuse of the media",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "මාධ්‍ය අවභාවිතය",
       "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
@@ -264,7 +264,7 @@
     "pk": 21,
     "fields": {
       "top_category": "Violation of election law",
-      "sub_category": "Conduct of rallies / processions",
+      "sub_category": "Conducting of rallies / processions",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "රැස්වීම්, පෙළපාලි පැවැත්වීම",
       "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
@@ -342,7 +342,7 @@
     "pk": 27,
     "fields": {
       "top_category": "Violation of election law",
-      "sub_category": "False information",
+      "sub_category": "False information / Fake news",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "අසත්‍ය ප්‍රචාර",
       "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
@@ -355,7 +355,7 @@
     "pk": 28,
     "fields": {
       "top_category": "Violation of election law",
-      "sub_category": "Falsification",
+      "sub_category": "Falsification / Forgery",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "ව්‍යාජ පුවත් මැවීම",
       "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
@@ -368,7 +368,7 @@
     "pk": 29,
     "fields": {
       "top_category": "Violation of election law",
-      "sub_category": "By relegious leaders involving propaganda",
+      "sub_category": "By religious leaders involving propaganda",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "ආගමික නායකයන් හරහා ප්‍රචාරණ කටයුතු කිරීම",
       "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
@@ -381,7 +381,7 @@
     "pk": 30,
     "fields": {
       "top_category": "Violation of election law",
-      "sub_category": "Use of religious place and occasions for propaganda",
+      "sub_category": "Use of religious place(s) and occasions for propaganda",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "දේශපාලන ප්‍රචාරක කටයුතු සඳහා ආගමික ස්ථාන හා උත්සව යොදා ගැනීම",
       "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
@@ -394,7 +394,7 @@
     "pk": 31,
     "fields": {
       "top_category": "Violation of election law",
-      "sub_category": "Obstructing the exercise of vote",
+      "sub_category": "Obstructing voting",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "ඡන්දය ප්‍රකාශ කිරීමට බාධා කිරීම",
       "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
