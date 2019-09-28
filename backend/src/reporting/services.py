@@ -6,27 +6,52 @@ import numpy as np
 
 from ..common.models import Category, Channel
 from ..incidents.models import Incident
-from .functions import get_summary_by
+from .functions import get_summary_by, get_general_report
 
 
-def get_category_summary():
-    return get_summary_by(Category, "top_category", "common_category", "incident.category")
+def get_category_summary(start_date, end_date, detailed_report):
+    if detailed_report == 'true':
+        return get_summary_by(Category, "top_category", "common_category", "incident.category", start_date, end_date)
+    return get_general_report("top_category", "Category", "common_category", "category", "id", start_date, end_date)
 
 
-def get_mode_summary():
-    return get_summary_by(Channel, "name", "common_channel", "incident.infoChannel")
+def get_mode_summary(start_date, end_date, detailed_report):
+    if detailed_report == 'true':
+        return get_summary_by(Channel, "name", "common_channel", "incident.infoChannel", start_date, end_date)
+    return get_general_report("name", "Mode", "common_channel", "infoChannel", "id", start_date, end_date)
 
 
-def get_severity_summary():
-    return get_summary_by(Incident, "severity", "incidents_incident", "incident.id")
+def get_severity_summary(start_date, end_date, detailed_report):
+    if detailed_report == 'true':
+        return get_summary_by(Incident, "severity", "incidents_incident", "incident.id", start_date, end_date)
+    sql = """
+    select CASE WHEN severity > 7 THEN 'High' WHEN severity > 3 THEN 'Medium' ELSE 'Low' END as Status, 
+    IFNULL(COUNT(incidents_incident.severity),'0') AS Total from incidents_incident 
+    where occured_date BETWEEN '%s' AND '%s' 
+    group by Status 
+    order by FIELD(Status, 'High','Medium','Low');""" % (
+        start_date, end_date)
+
+    dataframe = pd.read_sql_query(sql, connection)
+    return dataframe.to_html(index=False)
 
 
-def get_subcategory_summary():
-    return get_summary_by(Category, "sub_category", "common_category", "incident.category")
+def get_subcategory_summary(start_date, end_date, detailed_report):
+    if detailed_report == 'true':
+        return get_summary_by(Category, "sub_category", "common_category", "incident.category", start_date, end_date)
+    return get_general_report("sub_category", "Subcategory", "common_category", "category", "id", start_date, end_date)
 
 
-def get_status_summary():
-    return get_summary_by(Incident, "current_status", "incidents_incident", "incident.id")
+def get_status_summary(start_date, end_date, detailed_report):
+    if detailed_report == 'true':
+        return get_summary_by(Incident, "current_status", "incidents_incident", "incident.id", start_date, end_date)
+    sql = """select IFNULL(current_status,'Unassigned') as Status, IFNULL(COUNT(incidents_incident.current_status),'0') 
+    AS Total from incidents_incident 
+    where occured_date BETWEEN '%s' AND '%s' 
+    group by current_status order by Total DESC;""" % (start_date, end_date)
+
+    dataframe = pd.read_sql_query(sql, connection)
+    return dataframe.to_html(index=False)
 
 
 def get_police_division_summary():
