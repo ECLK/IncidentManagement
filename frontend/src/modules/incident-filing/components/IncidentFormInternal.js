@@ -344,7 +344,6 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={6} sm={3}>
                                             <TextField
-                                                margin="normal"
                                                 id="occured_date"
                                                 label="Incident date and time*"
                                                 type="datetime-local"
@@ -531,7 +530,7 @@ class IncidentFormInternal extends Component {
                                                         control={
                                                             <Radio
                                                                 classes={{
-                                                                    root: classes.severityHigh,
+                                                                    root: classes.severityMedium,
                                                                     checked: classes.checked,
                                                                 }}
                                                                 checked={(values.severity == "7") ? true : false }
@@ -541,7 +540,7 @@ class IncidentFormInternal extends Component {
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
                                                         classes={{
-                                                            label: classes.severityHigh,
+                                                            label: classes.severityMedium,
                                                         }}
                                                     />
                                                     <FormControlLabel
@@ -619,7 +618,6 @@ class IncidentFormInternal extends Component {
                                                 className={classes.textField}
                                                 value={values.location}
                                                 onChange={handleChange}
-                                                margin="normal"
                                                 multiline
                                             />
                                         </Grid>
@@ -630,7 +628,6 @@ class IncidentFormInternal extends Component {
                                                 className={classes.textField}
                                                 value={values.address}
                                                 onChange={handleChange}
-                                                margin="normal"
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
@@ -640,7 +637,6 @@ class IncidentFormInternal extends Component {
                                                 className={classes.textField}
                                                 value={values.city}
                                                 onChange={handleChange}
-                                                margin="normal"
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
@@ -770,7 +766,6 @@ class IncidentFormInternal extends Component {
                                                 className={classes.textField}
                                                 value={values.reporterName}
                                                 onChange={handleChange}
-                                                margin="normal"
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
@@ -798,7 +793,6 @@ class IncidentFormInternal extends Component {
                                                 className={classes.textField}
                                                 value={values.reporterAddress}
                                                 onChange={handleChange}
-                                                margin="normal"
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
@@ -809,7 +803,6 @@ class IncidentFormInternal extends Component {
                                                 className={classes.textField}
                                                 value={values.reporterMobile}
                                                 onChange={handleChange}
-                                                margin="normal"
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
@@ -820,7 +813,6 @@ class IncidentFormInternal extends Component {
                                                 className={classes.textField}
                                                 value={values.reporterEmail}
                                                 onChange={handleChange}
-                                                margin="normal"
                                             />
                                         </Grid>
                                         <Grid item xs={12} >
@@ -844,7 +836,7 @@ class IncidentFormInternal extends Component {
                                 <div className={classes.hide}>
                                     <ExpansionPanel>
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                                            <Typography varient="h5">Police Information</Typography>
+                                            <Typography variant="h5" gutterBottom> Police Related Information </Typography>
                                         </ExpansionPanelSummary>
                                         <ExpansionPanelDetails>
                                             <Grid container spacing={24}>
@@ -856,7 +848,6 @@ class IncidentFormInternal extends Component {
                                                         className={classes.textField}
                                                         value={values.nature_of_incident}
                                                         onChange={handleChange}
-                                                        margin="normal"
                                                     />
                                                 </Grid>
 
@@ -868,7 +859,6 @@ class IncidentFormInternal extends Component {
                                                         className={classes.textField}
                                                         value={values.complainers_name}
                                                         onChange={handleChange}
-                                                        margin="normal"
                                                     />
                                                 </Grid>
                                                 <Grid item xs={12} sm={4}>
@@ -881,7 +871,6 @@ class IncidentFormInternal extends Component {
                                                         className={classes.textField}
                                                         value={values.complainers_address}
                                                         onChange={handleChange}
-                                                        margin="normal"
                                                     />
                                                 </Grid>
 
@@ -893,7 +882,6 @@ class IncidentFormInternal extends Component {
                                                         className={classes.textField}
                                                         value={values.victims_name}
                                                         onChange={handleChange}
-                                                        margin="normal"
                                                     />
                                                 </Grid>
                                                 <Grid item xs={12} sm={4}>
@@ -906,7 +894,6 @@ class IncidentFormInternal extends Component {
                                                         className={classes.textField}
                                                         value={values.victims_address}
                                                         onChange={handleChange}
-                                                        margin="normal"
                                                     />
                                                 </Grid>
 
@@ -918,7 +905,7 @@ class IncidentFormInternal extends Component {
                                                         className={classes.textField}
                                                         value={values.respondents_name}
                                                         onChange={handleChange}
-                                                        margin="normal"
+                                                        
                                                     />
                                                 </Grid>
                                                 <Grid item xs={12} sm={4}>
@@ -931,7 +918,6 @@ class IncidentFormInternal extends Component {
                                                         className={classes.textField}
                                                         value={values.respondents_address}
                                                         onChange={handleChange}
-                                                        margin="normal"
                                                     />
                                                 </Grid>
 
@@ -943,7 +929,7 @@ class IncidentFormInternal extends Component {
                                                         className={classes.textField}
                                                         value={values.no_of_vehicles_arrested}
                                                         onChange={handleChange}
-                                                        margin="normal"
+                                                        
                                                     />
                                                 </Grid>
                                                 <Grid item xs={12} sm={6}></Grid>
@@ -956,7 +942,7 @@ class IncidentFormInternal extends Component {
                                                         className={classes.textField}
                                                         value={values.steps_taken}
                                                         onChange={handleChange}
-                                                        margin="normal"
+                                                        
                                                     />
                                                 </Grid>
 
@@ -968,7 +954,7 @@ class IncidentFormInternal extends Component {
                                                         className={classes.textField}
                                                         value={values.court_case_no}
                                                         onChange={handleChange}
-                                                        margin="normal"
+                                                        
                                                     />
                                                 </Grid>
                                                 <Grid item xs={12} sm={6}></Grid>

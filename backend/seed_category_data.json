@@ -403,101 +403,15 @@
     }
   },
   {
-    "model": "common.channel",
-    "pk": 1,
+    "model": "common.category",
+    "pk": 32,
     "fields": {
-      "name": "Letter",
-      "sn_name": "ලිපිය",
-      "tm_name": "கடிதம்",
-      "order": 3,
-      "created_date": "2019-06-27 00:00:00.000000"
-    }
-  },
-  {
-    "model": "common.channel",
-    "pk": 2,
-    "fields": {
-      "name": "Email",
-      "sn_name": "ඊමේල්",
-      "tm_name": "மின்னஞ்சல்கள்",
-      "order": 2,
-      "created_date": "2019-06-27 00:00:00.000000"
-    }
-  },
-  {
-    "model": "common.channel",
-    "pk": 3,
-    "fields": {
-      "name": "Fax",
-      "sn_name": "ෆැක්ස්",
-      "tm_name": "தொலைநகல்",
-      "order": 4,
-      "created_date": "2019-06-27 00:00:00.000000"
-    }
-  },
-  {
-    "model": "common.channel",
-    "pk": 4,
-    "fields": {
-      "name": "Phone",
-      "sn_name": "දුරකථන",
-      "tm_name": "போன்கள்",
-      "order": 1,
-      "created_date": "2019-06-27 00:00:00.000000"
-    }
-  },
-  {
-    "model": "common.channel",
-    "pk": 5,
-    "fields": {
-      "name": "SMS",
-      "sn_name": "කෙටි පණිවිඩ",
-      "tm_name": "எஸ்எம்எஸ்",
-      "order": 9,
-      "created_date": "2019-06-27 00:00:00.000000"
-    }
-  },
-  {
-    "model": "common.channel",
-    "pk": 6,
-    "fields": {
-      "name": "Tell Commission / FB",
-      "sn_name": "කොමිසමට / ෆේස්බුක්",
-      "tm_name": "கமிஷன் / ஃபேஸ்புக்",
-      "order": 8,
-      "created_date": "2019-06-27 00:00:00.000000"
-    }
-  },
-  {
-    "model": "common.channel",
-    "pk": 7,
-    "fields": {
-      "name": "Mobile App",
-      "sn_name": "ජංගම මෘදුකාංග",
-      "tm_name": "மொபைல் மென்பொருள்",
-      "order": 5,
-      "created_date": "2019-06-27 00:00:00.000000"
-    }
-  },
-  {
-    "model": "common.channel",
-    "pk": 8,
-    "fields": {
-      "name": "Civil Society",
-      "sn_name": "සිවිල් සමාජය",
-      "tm_name": "சிவில் சமூகத்தின்",
-      "order": 7,
-      "created_date": "2019-06-27 00:00:00.000000"
-    }
-  },
-  {
-    "model": "common.channel",
-    "pk": 9,
-    "fields": {
-      "name": "Mobile patrolling units",
-      "sn_name": "ජංගම මුර සංචාර ඒකක",
-      "tm_name": "மொபைல் ரோந்து அலகுகள்",
-      "order": 6,
+      "top_category": "Violation of election law",
+      "sub_category": "Other",
+      "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
+      "sn_sub_category": "වෙනත්",
+      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
+      "tm_sub_category": "இதர",
       "created_date": "2019-06-27 00:00:00.000000"
     }
   }
