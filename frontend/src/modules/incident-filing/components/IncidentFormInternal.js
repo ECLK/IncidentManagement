@@ -374,7 +374,6 @@ class IncidentFormInternal extends Component {
                                                             </div>
                                                         </MenuItem>
                                                     ))}
-                                                    <MenuItem value="Other"> Other </MenuItem>
                                                 </Select>
                                             </FormControl>
                                         </Grid>
