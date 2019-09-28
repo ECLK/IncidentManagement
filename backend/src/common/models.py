@@ -1,4 +1,13 @@
 from django.db import models
+import enum
+
+class PartyType(enum.Enum):
+    REGISTERED_PARTY = "Registered Party"
+    NON_REGISTERED_PARTY = "Non Registered Party"
+    INDEPENDENT_GROUP = "Independent Group"
+
+    def __str__(self):
+        return self.name
 
 class Category(models.Model):
     # django puts a default auto increment 'id' fields
@@ -109,6 +118,22 @@ class PoliceDivision(models.Model):
 
 class PollingDivision(models.Model):
     code = models.CharField(max_length=36, unique=True)
+    name = models.CharField(max_length=200)
+    sn_name = models.CharField(max_length=200, null=True, blank=True)
+    tm_name = models.CharField(max_length=200, null=True, blank=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('id',)
+
+class PoliticalParty(models.Model):
+    code = models.CharField(max_length=36, unique=True)
+    party_type = models.CharField(
+        max_length=50,
+        choices=[(tag.name, tag.value) for tag in PartyType],
+        null=True,
+        blank=True,
+    )
     name = models.CharField(max_length=200)
     sn_name = models.CharField(max_length=200, null=True, blank=True)
     tm_name = models.CharField(max_length=200, null=True, blank=True)
