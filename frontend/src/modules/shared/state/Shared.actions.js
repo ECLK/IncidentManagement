@@ -50,6 +50,10 @@ import {
     REQUEST_INCIDENT_WARDS_SUCCESS,
     REQUEST_INCIDENT_WARDS_FAILURE,
 
+    REQUEST_INCIDENT_POLITICAL_PARTIES,
+    REQUEST_INCIDENT_POLITICAL_PARTIES_SUCCESS,
+    REQUEST_INCIDENT_POLITICAL_PARTIES_FAILURE,
+
     ACTIVE_INCIDENT_GET_DATA_REQUEST,
     ACTIVE_INCIDENT_GET_DATA_SUCCESS,
     ACTIVE_INCIDENT_GET_DATA_ERROR,
@@ -81,7 +85,8 @@ import {
     getPollingDivisions,
     getPoliceStations, 
     getPoliceDivisions, 
-    getWards
+    getWards,
+    getPoliticalParties
 } from '../../../api/shared';
 import { signIn } from '../../../api/user';
 import * as localStorage from '../../../utils/localStorage';
@@ -545,6 +550,46 @@ export function fetchWards(){
     }
 }
 
+
+
+// get political parties
+
+export function requestPoliticalParties(){
+    return {
+        type: REQUEST_INCIDENT_POLITICAL_PARTIES,
+        isLoading: true
+    }
+}
+
+export function receivePoliticalParties(response){
+    return {
+        type: REQUEST_INCIDENT_POLITICAL_PARTIES_SUCCESS,
+        data: response,
+        error: null,
+        isLoading: false
+    }
+}
+
+export function receivePoliticalPatiesError(errorResponse){
+    return {
+        type: REQUEST_INCIDENT_POLITICAL_PARTIES_FAILURE,
+        data: null,
+        error: errorResponse,
+        isLoading: false
+    }
+}
+
+export function fetchPoliticalParties(){
+    return async function(dispatch) {
+        dispatch(requestPoliticalParties());
+        try {
+            const response = await getPoliticalParties();
+            await dispatch(receivePoliticalParties(response.data));
+        } catch (error) {
+            await dispatch(receivePoliticalPatiesError(error));
+        }
+    }
+}
 
 // get active incident data
 

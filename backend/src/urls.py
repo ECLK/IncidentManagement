@@ -57,6 +57,7 @@ urlpatterns = [
     path("dsdivisions/", common_views.DSDivisionList.as_view()),
     path("gndivisions/", common_views.GNDivisionList.as_view()),
 
+    path("politicalparties/", common_views.PoliticalPartyList.as_view()),
 
     path("incidents/", incident_views.IncidentList.as_view()),
     path("incidents/<uuid:incident_id>", incident_views.IncidentDetail.as_view()),
