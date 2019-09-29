@@ -69,6 +69,9 @@ import {
 
     RESET_ACTIVE_INCIDENT,
 
+    REQUEST_INCIDENT_POLITICAL_PARTIES,
+    REQUEST_INCIDENT_POLITICAL_PARTIES_SUCCESS,
+    REQUEST_INCIDENT_POLITICAL_PARTIES_FAILURE
 
 } from './Shared.types';
 
@@ -122,6 +125,10 @@ const initialState = {
         allCodes:[]
     },
     wards: [],
+    politicalParties: {
+        byCode:{},
+        allCodes:[]
+    },
 
     activeIncident: {
         isLoading: false,
@@ -250,6 +257,15 @@ export default function sharedReducer(state, action) {
                 return draft
             case REQUEST_INCIDENT_WARDS_FAILURE:
                 return draft
+
+            case REQUEST_INCIDENT_POLITICAL_PARTIES:
+                return draft
+            case REQUEST_INCIDENT_POLITICAL_PARTIES_SUCCESS:
+                draft.politicalParties = transformArray(action.data);
+                return draft
+            case REQUEST_INCIDENT_POLITICAL_PARTIES_FAILURE:
+                return draft
+
             case ACTIVE_INCIDENT_GET_DATA_REQUEST:
                 draft.activeIncident.isLoading = true
                 return draft

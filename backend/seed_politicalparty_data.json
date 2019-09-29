@@ -1,0 +1,230 @@
+[
+    {
+        "model": "common.politicalparty",
+        "pk": 1,
+        "fields": {
+            "code": "RPP1",
+            "party_type": "REGISTERED_PARTY",
+            "name": "United National Party",
+            "sn_name": "එක්සත් ජාතික පක්ෂය",
+            "tm_name": "ஐக்கிய தேசியக் கட்சி",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 2,
+        "fields": {
+            "code": "RPP2",
+            "party_type": "REGISTERED_PARTY",
+            "name": "United People's Freedom Alliance",
+            "sn_name": "එක්සත් ජනතා නිදහස් සන්ධානය",
+            "tm_name": "ஐக்கிய மக்கள் சுதந்திரக் கூட்டணி",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 3,
+        "fields": {
+            "code": "RPP3",
+            "party_type": "REGISTERED_PARTY",
+            "name": "People's Liberation Front",
+            "sn_name": "ජනතා විමුක්ති පෙරමුණ",
+            "tm_name": "மக்கள் விடுதலை முன்னணி",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 4,
+        "fields": {
+            "code": "RPP4",
+            "party_type": "REGISTERED_PARTY",
+            "name": "Democratic United National Front",
+            "sn_name": "ප්‍රජාතන්ත්‍රවාදී එක්සත් ජාතික පෙරමුණ",
+            "tm_name": "ஜனநாயக ஐக்கிய தேசிய முன்னணி",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 5,
+        "fields": {
+            "code": "RPP5",
+            "party_type": "REGISTERED_PARTY",
+            "name": "People's Alliance",
+            "sn_name": "පොදු ජන එක්සත් පෙරමුණ",
+            "tm_name": "மக்கள் கூட்டணி",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 6,
+        "fields": {
+            "code": "RPP6",
+            "party_type": "REGISTERED_PARTY",
+            "name": "All Ceylon Makkal Congres",
+            "sn_name": "සමස්ත ලංකා ජනතා කොංග්‍රසය",
+            "tm_name": "அனைத்து இலங்கை மக்கள் காங்கிரசு",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 7,
+        "fields": {
+            "code": "RPP7",
+            "party_type": "REGISTERED_PARTY",
+            "name": "Lanka Sama Samaja Party",
+            "sn_name": "ලංකා සම සමාජ පක්ෂය",
+            "tm_name": "இலங்கை சமசமாஜக் கட்சி",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 8,
+        "fields": {
+            "code": "RPP8",
+            "party_type": "REGISTERED_PARTY",
+            "name": "Ceylon Workers' Congress",
+            "sn_name": "ලංකා කම්කරු කොංග්‍රසය",
+            "tm_name": "இலங்கை தொழிலாளர் காங்கிரஸ்",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 9,
+        "fields": {
+            "code": "RPP9",
+            "party_type": "REGISTERED_PARTY",
+            "name": "Democratic Left Front",
+            "sn_name": "ප්‍රජාතන්ත්‍රවාදී වාමාංශික පෙරමුණ",
+            "tm_name": "மக்களாட்சி இடதுசாரி முன்னணி",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 10,
+        "fields": {
+            "code": "RPP10",
+            "party_type": "REGISTERED_PARTY",
+            "name": "Democratic National Movement",
+            "sn_name": "ප්‍රජාතන්ත්‍රවාදී ජනතා ව්‍යාපරය",
+            "tm_name": "மக்கட்தலை நாடு இயக்கம்",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 11,
+        "fields": {
+            "code": "RPP11",
+            "party_type": "REGISTERED_PARTY",
+            "name": "Democratic People's Front",
+            "sn_name": "ප්‍රජාතන්ත්‍රවාදී ජනතා පෙරමුණ",
+            "tm_name": "மக்களாட்சி மக்கள் முன்னணி",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 12,
+        "fields": {
+            "code": "RPP12",
+            "party_type": "REGISTERED_PARTY",
+            "name": "Jathika Hela Urumaya",
+            "sn_name": "ජාතික හෙළ උරුමය",
+            "tm_name": "ஜாதிக எல உறுமய",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 13,
+        "fields": {
+            "code": "RPP13",
+            "party_type": "REGISTERED_PARTY",
+            "name": "Mahajana Eksath Peramuna",
+            "sn_name": "මහජන එක්සත් පෙරමුණ‍",
+            "tm_name": "மகாஜன எக்சத் பெரமுன",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 14,
+        "fields": {
+            "code": "RPP14",
+            "party_type": "REGISTERED_PARTY",
+            "name": "National Freedom Front",
+            "sn_name": "ජාතික නිදහස් පෙරමුණ",
+            "tm_name": "தேசிய சுதந்திர முன்னணி",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 15,
+        "fields": {
+            "code": "RPP15",
+            "party_type": "REGISTERED_PARTY",
+            "name": "National Union of Workers",
+            "sn_name": "ජාතික කම්කරු සංගමය",
+            "tm_name": "தொழிலாளர் தேசிய சங்கம்",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 16,
+        "fields": {
+            "code": "RPP16",
+            "party_type": "REGISTERED_PARTY",
+            "name": "Sri Lanka Muslim Congress",
+            "sn_name": "ශ්‍රී ලංකා මුස්ලිම් කොංග්‍රසය",
+            "tm_name": "சிறீலங்கா முஸ்லிம் காங்கிரசு",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 17,
+        "fields": {
+            "code": "RPP17",
+            "party_type": "REGISTERED_PARTY",
+            "name": "Tamil Eelam Liberation Organization",
+            "sn_name": "ද්‍රවිඩ ඊලම් විමුක්ති සංවිධානය",
+            "tm_name": "தமிழீழ விடுதலை இயக்கம்",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 18,
+        "fields": {
+            "code": "RPP18",
+            "party_type": "REGISTERED_PARTY",
+            "name": "United Left Front",
+            "sn_name": "එක්සත් වාමාංශික පෙරමුණ",
+            "tm_name": "United Left Front",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 19,
+        "fields": {
+            "code": "RPP19",
+            "party_type": "REGISTERED_PARTY",
+            "name": "Up-Country People's Front",
+            "sn_name": "කඳුරට ජනතා පෙරමුණ",
+            "tm_name": "மலையக மக்கள் முன்னணி",
+            "created_date": "2019-06-27 00:00:00.000000"
+        }
+    }
+]

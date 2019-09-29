@@ -27,7 +27,7 @@ def get_severity_summary(start_date, end_date, detailed_report):
     sql = """
     select CASE WHEN severity > 7 THEN 'High' WHEN severity > 3 THEN 'Medium' ELSE 'Low' END as Status, 
     IFNULL(COUNT(incidents_incident.severity),'0') AS Total from incidents_incident 
-    where occured_date BETWEEN '%s' AND '%s' 
+    where occured_date BETWEEN '%s' AND '%s' or severity is null
     group by Status 
     order by FIELD(Status, 'High','Medium','Low');""" % (
         start_date, end_date)
@@ -47,7 +47,7 @@ def get_status_summary(start_date, end_date, detailed_report):
         return get_summary_by(Incident, "current_status", "incidents_incident", "incident.id", start_date, end_date)
     sql = """select IFNULL(current_status,'Unassigned') as Status, IFNULL(COUNT(incidents_incident.current_status),'0') 
     AS Total from incidents_incident 
-    where occured_date BETWEEN '%s' AND '%s' 
+    where occured_date BETWEEN '%s' AND '%s'
     group by current_status order by Total DESC;""" % (start_date, end_date)
 
     dataframe = pd.read_sql_query(sql, connection)

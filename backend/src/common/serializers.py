@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Channel, District, PoliceStation, PollingStation, DSDivision, GNDivision, Ward, PollingDivision, PoliceDivision
+from .models import Category, Channel, District, PoliceStation, PollingStation, DSDivision, GNDivision, Ward, PollingDivision, PoliceDivision, PoliticalParty
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -60,4 +60,9 @@ class PoliceDivisionSerializer(serializers.ModelSerializer):
 class PollingDivisionSerializer(serializers.ModelSerializer):
     class Meta:
         model = PollingDivision
+        fields = "__all__"
+
+class PoliticalPartySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PoliticalParty
         fields = "__all__"
