@@ -58,3 +58,7 @@ export const getElections = async () => {
     // return handler.get('/elections')
     return mockapi.getElections();
 }
+
+export const getPoliticalParties = async () => {
+    return (await handler.get('/politicalparties')).data;
+}
