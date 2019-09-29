@@ -1,0 +1,15 @@
+
+.DS_STORE
+
+__pycache__
+__pycache__/
+**/*/__pycache__
+
+media/
+.env*
+.gitignore
+docker-compose.yml
+Dockerfile
+*.md
+*.sql
+
