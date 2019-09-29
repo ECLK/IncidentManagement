@@ -6,7 +6,7 @@ import numpy as np
 
 from ..common.models import Category, Channel
 from ..incidents.models import Incident
-from .functions import get_summary_by, get_general_report
+from .functions import get_summary_by, get_general_report, get_status_general_report
 
 
 def get_category_summary(start_date, end_date, detailed_report):
@@ -25,11 +25,13 @@ def get_severity_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
         return get_summary_by(Incident, "severity", "incidents_incident", "incident.id", start_date, end_date)
     sql = """
-    select CASE WHEN severity > 7 THEN 'High' WHEN severity > 3 THEN 'Medium' ELSE 'Low' END as Status, 
-    IFNULL(COUNT(incidents_incident.severity),'0') AS Total from incidents_incident 
-    where occured_date BETWEEN '%s' AND '%s' or severity is null
-    group by Status 
-    order by FIELD(Status, 'High','Medium','Low');""" % (
+    SELECT IFNULL(name,'Unassigned') AS Severity, ifnull(subtotal,0) as Total FROM reporting_severitysegment as d 
+    LEFT JOIN ( select 
+    (CASE WHEN severity > 7 THEN 'High' WHEN severity > 3 THEN 'Medium' ELSE 'Low' END) as currentState, 
+    IFNULL(COUNT(incidents_incident.severity),'0') AS subtotal from incidents_incident 
+    where occured_date BETWEEN '%s' AND '%s' or severity is null 
+    GROUP by currentState) as incidents ON currentState = d.name order by FIELD(Severity, 'High','Medium','Low')
+    """ % (
         start_date, end_date)
 
     dataframe = pd.read_sql_query(sql, connection)
@@ -45,10 +47,16 @@ def get_subcategory_summary(start_date, end_date, detailed_report):
 def get_status_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
         return get_summary_by(Incident, "current_status", "incidents_incident", "incident.id", start_date, end_date)
-    sql = """select IFNULL(current_status,'Unassigned') as Status, IFNULL(COUNT(incidents_incident.current_status),'0') 
-    AS Total from incidents_incident 
-    where occured_date BETWEEN '%s' AND '%s'
-    group by current_status order by Total DESC;""" % (start_date, end_date)
+    sql = """
+    SELECT IFNULL(name,'Unassigned') AS Status, ifnull(subtotal,0) as Total
+    FROM reporting_statussegment as d LEFT JOIN (
+    select (case when ifnull(current_status,'Unassigned') like 'CLOSED' then 'Resolved' else 'Unresolved' end)
+    as currentState,
+    IFNULL(COUNT(current_status),'0') AS subtotal from incidents_incident where occured_date
+    BETWEEN '%s' AND '%s' or current_status is null
+    GROUP by currentState) as incidents ON currentState = d.name
+    ORDER BY `Status` ASC
+    """ % (start_date, end_date)
 
     dataframe = pd.read_sql_query(sql, connection)
     return dataframe.to_html(index=False)
