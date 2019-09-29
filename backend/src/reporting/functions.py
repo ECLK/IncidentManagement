@@ -28,7 +28,6 @@ def get_general_report(field_name, field_label, field_table, count_field, map_fi
     sql = """SELECT IFNULL(%s,'Unassigned') AS %s, IFNULL(COUNT(incidents_incident.%s),'0') AS Total FROM %s as d 
     LEFT JOIN incidents_incident ON incidents_incident.%s = d.%s where occured_date BETWEEN '%s' AND '%s' or %s is null group by %s order by Total DESC;""" % (
         field_name, field_label, count_field, field_table, count_field, map_field, start_date, end_date,count_field, field_name)
-    print(sql)
     dataframe = pd.read_sql_query(sql, connection)
     return dataframe.to_html(index=False)
 
