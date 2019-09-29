@@ -6,7 +6,7 @@ import numpy as np
 
 from ..common.models import Category, Channel
 from ..incidents.models import Incident
-from .functions import get_summary_by, get_general_report, get_status_general_report
+from .functions import get_summary_by, get_general_report
 
 
 def get_category_summary(start_date, end_date, detailed_report):
