@@ -4,7 +4,8 @@
 2. `pip install -r requirements.txt`
 3. `python manage.py migrate`
 4. `python manage.py createsuperuser --email admin@example.com --username admin`
-5. `python manage.py runserver` or to make accessible through LAN use `python manage.py runserver 0.0.0.0:8000` and add your LAN IP to `ALLOWED_HOSTS` in the `settings.py` along with `localhost`. ( `ALLOWED_HOSTS = ["localhost", "192.168.8.160"]`)
+5. `python manage.py loaddata file1 file2` (after `loaddata` add required seed file names separeated by space). Seed files are found in `./seeddata` folder.
+6. `python manage.py runserver` or to make accessible through LAN use `python manage.py runserver 0.0.0.0:8000` and add your LAN IP to `ALLOWED_HOSTS` in the `settings.py` along with `localhost`. ( `ALLOWED_HOSTS = ["localhost", "192.168.8.160"]`)
 
 ## Docker run
 

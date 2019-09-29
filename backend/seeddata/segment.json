@@ -1,0 +1,32 @@
+[
+    {
+        "model": "reporting.severitysegment",
+        "fields": {
+            "name": "High"
+        }
+    },
+    {
+        "model": "reporting.severitysegment",
+        "fields": {
+            "name": "Low"
+        }
+    },
+    {
+        "model": "reporting.severitysegment",
+        "fields": {
+            "name": "Medium"
+        }
+    },
+    {
+        "model": "reporting.statussegment",
+        "fields":{
+            "name": "Resolved"
+        }
+    },
+    {
+        "model": "reporting.statussegment",
+        "fields":{
+            "name": "Unresolved"
+        }
+    }
+]
