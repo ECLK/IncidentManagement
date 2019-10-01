@@ -865,6 +865,132 @@
         }
     },
     {
+        "model": "common.district",
+        "pk": 26,
+        "fields": {
+            "code": "P1",
+            "province": "Central",
+            "sn_province": "මධ්යම",
+            "tm_province": "மத்திய",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 27,
+        "fields": {
+            "code": "P2",
+            "province": "Eastern",
+            "sn_province": "නැගෙනහිර",
+            "tm_province": "கிழக்கு",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 28,
+        "fields": {
+            "code": "P3",
+            "province": "North Central",
+            "sn_province": "උතුරු මැද",
+            "tm_province": "வட மத்திய",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 29,
+        "fields": {
+            "code": "P4",
+            "province": "Northern",
+            "sn_province": "උතුරු",
+            "tm_province": "வடக்கு",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 30,
+        "fields": {
+            "code": "P5",
+            "province": "Sabaragamuwa",
+            "sn_province": "සබරගමුව",
+            "tm_province": "சப்ரகமுவ",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 31,
+        "fields": {
+            "code": "P6",
+            "province": "North Western",
+            "sn_province": "වයඹ",
+            "tm_province": "வடமேற்கு",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 32,
+        "fields": {
+            "code": "P7",
+            "province": "Southern",
+            "sn_province": "දකුණු",
+            "tm_province": "தெற்கு",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 33,
+        "fields": {
+            "code": "P8",
+            "province": "Uva",
+            "sn_province": "ඌව",
+            "tm_province": "ஊவா",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 34,
+        "fields": {
+            "code": "P9",
+            "province": "Western",
+            "sn_province": "බටහිර",
+            "tm_province": "மேற்கு",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
         "model": "common.politicalparty",
         "pk": 1,
         "fields": {
@@ -1093,37 +1219,37 @@
         }
     },
     {
-        "pk":1,
+        "pk": 1,
         "model": "reporting.severitysegment",
         "fields": {
             "name": "High"
         }
     },
     {
-        "pk":2,
+        "pk": 2,
         "model": "reporting.severitysegment",
         "fields": {
             "name": "Low"
         }
     },
     {
-        "pk":3,
+        "pk": 3,
         "model": "reporting.severitysegment",
         "fields": {
             "name": "Medium"
         }
     },
     {
-        "pk":1,
+        "pk": 1,
         "model": "reporting.statussegment",
-        "fields":{
+        "fields": {
             "name": "Resolved"
         }
     },
     {
-        "pk":2,
+        "pk": 2,
         "model": "reporting.statussegment",
-        "fields":{
+        "fields": {
             "name": "Unresolved"
         }
     }
