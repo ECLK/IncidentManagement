@@ -6,13 +6,19 @@ import numpy as np
 
 from ..common.models import Category, Channel
 from ..incidents.models import Incident
-from .functions import get_summary_by, get_general_report
+from .functions import get_summary_by, get_general_report, get_detailed_severity_report
 
 
 def get_category_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
         return get_summary_by(Category, "top_category", "common_category", "incident.category", start_date, end_date)
     return get_general_report("top_category", "Category", "common_category", "category", "id", start_date, end_date)
+
+
+def get_subcategory_summary(start_date, end_date, detailed_report):
+    if detailed_report == 'true':
+        return get_summary_by(Category, "sub_category", "common_category", "incident.category", start_date, end_date)
+    return get_general_report("sub_category", "Subcategory", "common_category", "category", "id", start_date, end_date)
 
 
 def get_mode_summary(start_date, end_date, detailed_report):
@@ -23,42 +29,42 @@ def get_mode_summary(start_date, end_date, detailed_report):
 
 def get_severity_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
-        return get_summary_by(Incident, "severity", "incidents_incident", "incident.id", start_date, end_date)
+        return get_detailed_severity_report(start_date, end_date)
     sql = """
-    SELECT IFNULL(name,'Unassigned') AS Severity, ifnull(subtotal,0) as Total FROM reporting_severitysegment as d 
+    (SELECT IFNULL(name,'Unassigned') AS Severity, ifnull(subtotal,0) as Total FROM reporting_severitysegment as d 
     LEFT JOIN ( select 
     (CASE WHEN severity > 7 THEN 'High' WHEN severity > 3 THEN 'Medium' ELSE 'Low' END) as currentState, 
     IFNULL(COUNT(incidents_incident.severity),'0') AS subtotal from incidents_incident 
     where occured_date BETWEEN '%s' AND '%s' or severity is null 
-    GROUP by currentState) as incidents ON currentState = d.name order by FIELD(Severity, 'High','Medium','Low')
-    """ % (
-        start_date, end_date)
-
-    dataframe = pd.read_sql_query(sql, connection)
+    GROUP by currentState) as incidents ON currentState = d.name ) as finalResult
+    """ % (start_date, end_date)
+    sql1 = """
+            select Severity,Total from %s union
+            select '', Sum(Total) from %s order by FIELD(Severity, 'High','Medium','Low','')
+        """ % (sql, sql)
+    dataframe = pd.read_sql_query(sql1, connection)
     return dataframe.to_html(index=False)
-
-
-def get_subcategory_summary(start_date, end_date, detailed_report):
-    if detailed_report == 'true':
-        return get_summary_by(Category, "sub_category", "common_category", "incident.category", start_date, end_date)
-    return get_general_report("sub_category", "Subcategory", "common_category", "category", "id", start_date, end_date)
 
 
 def get_status_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
         return get_summary_by(Incident, "current_status", "incidents_incident", "incident.id", start_date, end_date)
     sql = """
-    SELECT IFNULL(name,'Unassigned') AS Status, ifnull(subtotal,0) as Total
+    (SELECT IFNULL(name,'Unassigned') AS Status, ifnull(subtotal,'0') as Total
     FROM reporting_statussegment as d LEFT JOIN (
     select (case when ifnull(current_status,'Unassigned') like 'CLOSED' then 'Resolved' else 'Unresolved' end)
     as currentState,
     IFNULL(COUNT(current_status),'0') AS subtotal from incidents_incident where occured_date
-    BETWEEN '%s' AND '%s' or current_status is null
+    BETWEEN '%s' AND '%s'
     GROUP by currentState) as incidents ON currentState = d.name
-    ORDER BY `Status` ASC
+    ) as finalResult
     """ % (start_date, end_date)
-
-    dataframe = pd.read_sql_query(sql, connection)
+    sql1="""
+        select Status,Total from %s union
+        select '', Sum(Total) from %s ORDER BY FIELD(Status,'Resolved','Unresolved','')
+    """%(sql,sql)
+    print(sql1)
+    dataframe = pd.read_sql_query(sql1, connection)
     return dataframe.to_html(index=False)
 
 
