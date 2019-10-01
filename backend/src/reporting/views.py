@@ -44,23 +44,23 @@ class ReportingView(APIView):
 
         if param_report == "category_wise_summary_report":
             table_html = get_category_summary(start_date, end_date, detailed_report)
-            table_title = "Category-wise Summary Report"
+            table_title = "No. of Incidents by Category"
 
         elif param_report == "mode_wise_summary_report":
             table_html = get_mode_summary(start_date, end_date, detailed_report)
-            table_title = "Mode-wise Summary Report"
+            table_title = "No. of Incidents by Mode"
 
         elif param_report == "severity_wise_summary_report":
             table_html = get_severity_summary(start_date, end_date, detailed_report)
-            table_title = "Severity-wise Summary Report"
+            table_title = "No. of Incidents by Severity"
 
         elif param_report == "subcategory_wise_summary_report":
             table_html = get_subcategory_summary(start_date, end_date, detailed_report)
-            table_title = "Subcategory-wise Summary Report"
+            table_title = "No. of Incidents by Subcategory"
 
         elif param_report == "status_wise_summary_report":
             table_html = get_status_summary(start_date, end_date, detailed_report)
-            table_title = "Status-wise Summary Report"
+            table_title = "No. of Incidents by Status"
 
         if table_html is None:
             return Response("Report not found", status=status.HTTP_400_BAD_REQUEST)
