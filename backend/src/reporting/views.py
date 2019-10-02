@@ -6,7 +6,7 @@ from xhtml2pdf import pisa
 import datetime
 
 from .services import get_police_division_summary, get_category_summary, \
-    get_mode_summary, get_severity_summary, get_status_summary, get_subcategory_summary
+    get_mode_summary, get_severity_summary, get_status_summary, get_subcategory_summary, get_district_summary
 from .functions import apply_style
 
 
@@ -49,6 +49,10 @@ class ReportingView(APIView):
         elif param_report == "mode_wise_summary_report":
             table_html = get_mode_summary(start_date, end_date, detailed_report)
             table_title = "No. of Incidents by Mode"
+
+        elif param_report == "district_wise_summary_report":
+                    table_html = get_district_summary(start_date, end_date, detailed_report)
+                    table_title = "No. of Incidents by District"
 
         elif param_report == "severity_wise_summary_report":
             table_html = get_severity_summary(start_date, end_date, detailed_report)

@@ -19,18 +19,36 @@ def get_data_frame(sql, columns):
 
 
 def get_general_report(field_name, field_label, field_table, count_field, map_field, start_date, end_date):
-    sql = """(SELECT IFNULL(%s,'Unassigned') AS %s, IFNULL(COUNT(incidents.%s),'0') AS Total FROM %s as d 
-        LEFT JOIN (select %s from incidents_incident 
-        where occured_date BETWEEN '%s' 
-        AND '%s') as incidents ON incidents.%s = d.%s 
-        group by %s order by Total DESC) as finalResult""" % (
-        field_name, field_label, count_field, field_table, count_field, start_date, end_date, count_field, map_field,
-        field_name)
-    sql1 = """
-        select %s,Total from %s union
-        select '', Sum(Total) from %s
-            """ % (field_label, sql, sql)
-    dataframe = pd.read_sql_query(sql1, connection)
+    sql = """
+        SELECT %s, Total FROM (SELECT %s,
+               Sum(Total) AS Total
+        FROM   (SELECT Ifnull(%s, 'Unassigned') AS %s,
+                       Sum(Total)                 AS Total
+                FROM   %s AS d
+                       RIGHT JOIN (SELECT %s,
+                                          '1' AS Total
+                                   FROM   incidents_incident
+                                   WHERE  occured_date BETWEEN '%s' AND
+                                                               '%s') AS
+                                  incidents
+                               ON incidents.%s = d.%s
+                GROUP  BY incidents.%s
+                UNION
+                SELECT %s,
+                       '0'
+                FROM   %s) AS result
+        GROUP  BY result.%s
+        ORDER  BY Total DESC) as result2
+        UNION
+        SELECT '(Total No. of Incidents)',
+               Count(id)
+        FROM   incidents_incident
+        WHERE  occured_date BETWEEN '%s' AND '%s'
+    """ % (
+        field_label, field_label, field_name, field_label, field_table, count_field, start_date, end_date, count_field,
+        map_field, count_field, field_name, field_table, field_label, start_date, end_date)
+    dataframe = pd.read_sql_query(sql, connection)
+    dataframe = dataframe.fillna(0)
     return dataframe.to_html(index=False)
 
 
@@ -137,5 +155,4 @@ def apply_style(html, title, subtitle):
             </body>
         </html>
            """ % (title, subtitle, html)
-
     return html
