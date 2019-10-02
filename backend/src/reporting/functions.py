@@ -22,7 +22,7 @@ def get_general_report(field_name, field_label, field_table, count_field, map_fi
     sql = """
         SELECT %s, Total FROM (SELECT %s,
                Sum(Total) AS Total
-        FROM   (SELECT Ifnull(%s, 'Unassigned') AS %s,
+        FROM   (SELECT Ifnull(%s, '(Unassigned)') AS %s,
                        Sum(Total)                 AS Total
                 FROM   %s AS d
                        RIGHT JOIN (SELECT %s,
@@ -115,8 +115,6 @@ def apply_style(html, title, subtitle):
                         table-layout: fixed;
                         width: 100%%;
                         word-wrap: break-word;
-                        writing-mode: vertical-rl;
-                        text-orientation: upright;
                     }
 
                     .dataframe td{
