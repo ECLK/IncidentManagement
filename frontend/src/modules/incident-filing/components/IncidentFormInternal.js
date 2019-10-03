@@ -420,10 +420,11 @@ class IncidentFormInternal extends Component {
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.politicalParties.allCodes.map((c, k) => {
                                                         let currParty = this.props.politicalParties.byCode[c]
-                                                        return currParty.name !== 'NONE' &&
+                                                        return (
                                                             <MenuItem value={currParty.code} key={k}>
                                                                 {currParty.name}
                                                             </MenuItem>
+                                                        )
                                                     })}
                                                 </Select>
                                             </FormControl>

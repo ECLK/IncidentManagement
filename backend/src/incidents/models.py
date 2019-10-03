@@ -168,7 +168,7 @@ class Incident(models.Model):
         default=IncidentType.COMPLAINT,
     )
 
-    reported_through = models.CharField(max_length=50, default="GUEST")
+    created_by = models.CharField(max_length=50, default="OTHER")
 
     # getting the elections from a separate service
     election = models.CharField(max_length=200, blank=True)
