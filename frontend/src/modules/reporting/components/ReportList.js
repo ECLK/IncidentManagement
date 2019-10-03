@@ -25,6 +25,7 @@ import FormLabel from "@material-ui/core/FormLabel/FormLabel";
 import RadioGroup from "@material-ui/core/RadioGroup/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
 import Radio from "@material-ui/core/Radio/Radio";
+import moment from 'moment'
 
 const drawerWidth = 240;
 
@@ -71,9 +72,9 @@ class ReportList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            report_type: "",
-            start_date: "",
-            end_date: "",
+            report_type: "category_wise_summary_report",
+            start_date: moment().subtract(1, 'd').format("YYYY-MM-DDT16:00"),
+            end_date: moment().format("YYYY-MM-DDT16:00"),
             detailed_report: "false",
         };
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -157,7 +158,9 @@ class ReportList extends Component {
                                         margin="normal"
                                         id="start_date"
                                         label="Start Date"
-                                        type="date"
+                                        type="datetime-local"
+                                        error={this.state.start_date === ""}
+                                        helperText={this.state.start_date === "" ? 'Invalid Date!' : ' '}
                                         value={this.state.start_date}
                                         InputLabelProps={{shrink: true}}
                                         onChange={(e) => this.handleChange("start_date", e.target.value)}
@@ -169,7 +172,9 @@ class ReportList extends Component {
                                         margin="normal"
                                         id="end_date"
                                         label="End Date"
-                                        type="date"
+                                        type="datetime-local"
+                                        error={this.state.start_date === ""}
+                                        helperText={this.state.start_date === "" ? 'Invalid Date!' : ' '}
                                         value={this.state.end_date}
                                         InputLabelProps={{shrink: true}}
                                         onChange={(e) => this.handleChange("end_date", e.target.value)}

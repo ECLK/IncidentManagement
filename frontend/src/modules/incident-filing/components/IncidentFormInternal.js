@@ -116,7 +116,7 @@ class IncidentFormInternal extends Component {
     state = {
         incidentType: "COMPLAINT",
         infoChannel: "",
-        title: "Internal: ",
+        title: "",
         description: "",
         occurrence: "OCCURRED",
         occured_date: "",
@@ -420,10 +420,11 @@ class IncidentFormInternal extends Component {
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.politicalParties.allCodes.map((c, k) => {
                                                         let currParty = this.props.politicalParties.byCode[c]
-                                                        return currParty.name !== 'NONE' &&
+                                                        return (
                                                             <MenuItem value={currParty.code} key={k}>
                                                                 {currParty.name}
                                                             </MenuItem>
+                                                        )
                                                     })}
                                                 </Select>
                                             </FormControl>
@@ -855,7 +856,7 @@ class IncidentFormInternal extends Component {
                                 </Paper>
 
                                 {/* police details */}
-                                <div>
+                                <div className={classes.hide}>
                                     <ExpansionPanel>
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                             <Typography variant="h5" gutterBottom> Police Related Information </Typography>
