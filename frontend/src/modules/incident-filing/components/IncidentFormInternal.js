@@ -116,7 +116,7 @@ class IncidentFormInternal extends Component {
     state = {
         incidentType: "COMPLAINT",
         infoChannel: "",
-        title: "Internal: ",
+        title: "",
         description: "",
         occurrence: "OCCURRED",
         occured_date: "",
