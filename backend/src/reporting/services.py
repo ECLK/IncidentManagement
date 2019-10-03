@@ -62,6 +62,7 @@ def get_severity_summary(start_date, end_date, detailed_report):
         ORDER  BY Field(Severity, 'High', 'Medium', 'Low', '(Total No. of Incidents)') 
     """ % (start_date, end_date, start_date, end_date)
     dataframe = pd.read_sql_query(sql, connection)
+    dataframe = dataframe.fillna(0)
     return dataframe.to_html(index=False)
 
 
@@ -93,6 +94,7 @@ def get_status_summary(start_date, end_date, detailed_report):
         ORDER  BY Field(status, 'Resolved', 'Unresolved', '(Total No. of Incidents)') 
     """ % (start_date, end_date, start_date, end_date)
     dataframe = pd.read_sql_query(sql, connection)
+    dataframe = dataframe.fillna(0)
     return dataframe.to_html(index=False)
 
 
