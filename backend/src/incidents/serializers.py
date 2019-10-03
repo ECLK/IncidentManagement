@@ -46,10 +46,16 @@ class IncidentSerializer(serializers.ModelSerializer):
         source="police_division", required=False, allow_null=True, allow_blank=True)
 
     policeStation = serializers.CharField(
-        source="police_station", required=False, allow_null=True, allow_blank=True)
+        source="police_station", required=False, allow_null=True, allow_blank=True
+    )
 
     reporterConsent = serializers.BooleanField(
-        source="complainer_consent", required=False, allow_null=True)
+        source="complainer_consent", required=False, allow_null=True
+    )
+
+    politicalParty = serializers.CharField(
+        source="polictical_party", required=False, allow_null=True
+    )
 
     createdDate = serializers.ReadOnlyField(source="created_date")
 

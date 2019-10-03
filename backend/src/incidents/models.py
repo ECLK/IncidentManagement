@@ -49,6 +49,15 @@ class IncidentType(enum.Enum):
     def __str__(self):
         return self.name
 
+class ReportedThrough(enum.Enum):
+    GUEST = "Guest"
+    ELECTION_COMMISION = "Election Commision"
+    POLICE = "Police"
+    OTHER = "Other"
+
+    def __str__(self):
+        return self.name
+
 class Reporter(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
     sn_name = models.CharField(max_length=200, null=True, blank=True)
@@ -159,6 +168,8 @@ class Incident(models.Model):
         default=IncidentType.COMPLAINT,
     )
 
+    reported_through = models.CharField(max_length=50, default="GUEST")
+
     # getting the elections from a separate service
     election = models.CharField(max_length=200, blank=True)
 
@@ -202,6 +213,7 @@ class Incident(models.Model):
     ward = models.CharField(max_length=200, blank=True, null=True)
     di_division = models.CharField(max_length=200, blank=True, null=True)
 
+    polictical_party = models.CharField(max_length=300, blank=True, null=True)
 
     complainer_consent = models.BooleanField(default=False, null=True, blank=True)
     proof = models.BooleanField(default=False, null=True)

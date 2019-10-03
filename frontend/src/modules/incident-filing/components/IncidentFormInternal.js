@@ -5,14 +5,12 @@ import { withRouter } from "react-router";
 import { withStyles } from '@material-ui/core/styles';
 import { Formik } from 'formik';
 
-import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -27,7 +25,6 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
 import orange from '@material-ui/core/colors/orange';
 import yellow from '@material-ui/core/colors/yellow';
@@ -147,7 +144,7 @@ class IncidentFormInternal extends Component {
         reporterLandline: "",
         reporterEmail: "",
         file: null,
-        incidentPoliticalParty:"",
+        politicalParty:"",
 
         // police info
         nature_of_incident: "",
@@ -384,7 +381,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 type="text"
                                                 name="otherCat"
-                                                label="If Other, please describe here"
+                                                label="If Other Category, please describe here"
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
                                                 value={values.otherCat}
@@ -409,11 +406,11 @@ class IncidentFormInternal extends Component {
                                                 </Select>
                                             </FormControl>
                                         </Grid>
-                                        {/* <Grid item xs={12} sm={6}>
+                                        <Grid item xs={12} sm={6}>
                                             <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="politicalParty">Reponsible Political Party</InputLabel>
                                                 <Select
-                                                    value={values.incidentPoliticalParty}
+                                                    value={values.politicalParty}
                                                     onChange={handleChange}
                                                     inputProps={{
                                                         name: 'politicalParty',
@@ -430,7 +427,7 @@ class IncidentFormInternal extends Component {
                                                     })}
                                                 </Select>
                                             </FormControl>
-                                        </Grid> */}
+                                        </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <FormControl component="fieldset" className={classes.formControl}>
                                                 <FormLabel component="legend">Severity</FormLabel>
@@ -858,23 +855,14 @@ class IncidentFormInternal extends Component {
                                 </Paper>
 
                                 {/* police details */}
-                                <div className={classes.hide}>
+                                <div>
                                     <ExpansionPanel>
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                             <Typography variant="h5" gutterBottom> Police Related Information </Typography>
                                         </ExpansionPanelSummary>
                                         <ExpansionPanelDetails>
                                             <Grid container spacing={24}>
-                                                <Grid item xs={12} sm={12}>
-                                                    <TextField
-                                                        id="nature_of_incident"
-                                                        name="nature_of_incident"
-                                                        label="Nature of Incident"
-                                                        className={classes.textField}
-                                                        value={values.nature_of_incident}
-                                                        onChange={handleChange}
-                                                    />
-                                                </Grid>
+                                            
 
                                                 <Grid item xs={12} sm={6}>
                                                     <TextField
@@ -945,44 +933,6 @@ class IncidentFormInternal extends Component {
                                                         onChange={handleChange}
                                                     />
                                                 </Grid>
-
-                                                <Grid item xs={12} sm={6}>
-                                                    <TextField
-                                                        id="no_of_vehicles_arrested"
-                                                        name="no_of_vehicles_arrested"
-                                                        label="No. of Vehicles Arrested"
-                                                        className={classes.textField}
-                                                        value={values.no_of_vehicles_arrested}
-                                                        onChange={handleChange}
-
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={12} sm={6}></Grid>
-
-                                                <Grid item xs={12} sm={12}>
-                                                    <TextField
-                                                        id="steps_taken"
-                                                        name="steps_taken"
-                                                        label="Steps taken"
-                                                        className={classes.textField}
-                                                        value={values.steps_taken}
-                                                        onChange={handleChange}
-
-                                                    />
-                                                </Grid>
-
-                                                <Grid item xs={12} sm={6}>
-                                                    <TextField
-                                                        id="court_case_no"
-                                                        name="court_case_no"
-                                                        label="Court Case Number"
-                                                        className={classes.textField}
-                                                        value={values.court_case_no}
-                                                        onChange={handleChange}
-
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={12} sm={6}></Grid>
 
                                             </Grid>
                                         </ExpansionPanelDetails>
