@@ -38,7 +38,7 @@ def get_severity_summary(start_date, end_date, detailed_report):
         return get_detailed_severity_report(start_date, end_date)
     sql = """
          SELECT    Ifnull(name,'Unassigned') AS Severity,
-                   Ifnull(subtotal,0)        AS total
+                   Ifnull(subtotal,0)        AS Total
          FROM      reporting_severitysegment AS d
          LEFT JOIN
                    (
@@ -54,7 +54,7 @@ def get_severity_summary(start_date, end_date, detailed_report):
                             OR       severity IS NULL
                             GROUP BY currentstate) AS incidents
          ON        currentstate = d.name 
-         UNION
+         UNION ALL
         SELECT '(Total No. of Incidents)',
                Count(id)
         FROM   incidents_incident
@@ -62,6 +62,7 @@ def get_severity_summary(start_date, end_date, detailed_report):
         ORDER  BY Field(Severity, 'High', 'Medium', 'Low', '(Total No. of Incidents)') 
     """ % (start_date, end_date, start_date, end_date)
     dataframe = pd.read_sql_query(sql, connection)
+    dataframe = dataframe.fillna(0)
     return dataframe.to_html(index=False)
 
 
@@ -85,7 +86,7 @@ def get_status_summary(start_date, end_date, detailed_report):
                                                       '%s'
                           GROUP  BY currentstate) AS incidents
                       ON currentstate = d.name
-        UNION
+        UNION ALL
         SELECT '(Total No. of Incidents)',
                Count(id)
         FROM   incidents_incident
@@ -93,6 +94,7 @@ def get_status_summary(start_date, end_date, detailed_report):
         ORDER  BY Field(status, 'Resolved', 'Unresolved', '(Total No. of Incidents)') 
     """ % (start_date, end_date, start_date, end_date)
     dataframe = pd.read_sql_query(sql, connection)
+    dataframe = dataframe.fillna(0)
     return dataframe.to_html(index=False)
 
 
