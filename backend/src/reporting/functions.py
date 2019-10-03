@@ -33,7 +33,7 @@ def get_general_report(field_name, field_label, field_table, count_field, map_fi
                                   incidents
                                ON incidents.%s = d.%s
                 GROUP  BY incidents.%s
-                UNION
+                UNION ALL
                 SELECT %s,
                        '0'
                 FROM   %s) AS result
@@ -49,6 +49,7 @@ def get_general_report(field_name, field_label, field_table, count_field, map_fi
         map_field, count_field, field_name, field_table, field_label, start_date, end_date)
     dataframe = pd.read_sql_query(sql, connection)
     dataframe = dataframe.fillna(0)
+    print(sql)
     return dataframe.to_html(index=False)
 
 
