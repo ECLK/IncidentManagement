@@ -4,65 +4,96 @@ from django.db import connection
 import pandas as pd
 import numpy as np
 
+from ..common.models import Category, Channel
 from ..incidents.models import Incident
+from .functions import get_summary_by, get_general_report, get_detailed_severity_report
 
 
-def get_totals_by_category():
+def get_category_summary(start_date, end_date, detailed_report):
+    if detailed_report == 'true':
+        return get_summary_by(Category, "top_category", "common_category", "incident.category", start_date, end_date)
+    return get_general_report("top_category", "Category", "common_category", "category", "id", start_date, end_date)
+
+
+def get_subcategory_summary(start_date, end_date, detailed_report):
+    if detailed_report == 'true':
+        return get_summary_by(Category, "sub_category", "common_category", "incident.category", start_date, end_date)
+    return get_general_report("sub_category", "Subcategory", "common_category", "category", "id", start_date, end_date)
+
+
+def get_mode_summary(start_date, end_date, detailed_report):
+    if detailed_report == 'true':
+        return get_summary_by(Channel, "name", "common_channel", "incident.infoChannel", start_date, end_date)
+    return get_general_report("name", "Mode", "common_channel", "infoChannel", "id", start_date, end_date)
+
+
+def get_district_summary(start_date, end_date, detailed_report):
+    # if detailed_report == 'true':
+    # return get_summary_by(Channel, "name", "common_channel", "incident.infoChannel", start_date, end_date)
+    return get_general_report("name", "District", "common_district", "district", "code", start_date, end_date)
+
+
+def get_severity_summary(start_date, end_date, detailed_report):
+    if detailed_report == 'true':
+        return get_detailed_severity_report(start_date, end_date)
     sql = """
-            SELECT usr.id, COUNT(incident.id) as incident_count FROM `auth_user` as usr 
-            LEFT JOIN incidents_incident as incident on incident.assignee_id = usr.id 
-            INNER JOIN auth_user_groups on usr.id = auth_user_groups.user_id
-            INNER JOIN auth_group as grp on grp.id = auth_user_groups.group_id
-            WHERE grp.rank = %d
-            GROUP BY usr.id
-            ORDER BY incident_count ASC
-          """
-
-    with connection.cursor() as cursor:
-        cursor.execute(sql)
-        row = cursor.fetchone()
-
-        return []
-
-
-def get_summary_by(name):
-    item_list = set(Incident.objects.all().values_list(name, flat=True))
-
-    sql2 = ", ".join(
-        map(lambda c: "MAX(CASE WHEN (" + name + " = '%s') THEN 1 ELSE NULL END) AS '%s'" % (c, c), item_list))
-    sql1 = ", ".join(map(lambda c: "COUNT(items.`%s`) as '%s'" % (c, c), item_list))
-
-    sql = """
-            SELECT 
-                incident.province,
-                incident.di_division,
-                incident.police_division,
-                %s
-            FROM incidents_incident incident,
-            ( 
-                SELECT
-                id,
-                %s
-                FROM incidents_incident
-                GROUP BY id
-            ) as items 
-            WHERE items.id = incident.id
-            GROUP BY incident.province, incident.di_division, incident.police_division
-        """ % (sql1, sql2)
-
-    # headers = [ cat.n]
+         SELECT    Ifnull(name,'Unassigned') AS Severity,
+                   Ifnull(subtotal,0)        AS total
+         FROM      reporting_severitysegment AS d
+         LEFT JOIN
+                   (
+                            SELECT   (
+                                     CASE
+                                              WHEN severity > 7 THEN 'High'
+                                              WHEN severity > 3 THEN 'Medium'
+                                              ELSE 'Low'
+                                     end)                                           AS currentstate,
+                                     Count(Ifnull(incidents_incident.severity,0)) AS subtotal
+                            FROM     incidents_incident
+                            WHERE    occured_date BETWEEN '%s' AND      '%s'
+                            OR       severity IS NULL
+                            GROUP BY currentstate) AS incidents
+         ON        currentstate = d.name 
+         UNION
+        SELECT '(Total No. of Incidents)',
+               Count(id)
+        FROM   incidents_incident
+        WHERE  occured_date BETWEEN '%s' AND '%s'
+        ORDER  BY Field(Severity, 'High', 'Medium', 'Low', '(Total No. of Incidents)') 
+    """ % (start_date, end_date, start_date, end_date)
     dataframe = pd.read_sql_query(sql, connection)
+    return dataframe.to_html(index=False)
 
-    dataframe.sort_values(by=['province', 'di_division'], inplace=True)
-    dataframe.set_index(['province', 'di_division', 'police_division'], inplace=True)
-    dataframe.fillna(value=0, inplace=True)
-    dataframe.columns = item_list
 
-    dataframe['Total'] = dataframe.sum(axis=1)
-
-    dataframe.index.names = ["Province", "DI Division", "Police Division"]
-
-    return dataframe.to_html()
+def get_status_summary(start_date, end_date, detailed_report):
+    if detailed_report == 'true':
+        return get_summary_by(Incident, "current_status", "incidents_incident", "incident.id", start_date, end_date)
+    sql = """
+        SELECT name                  AS Status,
+               Ifnull(subtotal, '0') AS Total
+        FROM   reporting_statussegment AS d
+               LEFT JOIN (SELECT ( CASE
+                                     WHEN Ifnull(current_status, 'Unassigned') LIKE
+                                          'CLOSED'
+                                                                       THEN
+                                     'Resolved'
+                                     ELSE 'Unresolved'
+                                   end )                          AS currentState,
+                                 Count(Ifnull(current_status, 1)) AS subtotal
+                          FROM   incidents_incident
+                          WHERE  occured_date BETWEEN '%s' AND
+                                                      '%s'
+                          GROUP  BY currentstate) AS incidents
+                      ON currentstate = d.name
+        UNION
+        SELECT '(Total No. of Incidents)',
+               Count(id)
+        FROM   incidents_incident
+        WHERE  occured_date BETWEEN '%s' AND '%s'
+        ORDER  BY Field(status, 'Resolved', 'Unresolved', '(Total No. of Incidents)') 
+    """ % (start_date, end_date, start_date, end_date)
+    dataframe = pd.read_sql_query(sql, connection)
+    return dataframe.to_html(index=False)
 
 
 def get_police_division_summary():
@@ -110,68 +141,3 @@ def get_police_division_summary():
     dataframe.index.names = ["Province", "DI Division", "Police Division"]
 
     return dataframe.to_html()
-
-
-def get_category_summary():
-    return get_summary_by("category")
-
-
-def get_district_summary():
-    return get_summary_by("district")
-
-
-def get_mode_summary():
-    return get_summary_by("infoChannel")
-
-
-def get_severity_summary():
-    return get_summary_by("severity")
-
-
-def get_subcategory_summary():
-    return get_summary_by("category")
-
-
-def get_status_summary():
-    return get_summary_by("current_status")
-
-
-def apply_style(html, title):
-    html = """
-        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-        <html>
-            <head>
-                <style type="text/css">
-                    .dataframe{
-                        text-align: center;
-                        table-layout: fixed;
-                        width: 100%%;
-                        word-wrap: break-word;
-                    }
-
-                    .dataframe td{
-                        padding-top: 5px;
-                    }
-
-                    .dataframe th{
-                        text-align: left;
-                        padding-top: 5px;
-                        margin-left: 5px;
-                    }
-
-                    .dataframe thead th{
-                        text-align: center;
-                        padding-top: 5px;
-                    }
-                </style>
-            </head>
-            <body>
-                <h1 align=center>%s</h1>
-                <div>
-                    %s
-                </div>
-            </body>
-        </html>
-           """ % (title, html)
-
-    return html

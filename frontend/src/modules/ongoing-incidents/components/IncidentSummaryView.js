@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { withStyles, Tabs } from '@material-ui/core';
+import { elections } from '../../../data/elections';
 
 
 function TabContainer(props) {
@@ -38,11 +39,18 @@ const styles = theme => ({
     }
 });
 
+// dictionary map for occurrence
+const occurrence = {
+    "OCCURRED" : "Occurred",
+    "OCCURRING" : "Occurring",
+    "WILL_OCCUR" : "Will Occur"
+}
+
 /**
  * Basic Information TabView - (1)
  */
 function BasicDetailTab(props){
-    const { classes, incident, election } = props;
+    const { classes, incident, elections, categories, channels } = props;
 
     return (
         <div>
@@ -74,7 +82,7 @@ function BasicDetailTab(props){
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Occurrence </Typography>
-                                <Typography gutterBottom> {incident.occurence} </Typography>
+                                <Typography gutterBottom> { occurrence[incident.occurrence] } </Typography>
                             </Grid>
                         </Grid>
 
@@ -111,14 +119,18 @@ function BasicDetailTab(props){
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography className={classes.label}> Election </Typography>
-                                <Typography variant="h6" gutterBottom> {election.name} </Typography>
+                                <Typography variant="h6" gutterBottom> 
+                                { elections.map((value, index)=>(value.code===incident.election?value.name:null)) } 
+                                </Typography>
                             </Grid>
                         </Grid>
 
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Category </Typography>
-                                <Typography gutterBottom> {incident.category} </Typography>
+                                <Typography gutterBottom> 
+                                { categories.map((value, index)=>(value.id==incident.category?value.sub_category:null)) }
+                                 </Typography>
                             </Grid>
                             {/* <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Sub Category </Typography>
@@ -128,8 +140,10 @@ function BasicDetailTab(props){
 
                         <Grid container spacing={24}>
                             <Grid item xs>
-                                <Typography variant="caption" className={classes.label}> Information Channel </Typography>
-                                <Typography gutterBottom> {incident.infoChannel} </Typography>
+                                <Typography variant="caption" className={classes.label}> Received Mode </Typography>
+                                <Typography gutterBottom> 
+                                { channels.map((value, index)=>(value.id==incident.infoChannel?value.name:null)) }
+                                </Typography>
                             </Grid>
                         </Grid>
 
@@ -142,12 +156,20 @@ function BasicDetailTab(props){
     );
 }
 
+const resolveLocationName = (locationId, locatoinData )=> {
+    if(locationId && locatoinData.byCode[locationId]){
+        return locatoinData.byCode[locationId].name 
+    }else{
+        return ""
+    }
+}
+
 /**
  * Location Information TabView - (2)
  */
 function LocationTab(props){
 
-    const { classes, incident } = props;
+    const { classes, incident, districts, pollingDivisions, policeStations } = props;
 
     return (
         <div>
@@ -169,12 +191,12 @@ function LocationTab(props){
                             </Grid>
                         </Grid>
 
-                        <Grid container spacing={24}>
+                        {/* <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Coordinates </Typography>
                                 <Typography gutterBottom> {incident.coordinates} </Typography>
                             </Grid>
-                        </Grid>
+                        </Grid> */}
 
                     </Paper>
                 </Grid>
@@ -187,23 +209,35 @@ function LocationTab(props){
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Province </Typography>
-                                <Typography variant="" gutterBottom> {incident.province ? incident.province : ""} </Typography>
+                                <Typography variant="" gutterBottom> 
+                                    {
+                                        incident.province && districts.byCode[incident.province] ? 
+                                        districts.byCode[incident.province].province : ""
+                                    } 
+                                </Typography>
                             </Grid>
                         </Grid>
 
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> District </Typography>
-                                <Typography gutterBottom> {incident.district ? incident.district : ""}</Typography>
+                                <Typography variant="" gutterBottom> 
+                                    {
+                                        incident.district && districts.byCode[incident.district] ? 
+                                        districts.byCode[incident.district].name : ""
+                                    } 
+                                </Typography>
                             </Grid>
                         </Grid>
 
-                        <Grid container spacing={24}>
+                        {/* <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Polling Division </Typography>
-                                <Typography gutterBottom> {incident.pollingDivision} </Typography>
+                                <Typography gutterBottom>
+                                {resolveLocationName(incident.pollingDivision, pollingDivisions)}
+                                </Typography>
                             </Grid>
-                        </Grid>
+                        </Grid> */}
                         {/* 
                         <Grid container spacing={24}>
                             <Grid item xs>
@@ -212,12 +246,14 @@ function LocationTab(props){
                             </Grid>
                         </Grid> */}
 
-                        <Grid container spacing={24}>
+                        {/* <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Police Station </Typography>
-                                <Typography gutterBottom> {incident.policeStation} </Typography>
+                                <Typography gutterBottom> 
+                                {   resolveLocationName(incident.policeStation, policeStations)}
+                                </Typography>
                             </Grid>
-                        </Grid>
+                        </Grid> */}
 
                     </Paper>
                 </Grid>
@@ -358,7 +394,21 @@ function PoliceTab(props){
     );
 }
 
-function SummaryTabView({classes, incident, reporter, election, category}){
+function SummaryTabView(props){
+
+    const {
+        classes, incident, reporter, elections, category, 
+        districts,
+        divisionalSecretariats,
+        gramaNiladharis,
+        pollingDivisions,
+        pollingStations,
+        policeStations,
+        policeDivisions,
+        categories, 
+        channels
+    } = props
+
     const [currentTab, setCurrentTab] = useState(0);
 
     return (
@@ -367,11 +417,25 @@ function SummaryTabView({classes, incident, reporter, election, category}){
                 <LinkTab label="Basic Information" href="page1" />
                 <LinkTab label="Location Information" href="page2" />
                 <LinkTab label="Contact Information" href="page3" />
-                <LinkTab label="Police Information" href="page4" />
+                {/* <LinkTab label="Police Information" href="page4" /> */}
             </Tabs>
 
-            {currentTab === 0 && <TabContainer> <BasicDetailTab classes={classes} incident={incident} election={election} category={category} /> </TabContainer>}
-            {currentTab === 1 && <TabContainer> <LocationTab classes={classes} incident={incident} /> </TabContainer>}
+            {currentTab === 0 && <TabContainer> 
+                <BasicDetailTab classes={classes} incident={incident} elections={elections} category={category}
+                    categories={categories} 
+                    channels={channels}
+                    
+                /> </TabContainer>}
+            {currentTab === 1 && <TabContainer> 
+                <LocationTab classes={classes} incident={incident} 
+                    districts={districts}
+                    divisionalSecretariats = {divisionalSecretariats}
+                    gramaNiladharis = {gramaNiladharis}
+                    pollingDivisions = {pollingDivisions}
+                    pollingStations = {pollingStations}
+                    policeStations = {policeStations}
+                    policeDivisions = {policeDivisions}
+                /> </TabContainer>}
             {currentTab === 2 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
             {currentTab === 3 && <TabContainer> <PoliceTab classes={classes} incident={incident} /> </TabContainer>}
         </div>

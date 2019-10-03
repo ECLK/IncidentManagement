@@ -1,0 +1,478 @@
+[
+    {
+        "model": "common.district",
+        "pk": 1,
+        "fields": {
+            "code": "DST01",
+            "name": "Kandy",
+            "province": "Central",
+            "sn_name": "මහනුවර",
+            "sn_province": "මධ්යම",
+            "tm_name": "கண்டி",
+            "tm_province": "மத்திய",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 2,
+        "fields": {
+            "code": "DST02",
+            "name": "Matale",
+            "province": "Central",
+            "sn_name": "මාතලේ",
+            "sn_province": "මධ්යම",
+            "tm_name": "மாத்தளை",
+            "tm_province": "மத்திய",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 3,
+        "fields": {
+            "code": "DST03",
+            "name": "Nuwara Eliya",
+            "province": "Central",
+            "sn_name": "නුවරඑලිය",
+            "sn_province": "මධ්යම",
+            "tm_name": "நுவரா எலியா",
+            "tm_province": "மத்திய",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 4,
+        "fields": {
+            "code": "DST04",
+            "name": "Ampara",
+            "province": "Eastern",
+            "sn_name": "අම්පාර",
+            "sn_province": "නැගෙනහිර",
+            "tm_name": "அம்பாறை",
+            "tm_province": "கிழக்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 5,
+        "fields": {
+            "code": "DST05",
+            "name": "Batticaloa",
+            "province": "Eastern",
+            "sn_name": "මඩකලපුව",
+            "sn_province": "නැගෙනහිර",
+            "tm_name": "மட்டக்களப்பு",
+            "tm_province": "கிழக்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 6,
+        "fields": {
+            "code": "DST06",
+            "name": "Trincomalee",
+            "province": "Eastern",
+            "sn_name": "ත්රිකුණාමලය",
+            "sn_province": "නැගෙනහිර",
+            "tm_name": "திருகோணமலை",
+            "tm_province": "கிழக்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 7,
+        "fields": {
+            "code": "DST07",
+            "name": "Anuradhapura",
+            "province": "North Central",
+            "sn_name": "අනුරාධපුර",
+            "sn_province": "උතුරු මැද",
+            "tm_name": "அனுராதபுரம்",
+            "tm_province": "வட மத்திய",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 8,
+        "fields": {
+            "code": "DST08",
+            "name": "Polonnaruwa",
+            "province": "North Central",
+            "sn_name": "පොළොන්නරුව",
+            "sn_province": "උතුරු මැද",
+            "tm_name": "பொலன்னறுவை",
+            "tm_province": "வட மத்திய",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 9,
+        "fields": {
+            "code": "DST09",
+            "name": "Jaffna",
+            "province": "Northern",
+            "sn_name": "යාපනය",
+            "sn_province": "උතුරු",
+            "tm_name": "யாழ்ப்பாண",
+            "tm_province": "வடக்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 10,
+        "fields": {
+            "code": "DST10",
+            "name": "Kilinochchi",
+            "province": "Northern",
+            "sn_name": "කිලිනොච්චි",
+            "sn_province": "උතුරු",
+            "tm_name": "கிளிநொச்சி",
+            "tm_province": "வடக்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 11,
+        "fields": {
+            "code": "DST11",
+            "name": "Mannar",
+            "province": "Northern",
+            "sn_name": "මන්නාරම",
+            "sn_province": "උතුරු",
+            "tm_name": "மன்னார்",
+            "tm_province": "வடக்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 12,
+        "fields": {
+            "code": "DST12",
+            "name": "Mullaitivu",
+            "province": "Northern",
+            "sn_name": "මුලතිව්",
+            "sn_province": "උතුරු",
+            "tm_name": "முல்லைத்தீவு",
+            "tm_province": "வடக்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 13,
+        "fields": {
+            "code": "DST13",
+            "name": "Vavuniya",
+            "province": "Northern",
+            "sn_name": "වවුනියාව",
+            "sn_province": "උතුරු",
+            "tm_name": "வவுனியா",
+            "tm_province": "வடக்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 14,
+        "fields": {
+            "code": "DST14",
+            "name": "Kurunegala",
+            "province": "North Western",
+            "sn_name": "කුරුණෑගල",
+            "sn_province": "වයඹ",
+            "tm_name": "குருநாகல்",
+            "tm_province": "வடமேற்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 15,
+        "fields": {
+            "code": "DST15",
+            "name": "Puttalam",
+            "province": "North Western",
+            "sn_name": "පුත්තලම",
+            "sn_province": "වයඹ",
+            "tm_name": "புத்தளம்",
+            "tm_province": "வடமேற்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 16,
+        "fields": {
+            "code": "DST16",
+            "name": "Kegalle",
+            "province": "Sabaragamuwa",
+            "sn_name": "කෑගල්ල",
+            "sn_province": "සබරගමුව",
+            "tm_name": "கேகாலை",
+            "tm_province": "சப்ரகமுவ",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 17,
+        "fields": {
+            "code": "DST17",
+            "name": "Ratnapura",
+            "province": "Sabaragamuwa",
+            "sn_name": "රත්නපුර",
+            "sn_province": "සබරගමුව",
+            "tm_name": "இரத்தினபுரி",
+            "tm_province": "சப்ரகமுவ",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 18,
+        "fields": {
+            "code": "DST18",
+            "name": "Galle",
+            "province": "Southern",
+            "sn_name": "ගාල්ල",
+            "sn_province": "දකුණු",
+            "tm_name": "காலி",
+            "tm_province": "தெற்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 19,
+        "fields": {
+            "code": "DST19",
+            "name": "Hambantota",
+            "province": "Southern",
+            "sn_name": "හම්බන්තොට",
+            "sn_province": "දකුණු",
+            "tm_name": "அம்பாந்தோட்டை",
+            "tm_province": "தெற்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 20,
+        "fields": {
+            "code": "DST20",
+            "name": "Matara",
+            "province": "Southern",
+            "sn_name": "මාතර",
+            "sn_province": "දකුණු",
+            "tm_name": "மாத்தறை",
+            "tm_province": "தெற்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 21,
+        "fields": {
+            "code": "DST21",
+            "name": "Badulla",
+            "province": "Uva",
+            "sn_name": "බදුල්ල",
+            "sn_province": "ඌව",
+            "tm_name": "பதுளை",
+            "tm_province": "ஊவா",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 22,
+        "fields": {
+            "code": "DST22",
+            "name": "Moneragala",
+            "province": "Uva",
+            "sn_name": "මොණරාගල",
+            "sn_province": "ඌව",
+            "tm_name": "மொனராகலை",
+            "tm_province": "ஊவா",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 23,
+        "fields": {
+            "code": "DST23",
+            "name": "Colombo",
+            "province": "Western",
+            "sn_name": "කොළඹ",
+            "sn_province": "බටහිර",
+            "tm_name": "கொழும்பு",
+            "tm_province": "மேற்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 24,
+        "fields": {
+            "code": "DST24",
+            "name": "Gampaha",
+            "province": "Western",
+            "sn_name": "ගම්පහ",
+            "sn_province": "බටහිර",
+            "tm_name": "கம்பஹா",
+            "tm_province": "மேற்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 25,
+        "fields": {
+            "code": "DST25",
+            "name": "Kalutara",
+            "province": "Western",
+            "sn_name": "කළුතර",
+            "sn_province": "බටහිර",
+            "tm_name": "களுத்துறை",
+            "tm_province": "மேற்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 26,
+        "fields": {
+            "code": "P1",
+            "province": "Central",
+            "sn_province": "මධ්යම",
+            "tm_province": "மத்திய",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 27,
+        "fields": {
+            "code": "P2",
+            "province": "Eastern",
+            "sn_province": "නැගෙනහිර",
+            "tm_province": "கிழக்கு",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 28,
+        "fields": {
+            "code": "P3",
+            "province": "North Central",
+            "sn_province": "උතුරු මැද",
+            "tm_province": "வட மத்திய",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 29,
+        "fields": {
+            "code": "P4",
+            "province": "Northern",
+            "sn_province": "උතුරු",
+            "tm_province": "வடக்கு",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 30,
+        "fields": {
+            "code": "P5",
+            "province": "Sabaragamuwa",
+            "sn_province": "සබරගමුව",
+            "tm_province": "சப்ரகமுவ",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 31,
+        "fields": {
+            "code": "P6",
+            "province": "North Western",
+            "sn_province": "වයඹ",
+            "tm_province": "வடமேற்கு",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 32,
+        "fields": {
+            "code": "P7",
+            "province": "Southern",
+            "sn_province": "දකුණු",
+            "tm_province": "தெற்கு",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 33,
+        "fields": {
+            "code": "P8",
+            "province": "Uva",
+            "sn_province": "ඌව",
+            "tm_province": "ஊவா",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 34,
+        "fields": {
+            "code": "P9",
+            "province": "Western",
+            "sn_province": "බටහිර",
+            "tm_province": "மேற்கு",
+            "name": "NONE",
+            "sn_name": "NONE",
+            "tm_name": "NONE",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    }
+]

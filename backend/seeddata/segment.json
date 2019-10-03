@@ -1,0 +1,37 @@
+[
+    {
+        "pk":1,
+        "model": "reporting.severitysegment",
+        "fields": {
+            "name": "High"
+        }
+    },
+    {
+        "pk":2,
+        "model": "reporting.severitysegment",
+        "fields": {
+            "name": "Low"
+        }
+    },
+    {
+        "pk":3,
+        "model": "reporting.severitysegment",
+        "fields": {
+            "name": "Medium"
+        }
+    },
+    {
+        "pk":1,
+        "model": "reporting.statussegment",
+        "fields":{
+            "name": "Resolved"
+        }
+    },
+    {
+        "pk":2,
+        "model": "reporting.statussegment",
+        "fields":{
+            "name": "Unresolved"
+        }
+    }
+]
