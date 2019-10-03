@@ -111,11 +111,10 @@ class ReportList extends Component {
 
                                         >
                                             <MenuItem value="category_wise_summary_report"> Category Wise </MenuItem>
-                                            <MenuItem value="subcategory_wise_summary_report"> Subcategory
-                                                Wise </MenuItem>
+                                            <MenuItem value="subcategory_wise_summary_report"> Subcategory Wise </MenuItem>
                                             <MenuItem value="district_wise_summary_report"> District Wise </MenuItem>
                                             <MenuItem value="mode_wise_summary_report"> Mode Wise </MenuItem>
-                                            <MenuItem value="severity_wise_summary_report"> Severity Wise </MenuItem>
+                                            <MenuItem value="severity_wise_summary_report"> Severity Level Wise </MenuItem>
                                             <MenuItem value="status_wise_summary_report"> Status Wise </MenuItem>
                                         </Select>
                                     </FormControl>
