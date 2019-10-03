@@ -54,7 +54,7 @@ class IncidentSerializer(serializers.ModelSerializer):
     )
 
     politicalParty = serializers.CharField(
-        source="polictical_party", required=False, allow_null=True
+        source="polictical_party", required=False, allow_null=True, allow_blank=True
     )
 
     createdDate = serializers.ReadOnlyField(source="created_date")
