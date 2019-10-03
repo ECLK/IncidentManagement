@@ -122,7 +122,6 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
     status = IncidentStatus(current_status=StatusType.NEW,
                             incident=incident, approved=True)
     status.save()
-    breakpoint()
 
 def update_incident_postscript(incident: Incident, user: User, revision: str) -> None:
     event_services.update_incident_event(user, incident, revision)
