@@ -25,11 +25,13 @@ class ReportingView(APIView):
         detailed_report = self.request.query_params.get('detailed_report', 'false')
 
         if start_date == '':
-            start_date = datetime.date.today().strftime("%Y-%m-%d")
+            start_date = datetime.date.today().strftime("%Y-%m-%d 16:00:00")
+        else:
+            start_date = start_date.replace("T", " ", 1)
         if end_date == '':
-            end_date = datetime.date.today().strftime("%Y-%m-%d")
-        start_date += " 00:00:00"
-        end_date += " 23:59:00"
+            end_date = datetime.date.today().strftime("%Y-%m-%d 16:00:00")
+        else:
+            end_date = end_date.replace("T", " ", 1)
 
         if param_report is None or param_report == "":
             return Response("No report specified", status=status.HTTP_400_BAD_REQUEST)
