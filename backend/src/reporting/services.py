@@ -27,22 +27,41 @@ def get_mode_summary(start_date, end_date, detailed_report):
     return get_general_report("name", "Mode", "common_channel", "infoChannel", "id", start_date, end_date)
 
 
+def get_district_summary(start_date, end_date, detailed_report):
+    # if detailed_report == 'true':
+    # return get_summary_by(Channel, "name", "common_channel", "incident.infoChannel", start_date, end_date)
+    return get_general_report("name", "District", "common_district", "district", "code", start_date, end_date)
+
+
 def get_severity_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
         return get_detailed_severity_report(start_date, end_date)
     sql = """
-    (SELECT IFNULL(name,'Unassigned') AS Severity, ifnull(subtotal,0) as Total FROM reporting_severitysegment as d 
-    LEFT JOIN ( select 
-    (CASE WHEN severity > 7 THEN 'High' WHEN severity > 3 THEN 'Medium' ELSE 'Low' END) as currentState, 
-    IFNULL(COUNT(incidents_incident.severity),'0') AS subtotal from incidents_incident 
-    where occured_date BETWEEN '%s' AND '%s' or severity is null 
-    GROUP by currentState) as incidents ON currentState = d.name ) as finalResult
-    """ % (start_date, end_date)
-    sql1 = """
-            select Severity,Total from %s union
-            select '', Sum(Total) from %s order by FIELD(Severity, 'High','Medium','Low','')
-        """ % (sql, sql)
-    dataframe = pd.read_sql_query(sql1, connection)
+         SELECT    Ifnull(name,'Unassigned') AS Severity,
+                   Ifnull(subtotal,0)        AS total
+         FROM      reporting_severitysegment AS d
+         LEFT JOIN
+                   (
+                            SELECT   (
+                                     CASE
+                                              WHEN severity > 7 THEN 'High'
+                                              WHEN severity > 3 THEN 'Medium'
+                                              ELSE 'Low'
+                                     end)                                           AS currentstate,
+                                     Count(Ifnull(incidents_incident.severity,0)) AS subtotal
+                            FROM     incidents_incident
+                            WHERE    occured_date BETWEEN '%s' AND      '%s'
+                            OR       severity IS NULL
+                            GROUP BY currentstate) AS incidents
+         ON        currentstate = d.name 
+         UNION
+        SELECT '(Total No. of Incidents)',
+               Count(id)
+        FROM   incidents_incident
+        WHERE  occured_date BETWEEN '%s' AND '%s'
+        ORDER  BY Field(Severity, 'High', 'Medium', 'Low', '(Total No. of Incidents)') 
+    """ % (start_date, end_date, start_date, end_date)
+    dataframe = pd.read_sql_query(sql, connection)
     return dataframe.to_html(index=False)
 
 
@@ -50,21 +69,30 @@ def get_status_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
         return get_summary_by(Incident, "current_status", "incidents_incident", "incident.id", start_date, end_date)
     sql = """
-    (SELECT IFNULL(name,'Unassigned') AS Status, ifnull(subtotal,'0') as Total
-    FROM reporting_statussegment as d LEFT JOIN (
-    select (case when ifnull(current_status,'Unassigned') like 'CLOSED' then 'Resolved' else 'Unresolved' end)
-    as currentState,
-    IFNULL(COUNT(current_status),'0') AS subtotal from incidents_incident where occured_date
-    BETWEEN '%s' AND '%s'
-    GROUP by currentState) as incidents ON currentState = d.name
-    ) as finalResult
-    """ % (start_date, end_date)
-    sql1="""
-        select Status,Total from %s union
-        select '', Sum(Total) from %s ORDER BY FIELD(Status,'Resolved','Unresolved','')
-    """%(sql,sql)
-    print(sql1)
-    dataframe = pd.read_sql_query(sql1, connection)
+        SELECT name                  AS Status,
+               Ifnull(subtotal, '0') AS Total
+        FROM   reporting_statussegment AS d
+               LEFT JOIN (SELECT ( CASE
+                                     WHEN Ifnull(current_status, 'Unassigned') LIKE
+                                          'CLOSED'
+                                                                       THEN
+                                     'Resolved'
+                                     ELSE 'Unresolved'
+                                   end )                          AS currentState,
+                                 Count(Ifnull(current_status, 1)) AS subtotal
+                          FROM   incidents_incident
+                          WHERE  occured_date BETWEEN '%s' AND
+                                                      '%s'
+                          GROUP  BY currentstate) AS incidents
+                      ON currentstate = d.name
+        UNION
+        SELECT '(Total No. of Incidents)',
+               Count(id)
+        FROM   incidents_incident
+        WHERE  occured_date BETWEEN '%s' AND '%s'
+        ORDER  BY Field(status, 'Resolved', 'Unresolved', '(Total No. of Incidents)') 
+    """ % (start_date, end_date, start_date, end_date)
+    dataframe = pd.read_sql_query(sql, connection)
     return dataframe.to_html(index=False)
 
 

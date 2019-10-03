@@ -6,7 +6,7 @@ from xhtml2pdf import pisa
 import datetime
 
 from .services import get_police_division_summary, get_category_summary, \
-    get_mode_summary, get_severity_summary, get_status_summary, get_subcategory_summary
+    get_mode_summary, get_severity_summary, get_status_summary, get_subcategory_summary, get_district_summary
 from .functions import apply_style
 
 
@@ -50,6 +50,10 @@ class ReportingView(APIView):
             table_html = get_mode_summary(start_date, end_date, detailed_report)
             table_title = "No. of Incidents by Mode"
 
+        elif param_report == "district_wise_summary_report":
+            table_html = get_district_summary(start_date, end_date, detailed_report)
+            table_title = "No. of Incidents by District"
+
         elif param_report == "severity_wise_summary_report":
             table_html = get_severity_summary(start_date, end_date, detailed_report)
             table_title = "No. of Incidents by Severity"
@@ -65,7 +69,10 @@ class ReportingView(APIView):
         if table_html is None:
             return Response("Report not found", status=status.HTTP_400_BAD_REQUEST)
 
-        table_html = apply_style(table_html, table_title, table_subtitle)
+        table_html = apply_style(
+            table_html.replace(".0", "", -1).replace("(Total No. of Incidents)",
+                                                     "<strong>(Total No. of Incidents)</strong>", 1).replace(
+                "(Unassigned)", "<strong>(Unassigned)</strong>", 1), table_title, table_subtitle)
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="Report.pdf"'
         pisa.CreatePDF(table_html, dest=response)
