@@ -44,13 +44,21 @@ class ReportingView(APIView):
         #     table_html = get_police_division_summary()
         #     table_title = "Police Division Summary Report"
 
+        layout="A4 portrait"
         if param_report == "category_wise_summary_report":
             table_html = get_category_summary(start_date, end_date, detailed_report)
-            table_title = "No. of Incidents by Category"
+            if detailed_report:
+                table_title = "No. of Incidents by District and Category"
+            else:
+                table_title = "No. of Incidents by Category"
 
         elif param_report == "mode_wise_summary_report":
             table_html = get_mode_summary(start_date, end_date, detailed_report)
-            table_title = "No. of Incidents by Mode"
+            if detailed_report:
+                layout="A4 landscape"
+                table_title = "No. of Incidents by District and Mode"
+            else:
+                table_title = "No. of Incidents by Mode"
 
         elif param_report == "district_wise_summary_report":
             table_html = get_district_summary(start_date, end_date, detailed_report)
@@ -58,23 +66,39 @@ class ReportingView(APIView):
 
         elif param_report == "severity_wise_summary_report":
             table_html = get_severity_summary(start_date, end_date, detailed_report)
-            table_title = "No. of Incidents by Severity"
+            if detailed_report:
+                table_title = "No. of Incidents by District and Severity"
+            else:
+                table_title = "No. of Incidents by Severity"
 
         elif param_report == "subcategory_wise_summary_report":
             table_html = get_subcategory_summary(start_date, end_date, detailed_report)
-            table_title = "No. of Incidents by Subcategory"
+            if detailed_report:
+                layout = "A1 landscape"
+                table_title = "No. of Incidents by District and Subcategory"
+            else:
+                table_title = "No. of Incidents by Subcategory"
 
         elif param_report == "status_wise_summary_report":
             table_html = get_status_summary(start_date, end_date, detailed_report)
-            table_title = "No. of Incidents by Status"
+            if detailed_report:
+                table_title = "No. of Incidents by District and Status"
+            else:
+                table_title = "No. of Incidents by Status"
 
         if table_html is None:
             return Response("Report not found", status=status.HTTP_400_BAD_REQUEST)
 
         table_html = apply_style(
-            table_html.replace(".0", "", -1).replace("(Total No. of Incidents)",
-                                                     "<strong>(Total No. of Incidents)</strong>", 1).replace(
-                "(Unassigned)", "<strong>(Unassigned)</strong>", 1), table_title, table_subtitle)
+            table_html
+                .replace(".0", "", -1)
+                .replace("(Total No. of Incidents)","<strong>(Total No. of Incidents)</strong>", -1)
+                .replace("(Unassigned)", "<strong>(Unassigned)</strong>", -1)
+                .replace("____", ",", -1)
+                .replace("___", ".", -1)
+                .replace("__", "/", -1)
+                .replace("_", " ", -1)
+            , table_title, table_subtitle,layout)
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="Report.pdf"'
         pisa.CreatePDF(table_html, dest=response)
