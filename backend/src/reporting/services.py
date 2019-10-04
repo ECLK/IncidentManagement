@@ -6,24 +6,78 @@ import numpy as np
 
 from ..common.models import Category, Channel
 from ..incidents.models import Incident
-from .functions import get_summary_by, get_general_report
+from .functions import get_detailed_report, get_general_report
 
 
 def get_category_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
-        return get_summary_by(Category, "top_category", "common_category", "incident.category", start_date, end_date)
+        columns = set(Category.objects.all().values_list("top_category", flat=True))
+        columns = [name.replace(' ', '_') for name in columns]
+        columns.insert(0, "Unassigned")
+        sql2 = ", ".join(
+            map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (
+                'top_category', c, c), columns))
+        sql1 = """
+                        SELECT district,
+                                   %s
+                                  ,
+                                  1       AS Total
+                           FROM   incidents_incident
+                           left join common_category on category=common_category.id
+                           WHERE  occured_date BETWEEN
+                                  '%s' AND
+                                  '%s'
+                        """ % (sql2, start_date, end_date)
+        return get_detailed_report(sql1, columns)
     return get_general_report("top_category", "Category", "common_category", "category", "id", start_date, end_date)
 
 
 def get_subcategory_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
-        return get_summary_by(Category, "sub_category", "common_category", "incident.category", start_date, end_date)
+        columns = set(Category.objects.all().values_list("sub_category", flat=True))
+        columns = [name.replace(' ', '_') for name in columns]
+        columns = [name.replace('/', '__') for name in columns]
+        columns = [name.replace('.', '___') for name in columns]
+        columns = [name.replace(',', '____') for name in columns]
+        columns.insert(0, "Unassigned")
+        sqls = ", ".join(
+            map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (
+                'sub_category', c, c), columns))
+        sql1 = """
+                                SELECT district,
+                                           %s
+                                          ,
+                                          1       AS Total
+                                   FROM   incidents_incident
+                                   left join common_category on category=common_category.id
+                                   WHERE  occured_date BETWEEN
+                                          '%s' AND
+                                          '%s'
+                                """ % (sqls, start_date, end_date)
+        return get_detailed_report(sql1, columns)
     return get_general_report("sub_category", "Subcategory", "common_category", "category", "id", start_date, end_date)
 
 
 def get_mode_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
-        return get_summary_by(Channel, "name", "common_channel", "incident.infoChannel", start_date, end_date)
+        columns = set(Channel.objects.all().values_list("name", flat=True))
+        columns = [name.replace(' ', '_') for name in columns]
+        columns.insert(0, "Unassigned")
+        sql2 = ", ".join(
+            map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (
+                'infoChannel', c, c), columns))
+        sql1 = """
+                SELECT district,
+                           %s
+                          ,
+                          1       AS Total
+                   FROM   incidents_incident
+                   left join common_channel on infoChannel=common_channel.id
+                   WHERE  occured_date BETWEEN
+                          '%s' AND
+                          '%s'
+                """ % (sql2, start_date, end_date)
+        return get_detailed_report(sql1, columns)
     return get_general_report("name", "Mode", "common_channel", "infoChannel", "id", start_date, end_date)
 
 
@@ -57,51 +111,11 @@ def get_severity_summary(start_date, end_date, detailed_report):
                   '%s' AND
                   '%s'
         """ % (start_date, end_date)
-        sql = """
-            SELECT District,
-                   High,
-                   Medium,
-                   Low,
-                   Total
-            FROM   (SELECT District,
-                           Sum(High)   AS High,
-                           Sum(Medium) AS Medium,
-                           Sum(Low)    AS Low,
-                           Sum(Total)  AS Total
-                    FROM   (SELECT Ifnull(name, '(Unassigned)') AS District,
-                                   Sum(High)                    AS High,
-                                   Sum(Medium)                  AS Medium,
-                                   Sum(Low)                     AS Low,
-                                   Sum(Total)                   AS Total
-                            FROM   common_district AS d
-                                   RIGHT JOIN (%s) AS
-                                              incidents
-                                           ON incidents.district = d.code
-                            GROUP  BY incidents.district
-                            UNION ALL
-                            SELECT name,
-                                   '0',
-                                   '0',
-                                   '0',
-                                   '0'
-                            FROM   common_district) AS result
-                    GROUP  BY result.District
-                    ORDER  BY Total DESC) AS result2
-            UNION ALL
-            SELECT '(Total No. of Incidents)',
-                   Sum(High)   AS High,
-                   Sum(Medium) AS Medium,
-                   Sum(Low)    AS Low,
-                   Sum(Total)
-            FROM   (%s)
-                   AS
-                   result3 
-        """ % (sql1, sql1)
-        dataframe = pd.read_sql_query(sql, connection)
-        dataframe = dataframe.fillna(0)
-        return dataframe.to_html(index=False)
+        columns = ["High", "Medium", "Low"]
+        return get_detailed_report(sql1, columns)
+
     # if general report
-    sql = """
+    sql = """ # if general report
          SELECT    Ifnull(name,'Unassigned') AS Severity,
                    Ifnull(subtotal,0)        AS Total
          FROM      reporting_severitysegment AS d
@@ -132,7 +146,19 @@ def get_severity_summary(start_date, end_date, detailed_report):
 
 def get_status_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
-        return get_summary_by(Incident, "current_status", "incidents_incident", "incident.id", start_date, end_date)
+        sql1 = """
+        SELECT district,( 
+               CASE WHEN Ifnull(current_status, 'Unassigned') LIKE 'CLOSED' THEN 1 ELSE 0 END )AS Resolved,
+               (CASE WHEN Ifnull(current_status, 'Unassigned')  NOT LIKE 'CLOSED' THEN 1 ELSE 0 END )AS Unresolved,
+                             1 AS Total
+                      FROM   incidents_incident
+                      WHERE  occured_date BETWEEN '%s' AND
+                                                  '%s'
+        """ % (start_date, end_date)
+        columns = ["Resolved", "Unresolved"]
+        return get_detailed_report(sql1, columns)
+
+    # if general report
     sql = """
         SELECT name                  AS Status,
                Ifnull(subtotal, '0') AS Total
