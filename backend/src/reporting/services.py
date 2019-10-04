@@ -6,7 +6,7 @@ import numpy as np
 
 from ..common.models import Category, Channel
 from ..incidents.models import Incident
-from .functions import get_summary_by, get_general_report, get_detailed_severity_report
+from .functions import get_summary_by, get_general_report
 
 
 def get_category_summary(start_date, end_date, detailed_report):
@@ -28,14 +28,79 @@ def get_mode_summary(start_date, end_date, detailed_report):
 
 
 def get_district_summary(start_date, end_date, detailed_report):
-    # if detailed_report == 'true':
-    # return get_summary_by(Channel, "name", "common_channel", "incident.infoChannel", start_date, end_date)
     return get_general_report("name", "District", "common_district", "district", "code", start_date, end_date)
 
 
 def get_severity_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
-        return get_detailed_severity_report(start_date, end_date)
+        sql1 = """
+        SELECT district,
+                  ( CASE
+                      WHEN Ifnull(severity, 0) > 7 THEN
+                      1
+                      ELSE 0
+                    end ) AS High,
+                  ( CASE
+                      WHEN Ifnull(severity, 0) > 3
+                           AND Ifnull(severity, 0) < 8
+                    THEN 1
+                      ELSE 0
+                    end ) AS Medium,
+                  ( CASE
+                      WHEN Ifnull(severity, 0) < 4 THEN
+                      1
+                      ELSE 0
+                    end ) AS Low,
+                  1       AS Total
+           FROM   incidents_incident
+           WHERE  occured_date BETWEEN
+                  '%s' AND
+                  '%s'
+        """ % (start_date, end_date)
+        sql = """
+            SELECT District,
+                   High,
+                   Medium,
+                   Low,
+                   Total
+            FROM   (SELECT District,
+                           Sum(High)   AS High,
+                           Sum(Medium) AS Medium,
+                           Sum(Low)    AS Low,
+                           Sum(Total)  AS Total
+                    FROM   (SELECT Ifnull(name, '(Unassigned)') AS District,
+                                   Sum(High)                    AS High,
+                                   Sum(Medium)                  AS Medium,
+                                   Sum(Low)                     AS Low,
+                                   Sum(Total)                   AS Total
+                            FROM   common_district AS d
+                                   RIGHT JOIN (%s) AS
+                                              incidents
+                                           ON incidents.district = d.code
+                            GROUP  BY incidents.district
+                            UNION ALL
+                            SELECT name,
+                                   '0',
+                                   '0',
+                                   '0',
+                                   '0'
+                            FROM   common_district) AS result
+                    GROUP  BY result.District
+                    ORDER  BY Total DESC) AS result2
+            UNION ALL
+            SELECT '(Total No. of Incidents)',
+                   Sum(High)   AS High,
+                   Sum(Medium) AS Medium,
+                   Sum(Low)    AS Low,
+                   Sum(Total)
+            FROM   (%s)
+                   AS
+                   result3 
+        """ % (sql1, sql1)
+        dataframe = pd.read_sql_query(sql, connection)
+        dataframe = dataframe.fillna(0)
+        return dataframe.to_html(index=False)
+    # if general report
     sql = """
          SELECT    Ifnull(name,'Unassigned') AS Severity,
                    Ifnull(subtotal,0)        AS Total
@@ -47,11 +112,10 @@ def get_severity_summary(start_date, end_date, detailed_report):
                                               WHEN severity > 7 THEN 'High'
                                               WHEN severity > 3 THEN 'Medium'
                                               ELSE 'Low'
-                                     end)                                           AS currentstate,
+                                     END)                                           AS currentstate,
                                      Count(Ifnull(incidents_incident.severity,0)) AS subtotal
                             FROM     incidents_incident
                             WHERE    occured_date BETWEEN '%s' AND      '%s'
-                            OR       severity IS NULL
                             GROUP BY currentstate) AS incidents
          ON        currentstate = d.name 
          UNION ALL

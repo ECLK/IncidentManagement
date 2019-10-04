@@ -53,25 +53,6 @@ def get_general_report(field_name, field_label, field_table, count_field, map_fi
     return dataframe.to_html(index=False)
 
 
-def get_detailed_severity_report(start_date, end_date):
-    sql = """
-            select common_district.name as District,
-            ifnull(High,'0') as High,ifnull(Medium,'0') as Medium,ifnull(Low,'0')as Low,ifnull(Total,'0') as Total 
-            from common_district left join(
-            select ifnull(name,'Unassigned') as District, sum(High) as High,sum(Medium) as Medium, sum(Low) as Low, 
-            sum(High+Medium+Low) as Total from (
-            SELECT district,(CASE WHEN (severity = 'High') THEN 1 ELSE 0 END) AS 'High', 
-            (CASE WHEN (severity = 'Low') THEN 1 ELSE 0 END) AS 'Low', (CASE WHEN (severity = 'Medium') THEN 1 ELSE 0 
-            END) AS 'Medium' FROM (select district,(CASE WHEN severity > 7 THEN 'High' WHEN severity > 3 
-            THEN 'Medium' ELSE 'Low' END) as severity from incidents_incident where occured_date between '%s' and '%s') as incidents) as table1 
-            left join common_district on district=common_district.code GROUP BY table1.district) as total_table 
-            on common_district.name=total_table.District
-            where common_district.name not like 'NONE' order by Total DESC
-        """ % (start_date, end_date)
-    dataframe = pd.read_sql_query(sql, connection)
-    return dataframe.to_html(index=False)
-
-
 def get_summary_by(entity, name, table_name, table_field, start_date, end_date):
     item_list = set(entity.objects.all().values_list(name, flat=True))
 

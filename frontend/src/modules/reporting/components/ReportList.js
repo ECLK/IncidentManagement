@@ -121,39 +121,39 @@ class ReportList extends Component {
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                {/*<Grid item xs={12}>*/}
-                                    {/*<FormControl component="fieldset" className={classes.formControl}>*/}
-                                        {/*<FormLabel component="legend">Report Format</FormLabel>*/}
-                                        {/*<RadioGroup*/}
-                                            {/*name="report_format"*/}
-                                            {/*id="report_format"*/}
-                                            {/*value={this.state.detailed_report}*/}
-                                            {/*onChange={(e) => this.handleChange("detailed_report", e.target.value)}*/}
-                                            {/*row*/}
-                                        {/*>*/}
-                                            {/*<FormControlLabel*/}
-                                                {/*value="false"*/}
-                                                {/*control={*/}
-                                                    {/*<Radio/>*/}
-                                                {/*}*/}
-                                                {/*label="General"*/}
-                                                {/*labelPlacement="bottom"*/}
-                                                {/*className={classes.radioItem}*/}
+                                <Grid item xs={12}>
+                                    <FormControl component="fieldset" className={classes.formControl}>
+                                        <FormLabel component="legend">Report Format</FormLabel>
+                                        <RadioGroup
+                                            name="report_format"
+                                            id="report_format"
+                                            value={this.state.detailed_report}
+                                            onChange={(e) => this.handleChange("detailed_report", e.target.value)}
+                                            row
+                                        >
+                                            <FormControlLabel
+                                                value="false"
+                                                control={
+                                                    <Radio/>
+                                                }
+                                                label="General"
+                                                labelPlacement="bottom"
+                                                className={classes.radioItem}
 
-                                            {/*/>*/}
-                                            {/*<FormControlLabel*/}
-                                                {/*value="true"*/}
-                                                {/*control={*/}
-                                                    {/*<Radio/>*/}
-                                                {/*}*/}
-                                                {/*label="Detailed"*/}
-                                                {/*labelPlacement="bottom"*/}
-                                                {/*className={classes.radioItem}*/}
+                                            />
+                                            <FormControlLabel
+                                                value="true"
+                                                control={
+                                                    <Radio/>
+                                                }
+                                                label="District wise"
+                                                labelPlacement="bottom"
+                                                className={classes.radioItem}
 
-                                            {/*/>*/}
-                                        {/*</RadioGroup>*/}
-                                    {/*</FormControl>*/}
-                                {/*</Grid>*/}
+                                            />
+                                        </RadioGroup>
+                                    </FormControl>
+                                </Grid>
                                 <Grid item xs={12}>
                                     <TextField
                                         margin="normal"

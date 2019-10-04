@@ -46,6 +46,8 @@ class ReportingView(APIView):
 
         if param_report == "category_wise_summary_report":
             table_html = get_category_summary(start_date, end_date, detailed_report)
+            if detailed_report:
+                table_title="No. of Incidents by District and Category"
             table_title = "No. of Incidents by Category"
 
         elif param_report == "mode_wise_summary_report":
