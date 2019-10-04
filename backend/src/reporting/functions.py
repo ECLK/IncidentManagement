@@ -87,7 +87,6 @@ def get_detailed_report(sql1, columns):
                    AS
                    result3 
         """ % (sql3, sql2, sql2, sql1, sql4, sql2, sql1)
-    print(sql)
     dataframe = pd.read_sql_query(sql, connection)
     dataframe = dataframe.fillna(0)
     return dataframe.to_html(index=False)
