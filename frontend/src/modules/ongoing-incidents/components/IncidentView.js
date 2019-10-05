@@ -30,6 +30,9 @@ import {
 } from '../state/OngoingIncidents.actions';
 import { 
     fetchActiveIncidentData,
+    fetchChannels,
+    fetchElections,
+    fetchCategories,
     fetchDistricts,
     fetchProvinces
 } from '../../shared/state/Shared.actions';
@@ -126,6 +129,9 @@ class NavTabs extends Component {
         if (incidentId) {
             this.props.getIncident(incidentId);
             this.props.getEvents(incidentId);
+            this.props.getChannels();
+            this.props.getElections();
+            this.props.getCategories();
             this.props.getProvinces();
             this.props.getDistricts();
         }
@@ -188,6 +194,7 @@ class NavTabs extends Component {
                                 category={this.state.category}
                                 election={this.state.election}
                                 reporter={reporter}
+
                                 provinces={provinces}
                                 districts={districts}
                                 divisionalSecretariats = {divisionalSecretariats}
@@ -330,6 +337,15 @@ const mapDispatchToProps = (dispatch) => {
         },
         showRequestAdviceModal: (incidentId, users) => {
             dispatch(showModal('REQUEST_ADVICE_MODAL', { incidentId, users }))
+        },
+        getChannels: () => {
+            dispatch(fetchChannels());
+        },
+        getElections: () => {
+            dispatch(fetchElections());
+        },
+        getCategories: () => {
+            dispatch(fetchCategories());
         },
         getProvinces: () => {
             dispatch(fetchProvinces());
