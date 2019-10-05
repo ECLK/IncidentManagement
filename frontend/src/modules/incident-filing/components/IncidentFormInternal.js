@@ -164,6 +164,7 @@ class IncidentFormInternal extends Component {
         this.props.getChannels();
         this.props.getElections();
         this.props.getCategories();
+        this.props.getProvinces();
         this.props.getDistricts();
         this.props.getDivisionalSecretariats();
         this.props.getGramaNiladharis();
@@ -674,12 +675,13 @@ class IncidentFormInternal extends Component {
                                                     }}
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.districts.allCodes.map((c, k) => {
-                                                        let currDistrict = this.props.districts.byCode[c]
-                                                        return currDistrict.name === 'NONE' &&
-                                                            <MenuItem value={currDistrict.code} key={k}>
-                                                                {currDistrict.province}
+                                                    {this.props.provinces.allCodes.map((c, k) => {
+                                                        let currProvince = this.props.provinces.byCode[c]
+                                                        return (
+                                                            <MenuItem value={currProvince.code} key={k}>
+                                                                {currProvince.name}
                                                             </MenuItem>
+                                                        )
                                                     })}
                                                 </Select>
                                             </FormControl>

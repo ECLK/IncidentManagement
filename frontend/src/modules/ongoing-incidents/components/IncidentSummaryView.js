@@ -169,7 +169,7 @@ const resolveLocationName = (locationId, locatoinData )=> {
  */
 function LocationTab(props){
 
-    const { classes, incident, districts, pollingDivisions, policeStations } = props;
+    const { classes, incident, provinces, districts, pollingDivisions, policeStations } = props;
 
     return (
         <div>
@@ -211,8 +211,8 @@ function LocationTab(props){
                                 <Typography variant="caption" className={classes.label}> Province </Typography>
                                 <Typography variant="" gutterBottom> 
                                     {
-                                        incident.province && districts.byCode[incident.province] ? 
-                                        districts.byCode[incident.province].province : ""
+                                        incident.province && provinces.byCode[incident.province] ? 
+                                        provinces.byCode[incident.province].name : ""
                                     } 
                                 </Typography>
                             </Grid>
@@ -398,7 +398,7 @@ function SummaryTabView(props){
 
     const {
         classes, incident, reporter, elections, category, 
-        districts,
+        provinces, districts,
         divisionalSecretariats,
         gramaNiladharis,
         pollingDivisions,
@@ -427,7 +427,8 @@ function SummaryTabView(props){
                     
                 /> </TabContainer>}
             {currentTab === 1 && <TabContainer> 
-                <LocationTab classes={classes} incident={incident} 
+                <LocationTab classes={classes} incident={incident}
+                    provinces={provinces} 
                     districts={districts}
                     divisionalSecretariats = {divisionalSecretariats}
                     gramaNiladharis = {gramaNiladharis}
