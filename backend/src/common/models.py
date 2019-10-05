@@ -30,8 +30,7 @@ class Channel(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ('id',)
-    
+        ordering = ('id',)    
 
 class Province(models.Model):
     code = models.CharField(max_length=36, unique=True)
