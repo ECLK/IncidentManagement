@@ -95,7 +95,10 @@ const initialState = {
     channels: [],
     elections: [],
     categories: [],
-    provinces: [],
+    provinces: {
+        byCode:{},
+        allCodes:[]
+    },
     districts: {
         byCode:{},
         allCodes:[]
@@ -189,7 +192,7 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_PROVINCES:
                 return draft
             case REQUEST_INCIDENT_PROVINCES_SUCCESS:
-                draft.provinces = action.data;
+                draft.provinces = transformArray(action.data);
                 return draft
             case REQUEST_INCIDENT_PROVINCES_FAILURE:
                 return draft
