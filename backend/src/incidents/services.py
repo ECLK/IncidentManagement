@@ -123,6 +123,8 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
                             incident=incident, approved=True)
     status.save()
 
+    return incident
+
 def update_incident_postscript(incident: Incident, user: User, revision: str) -> None:
     event_services.update_incident_event(user, incident, revision)
 
