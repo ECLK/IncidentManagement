@@ -166,7 +166,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
 
         if serializer.is_valid():
             incident = serializer.save()
-            create_incident_postscript(incident, request.user)
+
             incident_police_report_data = request.data
             incident_police_report_data["incident"] = serializer.data["id"]
             incident_police_report_serializer = IncidentPoliceReportSerializer(data=incident_police_report_data)
@@ -174,8 +174,12 @@ class IncidentList(APIView, IncidentResultsSetPagination):
 
             if incident_police_report_serializer.is_valid():
                 incident_police_report = incident_police_report_serializer.save()
+                return_data = incident_police_report_serializer.data
                 return_data.update(incident_police_report_serializer.data)
-                return_data["id"] = serializer.data["id"]
+                # return_data["id"] = serializer.data["id"]
+            
+            incident_data = IncidentSerializer(create_incident_postscript(incident, request.user)).data
+            return_data.update(incident_data)
 
             return Response(return_data, status=status.HTTP_201_CREATED)
 
@@ -232,8 +236,8 @@ class IncidentDetail(APIView):
                 incident_police_report_data["incident"] = incident_id
                 incident_police_report_serializer = IncidentPoliceReportSerializer(incident_police_report, data=incident_police_report_data)
 
-                
                 if incident_police_report_serializer.is_valid():
+                    print("dsdsds")
                     incident_police_report_serializer.save()
                     return_data.update(incident_police_report_serializer.data)
                     return_data["id"] = incident_id

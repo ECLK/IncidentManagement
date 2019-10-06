@@ -16,6 +16,7 @@
     "formik": "^1.5.8",
     "immer": "^2.1.4",
     "immutable": "^4.0.0-rc.12",
+    "material-table": "1.35.0",
     "material-ui-pickers": "^2.2.4",
     "moment": "^2.24.0",
     "query-string": "^6.8.3",

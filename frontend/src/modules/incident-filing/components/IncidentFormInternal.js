@@ -24,6 +24,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MaterialTable from "material-table";
 
 import red from '@material-ui/core/colors/red';
 import orange from '@material-ui/core/colors/orange';
@@ -145,6 +146,9 @@ class IncidentFormInternal extends Component {
         reporterEmail: "",
         file: null,
         politicalParty:"",
+        injuredParties: [],
+        respondents: [],
+        detainedVehicles: [],
 
         // police info
         nature_of_incident: "",
@@ -238,11 +242,43 @@ class IncidentFormInternal extends Component {
         })
     }
 
+    tableRowAdd = (setFieldValue, fieldName, tableData, record) => {
+        return new Promise((resolve, reject) => {
+            tableData.push(record);
+            setFieldValue(fieldName, tableData);
+            resolve();
+        })
+    }
+
+    tableRowDelete = (setFieldValue, fieldName, tableData, record) => {
+        return new Promise((resolve, reject) => {            
+            const idx = record.tableData.id;
+            tableData.splice(idx, 1);
+            setFieldValue(fieldName, tableData);
+            resolve();
+        })
+    }
+
+    tableRowUpdate = (setFieldValue, fieldName, tableData, oldRecord, newRecord) => {
+        return new Promise((resolve, reject) => {         
+            tableData[oldRecord.tableData.id] = newRecord;
+            setFieldValue(fieldName, tableData);
+            resolve();
+        })
+    }
+
     render() {
         const { classes } = this.props;
         const { paramIncidentId } = this.props.match.params
 
         const reinit = paramIncidentId ? true : false;
+
+        const politicalPartyLookup = Object.assign({}, 
+            ...this.props.politicalParties.allCodes.map((c, k) => {
+                const curParty = this.props.politicalParties.byCode[c];
+                return { [curParty.code]: this.props.politicalParties.byCode[c].name}
+            })
+        );
 
         return (
             <div className={classes.root}>
@@ -890,7 +926,7 @@ class IncidentFormInternal extends Component {
                                                     />
                                                 </Grid>
 
-                                                <Grid item xs={12} sm={6}>
+                                                {/* <Grid item xs={12} sm={6}>
                                                     <TextField
                                                         id="victims_name"
                                                         name="victims_name"
@@ -899,22 +935,67 @@ class IncidentFormInternal extends Component {
                                                         value={values.victims_name}
                                                         onChange={handleChange}
                                                     />
-                                                </Grid>
+                                                </Grid> */}
                                                 <Grid item xs={12} sm={4}>
                                                 </Grid>
                                                 <Grid item xs={12}>
-                                                    <TextField
+                                                    <MaterialTable
+                                                        columns={[
+                                                            { title: "Name", field: "name" },
+                                                            { title: "Address", field: "address" },
+                                                            {
+                                                                title: "Political Affliation",
+                                                                field: "political_affliation",
+                                                                lookup: politicalPartyLookup
+                                                            }
+                                                        ]}
+                                                        data={values.injuredParties}
+                                                        title="Injured Parties"
+                                                        editable={{
+                                                            onRowAdd: newData => this.tableRowAdd(setFieldValue, "injuredParties", values.injuredParties, newData),
+                                                            onRowUpdate: (newData, oldData) => this.tableRowUpdate(setFieldValue, "injuredParties", values.injuredParties, oldData, newData),
+                                                            onRowDelete: oldData => this.tableRowDelete(setFieldValue, "injuredParties", values.injuredParties, oldData)
+                                                        }}
+                                                        options={{
+                                                            search: false,
+                                                            paging: false
+                                                        }}
+                                                    />
+                                                    {/* <TextField
                                                         id="victims_address"
                                                         name="victims_address"
                                                         label="Victims Address"
                                                         className={classes.textField}
                                                         value={values.victims_address}
                                                         onChange={handleChange}
-                                                    />
+                                                    /> */}
+                                                    
                                                 </Grid>
 
-                                                <Grid item xs={12} sm={6}>
-                                                    <TextField
+                                                <Grid item xs={12}>
+                                                    <MaterialTable
+                                                        columns={[
+                                                            { title: "Name", field: "name" },
+                                                            { title: "Address", field: "address" },
+                                                            {
+                                                                title: "Political Affliation",
+                                                                field: "political_affliation",
+                                                                lookup: politicalPartyLookup
+                                                            }
+                                                        ]}
+                                                        data={values.respondents}
+                                                        title="Respondents"
+                                                        editable={{
+                                                            onRowAdd: newData => this.tableRowAdd(setFieldValue, "respondents", values.respondents, newData),
+                                                            onRowUpdate: (newData, oldData) => this.tableRowUpdate(setFieldValue, "respondents", values.respondents, oldData, newData),
+                                                            onRowDelete: oldData => this.tableRowDelete(setFieldValue, "respondents", values.respondents, oldData)
+                                                        }}
+                                                        options={{
+                                                            search: false,
+                                                            paging: false
+                                                        }}
+                                                    />
+                                                    {/* <TextField
                                                         id="respondents_name"
                                                         name="respondents_name"
                                                         label="Respondants Name"
@@ -922,9 +1003,9 @@ class IncidentFormInternal extends Component {
                                                         value={values.respondents_name}
                                                         onChange={handleChange}
 
-                                                    />
+                                                    /> */}
                                                 </Grid>
-                                                <Grid item xs={12} sm={4}>
+                                                {/* <Grid item xs={12} sm={4}>
                                                 </Grid>
                                                 <Grid item xs={12}>
                                                     <TextField
@@ -934,6 +1015,33 @@ class IncidentFormInternal extends Component {
                                                         className={classes.textField}
                                                         value={values.respondents_address}
                                                         onChange={handleChange}
+                                                    />
+                                                </Grid> */}
+
+<Grid item xs={12}>
+                                                    <MaterialTable
+                                                        columns={[
+                                                            { title: "Vehicle License Plate", field: "vehicle_no" },
+                                                            {
+                                                                title: "Vehicle Ownership",
+                                                                field: "is_private",
+                                                                lookup: {
+                                                                    "null": "Government Vehicle",
+                                                                    "true": "Private Vehicle"
+                                                                }
+                                                            }
+                                                        ]}
+                                                        data={values.detainedVehicles}
+                                                        title="Detained Vehicles"
+                                                        editable={{
+                                                            onRowAdd: newData => this.tableRowAdd(setFieldValue, "detainedVehicles", values.detainedVehicles, newData),
+                                                            onRowUpdate: (newData, oldData) => this.tableRowUpdate(setFieldValue, "detainedVehicles", values.detainedVehicles, oldData, newData),
+                                                            onRowDelete: oldData => this.tableRowDelete(setFieldValue, "detainedVehicles", values.detainedVehicles, oldData)
+                                                        }}
+                                                        options={{
+                                                            search: false,
+                                                            paging: false
+                                                        }}
                                                     />
                                                 </Grid>
 
