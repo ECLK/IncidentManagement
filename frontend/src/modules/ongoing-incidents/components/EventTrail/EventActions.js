@@ -165,6 +165,7 @@ const EventActions = (props) => {
             <Divider variant="middle" className={classes.divider} />
 
             {activeIncident.currentStatus !== 'CLOSED'  && 
+              userCan(currentUser, activeIncident, USER_ACTIONS.RUN_WORKFLOW) && 
                 <>
                 {userCan(currentUser, activeIncident, USER_ACTIONS.ESCALATE_INCIDENT) && 
                     <Button color="primary" size="large" variant='text' className={classes.button} onClick={props.escallateIncident}>
@@ -175,7 +176,7 @@ const EventActions = (props) => {
                 
                 <Button color="primary" size="large" variant='text' className={classes.button} onClick={()=>{dispatch(showModal('ESCALLATE_OUTSIDE', { incidentId: activeIncident.id }))}}>
                     <SubdirectoryArrowLeftIcon className={classes.actionButtonIcon} />
-                    Escalate to outside
+                    Refer to organization 
                 </Button>
                 <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REQUEST_ADVICE_MODAL', { activeIncident, users })) }}>
                     <HelpIcon className={classes.actionButtonIcon} />

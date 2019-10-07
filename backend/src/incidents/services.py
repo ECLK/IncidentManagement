@@ -71,6 +71,10 @@ def get_user_group(user: User):
 
     return user_groups[0]
 
+def get_user_orgnaization(user: User):
+    user_org = Group.objects.get(id=get_user_group(user).organization_id)
+    return user_org
+
 def get_guest_user():
     try:
         return User.objects.get(username="guest")
@@ -88,27 +92,36 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
     reporter = Reporter()
     reporter.save()
 
+    incident.created_by = get_user_orgnaization(user).name
     incident.reporter = reporter
     incident.assignee = user
     incident.save()
+
+    event_services.create_incident_event(user, incident)
 
     # if the user is from the guest group (public user or data entry operator)
     # auto escalate it
     user_group = get_user_group(user)
     if user_group.name == "guest":
-        print(incident.current_status)
         incident_escalate(user, incident)
+
+        # updating the created_by as "GUEST" for public user
+        if not user.is_staff:
+            incident.created_by = "GUEST"
+            incident.save()
+
+    elif not user.is_staff:
+        # for external entity users, we assign a staff member
+        guest_user = get_guest_user()
+        incident.assignee = guest_user
+        incident.linked_individuals.add(user)
+        incident.save()
+
+        incident_escalate(guest_user, incident)
 
     status = IncidentStatus(current_status=StatusType.NEW,
                             incident=incident, approved=True)
     status.save()
-
-    # severity = IncidentSeverity(
-    #     current_severity=10, incident=incident, approved=True
-    # )
-    # severity.save()
-
-    event_services.create_incident_event(user, incident)
 
 def update_incident_postscript(incident: Incident, user: User, revision: str) -> None:
     event_services.update_incident_event(user, incident, revision)
@@ -241,6 +254,7 @@ def incident_auto_assign(incident: Incident, user_group: Group):
             INNER JOIN auth_user_groups on usr.id = auth_user_groups.user_id
             INNER JOIN auth_group as grp on grp.id = auth_user_groups.group_id
             WHERE grp.rank = %d
+            AND usr.is_staff = 1
             GROUP BY usr.id
             ORDER BY incident_count ASC
           """ % user_group.rank

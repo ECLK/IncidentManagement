@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Route, BrowserRouter as Router, Redirect, Switch } from "react-router-dom";
+import { Route, Router, Redirect, Switch } from "react-router-dom";
 import { connect } from "react-redux";
-import history from './history';
+import { history } from './history';
 
 import { IntlProvider } from "react-intl";
 import i18n from "../translation/i18n.js";

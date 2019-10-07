@@ -8,6 +8,7 @@ import queryString from 'query-string';
 
 import * as localStorage from '../../../utils/localStorage';
 import handler from "../../../api/apiHandler";
+import { API_BASE_URL } from "../../../config";
 
 // pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -19,13 +20,21 @@ const styles = theme => ({
 });
 const ReportViewer = ({classes, ...props}) =>{
     const [report, setReport] = useState(null);
+    const [detailed_report, setDetailedReport] = useState(null);
+    const [start_date, setStartDate] = useState(null);
+    const [end_date, setEndDate] = useState(null);
     const [uri, setUri] = useState(null);
 
     useEffect(() => {
         const values = queryString.parse(props.location.search);
-        loadPDF("http://localhost:8000/reports/?report=" + values.report)
+        loadPDF(API_BASE_URL + "/reports/?report=" + values.report + "&start_date=" + values.start_date +
+                "&end_date=" + values.end_date +
+                "&detailed_report=" + values.detailed_report);
 
         setReport(values.report);
+        setDetailedReport(values.detailed_report);
+        setStartDate(values.start_date);
+        setEndDate(values.end_date);
     }, []);
 
     async function loadPDF(url){

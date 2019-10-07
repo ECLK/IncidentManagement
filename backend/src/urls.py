@@ -45,11 +45,19 @@ urlpatterns = [
     path("categories/", common_views.CategoryList.as_view()),
     path("channels/", common_views.ChannelList.as_view()),
     path("districts/", common_views.DistrictList.as_view()),
+    
     path("wards/", common_views.WardList.as_view()),
-    path("pollingstations/", common_views.PollingStationList.as_view()),
-    path("policestations/", common_views.PoliceStationList.as_view()),
-    path("dsdivisions/", common_views.DSDivisionList.as_view()),
 
+    path("pollingstations/", common_views.PollingStationList.as_view()),
+    path("pollingdivisions/", common_views.PollingDivisionList.as_view()),
+    
+    path("policestations/", common_views.PoliceStationList.as_view()),
+    path("policedivisions/", common_views.PoliceDivisionList.as_view()),
+
+    path("dsdivisions/", common_views.DSDivisionList.as_view()),
+    path("gndivisions/", common_views.GNDivisionList.as_view()),
+
+    path("politicalparties/", common_views.PoliticalPartyList.as_view()),
 
     path("incidents/", incident_views.IncidentList.as_view()),
     path("incidents/<uuid:incident_id>", incident_views.IncidentDetail.as_view()),

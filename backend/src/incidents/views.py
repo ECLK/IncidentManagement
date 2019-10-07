@@ -85,6 +85,10 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         incidents = Incident.objects.all()
         user = request.user
 
+        # for external entities, they can only view related incidents
+        if not user.is_staff:
+            incidents = incidents.filter(linked_individuals__id=user.id)
+
         # filtering
         param_query = self.request.query_params.get('q', None)
         if param_query is not None and param_query != "":
@@ -175,7 +179,8 @@ class IncidentList(APIView, IncidentResultsSetPagination):
 
             return Response(return_data, status=status.HTTP_201_CREATED)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        raise IncidentException(serializer.errors)
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class IncidentDetail(APIView):
@@ -194,7 +199,16 @@ class IncidentDetail(APIView):
             return Response("Invalid incident id", status=status.HTTP_404_NOT_FOUND)
 
         serializer = IncidentSerializer(incident)
-        return Response(serializer.data)
+        incident_data = serializer.data
+        
+        police_report = get_police_report_by_incident(incident)
+        if police_report is not None:
+            police_report_data = IncidentPoliceReportSerializer(police_report).data
+            for key in police_report_data:
+                if key != "id" and key != "incident":
+                    incident_data[key] = police_report_data[key]
+
+        return Response(incident_data)
 
     def put(self, request, incident_id, format=None):
         """

@@ -5,14 +5,12 @@ import { withRouter } from "react-router";
 import { withStyles } from '@material-ui/core/styles';
 import { Formik } from 'formik';
 
-import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -22,18 +20,16 @@ import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
 import orange from '@material-ui/core/colors/orange';
 import yellow from '@material-ui/core/colors/yellow';
 
 import {
-    submitIncidentBasicData,
-    stepBackwardIncidentStepper,
-    stepForwardIncidentStepper,
-    fetchUpdateReporter,
-    fetchUpdateIncident,
     resetIncidentForm,
     submitInternalIncidentData,
     fetchUpdateInternalIncidentData
@@ -52,9 +48,11 @@ import {
     fetchPoliceDivisions,
     fetchWards,
     fetchActiveIncidentData,
-    resetActiveIncident
+    resetActiveIncident,
+    fetchPoliticalParties,
 } from '../../shared/state/Shared.actions';
 import DropZoneBase from '../../shared/components/DropZoneBase';
+import IntlSelect from './IntlSelect';
 import moment from 'moment';
 
 const styles = theme => ({
@@ -102,7 +100,10 @@ const styles = theme => ({
         },
     },
     checked: {},
-    langCats : {
+    hide: {
+        display: "none",
+    },
+    langCats: {
         display: "flex",
         "& div": {
             padding: "0 3px"
@@ -113,8 +114,9 @@ const styles = theme => ({
 class IncidentFormInternal extends Component {
 
     state = {
+        incidentType: "COMPLAINT",
         infoChannel: "",
-        title: "default title",
+        title: "",
         description: "",
         occurrence: "OCCURRED",
         occured_date: "",
@@ -141,14 +143,27 @@ class IncidentFormInternal extends Component {
         reporterMobile: "",
         reporterLandline: "",
         reporterEmail: "",
-        file: null
+        file: null,
+        politicalParty:"",
+
+        // police info
+        nature_of_incident: "",
+        complainers_name: "",
+        complainers_address: "",
+        victims_name: "",
+        victims_address: "",
+        respondents_name: "",
+        respondents_address: "",
+        no_of_vehicles_arrested: null,
+        steps_taken: "",
+        court_case_no: "",
+
     }
 
     componentDidMount() {
         this.props.getChannels();
         this.props.getElections();
         this.props.getCategories();
-        this.props.getProvinces();
         this.props.getDistricts();
         this.props.getDivisionalSecretariats();
         this.props.getGramaNiladharis();
@@ -157,6 +172,7 @@ class IncidentFormInternal extends Component {
         this.props.getPoliceStations();
         this.props.getPoliceDivisions();
         this.props.getWards();
+        this.props.getPoliticalParties();
 
         this.props.resetIncidentForm();
 
@@ -174,7 +190,7 @@ class IncidentFormInternal extends Component {
 
         const { paramIncidentId } = this.props.match.params
 
-        if(values.occured_date){
+        if (values.occured_date) {
             values.occured_date = moment(values.occured_date).format()
         }
 
@@ -183,7 +199,7 @@ class IncidentFormInternal extends Component {
             this.props.history.push(`/app/review/${paramIncidentId}`);
         } else {
             this.props.submitInternalIncident(values, this.state.file);
-            this.props.history.push('/app/review');
+            // this.props.history.push('/app/review');
         }
     }
 
@@ -208,7 +224,7 @@ class IncidentFormInternal extends Component {
             });
         }
 
-        if(initData.occured_date){
+        if (initData.occured_date) {
             initData.occured_date = moment(initData.occured_date).format("YYYY-MM-DDTHH:mm")
         }
 
@@ -233,10 +249,11 @@ class IncidentFormInternal extends Component {
                     enableReinitialize={reinit}
                     initialValues={this.getInitialValues()}
                     onSubmit={(values, actions) => {
+                        console.log(values)
                         this.handleSubmit(values, actions)
                     }}
                     render={
-                        ({ handleSubmit, handleChange, handleBlur, values, errors }) => (
+                        ({ handleSubmit, handleChange, handleBlur, values, errors, setFieldValue }) => (
                             <form className={classes.container} noValidate autoComplete="off" onSubmit={handleSubmit}>
                                 <div style={{ display: "none" }}>{this.props.incident.id}</div>
                                 {/* basic incident detail information */}
@@ -246,30 +263,48 @@ class IncidentFormInternal extends Component {
                                     </Typography>
                                     <Grid container spacing={24}>
                                         <Grid item xs={12}>
-                                            <Grid item xs={12} sm={6}>
-                                                <FormControl className={classes.formControl}>
-                                                    <InputLabel htmlFor="infoChannel">Received Mode</InputLabel>
-                                                    <Select
-                                                        value={values.infoChannel}
-                                                        onChange={handleChange}
-                                                        inputProps={{
-                                                            name: 'infoChannel',
-                                                            id: 'infoChannel',
-                                                        }}
-                                                    >
-                                                        {this.props.channels.map((c, k) => (
-                                                            <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
-                                                        ))}
-                                                        <MenuItem value="Other"> Other </MenuItem>
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
+                                            <FormControl component="fieldset" className={classes.formControl}>
+                                                <FormLabel component="legend">Type*</FormLabel>
+                                                <RadioGroup
+                                                    id="incidentType"
+                                                    name="incidentType"
+                                                    className={classes.group}
+                                                    value={values.incidentType}
+                                                    onChange={handleChange}
+                                                    row
+                                                >
+                                                    <FormControlLabel value="COMPLAINT" control={<Radio color="primary" />} label="Complaint" />
+                                                    <FormControlLabel value="INQUIRY" control={<Radio color="primary" />} label="Inquiry" />
+                                                </RadioGroup>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <FormLabel component="legend">Incident receipt mode*</FormLabel>
+                                            {this.props.channels.map((c, k) => (
+                                                <Button
+                                                    variant="contained"
+                                                    color={(values.infoChannel == c.id) ? "primary" : ""}
+                                                    className={classes.button}
+                                                    onClick={() => { setFieldValue("infoChannel", c.id, false) }}
+                                                >
+                                                    {c.name}
+                                                </Button>
+                                            ))}
+
+                                            {/* testbox to keep value of channel selected */}
+                                            <TextField
+                                                id="infoChannel"
+                                                name="infoChannel"
+                                                className={classes.hide}
+                                                value={values.infoChannel}
+                                                onChange={handleChange}
+                                            />
                                         </Grid>
                                         <Grid item xs={12}>
                                             <TextField
                                                 type="text"
                                                 name="title"
-                                                label="Title"
+                                                label="Title*"
                                                 placeholder="Title"
                                                 className={classes.textField}
                                                 value={values.title}
@@ -281,7 +316,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 type="text"
                                                 name="description"
-                                                label="Description"
+                                                label="Description*"
                                                 placeholder="Press enter for new lines."
                                                 className={classes.textField}
                                                 multiline
@@ -292,7 +327,7 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <FormControl component="fieldset" className={classes.formControl}>
-                                                <FormLabel component="legend">Occurrence</FormLabel>
+                                                <FormLabel component="legend">Occurrence*</FormLabel>
                                                 <RadioGroup
                                                     name="occurrence"
                                                     id="occurrence"
@@ -309,9 +344,8 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={6} sm={3}>
                                             <TextField
-                                                margin="normal"
                                                 id="occured_date"
-                                                label="Incident date"
+                                                label="Incident date and time*"
                                                 type="datetime-local"
                                                 value={values.occured_date}
                                                 InputLabelProps={{ shrink: true }}
@@ -320,7 +354,7 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="category">Category</InputLabel>
+                                                <InputLabel htmlFor="category">Category*</InputLabel>
                                                 <Select
                                                     value={values.category}
                                                     onChange={handleChange}
@@ -330,7 +364,7 @@ class IncidentFormInternal extends Component {
                                                     }}
                                                 >
                                                     {this.props.categories.map((c, k) => (
-                                                        <MenuItem value={c.sub_category} key={k}>
+                                                        <MenuItem value={c.id} key={k}>
                                                             <div className={classes.langCats}>
                                                                 <div>{c.sub_category}</div>
                                                                 <div>|</div>
@@ -340,7 +374,6 @@ class IncidentFormInternal extends Component {
                                                             </div>
                                                         </MenuItem>
                                                     ))}
-                                                    <MenuItem value="Other"> Other </MenuItem>
                                                 </Select>
                                             </FormControl>
                                         </Grid>
@@ -348,7 +381,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 type="text"
                                                 name="otherCat"
-                                                label="If Other, please describe here"
+                                                label="If Other Category, please describe here"
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
                                                 value={values.otherCat}
@@ -357,7 +390,7 @@ class IncidentFormInternal extends Component {
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="election" >Election</InputLabel>
+                                                <InputLabel htmlFor="election" >Election*</InputLabel>
                                                 <Select
                                                     value={values.election}
                                                     onChange={handleChange}
@@ -368,8 +401,31 @@ class IncidentFormInternal extends Component {
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.elections.map((c, k) => (
-                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
+                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
                                                     ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="politicalParty">Reponsible Political Party</InputLabel>
+                                                <Select
+                                                    value={values.politicalParty}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'politicalParty',
+                                                        id: 'politicalParty',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {this.props.politicalParties.allCodes.map((c, k) => {
+                                                        let currParty = this.props.politicalParties.byCode[c]
+                                                        return (
+                                                            <MenuItem value={currParty.code} key={k}>
+                                                                {currParty.name}
+                                                            </MenuItem>
+                                                        )
+                                                    })}
                                                 </Select>
                                             </FormControl>
                                         </Grid>
@@ -391,6 +447,7 @@ class IncidentFormInternal extends Component {
                                                                     root: classes.severityLow,
                                                                     checked: classes.checked,
                                                                 }}
+                                                                checked={(values.severity == "1") ? true : false}
                                                             />
                                                         }
                                                         label="1"
@@ -408,6 +465,7 @@ class IncidentFormInternal extends Component {
                                                                     root: classes.severityLow,
                                                                     checked: classes.checked,
                                                                 }}
+                                                                checked={(values.severity == "2") ? true : false}
                                                             />
                                                         }
                                                         label="2"
@@ -425,6 +483,7 @@ class IncidentFormInternal extends Component {
                                                                     root: classes.severityLow,
                                                                     checked: classes.checked,
                                                                 }}
+                                                                checked={(values.severity == "3") ? true : false}
                                                             />
                                                         }
                                                         label="3"
@@ -442,6 +501,7 @@ class IncidentFormInternal extends Component {
                                                                     root: classes.severityMedium,
                                                                     checked: classes.checked,
                                                                 }}
+                                                                checked={(values.severity == "4") ? true : false}
                                                             />
                                                         }
                                                         label="4"
@@ -459,6 +519,7 @@ class IncidentFormInternal extends Component {
                                                                     root: classes.severityMedium,
                                                                     checked: classes.checked,
                                                                 }}
+                                                                checked={(values.severity == "5") ? true : false}
                                                             />
                                                         }
                                                         label="5"
@@ -476,6 +537,7 @@ class IncidentFormInternal extends Component {
                                                                     root: classes.severityMedium,
                                                                     checked: classes.checked,
                                                                 }}
+                                                                checked={(values.severity == "6") ? true : false}
                                                             />
                                                         }
                                                         label="6"
@@ -490,21 +552,28 @@ class IncidentFormInternal extends Component {
                                                         control={
                                                             <Radio
                                                                 classes={{
-                                                                    root: classes.severityHigh,
+                                                                    root: classes.severityMedium,
                                                                     checked: classes.checked,
                                                                 }}
+                                                                checked={(values.severity == "7") ? true : false}
                                                             />
                                                         }
                                                         label="7"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
                                                         classes={{
-                                                            label: classes.severityHigh,
+                                                            label: classes.severityMedium,
                                                         }}
                                                     />
                                                     <FormControlLabel
                                                         value="8"
-                                                        control={<Radio className={classes.severityHigh} />}
+                                                        control={<Radio
+                                                            classes={{
+                                                                root: classes.severityHigh,
+                                                                checked: classes.checked,
+                                                            }}
+                                                            checked={(values.severity == "8") ? true : false}
+                                                        />}
                                                         label="8"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
@@ -514,7 +583,13 @@ class IncidentFormInternal extends Component {
                                                     />
                                                     <FormControlLabel
                                                         value="9"
-                                                        control={<Radio className={classes.severityHigh} />}
+                                                        control={<Radio
+                                                            classes={{
+                                                                root: classes.severityHigh,
+                                                                checked: classes.checked,
+                                                            }}
+                                                            checked={(values.severity == "9") ? true : false}
+                                                        />}
                                                         label="9"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
@@ -524,7 +599,13 @@ class IncidentFormInternal extends Component {
                                                     />
                                                     <FormControlLabel
                                                         value="10"
-                                                        control={<Radio className={classes.severityHigh} />}
+                                                        control={<Radio
+                                                            classes={{
+                                                                root: classes.severityHigh,
+                                                                checked: classes.checked,
+                                                            }}
+                                                            checked={(values.severity == "10") ? true : false}
+                                                        />}
                                                         label="10"
                                                         labelPlacement="bottom"
                                                         className={classes.radioItem}
@@ -535,13 +616,14 @@ class IncidentFormInternal extends Component {
                                                 </RadioGroup>
                                             </FormControl>
                                         </Grid>
-                                        
-                                        { !paramIncidentId && 
-                                            <Grid item>
+
+                                        {!paramIncidentId &&
+                                            <Grid item xs={12} sm={6}>
                                                 <InputLabel htmlFor="election" >Upload File</InputLabel>
                                                 <DropZoneBase setSelectedFiles={this.handleFileSelect} />
                                             </Grid>
                                         }
+
 
                                     </Grid>
                                 </Paper>
@@ -559,7 +641,6 @@ class IncidentFormInternal extends Component {
                                                 className={classes.textField}
                                                 value={values.location}
                                                 onChange={handleChange}
-                                                margin="normal"
                                                 multiline
                                             />
                                         </Grid>
@@ -570,7 +651,6 @@ class IncidentFormInternal extends Component {
                                                 className={classes.textField}
                                                 value={values.address}
                                                 onChange={handleChange}
-                                                margin="normal"
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
@@ -580,7 +660,6 @@ class IncidentFormInternal extends Component {
                                                 className={classes.textField}
                                                 value={values.city}
                                                 onChange={handleChange}
-                                                margin="normal"
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
@@ -595,15 +674,19 @@ class IncidentFormInternal extends Component {
                                                     }}
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.provinces.map((c, k) => (
-                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
-                                                    ))}
+                                                    {this.props.districts.allCodes.map((c, k) => {
+                                                        let currDistrict = this.props.districts.byCode[c]
+                                                        return currDistrict.name === 'NONE' &&
+                                                            <MenuItem value={currDistrict.code} key={k}>
+                                                                {currDistrict.province}
+                                                            </MenuItem>
+                                                    })}
                                                 </Select>
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="district">Districts</InputLabel>
+                                                <InputLabel htmlFor="district">District</InputLabel>
                                                 <Select
                                                     value={values.district}
                                                     onChange={handleChange}
@@ -613,118 +696,80 @@ class IncidentFormInternal extends Component {
                                                     }}
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.districts.map((c, k) => (
-                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
-                                                    ))}
+                                                    {this.props.districts.allCodes.map((c, k) => {
+                                                        let currDistrict = this.props.districts.byCode[c]
+                                                        return currDistrict.name !== 'NONE' &&
+                                                            <MenuItem value={currDistrict.code} key={k}>
+                                                                {currDistrict.name}
+                                                            </MenuItem>
+                                                    })}
                                                 </Select>
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="divisionalSecretariat">Divisional Secretariat</InputLabel>
-                                                <Select
+                                                <IntlSelect
                                                     value={values.divisionalSecretariat}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'divisionalSecretariat',
-                                                        id: 'divisionalSecretariat',
-                                                    }}
-                                                >
-                                                    <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.divisionalSecretariats.map((c, k) => (
-                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
-                                                    ))}
-                                                </Select>
+                                                    handleChange={handleChange}
+                                                    name='divisionalSecretariat'
+                                                    dataObj={this.props.divisionalSecretariats}
+                                                />
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="pollingDivision">Polling Division</InputLabel>
-                                                <Select
+                                                <IntlSelect
                                                     value={values.pollingDivision}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'pollingDivision',
-                                                        id: 'pollingDivision',
-                                                    }}
-                                                >
-                                                    <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.pollingDivisions.map((c, k) => (
-                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
-                                                    ))}
-                                                </Select>
+                                                    handleChange={handleChange}
+                                                    name='pollingDivision'
+                                                    dataObj={this.props.pollingDivisions}
+                                                />
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="pollingStation">Polling Station</InputLabel>
-                                                <Select
+                                                <IntlSelect
                                                     value={values.pollingStation}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'pollingStation',
-                                                        id: 'pollingStation',
-                                                    }}
-                                                >
-                                                    <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.pollingStations.map((c, k) => (
-                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
-                                                    ))}
-                                                </Select>
+                                                    handleChange={handleChange}
+                                                    name='pollingStation'
+                                                    dataObj={this.props.pollingStations}
+                                                />
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="gramaNiladhari">Grama Niladhari Division</InputLabel>
-                                                <Select
+                                                <IntlSelect
                                                     value={values.gramaNiladhari}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'gramaNiladhari',
-                                                        id: 'gramaNiladhari',
-                                                    }}
-                                                >
-                                                    <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.gramaNiladharis.map((c, k) => (
-                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
-                                                    ))}
-                                                </Select>
+                                                    handleChange={handleChange}
+                                                    name='gramaNiladhari'
+                                                    dataObj={this.props.gramaNiladharis}
+                                                />
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="policeStation">Police Station</InputLabel>
-                                                <Select
+                                                <IntlSelect
                                                     value={values.policeStation}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'policeStation',
-                                                        id: 'policeStation',
-                                                    }}
-                                                >
-                                                    <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.policeStations.map((c, k) => (
-                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
-                                                    ))}
-                                                </Select>
+                                                    handleChange={handleChange}
+                                                    name='policeStation'
+                                                    dataObj={this.props.policeStations}
+                                                />
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="policeDivision">Police Division</InputLabel>
-                                                <Select
+                                                <IntlSelect
                                                     value={values.policeDivision}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'policeDivision',
-                                                        id: 'policeDivision',
-                                                    }}
-                                                >
-                                                    <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.policeDivisions.map((c, k) => (
-                                                        <MenuItem value={c.name} key={k}>{c.name}</MenuItem>
-                                                    ))}
-                                                </Select>
+                                                    handleChange={handleChange}
+                                                    name='policeDivision'
+                                                    dataObj={this.props.policeDivisions}
+                                                />
                                             </FormControl>
                                         </Grid>
                                     </Grid>
@@ -744,7 +789,6 @@ class IncidentFormInternal extends Component {
                                                 className={classes.textField}
                                                 value={values.reporterName}
                                                 onChange={handleChange}
-                                                margin="normal"
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
@@ -772,7 +816,6 @@ class IncidentFormInternal extends Component {
                                                 className={classes.textField}
                                                 value={values.reporterAddress}
                                                 onChange={handleChange}
-                                                margin="normal"
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
@@ -783,7 +826,6 @@ class IncidentFormInternal extends Component {
                                                 className={classes.textField}
                                                 value={values.reporterMobile}
                                                 onChange={handleChange}
-                                                margin="normal"
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
@@ -794,7 +836,6 @@ class IncidentFormInternal extends Component {
                                                 className={classes.textField}
                                                 value={values.reporterEmail}
                                                 onChange={handleChange}
-                                                margin="normal"
                                             />
                                         </Grid>
                                         <Grid item xs={12} >
@@ -805,6 +846,7 @@ class IncidentFormInternal extends Component {
                                                         name="reporterConsent"
                                                         checked={values.reporterConsent}
                                                         onChange={handleChange}
+                                                        color="primary"
                                                     />
                                                 }
                                                 label="Complainer details can be shared with external parties."
@@ -813,11 +855,96 @@ class IncidentFormInternal extends Component {
                                     </Grid>
                                 </Paper>
 
+                                {/* police details */}
+                                <div className={classes.hide}>
+                                    <ExpansionPanel>
+                                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                            <Typography variant="h5" gutterBottom> Police Related Information </Typography>
+                                        </ExpansionPanelSummary>
+                                        <ExpansionPanelDetails>
+                                            <Grid container spacing={24}>
+                                            
+
+                                                <Grid item xs={12} sm={6}>
+                                                    <TextField
+                                                        id="complainers_name"
+                                                        name="complainers_name"
+                                                        label="Complainer Name"
+                                                        className={classes.textField}
+                                                        value={values.complainers_name}
+                                                        onChange={handleChange}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={4}>
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="complainers_address"
+                                                        name="complainers_address"
+                                                        label="Complainers Address"
+                                                        className={classes.textField}
+                                                        value={values.complainers_address}
+                                                        onChange={handleChange}
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12} sm={6}>
+                                                    <TextField
+                                                        id="victims_name"
+                                                        name="victims_name"
+                                                        label="Victims Name"
+                                                        className={classes.textField}
+                                                        value={values.victims_name}
+                                                        onChange={handleChange}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={4}>
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="victims_address"
+                                                        name="victims_address"
+                                                        label="Victims Address"
+                                                        className={classes.textField}
+                                                        value={values.victims_address}
+                                                        onChange={handleChange}
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12} sm={6}>
+                                                    <TextField
+                                                        id="respondents_name"
+                                                        name="respondents_name"
+                                                        label="Respondants Name"
+                                                        className={classes.textField}
+                                                        value={values.respondents_name}
+                                                        onChange={handleChange}
+
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={4}>
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="respondents_address"
+                                                        name="respondents_address"
+                                                        label="Respondents Address"
+                                                        className={classes.textField}
+                                                        value={values.respondents_address}
+                                                        onChange={handleChange}
+                                                    />
+                                                </Grid>
+
+                                            </Grid>
+                                        </ExpansionPanelDetails>
+                                    </ExpansionPanel>
+                                </div>
+
                                 {/* action panel */}
                                 <Grid container spacing={24}>
                                     <Grid item xs={12} style={{ textAlign: "center" }}>
                                         <Button variant="contained" className={classes.button}> Cancel</Button>
-                                        <Button type="submit" variant="contained" color="primary" className={classes.button}> Sumbit</Button>
+                                        <Button type="submit" variant="contained" color="primary" className={classes.button}> Submit</Button>
                                     </Grid>
                                 </Grid>
                             </form>
@@ -862,6 +989,7 @@ const mapStateToProps = (state, ownProps) => {
         policeDivisions: state.sharedReducer.policeDivisions,
         wards: state.sharedReducer.wards,
         elections: state.sharedReducer.elections,
+        politicalParties: state.sharedReducer.politicalParties,
 
         ...ownProps
     }
@@ -869,26 +997,11 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        submitIncidentBasicDetails: (values) => {
-            dispatch(submitIncidentBasicData(values))
-        },
         submitInternalIncident: (values, fileData) => {
             dispatch(submitInternalIncidentData(values, fileData))
         },
-        updateIncidentBasicDetails: (incidentId, incidentData) => {
-            dispatch(fetchUpdateIncident(incidentId, incidentData));
-        },
         updateInternalIncident: (incidentId, incidentData) => {
             dispatch(fetchUpdateInternalIncidentData(incidentId, incidentData));
-        },
-        submitContactDetails: (incidentId, reporterId, reporterData) => {
-            dispatch(fetchUpdateReporter(incidentId, reporterId, reporterData))
-        },
-        stepBackward: () => {
-            dispatch(stepBackwardIncidentStepper())
-        },
-        stepForward: () => {
-            dispatch(stepForwardIncidentStepper())
         },
 
         getChannels: () => {
@@ -926,6 +1039,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         getWards: () => {
             dispatch(fetchWards())
+        },
+        getPoliticalParties: () => {
+            dispatch(fetchPoliticalParties())
         },
 
         getIncident: (incidentId) => {

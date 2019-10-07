@@ -28,6 +28,7 @@ def read_env():
                 val = re.sub(r'\\(.)', r'\1', m3.group(1))
             os.environ.setdefault(key, val)
 
+
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'src.settings')
     try:
