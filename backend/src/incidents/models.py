@@ -49,6 +49,15 @@ class IncidentType(enum.Enum):
     def __str__(self):
         return self.name
 
+class ReportedThrough(enum.Enum):
+    GUEST = "Guest"
+    ELECTION_COMMISION = "Election Commision"
+    POLICE = "Police"
+    OTHER = "Other"
+
+    def __str__(self):
+        return self.name
+
 class Reporter(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
     sn_name = models.CharField(max_length=200, null=True, blank=True)
@@ -159,6 +168,8 @@ class Incident(models.Model):
         default=IncidentType.COMPLAINT,
     )
 
+    created_by = models.CharField(max_length=50, default="OTHER")
+
     # getting the elections from a separate service
     election = models.CharField(max_length=200, blank=True)
 
@@ -202,6 +213,7 @@ class Incident(models.Model):
     ward = models.CharField(max_length=200, blank=True, null=True)
     di_division = models.CharField(max_length=200, blank=True, null=True)
 
+    polictical_party = models.CharField(max_length=300, blank=True, null=True)
 
     complainer_consent = models.BooleanField(default=False, null=True, blank=True)
     proof = models.BooleanField(default=False, null=True)
@@ -244,6 +256,20 @@ def update_incident_current_severity(sender, **kwargs):
     incident.current_severity = incident_severity.current_severity
     incident.save()
 
+class IncidentPerson(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=200, null=True, blank=True)
+    address = models.CharField(max_length=200, null=True, blank=True)
+    
+    # this is essentially a one-to-one mapping to common.PolicalParty
+    # for future compatibiliy, it is set to char field 
+    political_affliation = models.CharField(max_length=200, blank=True, null=True)
+
+class IncidentVehicle(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    vehicle_no = models.CharField(max_length=15, null=True, blank=True)
+    is_private = models.BooleanField(default=False)
+
 class IncidentPoliceReport(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     incident = models.ForeignKey("Incident", on_delete=models.DO_NOTHING)
@@ -269,6 +295,11 @@ class IncidentPoliceReport(models.Model):
     no_of_vehicles_arrested =  models.IntegerField(default=0, null=True, blank=True)
     steps_taken = models.CharField(max_length=200, null=True, blank=True)
     court_case_no = models.CharField(max_length=200, null=True, blank=True)
+
+    injured_parties = models.ManyToManyField(IncidentPerson, related_name='incident_injured_parties', blank=True)
+    respondents = models.ManyToManyField(IncidentPerson, related_name='incident_respondents', blank=True)
+    detained_vehicles = models.ManyToManyField(IncidentVehicle, related_name='incident_detained_vehicles', blank=True)
+
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:

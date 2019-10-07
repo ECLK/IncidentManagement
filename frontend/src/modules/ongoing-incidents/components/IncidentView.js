@@ -28,7 +28,14 @@ import {
     setIncidentAssignee,
     fetchEscallateIncident
 } from '../state/OngoingIncidents.actions';
-import { fetchActiveIncidentData } from '../../shared/state/Shared.actions';
+import { 
+    fetchActiveIncidentData,
+    fetchChannels,
+    fetchElections,
+    fetchCategories,
+    fetchDistricts,
+    fetchProvinces
+} from '../../shared/state/Shared.actions';
 import { EventActions } from './EventTrail'
 import {showModal} from '../../modals/state/modal.actions'
 import { userCan, USER_ACTIONS } from '../../utils/userUtils';
@@ -122,6 +129,11 @@ class NavTabs extends Component {
         if (incidentId) {
             this.props.getIncident(incidentId);
             this.props.getEvents(incidentId);
+            this.props.getChannels();
+            this.props.getElections();
+            this.props.getCategories();
+            this.props.getProvinces();
+            this.props.getDistricts();
         }
         this.scrollToTop()
         this.props.getUsers();
@@ -158,7 +170,7 @@ class NavTabs extends Component {
             reporter, changeStatus, changeSeverity,
             activeUser, users, getUsers,
             setIncidentAssignee, events,
-            districts,
+            provinces, districts,
             divisionalSecretariats,
             gramaNiladharis,
             pollingDivisions,
@@ -182,6 +194,8 @@ class NavTabs extends Component {
                                 category={this.state.category}
                                 election={this.state.election}
                                 reporter={reporter}
+
+                                provinces={provinces}
                                 districts={districts}
                                 divisionalSecretariats = {divisionalSecretariats}
                                 gramaNiladharis = {gramaNiladharis}
@@ -268,9 +282,8 @@ const mapStateToProps = (state, ownProps) => {
         events: state.ongoingIncidentReducer.events,
         activeIncident: state.sharedReducer.activeIncident.data,
         reporter: state.sharedReducer.activeIncidentReporter,
+        provinces: state.sharedReducer.provinces,
         districts: state.sharedReducer.districts,
-
-        provinces: [],
         divisionalSecretariats: state.sharedReducer.divisionalSecretariats ,
         gramaNiladharis: state.sharedReducer.gramaNiladharis ,
         pollingDivisions: state.sharedReducer.pollingDivisions ,
@@ -325,6 +338,21 @@ const mapDispatchToProps = (dispatch) => {
         showRequestAdviceModal: (incidentId, users) => {
             dispatch(showModal('REQUEST_ADVICE_MODAL', { incidentId, users }))
         },
+        getChannels: () => {
+            dispatch(fetchChannels());
+        },
+        getElections: () => {
+            dispatch(fetchElections());
+        },
+        getCategories: () => {
+            dispatch(fetchCategories());
+        },
+        getProvinces: () => {
+            dispatch(fetchProvinces());
+        },
+        getDistricts: () => {
+            dispatch(fetchDistricts());
+        }
     }
 }
 

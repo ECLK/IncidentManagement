@@ -71,6 +71,10 @@ def get_user_group(user: User):
 
     return user_groups[0]
 
+def get_user_orgnaization(user: User):
+    user_org = Group.objects.get(id=get_user_group(user).organization_id)
+    return user_org
+
 def get_guest_user():
     try:
         return User.objects.get(username="guest")
@@ -88,6 +92,7 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
     reporter = Reporter()
     reporter.save()
 
+    incident.created_by = get_user_orgnaization(user).name
     incident.reporter = reporter
     incident.assignee = user
     incident.save()
@@ -99,6 +104,12 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
     user_group = get_user_group(user)
     if user_group.name == "guest":
         incident_escalate(user, incident)
+
+        # updating the created_by as "GUEST" for public user
+        if not user.is_staff:
+            incident.created_by = "GUEST"
+            incident.save()
+
     elif not user.is_staff:
         # for external entity users, we assign a staff member
         guest_user = get_guest_user()
@@ -111,6 +122,8 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
     status = IncidentStatus(current_status=StatusType.NEW,
                             incident=incident, approved=True)
     status.save()
+
+    return incident
 
 def update_incident_postscript(incident: Incident, user: User, revision: str) -> None:
     event_services.update_incident_event(user, incident, revision)

@@ -1,0 +1,101 @@
+[
+    {
+        "model": "common.province",
+        "pk": "1",
+        "fields": {
+            "code": "P1",
+            "name": "Central",
+            "sn_name": "මධ්යම",
+            "tm_name": "மத்திய",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.province",
+        "pk": "2",
+        "fields": {
+            "code": "P2",
+            "name": "Eastern",
+            "sn_name": "නැගෙනහිර",
+            "tm_name": "கிழக்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.province",
+        "pk": "3",
+        "fields": {
+            "code": "P3",
+            "name": "North Central",
+            "sn_name": "උතුරු මැද",
+            "tm_name": "வட மத்திய",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.province",
+        "pk": "4",
+        "fields": {
+            "code": "P4",
+            "name": "Northern",
+            "sn_name": "උතුරු",
+            "tm_name": "வடக்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.province",
+        "pk": "5",
+        "fields": {
+            "code": "P5",
+            "name": "North Western",
+            "sn_name": "සබරගමුව",
+            "tm_name": "சப்ரகமுவ",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.province",
+        "pk": "6",
+        "fields": {
+            "code": "P6",
+            "name": "Sabaragamuwa",
+            "sn_name": "වයඹ",
+            "tm_name": "வடமேற்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.province",
+        "pk": "7",
+        "fields": {
+            "code": "P7",
+            "name": "Southern",
+            "sn_name": "දකුණු",
+            "tm_name": "தெற்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.province",
+        "pk": "8",
+        "fields": {
+            "code": "P8",
+            "name": "Uva",
+            "sn_name": "ඌව",
+            "tm_name": "ஊவா",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.province",
+        "pk": "9",
+        "fields": {
+            "code": "P9",
+            "name": "Western",
+            "sn_name": "බටහිර",
+            "tm_name": "மேற்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    }
+]

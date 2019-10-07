@@ -5,14 +5,12 @@ import { withRouter } from "react-router";
 import { withStyles } from '@material-ui/core/styles';
 import { Formik } from 'formik';
 
-import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -26,8 +24,8 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MaterialTable from "material-table";
 
-import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
 import orange from '@material-ui/core/colors/orange';
 import yellow from '@material-ui/core/colors/yellow';
@@ -119,7 +117,7 @@ class IncidentFormInternal extends Component {
     state = {
         incidentType: "COMPLAINT",
         infoChannel: "",
-        title: "Internal: ",
+        title: "",
         description: "",
         occurrence: "OCCURRED",
         occured_date: "",
@@ -147,7 +145,10 @@ class IncidentFormInternal extends Component {
         reporterLandline: "",
         reporterEmail: "",
         file: null,
-        incidentPoliticalParty:"",
+        politicalParty:"",
+        injuredParties: [],
+        respondents: [],
+        detainedVehicles: [],
 
         // police info
         nature_of_incident: "",
@@ -167,6 +168,7 @@ class IncidentFormInternal extends Component {
         this.props.getChannels();
         this.props.getElections();
         this.props.getCategories();
+        this.props.getProvinces();
         this.props.getDistricts();
         this.props.getDivisionalSecretariats();
         this.props.getGramaNiladharis();
@@ -240,11 +242,43 @@ class IncidentFormInternal extends Component {
         })
     }
 
+    tableRowAdd = (setFieldValue, fieldName, tableData, record) => {
+        return new Promise((resolve, reject) => {
+            tableData.push(record);
+            setFieldValue(fieldName, tableData);
+            resolve();
+        })
+    }
+
+    tableRowDelete = (setFieldValue, fieldName, tableData, record) => {
+        return new Promise((resolve, reject) => {            
+            const idx = record.tableData.id;
+            tableData.splice(idx, 1);
+            setFieldValue(fieldName, tableData);
+            resolve();
+        })
+    }
+
+    tableRowUpdate = (setFieldValue, fieldName, tableData, oldRecord, newRecord) => {
+        return new Promise((resolve, reject) => {         
+            tableData[oldRecord.tableData.id] = newRecord;
+            setFieldValue(fieldName, tableData);
+            resolve();
+        })
+    }
+
     render() {
         const { classes } = this.props;
         const { paramIncidentId } = this.props.match.params
 
         const reinit = paramIncidentId ? true : false;
+
+        const politicalPartyLookup = Object.assign({}, 
+            ...this.props.politicalParties.allCodes.map((c, k) => {
+                const curParty = this.props.politicalParties.byCode[c];
+                return { [curParty.code]: this.props.politicalParties.byCode[c].name}
+            })
+        );
 
         return (
             <div className={classes.root}>
@@ -384,7 +418,7 @@ class IncidentFormInternal extends Component {
                                             <TextField
                                                 type="text"
                                                 name="otherCat"
-                                                label="If Other, please describe here"
+                                                label="If Other Category, please describe here"
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
                                                 value={values.otherCat}
@@ -409,11 +443,11 @@ class IncidentFormInternal extends Component {
                                                 </Select>
                                             </FormControl>
                                         </Grid>
-                                        {/* <Grid item xs={12} sm={6}>
+                                        <Grid item xs={12} sm={6}>
                                             <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="politicalParty">Reponsible Political Party</InputLabel>
                                                 <Select
-                                                    value={values.incidentPoliticalParty}
+                                                    value={values.politicalParty}
                                                     onChange={handleChange}
                                                     inputProps={{
                                                         name: 'politicalParty',
@@ -423,14 +457,15 @@ class IncidentFormInternal extends Component {
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
                                                     {this.props.politicalParties.allCodes.map((c, k) => {
                                                         let currParty = this.props.politicalParties.byCode[c]
-                                                        return currParty.name !== 'NONE' &&
+                                                        return (
                                                             <MenuItem value={currParty.code} key={k}>
                                                                 {currParty.name}
                                                             </MenuItem>
+                                                        )
                                                     })}
                                                 </Select>
                                             </FormControl>
-                                        </Grid> */}
+                                        </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <FormControl component="fieldset" className={classes.formControl}>
                                                 <FormLabel component="legend">Severity</FormLabel>
@@ -676,12 +711,13 @@ class IncidentFormInternal extends Component {
                                                     }}
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.districts.allCodes.map((c, k) => {
-                                                        let currDistrict = this.props.districts.byCode[c]
-                                                        return currDistrict.name === 'NONE' &&
-                                                            <MenuItem value={currDistrict.code} key={k}>
-                                                                {currDistrict.province}
+                                                    {this.props.provinces.allCodes.map((c, k) => {
+                                                        let currProvince = this.props.provinces.byCode[c]
+                                                        return (
+                                                            <MenuItem value={currProvince.code} key={k}>
+                                                                {currProvince.name}
                                                             </MenuItem>
+                                                        )
                                                     })}
                                                 </Select>
                                             </FormControl>
@@ -865,16 +901,7 @@ class IncidentFormInternal extends Component {
                                         </ExpansionPanelSummary>
                                         <ExpansionPanelDetails>
                                             <Grid container spacing={24}>
-                                                <Grid item xs={12} sm={12}>
-                                                    <TextField
-                                                        id="nature_of_incident"
-                                                        name="nature_of_incident"
-                                                        label="Nature of Incident"
-                                                        className={classes.textField}
-                                                        value={values.nature_of_incident}
-                                                        onChange={handleChange}
-                                                    />
-                                                </Grid>
+                                            
 
                                                 <Grid item xs={12} sm={6}>
                                                     <TextField
@@ -899,7 +926,7 @@ class IncidentFormInternal extends Component {
                                                     />
                                                 </Grid>
 
-                                                <Grid item xs={12} sm={6}>
+                                                {/* <Grid item xs={12} sm={6}>
                                                     <TextField
                                                         id="victims_name"
                                                         name="victims_name"
@@ -908,22 +935,67 @@ class IncidentFormInternal extends Component {
                                                         value={values.victims_name}
                                                         onChange={handleChange}
                                                     />
-                                                </Grid>
+                                                </Grid> */}
                                                 <Grid item xs={12} sm={4}>
                                                 </Grid>
                                                 <Grid item xs={12}>
-                                                    <TextField
+                                                    <MaterialTable
+                                                        columns={[
+                                                            { title: "Name", field: "name" },
+                                                            { title: "Address", field: "address" },
+                                                            {
+                                                                title: "Political Affliation",
+                                                                field: "political_affliation",
+                                                                lookup: politicalPartyLookup
+                                                            }
+                                                        ]}
+                                                        data={values.injuredParties}
+                                                        title="Injured Parties"
+                                                        editable={{
+                                                            onRowAdd: newData => this.tableRowAdd(setFieldValue, "injuredParties", values.injuredParties, newData),
+                                                            onRowUpdate: (newData, oldData) => this.tableRowUpdate(setFieldValue, "injuredParties", values.injuredParties, oldData, newData),
+                                                            onRowDelete: oldData => this.tableRowDelete(setFieldValue, "injuredParties", values.injuredParties, oldData)
+                                                        }}
+                                                        options={{
+                                                            search: false,
+                                                            paging: false
+                                                        }}
+                                                    />
+                                                    {/* <TextField
                                                         id="victims_address"
                                                         name="victims_address"
                                                         label="Victims Address"
                                                         className={classes.textField}
                                                         value={values.victims_address}
                                                         onChange={handleChange}
-                                                    />
+                                                    /> */}
+                                                    
                                                 </Grid>
 
-                                                <Grid item xs={12} sm={6}>
-                                                    <TextField
+                                                <Grid item xs={12}>
+                                                    <MaterialTable
+                                                        columns={[
+                                                            { title: "Name", field: "name" },
+                                                            { title: "Address", field: "address" },
+                                                            {
+                                                                title: "Political Affliation",
+                                                                field: "political_affliation",
+                                                                lookup: politicalPartyLookup
+                                                            }
+                                                        ]}
+                                                        data={values.respondents}
+                                                        title="Respondents"
+                                                        editable={{
+                                                            onRowAdd: newData => this.tableRowAdd(setFieldValue, "respondents", values.respondents, newData),
+                                                            onRowUpdate: (newData, oldData) => this.tableRowUpdate(setFieldValue, "respondents", values.respondents, oldData, newData),
+                                                            onRowDelete: oldData => this.tableRowDelete(setFieldValue, "respondents", values.respondents, oldData)
+                                                        }}
+                                                        options={{
+                                                            search: false,
+                                                            paging: false
+                                                        }}
+                                                    />
+                                                    {/* <TextField
                                                         id="respondents_name"
                                                         name="respondents_name"
                                                         label="Respondants Name"
@@ -931,9 +1003,9 @@ class IncidentFormInternal extends Component {
                                                         value={values.respondents_name}
                                                         onChange={handleChange}
 
-                                                    />
+                                                    /> */}
                                                 </Grid>
-                                                <Grid item xs={12} sm={4}>
+                                                {/* <Grid item xs={12} sm={4}>
                                                 </Grid>
                                                 <Grid item xs={12}>
                                                     <TextField
@@ -944,45 +1016,34 @@ class IncidentFormInternal extends Component {
                                                         value={values.respondents_address}
                                                         onChange={handleChange}
                                                     />
-                                                </Grid>
+                                                </Grid> */}
 
-                                                <Grid item xs={12} sm={6}>
-                                                    <TextField
-                                                        id="no_of_vehicles_arrested"
-                                                        name="no_of_vehicles_arrested"
-                                                        label="No. of Vehicles Arrested"
-                                                        className={classes.textField}
-                                                        value={values.no_of_vehicles_arrested}
-                                                        onChange={handleChange}
-
+<Grid item xs={12}>
+                                                    <MaterialTable
+                                                        columns={[
+                                                            { title: "Vehicle License Plate", field: "vehicle_no" },
+                                                            {
+                                                                title: "Vehicle Ownership",
+                                                                field: "is_private",
+                                                                lookup: {
+                                                                    "null": "Government Vehicle",
+                                                                    "true": "Private Vehicle"
+                                                                }
+                                                            }
+                                                        ]}
+                                                        data={values.detainedVehicles}
+                                                        title="Detained Vehicles"
+                                                        editable={{
+                                                            onRowAdd: newData => this.tableRowAdd(setFieldValue, "detainedVehicles", values.detainedVehicles, newData),
+                                                            onRowUpdate: (newData, oldData) => this.tableRowUpdate(setFieldValue, "detainedVehicles", values.detainedVehicles, oldData, newData),
+                                                            onRowDelete: oldData => this.tableRowDelete(setFieldValue, "detainedVehicles", values.detainedVehicles, oldData)
+                                                        }}
+                                                        options={{
+                                                            search: false,
+                                                            paging: false
+                                                        }}
                                                     />
                                                 </Grid>
-                                                <Grid item xs={12} sm={6}></Grid>
-
-                                                <Grid item xs={12} sm={12}>
-                                                    <TextField
-                                                        id="steps_taken"
-                                                        name="steps_taken"
-                                                        label="Steps taken"
-                                                        className={classes.textField}
-                                                        value={values.steps_taken}
-                                                        onChange={handleChange}
-
-                                                    />
-                                                </Grid>
-
-                                                <Grid item xs={12} sm={6}>
-                                                    <TextField
-                                                        id="court_case_no"
-                                                        name="court_case_no"
-                                                        label="Court Case Number"
-                                                        className={classes.textField}
-                                                        value={values.court_case_no}
-                                                        onChange={handleChange}
-
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={12} sm={6}></Grid>
 
                                             </Grid>
                                         </ExpansionPanelDetails>
