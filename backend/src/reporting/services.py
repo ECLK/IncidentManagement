@@ -13,6 +13,9 @@ def get_category_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
         columns = set(Category.objects.all().values_list("top_category", flat=True))
         columns = [name.replace(' ', '_') for name in columns]
+        columns = [name.replace('/', '__') for name in columns]
+        columns = [name.replace('.', '___') for name in columns]
+        columns = [name.replace(',', '____') for name in columns]
         columns.insert(0, "Unassigned")
         sql2 = ", ".join(
             map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (
@@ -62,6 +65,9 @@ def get_mode_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
         columns = set(Channel.objects.all().values_list("name", flat=True))
         columns = [name.replace(' ', '_') for name in columns]
+        columns = [name.replace('/', '__') for name in columns]
+        columns = [name.replace('.', '___') for name in columns]
+        columns = [name.replace(',', '____') for name in columns]
         columns.insert(0, "Unassigned")
         sql2 = ", ".join(
             map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (
