@@ -18,7 +18,7 @@ import Menu from '@material-ui/core/Menu';
 
 import { Link, withRouter } from 'react-router-dom';
 
-import { initiateSignOut } from '../../state/Shared.actions'
+import { initiateSignOut, fetchChannels, fetchElections, fetchCategories, fetchProvinces, fetchDistricts, fetchDivisionalSecretariats, fetchGramaNiladharis, fetchPollingDivisions, fetchPollingStations, fetchPoliceStations, fetchPoliceDivisions, fetchWards } from '../../state/Shared.actions'
 import { changeLanguage } from '../../state/Shared.actions';
 
 import RootModal from '../../../modals/components/RootModal'
@@ -114,6 +114,21 @@ class DomainContainer extends React.Component {
     anchorEl: null,
     anchorLang: null
   };
+
+  componentDidMount() {
+    this.props.getChannels();
+    this.props.getElections();
+    this.props.getCategories();
+    this.props.getProvinces();
+    this.props.getDistricts();
+    this.props.getDivisionalSecretariats();
+    this.props.getGramaNiladharis();
+    this.props.getPollingDivisions();
+    this.props.getPollingStations();
+    this.props.getPoliceStations();
+    this.props.getPoliceDivisions();
+    this.props.getWards();
+  }
 
   handleDrawerOpen = () => {
     this.setState({ open: true });
@@ -297,6 +312,43 @@ const mapDispatchToProps = (dispatch) => {
                     message: "Major error in data! Fallback"
                 }
             })
+        },
+
+        getChannels: () => {
+            dispatch(fetchChannels())
+        },
+        getElections: () => {
+            dispatch(fetchElections());
+        },
+        getCategories: () => {
+            dispatch(fetchCategories())
+        },
+        getProvinces: () => {
+            dispatch(fetchProvinces())
+        },
+        getDistricts: () => {
+            dispatch(fetchDistricts())
+        },
+        getDivisionalSecretariats: () => {
+            dispatch(fetchDivisionalSecretariats())
+        },
+        getGramaNiladharis: () => {
+            dispatch(fetchGramaNiladharis())
+        },
+        getPollingDivisions: () => {
+            dispatch(fetchPollingDivisions())
+        },
+        getPollingStations: () => {
+            dispatch(fetchPollingStations())
+        },
+        getPoliceStations: () => {
+            dispatch(fetchPoliceStations())
+        },
+        getPoliceDivisions: () => {
+            dispatch(fetchPoliceDivisions())
+        },
+        getWards: () => {
+            dispatch(fetchWards())
         }
     }
 }
