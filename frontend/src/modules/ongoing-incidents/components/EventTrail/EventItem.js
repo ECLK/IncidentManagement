@@ -1,8 +1,10 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 
 import { withStyles } from '@material-ui/core/styles';
+import Chip from '@material-ui/core/Chip';
+
 import Avatar from './Avatar';
 import * as moment from 'moment';
 import Button from '@material-ui/core/Button';
@@ -35,7 +37,7 @@ const styles = {
     },
     eventItemUserDetails: {
         marginLeft: "10px",
-        lineHeight: "25px"
+        lineHeight: "35px"
     },
     eventItemBody: {
         width: "100%",
@@ -222,7 +224,8 @@ function getDateDiff(event){
 
 const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const userData = useSelector((state)=>(state.user));
 
     const hasPendingAdviceRequest = (event.action=== "ATTRIBUTE_CHANGED" && 
                                     event.data.status.to_status_type === "ADVICE_REQESTED" &&
@@ -233,12 +236,15 @@ const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
         initiator = event.initiator.displayname;
     }
 
+    let initiatorData = userData.users.byIds[event.initiator.uid];
+
     return (
     <li className={classes.eventItem}>
         <div className={classes.eventItemDetails}>
             {/* <div className={classes.eventItemAvatar}>
                 <Avatar user={event.author} />
             </div> */}
+            <Chip label={!!(initiatorData) ? initiatorData.entity.name : ""} className={classes.chip} variant="outlined" />
             <div className={classes.eventItemUserDetails}>
                 <div className={classes.truncate}>
                     <strong>
