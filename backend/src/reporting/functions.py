@@ -144,5 +144,5 @@ def apply_style(html, title, subtitle, layout):
                 </div>
             </body>
         </html>
-           """ % (layout,title, subtitle, html)
+           """ % (layout, title, subtitle, html)
     return html
