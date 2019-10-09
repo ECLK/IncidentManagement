@@ -12,12 +12,10 @@ export const getCategories = async () => {
 
 export const getProvinces = async () => {
     return (await handler.get('/provinces')).data;
-    // return mockapi.getProvinces();
 }
 
 export const getDistricts = async () => {
     return (await handler.get('/districts')).data;
-    // return mockapi.getDistricts();
 }
 
 export const getDivisionalSecretariats = async () => {

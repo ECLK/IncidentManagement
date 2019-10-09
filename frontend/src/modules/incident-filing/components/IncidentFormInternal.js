@@ -117,7 +117,7 @@ class IncidentFormInternal extends Component {
     state = {
         incidentType: "COMPLAINT",
         infoChannel: "",
-        title: "Internal: ",
+        title: "",
         description: "",
         occurrence: "OCCURRED",
         occured_date: "",
@@ -168,6 +168,7 @@ class IncidentFormInternal extends Component {
         this.props.getChannels();
         this.props.getElections();
         this.props.getCategories();
+        this.props.getProvinces();
         this.props.getDistricts();
         this.props.getDivisionalSecretariats();
         this.props.getGramaNiladharis();
@@ -717,12 +718,13 @@ class IncidentFormInternal extends Component {
                                                     }}
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {this.props.districts.allCodes.map((c, k) => {
-                                                        let currDistrict = this.props.districts.byCode[c]
-                                                        return currDistrict.name === 'NONE' &&
-                                                            <MenuItem value={currDistrict.code} key={k}>
-                                                                {currDistrict.province}
+                                                    {this.props.provinces.allCodes.map((c, k) => {
+                                                        let currProvince = this.props.provinces.byCode[c]
+                                                        return (
+                                                            <MenuItem value={currProvince.code} key={k}>
+                                                                {currProvince.name}
                                                             </MenuItem>
+                                                        )
                                                     })}
                                                 </Select>
                                             </FormControl>
@@ -899,7 +901,7 @@ class IncidentFormInternal extends Component {
                                 </Paper>
 
                                 {/* police details */}
-                                <div>
+                                <div className={classes.hide}>
                                     <ExpansionPanel>
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                             <Typography variant="h5" gutterBottom> Police Related Information </Typography>
