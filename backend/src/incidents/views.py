@@ -310,8 +310,9 @@ class IncidentWorkflowView(APIView):
             incident_close(request.user, incident, comment)
 
         elif workflow == "request-action":
-            comment = json.dumps(request.data['comment'])
-            incident_escalate_external_action(request.user, incident, comment)
+            entity = request.data['entity']
+            comment = request.data['comment']
+            incident_escalate_external_action(request.user, incident, entity, comment)
 
         elif workflow == "complete-action":
             comment = json.dumps(request.data['comment'])

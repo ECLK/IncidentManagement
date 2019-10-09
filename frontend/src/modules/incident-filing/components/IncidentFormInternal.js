@@ -195,6 +195,13 @@ class IncidentFormInternal extends Component {
 
         const { paramIncidentId } = this.props.match.params
 
+        for(var v in values["detainedVehicles"]){
+            if(values["detainedVehicles"][v]["is_private"] === "null"){
+                values["detainedVehicles"][v]["is_private"] = false;
+            }
+        }
+
+
         if (values.occured_date) {
             values.occured_date = moment(values.occured_date).format()
         }
