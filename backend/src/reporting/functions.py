@@ -28,7 +28,7 @@ def get_general_report(field_name, field_label, field_table, count_field, map_fi
                            RIGHT JOIN (SELECT %s,
                                               '1' AS Total
                                        FROM   incidents_incident
-                                       WHERE  occured_date BETWEEN '%s' AND
+                                       WHERE  incidents_incident.created_date BETWEEN '%s' AND
                                                                    '%s') AS
                                       incidents
                                    ON incidents.%s = d.%s
@@ -43,7 +43,7 @@ def get_general_report(field_name, field_label, field_table, count_field, map_fi
             SELECT '(Total No. of Incidents)',
                    Count(id)
             FROM   incidents_incident
-            WHERE  occured_date BETWEEN '%s' AND '%s'
+            WHERE  incidents_incident.created_date BETWEEN '%s' AND '%s'
         """ % (
         field_label, field_label, field_name, field_label, field_table, count_field, start_date, end_date, count_field,
         map_field, count_field, field_name, field_table, field_label, start_date, end_date)
@@ -92,7 +92,26 @@ def get_detailed_report(sql1, columns):
     return dataframe.to_html(index=False)
 
 
-def apply_style(html, title, subtitle, layout):
+def encode_column_names(columns):
+    columns = [name.replace(' ', '_') for name in columns]
+    columns = [name.replace('/', '__') for name in columns]
+    columns = [name.replace('.', '___') for name in columns]
+    columns = [name.replace(',', '____') for name in columns]
+    columns = [name.replace('(', '$') for name in columns]
+    columns = [name.replace(')', '$$') for name in columns]
+    return columns
+
+
+def decode_column_names(text):
+    return text.replace("$$", ")", -1) \
+        .replace("$", "(", -1) \
+        .replace("____", ", ", -1) \
+        .replace("___", ".", -1) \
+        .replace("__", "/", -1) \
+        .replace("_", " ", -1)
+
+
+def apply_style(html, title, layout, total):
     html = """
         <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
         <html>
@@ -125,13 +144,15 @@ def apply_style(html, title, subtitle, layout):
                 </style>
             </head>
             <body>
-                <h1 align=center>%s</h1>
-                <h2 align=center>%s</h2>
+                <h1 align=center>No. of incidents within the period <br>%s</h1>
                 <div>
                     %s
                 </div>
                 <div>
                 <br>
+                <p>
+                Total No.of reported incidents all time: %s
+                </p>
                 <p style="text-align:right;">
                 Report Submitted by
                 <br>
@@ -144,5 +165,5 @@ def apply_style(html, title, subtitle, layout):
                 </div>
             </body>
         </html>
-           """ % (layout, title, subtitle, html)
+           """ % (layout, title, html, total)
     return html
