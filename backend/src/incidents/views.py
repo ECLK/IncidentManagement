@@ -82,7 +82,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         )
 
     def get(self, request, format=None):
-        incidents = Incident.objects.all()
+        incidents = Incident.objects.all().order_by('created_date').reverse()
         user = request.user
 
         # for external entities, they can only view related incidents
