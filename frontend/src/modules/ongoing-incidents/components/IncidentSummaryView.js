@@ -417,7 +417,7 @@ function SummaryTabView(props){
                 <LinkTab label="Basic Information" href="page1" />
                 <LinkTab label="Location Information" href="page2" />
                 <LinkTab label="Contact Information" href="page3" />
-                {/* <LinkTab label="Police Information" href="page4" /> */}
+                <LinkTab label="Police Information" href="page4" />
             </Tabs>
 
             {currentTab === 0 && <TabContainer> 
