@@ -4,10 +4,12 @@ from rest_framework.response import Response
 from django.http import HttpResponse
 from xhtml2pdf import pisa
 import datetime
+from django.db import connection
+import pandas as pd
 
 from .services import get_police_division_summary, get_category_summary, \
     get_mode_summary, get_severity_summary, get_status_summary, get_subcategory_summary, get_district_summary
-from .functions import apply_style
+from .functions import apply_style, decode_column_names
 
 
 class ReportingView(APIView):
@@ -38,67 +40,69 @@ class ReportingView(APIView):
 
         table_html = None
         table_title = None
-        table_subtitle = """%s - %s""" % (start_date, end_date)
 
         # if param_report == "police_division_summary_report":
         #     table_html = get_police_division_summary()
         #     table_title = "Police Division Summary Report"
 
-        layout="A4 portrait"
+        layout = "A4 portrait"
+        title = """from %s to %s by """ % (start_date, end_date)
         if param_report == "category_wise_summary_report":
             table_html = get_category_summary(start_date, end_date, detailed_report)
-            if detailed_report:
-                table_title = "No. of Incidents by District and Category"
+            if detailed_report == 'true':
+                table_title = title + "District and Category"
             else:
-                table_title = "No. of Incidents by Category"
+                table_title = title + "Category"
 
         elif param_report == "mode_wise_summary_report":
             table_html = get_mode_summary(start_date, end_date, detailed_report)
-            if detailed_report:
-                layout="A4 landscape"
-                table_title = "No. of Incidents by District and Mode"
+            if detailed_report == 'true':
+                layout = "A4 landscape"
+                table_title = title + "District and Mode"
             else:
-                table_title = "No. of Incidents by Mode"
+                table_title = title + "Mode"
 
         elif param_report == "district_wise_summary_report":
             table_html = get_district_summary(start_date, end_date, detailed_report)
-            table_title = "No. of Incidents by District"
+            table_title = title + "District"
 
         elif param_report == "severity_wise_summary_report":
             table_html = get_severity_summary(start_date, end_date, detailed_report)
-            if detailed_report:
-                table_title = "No. of Incidents by District and Severity"
+            if detailed_report == 'true':
+                table_title = title + "District and Severity"
             else:
-                table_title = "No. of Incidents by Severity"
+                table_title = title + "Severity"
 
         elif param_report == "subcategory_wise_summary_report":
             table_html = get_subcategory_summary(start_date, end_date, detailed_report)
-            if detailed_report:
+            if detailed_report == 'true':
                 layout = "A1 landscape"
-                table_title = "No. of Incidents by District and Subcategory"
+                table_title = title + "District and Subcategory"
             else:
-                table_title = "No. of Incidents by Subcategory"
+                table_title = title + "Subcategory"
 
         elif param_report == "status_wise_summary_report":
             table_html = get_status_summary(start_date, end_date, detailed_report)
-            if detailed_report:
-                table_title = "No. of Incidents by District and Status"
+            if detailed_report == 'true':
+                table_title = title + "District and Status"
             else:
-                table_title = "No. of Incidents by Status"
+                table_title = title + "Status"
 
         if table_html is None:
             return Response("Report not found", status=status.HTTP_400_BAD_REQUEST)
 
+        sql = """SELECT 
+                     Count(id) as TotalCount
+                 FROM   incidents_incident"""
+        dataframe = pd.read_sql_query(sql, connection)
+        totalCount = dataframe['TotalCount'][0]
+
         table_html = apply_style(
-            table_html
+            decode_column_names(table_html)
                 .replace(".0", "", -1)
-                .replace("(Total No. of Incidents)","<strong>(Total No. of Incidents)</strong>", -1)
+                .replace("(Total No. of Incidents)", "<strong>(Total No. of Incidents)</strong>", -1)
                 .replace("(Unassigned)", "<strong>(Unassigned)</strong>", -1)
-                .replace("____", ",", -1)
-                .replace("___", ".", -1)
-                .replace("__", "/", -1)
-                .replace("_", " ", -1)
-            , table_title, table_subtitle,layout)
+            , table_title, layout, totalCount)
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="Report.pdf"'
         pisa.CreatePDF(table_html, dest=response)

@@ -6,16 +6,13 @@ import numpy as np
 
 from ..common.models import Category, Channel
 from ..incidents.models import Incident
-from .functions import get_detailed_report, get_general_report
+from .functions import get_detailed_report, get_general_report, encode_column_names
 
 
 def get_category_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
         columns = set(Category.objects.all().values_list("top_category", flat=True))
-        columns = [name.replace(' ', '_') for name in columns]
-        columns = [name.replace('/', '__') for name in columns]
-        columns = [name.replace('.', '___') for name in columns]
-        columns = [name.replace(',', '____') for name in columns]
+        columns = encode_column_names(columns)
         columns.insert(0, "Unassigned")
         sql2 = ", ".join(
             map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (
@@ -27,7 +24,7 @@ def get_category_summary(start_date, end_date, detailed_report):
                                   1       AS Total
                            FROM   incidents_incident
                            left join common_category on category=common_category.id
-                           WHERE  occured_date BETWEEN
+                           WHERE  incidents_incident.created_date BETWEEN
                                   '%s' AND
                                   '%s'
                         """ % (sql2, start_date, end_date)
@@ -38,10 +35,7 @@ def get_category_summary(start_date, end_date, detailed_report):
 def get_subcategory_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
         columns = set(Category.objects.all().values_list("sub_category", flat=True))
-        columns = [name.replace(' ', '_') for name in columns]
-        columns = [name.replace('/', '__') for name in columns]
-        columns = [name.replace('.', '___') for name in columns]
-        columns = [name.replace(',', '____') for name in columns]
+        columns = encode_column_names(columns)
         columns.insert(0, "Unassigned")
         sqls = ", ".join(
             map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (
@@ -53,7 +47,7 @@ def get_subcategory_summary(start_date, end_date, detailed_report):
                                           1       AS Total
                                    FROM   incidents_incident
                                    left join common_category on category=common_category.id
-                                   WHERE  occured_date BETWEEN
+                                   WHERE  incidents_incident.created_date BETWEEN
                                           '%s' AND
                                           '%s'
                                 """ % (sqls, start_date, end_date)
@@ -64,14 +58,11 @@ def get_subcategory_summary(start_date, end_date, detailed_report):
 def get_mode_summary(start_date, end_date, detailed_report):
     if detailed_report == 'true':
         columns = set(Channel.objects.all().values_list("name", flat=True))
-        columns = [name.replace(' ', '_') for name in columns]
-        columns = [name.replace('/', '__') for name in columns]
-        columns = [name.replace('.', '___') for name in columns]
-        columns = [name.replace(',', '____') for name in columns]
+        columns = encode_column_names(columns)
         columns.insert(0, "Unassigned")
         sql2 = ", ".join(
             map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (
-                'infoChannel', c, c), columns))
+                'name', c, c), columns))
         sql1 = """
                 SELECT district,
                            %s
@@ -79,10 +70,11 @@ def get_mode_summary(start_date, end_date, detailed_report):
                           1       AS Total
                    FROM   incidents_incident
                    left join common_channel on infoChannel=common_channel.id
-                   WHERE  occured_date BETWEEN
+                   WHERE  incidents_incident.created_date BETWEEN
                           '%s' AND
                           '%s'
                 """ % (sql2, start_date, end_date)
+        print(sql1)
         return get_detailed_report(sql1, columns)
     return get_general_report("name", "Mode", "common_channel", "infoChannel", "id", start_date, end_date)
 
@@ -113,7 +105,7 @@ def get_severity_summary(start_date, end_date, detailed_report):
                     end ) AS Low,
                   1       AS Total
            FROM   incidents_incident
-           WHERE  occured_date BETWEEN
+           WHERE  incidents_incident.created_date BETWEEN
                   '%s' AND
                   '%s'
         """ % (start_date, end_date)
@@ -135,14 +127,14 @@ def get_severity_summary(start_date, end_date, detailed_report):
                                      END)                                           AS currentstate,
                                      Count(Ifnull(incidents_incident.severity,0)) AS subtotal
                             FROM     incidents_incident
-                            WHERE    occured_date BETWEEN '%s' AND      '%s'
+                            WHERE    incidents_incident.created_date BETWEEN '%s' AND      '%s'
                             GROUP BY currentstate) AS incidents
          ON        currentstate = d.name 
          UNION ALL
         SELECT '(Total No. of Incidents)',
                Count(id)
         FROM   incidents_incident
-        WHERE  occured_date BETWEEN '%s' AND '%s'
+        WHERE  incidents_incident.created_date BETWEEN '%s' AND '%s'
         ORDER  BY Field(Severity, 'High', 'Medium', 'Low', '(Total No. of Incidents)') 
     """ % (start_date, end_date, start_date, end_date)
     dataframe = pd.read_sql_query(sql, connection)
@@ -158,7 +150,7 @@ def get_status_summary(start_date, end_date, detailed_report):
                (CASE WHEN Ifnull(current_status, 'Unassigned')  NOT LIKE 'CLOSED' THEN 1 ELSE 0 END )AS Unresolved,
                              1 AS Total
                       FROM   incidents_incident
-                      WHERE  occured_date BETWEEN '%s' AND
+                      WHERE  incidents_incident.created_date BETWEEN '%s' AND
                                                   '%s'
         """ % (start_date, end_date)
         columns = ["Resolved", "Unresolved"]
@@ -178,7 +170,7 @@ def get_status_summary(start_date, end_date, detailed_report):
                                    end )                          AS currentState,
                                  Count(Ifnull(current_status, 1)) AS subtotal
                           FROM   incidents_incident
-                          WHERE  occured_date BETWEEN '%s' AND
+                          WHERE  incidents_incident.created_date BETWEEN '%s' AND
                                                       '%s'
                           GROUP  BY currentstate) AS incidents
                       ON currentstate = d.name
@@ -186,7 +178,7 @@ def get_status_summary(start_date, end_date, detailed_report):
         SELECT '(Total No. of Incidents)',
                Count(id)
         FROM   incidents_incident
-        WHERE  occured_date BETWEEN '%s' AND '%s'
+        WHERE  incidents_incident.created_date BETWEEN '%s' AND '%s'
         ORDER  BY Field(status, 'Resolved', 'Unresolved', '(Total No. of Incidents)') 
     """ % (start_date, end_date, start_date, end_date)
     dataframe = pd.read_sql_query(sql, connection)
