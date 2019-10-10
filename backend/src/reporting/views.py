@@ -8,7 +8,8 @@ from django.db import connection
 import pandas as pd
 
 from .services import get_police_division_summary, get_category_summary, \
-    get_mode_summary, get_severity_summary, get_status_summary, get_subcategory_summary, get_district_summary
+    get_mode_summary, get_severity_summary, get_status_summary, get_subcategory_summary, get_district_summary, \
+    get_incident_date_summary
 from .functions import apply_style, decode_column_names
 
 
@@ -80,6 +81,10 @@ class ReportingView(APIView):
                 table_title = title + "District and Subcategory"
             else:
                 table_title = title + "Subcategory"
+
+        elif param_report == "incident_date_wise_summary_report":
+            table_html = get_incident_date_summary(start_date, end_date, detailed_report)
+            table_title = title + "Incident Date"
 
         elif param_report == "status_wise_summary_report":
             table_html = get_status_summary(start_date, end_date, detailed_report)

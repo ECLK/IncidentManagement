@@ -144,7 +144,7 @@ def apply_style(html, title, layout, total):
                 </style>
             </head>
             <body>
-                <h1 align=center>No. of incidents within the period <br>%s</h1>
+                <h1 align=center>No. of incidents reported within the period <br>%s</h1>
                 <div>
                     %s
                 </div>
