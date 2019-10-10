@@ -79,6 +79,148 @@ def get_mode_summary(start_date, end_date, detailed_report):
     return get_general_report("name", "Mode", "common_channel", "infoChannel", "id", start_date, end_date)
 
 
+def get_incident_date_summary(start_date, end_date, detailed_report):
+    sql = """
+            SELECT incident_date as 'Incident Date', 
+       Total 
+FROM   (SELECT incident_date, 
+               Sum(Total) AS Total 
+        FROM   (SELECT Date_format(occured_date + INTERVAL 8 hour, '%s') 
+                       AS 
+                       incident_date 
+                               , 
+                       '1' 
+                               AS Total 
+                FROM   incidents_incident 
+                WHERE  incidents_incident.created_date BETWEEN 
+                       '%s' AND '%s' 
+                UNION ALL 
+                SELECT selected_date, 
+                       '0' 
+                FROM   (SELECT * 
+                        FROM   (SELECT Adddate('2018-01-01', 
+                                       t4.i * 10000 + t3.i * 1000 
+                                       + 
+                                       t2.i * 100 + 
+                                               t1.i * 10 + 
+                                       t0.i) selected_date 
+                                FROM   (SELECT 0 i 
+                                        UNION 
+                                        SELECT 1 
+                                        UNION 
+                                        SELECT 2 
+                                        UNION 
+                                        SELECT 3 
+                                        UNION 
+                                        SELECT 4 
+                                        UNION 
+                                        SELECT 5 
+                                        UNION 
+                                        SELECT 6 
+                                        UNION 
+                                        SELECT 7 
+                                        UNION 
+                                        SELECT 8 
+                                        UNION 
+                                        SELECT 9) t0, 
+                                       (SELECT 0 i 
+                                        UNION 
+                                        SELECT 1 
+                                        UNION 
+                                        SELECT 2 
+                                        UNION 
+                                        SELECT 3 
+                                        UNION 
+                                        SELECT 4 
+                                        UNION 
+                                        SELECT 5 
+                                        UNION 
+                                        SELECT 6 
+                                        UNION 
+                                        SELECT 7 
+                                        UNION 
+                                        SELECT 8 
+                                        UNION 
+                                        SELECT 9) t1, 
+                                       (SELECT 0 i 
+                                        UNION 
+                                        SELECT 1 
+                                        UNION 
+                                        SELECT 2 
+                                        UNION 
+                                        SELECT 3 
+                                        UNION 
+                                        SELECT 4 
+                                        UNION 
+                                        SELECT 5 
+                                        UNION 
+                                        SELECT 6 
+                                        UNION 
+                                        SELECT 7 
+                                        UNION 
+                                        SELECT 8 
+                                        UNION 
+                                        SELECT 9) t2, 
+                                       (SELECT 0 i 
+                                        UNION 
+                                        SELECT 1 
+                                        UNION 
+                                        SELECT 2 
+                                        UNION 
+                                        SELECT 3 
+                                        UNION 
+                                        SELECT 4 
+                                        UNION 
+                                        SELECT 5 
+                                        UNION 
+                                        SELECT 6 
+                                        UNION 
+                                        SELECT 7 
+                                        UNION 
+                                        SELECT 8 
+                                        UNION 
+                                        SELECT 9) t3, 
+                                       (SELECT 0 i 
+                                        UNION 
+                                        SELECT 1 
+                                        UNION 
+                                        SELECT 2 
+                                        UNION 
+                                        SELECT 3 
+                                        UNION 
+                                        SELECT 4 
+                                        UNION 
+                                        SELECT 5 
+                                        UNION 
+                                        SELECT 6 
+                                        UNION 
+                                        SELECT 7 
+                                        UNION 
+                                        SELECT 8 
+                                        UNION 
+                                        SELECT 9) t4) v 
+                        WHERE  selected_date BETWEEN 
+                               Date_format('%s', 
+                               '%s' 
+                               ) 
+                               AND 
+                               Date_format('%s', 
+                               '%s' 
+                               )) AS dateranges) AS result 
+        GROUP  BY result.incident_date 
+        ORDER  BY incident_date) AS result2 
+UNION 
+SELECT '(Total No. of Incidents)', 
+       Count(id) 
+FROM   incidents_incident 
+WHERE  incidents_incident.created_date BETWEEN 
+       '%s' AND '%s' 
+            """ % ("%Y-%m-%d",start_date, end_date, start_date,"%Y-%m-%d", end_date,"%Y-%m-%d", start_date, end_date)
+    dataframe = pd.read_sql_query(sql, connection)
+    dataframe = dataframe.fillna(0)
+    return dataframe.to_html(index=False)
+
+
 def get_district_summary(start_date, end_date, detailed_report):
     return get_general_report("name", "District", "common_district", "district", "code", start_date, end_date)
 
