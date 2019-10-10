@@ -410,6 +410,8 @@ class IncidentFormInternal extends Component {
                                                     {this.props.categories.map((c, k) => (
                                                         <MenuItem value={c.id} key={k}>
                                                             <div className={classes.langCats}>
+                                                                <div>{c.code}</div>
+                                                                <div>|</div>
                                                                 <div>{c.sub_category}</div>
                                                                 <div>|</div>
                                                                 <div> {c.sn_sub_category}</div>

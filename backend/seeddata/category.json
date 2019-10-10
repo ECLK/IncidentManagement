@@ -3,6 +3,7 @@
     "model": "common.category",
     "pk": 1,
     "fields": {
+      "code": "A-1",
       "top_category": "Violence",
       "sub_category": "Verbal intimidation",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
@@ -16,6 +17,7 @@
     "model": "common.category",
     "pk": 2,
     "fields": {
+      "code": "A-2",
       "top_category": "Violence",
       "sub_category": "Threaten with weapons / Attempted murder by shooting",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
@@ -29,6 +31,7 @@
     "model": "common.category",
     "pk": 3,
     "fields": {
+      "code": "A-3",
       "top_category": "Violence",
       "sub_category": "Assault / Mob attack",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
@@ -42,6 +45,7 @@
     "model": "common.category",
     "pk": 4,
     "fields": {
+      "code": "A-4",
       "top_category": "Violence",
       "sub_category": "Cause serious injuries / Attempted murder",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
@@ -55,6 +59,7 @@
     "model": "common.category",
     "pk": 5,
     "fields": {
+      "code": "A-5",
       "top_category": "Violence",
       "sub_category": "Murder",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
@@ -68,6 +73,7 @@
     "model": "common.category",
     "pk": 6,
     "fields": {
+      "code": "A-6",
       "top_category": "Violence",
       "sub_category": "Abduction",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
@@ -81,6 +87,7 @@
     "model": "common.category",
     "pk": 7,
     "fields": {
+      "code": "A-7",
       "top_category": "Violence",
       "sub_category": "Shooting",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
@@ -94,6 +101,7 @@
     "model": "common.category",
     "pk": 8,
     "fields": {
+      "code": "A-8",
       "top_category": "Violence",
       "sub_category": "Arson",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
@@ -107,6 +115,7 @@
     "model": "common.category",
     "pk": 9,
     "fields": {
+      "code": "A-9",
       "top_category": "Violence",
       "sub_category": "Riots",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
@@ -120,6 +129,7 @@
     "model": "common.category",
     "pk": 10,
     "fields": {
+      "code": "A-10",
       "top_category": "Violence",
       "sub_category": "Damage to property / Property theft",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
@@ -133,6 +143,7 @@
     "model": "common.category",
     "pk": 11,
     "fields": {
+      "code": "A-11",
       "top_category": "Violence",
       "sub_category": "Damage to Election Offices / Posters / Banners etc.",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
@@ -148,6 +159,7 @@
     "model": "common.category",
     "pk": 12,
     "fields": {
+      "code": "B-12",
       "top_category": "Violation of election law",
       "sub_category": "Misuse of public property",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
@@ -161,6 +173,7 @@
     "model": "common.category",
     "pk": 13,
     "fields": {
+      "code": "B-13",
       "top_category": "Violation of election law",
       "sub_category": "Involvement of public officers in politics",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
@@ -174,6 +187,7 @@
     "model": "common.category",
     "pk": 14,
     "fields": {
+      "code": "B-14",
       "top_category": "Violation of election law",
       "sub_category": "Appointment / promotion / transfer of officers",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
@@ -187,6 +201,7 @@
     "model": "common.category",
     "pk": 15,
     "fields": {
+      "code": "B-15",
       "top_category": "Violation of election law",
       "sub_category": "Misuse of the media",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
@@ -200,6 +215,7 @@
     "model": "common.category",
     "pk": 16,
     "fields": {
+      "code": "B-16",
       "top_category": "Violation of election law",
       "sub_category": "False information / Forgery / Hate Speech",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
@@ -213,6 +229,7 @@
     "model": "common.category",
     "pk": 17,
     "fields": {
+      "code": "B-17",
       "top_category": "Violation of election law",
       "sub_category": "Obstructing propaganda / campaign",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
@@ -226,6 +243,7 @@
     "model": "common.category",
     "pk": 18,
     "fields": {
+      "code": "B-18",
       "top_category": "Violation of election law",
       "sub_category": "Illegal posters / banners / cutouts on display",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
@@ -239,6 +257,7 @@
     "model": "common.category",
     "pk": 19,
     "fields": {
+      "code": "B-19",
       "top_category": "Violation of election law",
       "sub_category": "Distribution of goods/ treatment of goods",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
@@ -252,6 +271,7 @@
     "model": "common.category",
     "pk": 20,
     "fields": {
+      "code": "B-20",
       "top_category": "Violation of election law",
       "sub_category": "Conducting of rallies / processions / illegal political offices",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
@@ -265,6 +285,7 @@
     "model": "common.category",
     "pk": 21,
     "fields": {
+      "code": "B-21",
       "top_category": "Violation of election law",
       "sub_category": "By religious leaders and place(s) involving propaganda",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
@@ -278,6 +299,7 @@
     "model": "common.category",
     "pk": 22,
     "fields": {
+      "code": "B-22",
       "top_category": "Violation of election law",
       "sub_category": "Complaints related to postal votes",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
@@ -291,6 +313,7 @@
     "model": "common.category",
     "pk": 23,
     "fields": {
+      "code": "B-23",
       "top_category": "Violation of election law",
       "sub_category": "Complaint related to polling booth / election committee / electoral materials",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
@@ -304,6 +327,7 @@
     "model": "common.category",
     "pk": 24,
     "fields": {
+      "code": "B-24",
       "top_category": "Violation of election law",
       "sub_category": "Obstructing in casting voting",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
@@ -317,6 +341,7 @@
     "model": "common.category",
     "pk": 25,
     "fields": {
+      "code": "B-25",
       "top_category": "Violation of election law",
       "sub_category": "Organizing illegal events",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
@@ -330,6 +355,7 @@
     "model": "common.category",
     "pk": 26,
     "fields": {
+      "code": "B-26",
       "top_category": "Violation of election law",
       "sub_category": "Treats for voters",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
@@ -343,6 +369,7 @@
     "model": "common.category",
     "pk": 27,
     "fields": {
+      "code": "B-27",
       "top_category": "Violation of election law",
       "sub_category": "Other",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
