@@ -195,11 +195,11 @@ class IncidentFormInternal extends Component {
 
         const { paramIncidentId } = this.props.match.params
 
-        for(var v in values["detainedVehicles"]){
-            if(values["detainedVehicles"][v]["is_private"] === "null"){
-                values["detainedVehicles"][v]["is_private"] = false;
-            }
-        }
+        // for(var v in values["detainedVehicles"]){
+        //     if(values["detainedVehicles"][v]["is_private"] === "null"){
+        //         values["detainedVehicles"][v]["is_private"] = false;
+        //     }
+        // }
 
 
         if (values.occured_date) {
@@ -901,7 +901,7 @@ class IncidentFormInternal extends Component {
                                 </Paper>
 
                                 {/* police details */}
-                                <div className={classes.hide}>
+                                <div>
                                     <ExpansionPanel>
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                             <Typography variant="h5" gutterBottom> Police Related Information </Typography>
@@ -1031,10 +1031,10 @@ class IncidentFormInternal extends Component {
                                                             { title: "Vehicle License Plate", field: "vehicle_no" },
                                                             {
                                                                 title: "Vehicle Ownership",
-                                                                field: "is_private",
+                                                                field: "ownership",
                                                                 lookup: {
-                                                                    "null": "Government Vehicle",
-                                                                    "true": "Private Vehicle"
+                                                                    "government": "Government Vehicle",
+                                                                    "private": "Private Vehicle"
                                                                 }
                                                             }
                                                         ]}

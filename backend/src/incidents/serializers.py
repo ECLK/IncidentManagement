@@ -100,7 +100,6 @@ class IncidentPersonSerializer(serializers.ModelSerializer):
 
 class IncidentVehicleSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(required=False, write_only=False)
-    is_private = serializers.BooleanField(required=False)
 
     class Meta:
         model = IncidentVehicle
