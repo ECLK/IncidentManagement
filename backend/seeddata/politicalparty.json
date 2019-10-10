@@ -8,7 +8,7 @@
             "name": "United National Party",
             "sn_name": "එක්සත් ජාතික පක්ෂය",
             "tm_name": "ஐக்கிய தேசியக் கட்சி",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -20,7 +20,7 @@
             "name": "United People's Freedom Alliance",
             "sn_name": "එක්සත් ජනතා නිදහස් සන්ධානය",
             "tm_name": "ஐக்கிய மக்கள் சுதந்திரக் கூட்டணி",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -32,7 +32,7 @@
             "name": "People's Liberation Front",
             "sn_name": "ජනතා විමුක්ති පෙරමුණ",
             "tm_name": "மக்கள் விடுதலை முன்னணி",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -44,7 +44,7 @@
             "name": "Democratic United National Front",
             "sn_name": "ප්‍රජාතන්ත්‍රවාදී එක්සත් ජාතික පෙරමුණ",
             "tm_name": "ஜனநாயக ஐக்கிய தேசிய முன்னணி",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -56,7 +56,7 @@
             "name": "People's Alliance",
             "sn_name": "පොදු ජන එක්සත් පෙරමුණ",
             "tm_name": "மக்கள் கூட்டணி",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -68,7 +68,7 @@
             "name": "All Ceylon Makkal Congres",
             "sn_name": "සමස්ත ලංකා ජනතා කොංග්‍රසය",
             "tm_name": "அனைத்து இலங்கை மக்கள் காங்கிரசு",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -80,7 +80,7 @@
             "name": "Lanka Sama Samaja Party",
             "sn_name": "ලංකා සම සමාජ පක්ෂය",
             "tm_name": "இலங்கை சமசமாஜக் கட்சி",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -92,7 +92,7 @@
             "name": "Ceylon Workers' Congress",
             "sn_name": "ලංකා කම්කරු කොංග්‍රසය",
             "tm_name": "இலங்கை தொழிலாளர் காங்கிரஸ்",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -104,7 +104,7 @@
             "name": "Democratic Left Front",
             "sn_name": "ප්‍රජාතන්ත්‍රවාදී වාමාංශික පෙරමුණ",
             "tm_name": "மக்களாட்சி இடதுசாரி முன்னணி",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -116,7 +116,7 @@
             "name": "Democratic National Movement",
             "sn_name": "ප්‍රජාතන්ත්‍රවාදී ජනතා ව්‍යාපරය",
             "tm_name": "மக்கட்தலை நாடு இயக்கம்",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -128,7 +128,7 @@
             "name": "Democratic People's Front",
             "sn_name": "ප්‍රජාතන්ත්‍රවාදී ජනතා පෙරමුණ",
             "tm_name": "மக்களாட்சி மக்கள் முன்னணி",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -140,7 +140,7 @@
             "name": "Jathika Hela Urumaya",
             "sn_name": "ජාතික හෙළ උරුමය",
             "tm_name": "ஜாதிக எல உறுமய",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -152,7 +152,7 @@
             "name": "Mahajana Eksath Peramuna",
             "sn_name": "මහජන එක්සත් පෙරමුණ‍",
             "tm_name": "மகாஜன எக்சத் பெரமுன",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -164,7 +164,7 @@
             "name": "National Freedom Front",
             "sn_name": "ජාතික නිදහස් පෙරමුණ",
             "tm_name": "தேசிய சுதந்திர முன்னணி",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -176,7 +176,7 @@
             "name": "National Union of Workers",
             "sn_name": "ජාතික කම්කරු සංගමය",
             "tm_name": "தொழிலாளர் தேசிய சங்கம்",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -188,7 +188,7 @@
             "name": "Sri Lanka Muslim Congress",
             "sn_name": "ශ්‍රී ලංකා මුස්ලිම් කොංග්‍රසය",
             "tm_name": "சிறீலங்கா முஸ்லிம் காங்கிரசு",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -200,7 +200,7 @@
             "name": "Tamil Eelam Liberation Organization",
             "sn_name": "ද්‍රවිඩ ඊලම් විමුක්ති සංවිධානය",
             "tm_name": "தமிழீழ விடுதலை இயக்கம்",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -212,7 +212,7 @@
             "name": "United Left Front",
             "sn_name": "එක්සත් වාමාංශික පෙරමුණ",
             "tm_name": "United Left Front",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     },
     {
@@ -224,7 +224,7 @@
             "name": "Up-Country People's Front",
             "sn_name": "කඳුරට ජනතා පෙරමුණ",
             "tm_name": "மலையக மக்கள் முன்னணி",
-            "created_date": "2019-06-27 00:00:00.000000"
+            "created_date": "2019-06-27T00:00:00Z"
         }
     }
 ]
