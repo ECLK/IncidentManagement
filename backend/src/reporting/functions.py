@@ -144,14 +144,14 @@ def apply_style(html, title, layout, total):
                 </style>
             </head>
             <body>
-                <h1 align=center>No. of incidents within the period <br>%s</h1>
+                <h1 align=center>No. of incidents reported within the period <br>%s</h1>
                 <div>
                     %s
                 </div>
                 <div>
                 <br>
                 <p>
-                Total No.of reported incidents all time: %s
+                Total No.of reported incidents : %s
                 </p>
                 <p style="text-align:right;">
                 Report Submitted by
