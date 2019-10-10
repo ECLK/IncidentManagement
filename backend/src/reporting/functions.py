@@ -151,7 +151,7 @@ def apply_style(html, title, layout, total):
                 <div>
                 <br>
                 <p>
-                Total No.of reported incidents all time: %s
+                Total No.of reported incidents : %s
                 </p>
                 <p style="text-align:right;">
                 Report Submitted by
