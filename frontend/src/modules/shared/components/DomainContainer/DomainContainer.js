@@ -20,13 +20,14 @@ import { Link, withRouter } from 'react-router-dom';
 
 import { initiateSignOut, fetchChannels, fetchElections, fetchCategories, fetchProvinces, fetchDistricts, fetchDivisionalSecretariats, fetchGramaNiladharis, fetchPollingDivisions, fetchPollingStations, fetchPoliceStations, fetchPoliceDivisions, fetchWards } from '../../state/Shared.actions'
 import { changeLanguage } from '../../state/Shared.actions';
+import { loadUsers } from '../../../user/state/userActions'
 
 import RootModal from '../../../modals/components/RootModal'
 import Notification from '../../../notifications/components/Notification';
 import ErrorNotification from '../../../notifications/components/ErrorNotification';
 import ConfirmNotification from '../../../notifications/components/ConfirmNotification';
 import LoadingNotification from '../../../notifications/components/LoadingNotification';
-import Breadcrumbs from '../Breadcrumbs'
+import Breadcrumbs from '../Breadcrumbs';
 
 import { userCan, USER_ACTIONS } from '../../../utils/userUtils';
 
@@ -128,6 +129,7 @@ class DomainContainer extends React.Component {
     this.props.getPoliceStations();
     this.props.getPoliceDivisions();
     this.props.getWards();
+    this.props.loadAllUsers();
   }
 
   handleDrawerOpen = () => {
@@ -349,6 +351,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         getWards: () => {
             dispatch(fetchWards())
+        },
+        loadAllUsers: () => {
+            dispatch(loadUsers())
         }
     }
 }

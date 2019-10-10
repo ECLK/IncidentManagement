@@ -9,7 +9,7 @@ class PermissionSerializer(serializers.ModelSerializer):
 class GroupSerializer(serializers.ModelSerializer): 
     class Meta:
         model = Group
-        fields = ('name')
+        fields = ['id','name']
 
 class UserSerializer(serializers.ModelSerializer):
     uid = serializers.IntegerField(source="id")
@@ -18,9 +18,24 @@ class UserSerializer(serializers.ModelSerializer):
     displayname = serializers.SerializerMethodField('get_full_name')
     userPermissions = serializers.SerializerMethodField('get_permissions')
     isStaff = serializers.BooleanField(source="is_staff")
+    entity = serializers.SerializerMethodField()
 
     def get_full_name(self, obj):
         return obj.first_name + " " + obj.last_name
+
+    def get_entity(self, obj):
+        if obj.groups.count() > 0:
+            group = obj.groups.all()[0]
+
+            if group.organization is None:
+                return None 
+
+            return { 
+                "gid" : group.organization.id,
+                "name": group.organization.name
+            }
+
+        return None
     
     def get_permissions(self, obj):
         if obj.groups.count() > 0:
@@ -34,6 +49,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('uid', 'userName', 'displayname', 'isActive', 'userPermissions', 'isStaff')
+        fields = ('uid', 'userName', 'displayname', 'isActive', 'userPermissions', 'isStaff', 'entity')
         # fields = "__all__"
 

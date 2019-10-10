@@ -19,6 +19,7 @@ from .exceptions import WorkflowException, IncidentException
 import pandas as pd
 from django.http import HttpResponse
 from xhtml2pdf import pisa
+import json
 
 
 def is_valid_incident(incident_id: str) -> bool:
@@ -47,6 +48,16 @@ def get_user_by_id(user_id: str) -> User:
             raise IncidentException("Invalid user id")
     except:
         raise IncidentException("Invalid user id")
+
+    return user
+
+def get_group_by_id(group_id: str) -> User:
+    try:
+        user = Group.objects.get(id=group_id)
+        if user is None:
+            raise IncidentException("Invalid group id")
+    except:
+        raise IncidentException("Invalid group id")
 
     return user
 
@@ -361,8 +372,34 @@ def incident_close(user: User, incident: Incident, comment: str):
             user, incident, status, True, comment)
 
 
-def incident_escalate_external_action(user: User, incident: Incident, comment: str):
-    # new event
+def incident_escalate_external_action(user: User, incident: Incident, entity: object, comment: str):
+    evt_description = None
+
+    is_internal_user = entity["isInternalUser"]
+
+    if is_internal_user:
+        user = get_user_by_id(entity["name"])
+        group = get_group_by_id(entity["type"])
+        incident.linked_individuals.add(user)
+        incident.save()
+
+        evt_description = {
+            "entity": {
+                "name": user.get_full_name(),
+                "type": group.name
+            },            
+            "comment": comment
+        }        
+
+    else:
+        evt_description = {
+            "entity": {
+                "name": entity["name"],
+                "type": entity["type"]
+            },
+            "comment": comment
+        }
+
     status = IncidentStatus(
         current_status=StatusType.ACTION_PENDING,
         previous_status=incident.current_status,
@@ -371,7 +408,7 @@ def incident_escalate_external_action(user: User, incident: Incident, comment: s
     )
     status.save()
 
-    event_services.start_action_event(user, incident, status, comment)
+    event_services.start_action_event(user, incident, status, json.dumps(evt_description))
 
 
 def incident_complete_external_action(user: User, incident: Incident, comment: str, start_event: Event):
