@@ -82,7 +82,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         )
 
     def get(self, request, format=None):
-        incidents = Incident.objects.all()
+        incidents = Incident.objects.all().order_by('created_date').reverse()
         user = request.user
 
         # for external entities, they can only view related incidents
@@ -310,8 +310,9 @@ class IncidentWorkflowView(APIView):
             incident_close(request.user, incident, comment)
 
         elif workflow == "request-action":
-            comment = json.dumps(request.data['comment'])
-            incident_escalate_external_action(request.user, incident, comment)
+            entity = request.data['entity']
+            comment = request.data['comment']
+            incident_escalate_external_action(request.user, incident, entity, comment)
 
         elif workflow == "complete-action":
             comment = json.dumps(request.data['comment'])
