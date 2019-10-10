@@ -370,11 +370,11 @@
     "pk": 27,
     "fields": {
       "code": "B-27",
-      "top_category": "Violation of election law",
+      "top_category": "Other",
       "sub_category": "Other",
-      "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
+      "sn_top_category": "වෙනත්",
       "sn_sub_category": "වෙනත්",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
+      "tm_top_category": "இதர",
       "tm_sub_category": "இதர",
       "created_date": "2019-06-27 00:00:00.000000"
     }
