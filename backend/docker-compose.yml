@@ -32,7 +32,7 @@ services:
       - DATABASE_PWD=toor
     volumes:
       - './src:/app/src'
-      - './seed_data.json:/app/seed_data.json'
+      - './seeddata:/app/seeddata'
       - './media:/app/media'
     # command: gunicorn --bind=0.0.0.0:8000 src.wsgi:application
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8001

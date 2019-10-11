@@ -1,9 +1,9 @@
-Django==2.2.1
-djangorestframework==3.9.4
+Django
+djangorestframework
 mysql-connector-python==8.0.16
-djangorestframework-jwt==1.11.0
-django-cors-headers==3.0.2
-django-filter==2.1.0
+djangorestframework-jwt
+django-cors-headers
+django-filter
 gunicorn==19.9.0
 django-rest-swagger==2.2.0
 xhtml2pdf

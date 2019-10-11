@@ -6,6 +6,6 @@ services:
       dockerfile: Dockerfile
       context: .
     ports:
-      - '80:80'
+      - '3001:80'
     environment:
-      - API_BASE=http://localhost:5000
+      - REACT_APP_API_BASE_URL=http://localhost:8001
