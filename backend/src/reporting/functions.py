@@ -22,7 +22,7 @@ def get_subcategory_report(field_name, field_label, field_table, count_field, ma
     sql = """
             SELECT %s, Total FROM (SELECT %s,
                    Sum(Total) AS Total
-            FROM   (SELECT Ifnull(%s, '(Unassigned)') AS %s,
+            FROM   (SELECT ifnull(concat(top_category,' -> ',%s), '(Unassigned)') AS %s,
                            Sum(Total)                 AS Total
                     FROM   %s AS d
                            RIGHT JOIN (SELECT %s,
@@ -34,7 +34,7 @@ def get_subcategory_report(field_name, field_label, field_table, count_field, ma
                                    ON incidents.%s = d.%s
                     GROUP  BY incidents.%s
                     UNION ALL
-                    SELECT %s,
+                    SELECT concat(top_category,' -> ',sub_category)  AS %s,
                            '0'
                     FROM   %s) AS result
             GROUP  BY result.%s
