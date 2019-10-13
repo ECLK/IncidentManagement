@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { withRouter } from "react-router";
 
 import { withStyles } from '@material-ui/core/styles';
@@ -34,7 +34,8 @@ import {
 } from '../../incident/state/incidentActions'
 
 import {
-    moveStepper
+    moveStepper,
+    resetIsFinished
 } from '../state/guestViewActions'
 
 const styles = theme => ({
@@ -58,6 +59,8 @@ const styles = theme => ({
 
 const VerticalLinearStepper = (props) => {
 
+    //todo: initliaze below state with the valuse coming store if available.
+
 
     const [skippedSteps, setSkippedSets] = useState(new Set());
     const [incidentDescription, setIncidentDescription] = useState(null);
@@ -72,13 +75,14 @@ const VerticalLinearStepper = (props) => {
     const [incidentContact, setIncidentContact] = useState({
         name: '',
         phone: '',
+        mobile: '',
         email: ''
     });
 
     const dispatch = useDispatch();
     const { elections, categories } = useSelector((state) => (state.sharedReducer));
     const { activeIncident, activeIncidentReporter } = useSelector((state) => (state.incident));
-    const { activeStep, isFinished } = useSelector((state) => (state.guestView));
+    const { activeStep } = useSelector((state) => (state.guestView));
 
     const incidentId = activeIncident && activeIncident.data ? activeIncident.data.id : null
     let incidentData = incidentId ? JSON.parse(JSON.stringify(activeIncident.data)): {};
@@ -159,6 +163,7 @@ const VerticalLinearStepper = (props) => {
                 if(incidentContact.name || incidentContact.phone || incidentContact.email){
                     incidentReporterData.name = incidentContact.name;
                     incidentReporterData.telephone = incidentContact.phone;
+                    incidentReporterData.mobile = incidentContact.mobile;
                     incidentReporterData.email = incidentContact.email;
                     dispatch(updateGuestIncidentReporter(incidentReporterData.id, incidentReporterData))
                 }
@@ -178,6 +183,7 @@ const VerticalLinearStepper = (props) => {
                 }else{
                     dispatch(moveStepper({step:activeStep+1})) 
                 }
+
             }
         },
         
@@ -230,8 +236,8 @@ const VerticalLinearStepper = (props) => {
     const { classes } = props;
     const GoBackLink = props => <Link to="/" {...props} />
 
-    if(isFinished){
-        props.history.push('/report/success')
+    if(activeStep===5){
+        return <Redirect to='/report/success'/>
     }
 
     return (

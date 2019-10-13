@@ -22,8 +22,7 @@ function GuestFormSuccessPage(props) {
     const handleButtonClick = (action) => {
         switch(action){
             case 'edit':
-                // dispatch(moveStepper({step:0}))
-                console.log('guest success edit click', props)
+                dispatch(moveStepper({step:0}))
                 props.history.push("/report");
                 break;
             case 'status':
