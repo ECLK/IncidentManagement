@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { Table, TableHead, TableRow, TableCell, TableBody, withStyles, TableFooter, TablePagination } from '@material-ui/core';
 import { withRouter } from 'react-router';
+import moment from 'moment';
 
 const CustomTableCell = withRouter(
     withStyles(theme => ({
@@ -81,29 +82,29 @@ const styles = theme => ({
 });
 
 function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, handlePageChange }){
+
+  const { elections, categories } = useSelector((state) => (state.sharedReducer));
     
     return (
         <Table className={classes.table}>
           <colgroup>
             <col style={{ width: "2%" }} />
             <col style={{ width: "20%" }} />
-            <col style={{ width: "45%" }} />
-            <col style={{ width: "5%" }} />
-            <col style={{ width: "5%" }} />
-            <col style={{ width: "15%" }} />
+            <col style={{ width: "30%" }} />
             <col style={{ width: "2%" }} />
+            <col style={{ width: "15%" }} />
+            <col style={{ width: "10%" }} />
+            <col style={{ width: "10%" }} />
           </colgroup>
           <TableHead>
             <TableRow>
               <CustomTableCell align="center">Ref Id</CustomTableCell>
-
               <CustomTableCell align="center">Title</CustomTableCell>
               <CustomTableCell align="center">Description</CustomTableCell>
               <CustomTableCell align="center">Status</CustomTableCell>
-              <CustomTableCell align="center">Severity</CustomTableCell>
-              <CustomTableCell align="center">Response Time</CustomTableCell>
+              <CustomTableCell align="center">Incident Type</CustomTableCell>
               <CustomTableCell align="center">Category</CustomTableCell>
-              <CustomTableCell align="center">Last Action At</CustomTableCell>
+              <CustomTableCell align="center">Logged Date</CustomTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -127,16 +128,13 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
                   <p>{row.currentStatus}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
-                  <p>{row.severity}</p>
+                  <p>{row.incidentType}</p>
+                </CustomTableCell>
+                <CustomTableCell align="left">
+                  <p>{ categories.map((value, index)=>(value.id==row.category? value.code+" | "+value.sub_category:null)) }</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
-                  <p>{row.response_time} h</p>
-                </CustomTableCell>
-                <CustomTableCell align="center">
-                  <p>{row.category}</p>
-                </CustomTableCell>
-                <CustomTableCell align="center">
-                  <p>{row.subCategory}</p>
+                  <p>{moment(row.createdDate).format('YYYY-MM-DD  h:mm a')}</p>
                 </CustomTableCell>
 
                 {/* <CustomTableCell align="center">
