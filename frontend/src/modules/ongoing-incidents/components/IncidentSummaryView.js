@@ -88,12 +88,16 @@ function BasicDetailTab(props){
 
                         <Grid container spacing={24}>
                             <Grid item xs>
-                                <Typography variant="caption" className={classes.label}> Date </Typography>
-                                <Typography gutterBottom> <Moment format="YYYY/MM/DD">{incident.occured_date}</Moment> </Typography>
+                                <Typography variant="caption" className={classes.label}>Incident Date </Typography>
+                                <Typography gutterBottom> 
+                                { (incident.occured_date) ? <Moment format="YYYY/MM/DD">{incident.occured_date}</Moment> : "No date set" }
+                                 </Typography>
                             </Grid>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Incident Time </Typography>
-                                <Typography gutterBottom> <Moment format="HH:mm">{incident.occured_date}</Moment> </Typography>
+                                <Typography gutterBottom> 
+                                { (incident.occured_date) ? <Moment format="HH:mm">{incident.occured_date}</Moment>  : "No time set" }
+                                </Typography>
                             </Grid>
                         </Grid>
 
@@ -417,7 +421,7 @@ function SummaryTabView(props){
                 <LinkTab label="Basic Information" href="page1" />
                 <LinkTab label="Location Information" href="page2" />
                 <LinkTab label="Contact Information" href="page3" />
-                {/* <LinkTab label="Police Information" href="page4" /> */}
+                <LinkTab label="Police Information" href="page4" />
             </Tabs>
 
             {currentTab === 0 && <TabContainer> 

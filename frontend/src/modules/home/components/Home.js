@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Card, Grid, CardContent, CardHeader } from '@material-ui/core';
 import IncidentList from './IncidentList';
 import ManagedIncidentList from './ManagedIncidentList';
+import { useSelector } from 'react-redux';
 
 const drawerWidth = 240;
 const styles = theme => ({
@@ -14,34 +15,56 @@ const styles = theme => ({
     }
 });
 const Home = ({classes, ...props}) =>{
+    const user = useSelector(state => state.sharedReducer.signedInUser.data);
 
     return (
         <Grid container>
-            <Grid item>
-                <Card xs={6}>
-                    <CardHeader 
-                        title="Incidents Assigned to You"
-                    />
-                    <CardContent>
-                        <ManagedIncidentList 
-                            filters={ { assignee: "me" } }
+            {user.isStaff && (
+                <>
+                <Grid item>
+                    <Card xs={6}>
+                        <CardHeader 
+                            title="Incidents Assigned to You"
                         />
-                    </CardContent>
-                </Card>
-            </Grid>
-            {/* <Grid item xs={1}></Grid> */}
-            <Grid item style={{paddingTop:"10px"}}>
-                <Card xs={6}>
-                    <CardHeader 
-                        title="Incidents Linked to You"
-                    />
-                    <CardContent>
-                        <ManagedIncidentList 
-                            filters={ { user_linked: "me" } }
+                        <CardContent>
+                            <ManagedIncidentList 
+                                filters={ { assignee: "me" } }
+                            />
+                        </CardContent>
+                    </Card>
+                </Grid>
+                
+                <Grid item style={{paddingTop:"10px"}}>
+                    <Card xs={6}>
+                        <CardHeader 
+                            title="Incidents Linked to You"
                         />
-                    </CardContent>
-                </Card>
-            </Grid>
+                        <CardContent>
+                            <ManagedIncidentList 
+                                filters={ { user_linked: "me" } }
+                            />
+                        </CardContent>
+                    </Card>
+                </Grid>
+                </>
+            )}
+
+            {!user.isStaff && (
+                <>
+                <Grid item style={{paddingTop:"10px"}}>
+                    <Card xs={6}>
+                        <CardHeader 
+                            title="Your Incidents"
+                        />
+                        <CardContent>
+                            <ManagedIncidentList 
+                                filters={ { user_linked: "me" } }
+                            />
+                        </CardContent>
+                    </Card>
+                </Grid>
+                </>
+            )}
         </Grid>
         
     )

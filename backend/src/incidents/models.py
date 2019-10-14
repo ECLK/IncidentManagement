@@ -268,7 +268,7 @@ class IncidentPerson(models.Model):
 class IncidentVehicle(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     vehicle_no = models.CharField(max_length=15, null=True, blank=True)
-    is_private = models.BooleanField(default=False)
+    ownership = models.CharField(max_length=15, null=True, blank=True)
 
 class IncidentPoliceReport(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

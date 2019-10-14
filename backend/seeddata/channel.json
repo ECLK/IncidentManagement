@@ -7,7 +7,7 @@
       "sn_name": "ලිපිය",
       "tm_name": "கடிதம்",
       "order": 3,
-      "created_date": "2019-06-27 00:00:00.000000"
+      "created_date": "2019-06-27T00:00:00Z"
     }
   },
   {
@@ -18,7 +18,7 @@
       "sn_name": "ඊමේල්",
       "tm_name": "மின்னஞ்சல்கள்",
       "order": 2,
-      "created_date": "2019-06-27 00:00:00.000000"
+      "created_date": "2019-06-27T00:00:00Z"
     }
   },
   {
@@ -29,7 +29,7 @@
       "sn_name": "ෆැක්ස්",
       "tm_name": "தொலைநகல்",
       "order": 4,
-      "created_date": "2019-06-27 00:00:00.000000"
+      "created_date": "2019-06-27T00:00:00Z"
     }
   },
   {
@@ -40,7 +40,7 @@
       "sn_name": "දුරකථන",
       "tm_name": "போன்கள்",
       "order": 1,
-      "created_date": "2019-06-27 00:00:00.000000"
+      "created_date": "2019-06-27T00:00:00Z"
     }
   },
   {
@@ -50,19 +50,19 @@
       "name": "SMS",
       "sn_name": "කෙටි පණිවිඩ",
       "tm_name": "எஸ்எம்எஸ்",
-      "order": 9,
-      "created_date": "2019-06-27 00:00:00.000000"
+      "order": 10,
+      "created_date": "2019-06-27T00:00:00Z"
     }
   },
   {
     "model": "common.channel",
     "pk": 6,
     "fields": {
-      "name": "Tell Commission / FB",
-      "sn_name": "කොමිසමට / ෆේස්බුක්",
-      "tm_name": "கமிஷன் / ஃபேஸ்புக்",
-      "order": 8,
-      "created_date": "2019-06-27 00:00:00.000000"
+      "name": "Tell Commission",
+      "sn_name": "කොමිසමට",
+      "tm_name": "கமிஷன்",
+      "order": 6,
+      "created_date": "2019-06-27T00:00:00Z"
     }
   },
   {
@@ -72,8 +72,8 @@
       "name": "Mobile App",
       "sn_name": "ජංගම මෘදුකාංග",
       "tm_name": "மொபைல் மென்பொருள்",
-      "order": 5,
-      "created_date": "2019-06-27 00:00:00.000000"
+      "order": 7,
+      "created_date": "2019-06-27T00:00:00Z"
     }
   },
   {
@@ -83,8 +83,8 @@
       "name": "Civil Society",
       "sn_name": "සිවිල් සමාජය",
       "tm_name": "சிவில் சமூகத்தின்",
-      "order": 7,
-      "created_date": "2019-06-27 00:00:00.000000"
+      "order": 9,
+      "created_date": "2019-06-27T00:00:00Z"
     }
   },
   {
@@ -94,8 +94,30 @@
       "name": "Mobile patrolling units",
       "sn_name": "ජංගම මුර සංචාර ඒකක",
       "tm_name": "மொபைல் ரோந்து அலகுகள்",
-      "order": 6,
-      "created_date": "2019-06-27 00:00:00.000000"
+      "order": 8,
+      "created_date": "2019-06-27T00:00:00Z"
+    }
+  },
+  {
+    "model": "common.channel",
+    "pk": 10,
+    "fields": {
+      "name": "Social Media",
+      "sn_name": "සමාජ මාධ්‍ය",
+      "tm_name": "சமூக ஊடகங்கள்",
+      "order": 5,
+      "created_date": "2019-06-27T00:00:00Z"
+    }
+  },
+  {
+    "model": "common.channel",
+    "pk": 11,
+    "fields": {
+      "name": "Web",
+      "sn_name": "වෙබ් අඩවිය",
+      "tm_name": "இணையதளம்",
+      "order": 11,
+      "created_date": "2019-06-27T00:00:00Z"
     }
   }
 ]

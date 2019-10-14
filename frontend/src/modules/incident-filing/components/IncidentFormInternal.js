@@ -120,7 +120,7 @@ class IncidentFormInternal extends Component {
         title: "",
         description: "",
         occurrence: "OCCURRED",
-        occured_date: "",
+        occured_date: null,
         time: "",
         otherCat: "",
         category: "",
@@ -145,7 +145,7 @@ class IncidentFormInternal extends Component {
         reporterLandline: "",
         reporterEmail: "",
         file: null,
-        politicalParty:"",
+        politicalParty: "",
         injuredParties: [],
         respondents: [],
         detainedVehicles: [],
@@ -194,6 +194,13 @@ class IncidentFormInternal extends Component {
 
 
         const { paramIncidentId } = this.props.match.params
+
+        // for(var v in values["detainedVehicles"]){
+        //     if(values["detainedVehicles"][v]["is_private"] === "null"){
+        //         values["detainedVehicles"][v]["is_private"] = false;
+        //     }
+        // }
+
 
         if (values.occured_date) {
             values.occured_date = moment(values.occured_date).format()
@@ -251,7 +258,7 @@ class IncidentFormInternal extends Component {
     }
 
     tableRowDelete = (setFieldValue, fieldName, tableData, record) => {
-        return new Promise((resolve, reject) => {            
+        return new Promise((resolve, reject) => {
             const idx = record.tableData.id;
             tableData.splice(idx, 1);
             setFieldValue(fieldName, tableData);
@@ -260,7 +267,7 @@ class IncidentFormInternal extends Component {
     }
 
     tableRowUpdate = (setFieldValue, fieldName, tableData, oldRecord, newRecord) => {
-        return new Promise((resolve, reject) => {         
+        return new Promise((resolve, reject) => {
             tableData[oldRecord.tableData.id] = newRecord;
             setFieldValue(fieldName, tableData);
             resolve();
@@ -273,10 +280,10 @@ class IncidentFormInternal extends Component {
 
         const reinit = paramIncidentId ? true : false;
 
-        const politicalPartyLookup = Object.assign({}, 
+        const politicalPartyLookup = Object.assign({},
             ...this.props.politicalParties.allCodes.map((c, k) => {
                 const curParty = this.props.politicalParties.byCode[c];
-                return { [curParty.code]: this.props.politicalParties.byCode[c].name}
+                return { [curParty.code]: this.props.politicalParties.byCode[c].name }
             })
         );
 
@@ -382,7 +389,7 @@ class IncidentFormInternal extends Component {
                                         <Grid item xs={6} sm={3}>
                                             <TextField
                                                 id="occured_date"
-                                                label="Incident date and time*"
+                                                label="Incident date and time"
                                                 type="datetime-local"
                                                 value={values.occured_date}
                                                 InputLabelProps={{ shrink: true }}
@@ -403,6 +410,8 @@ class IncidentFormInternal extends Component {
                                                     {this.props.categories.map((c, k) => (
                                                         <MenuItem value={c.id} key={k}>
                                                             <div className={classes.langCats}>
+                                                                <div>{c.code}</div>
+                                                                <div>|</div>
                                                                 <div>{c.sub_category}</div>
                                                                 <div>|</div>
                                                                 <div> {c.sn_sub_category}</div>
@@ -894,50 +903,14 @@ class IncidentFormInternal extends Component {
                                 </Paper>
 
                                 {/* police details */}
-                                <div className={classes.hide}>
+                                <div>
                                     <ExpansionPanel>
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                             <Typography variant="h5" gutterBottom> Police Related Information </Typography>
                                         </ExpansionPanelSummary>
                                         <ExpansionPanelDetails>
                                             <Grid container spacing={24}>
-                                            
-
-                                                <Grid item xs={12} sm={6}>
-                                                    <TextField
-                                                        id="complainers_name"
-                                                        name="complainers_name"
-                                                        label="Complainer Name"
-                                                        className={classes.textField}
-                                                        value={values.complainers_name}
-                                                        onChange={handleChange}
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={12} sm={4}>
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    <TextField
-                                                        id="complainers_address"
-                                                        name="complainers_address"
-                                                        label="Complainers Address"
-                                                        className={classes.textField}
-                                                        value={values.complainers_address}
-                                                        onChange={handleChange}
-                                                    />
-                                                </Grid>
-
-                                                {/* <Grid item xs={12} sm={6}>
-                                                    <TextField
-                                                        id="victims_name"
-                                                        name="victims_name"
-                                                        label="Victims Name"
-                                                        className={classes.textField}
-                                                        value={values.victims_name}
-                                                        onChange={handleChange}
-                                                    />
-                                                </Grid> */}
-                                                <Grid item xs={12} sm={4}>
-                                                </Grid>
+                                                
                                                 <Grid item xs={12}>
                                                     <MaterialTable
                                                         columns={[
@@ -961,15 +934,7 @@ class IncidentFormInternal extends Component {
                                                             paging: false
                                                         }}
                                                     />
-                                                    {/* <TextField
-                                                        id="victims_address"
-                                                        name="victims_address"
-                                                        label="Victims Address"
-                                                        className={classes.textField}
-                                                        value={values.victims_address}
-                                                        onChange={handleChange}
-                                                    /> */}
-                                                    
+
                                                 </Grid>
 
                                                 <Grid item xs={12}>
@@ -995,39 +960,18 @@ class IncidentFormInternal extends Component {
                                                             paging: false
                                                         }}
                                                     />
-                                                    {/* <TextField
-                                                        id="respondents_name"
-                                                        name="respondents_name"
-                                                        label="Respondants Name"
-                                                        className={classes.textField}
-                                                        value={values.respondents_name}
-                                                        onChange={handleChange}
-
-                                                    /> */}
                                                 </Grid>
-                                                {/* <Grid item xs={12} sm={4}>
-                                                </Grid>
+                                                
                                                 <Grid item xs={12}>
-                                                    <TextField
-                                                        id="respondents_address"
-                                                        name="respondents_address"
-                                                        label="Respondents Address"
-                                                        className={classes.textField}
-                                                        value={values.respondents_address}
-                                                        onChange={handleChange}
-                                                    />
-                                                </Grid> */}
-
-<Grid item xs={12}>
                                                     <MaterialTable
                                                         columns={[
                                                             { title: "Vehicle License Plate", field: "vehicle_no" },
                                                             {
                                                                 title: "Vehicle Ownership",
-                                                                field: "is_private",
+                                                                field: "ownership",
                                                                 lookup: {
-                                                                    "null": "Government Vehicle",
-                                                                    "true": "Private Vehicle"
+                                                                    "government": "Government Vehicle",
+                                                                    "private": "Private Vehicle"
                                                                 }
                                                             }
                                                         ]}

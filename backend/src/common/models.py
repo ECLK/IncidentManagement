@@ -11,6 +11,7 @@ class PartyType(enum.Enum):
 
 class Category(models.Model):
     # django puts a default auto increment 'id' fields
+    code = models.CharField(max_length=36, unique=True) # this is introduced just to help the process at EC
     top_category = models.CharField(max_length=200)
     sub_category = models.CharField(max_length=200)
     sn_top_category = models.CharField(max_length=200)
