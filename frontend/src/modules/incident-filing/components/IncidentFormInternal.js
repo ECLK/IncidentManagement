@@ -120,7 +120,7 @@ class IncidentFormInternal extends Component {
         title: "",
         description: "",
         occurrence: "OCCURRED",
-        occured_date: "",
+        occured_date: null,
         time: "",
         otherCat: "",
         category: "",
@@ -389,7 +389,7 @@ class IncidentFormInternal extends Component {
                                         <Grid item xs={6} sm={3}>
                                             <TextField
                                                 id="occured_date"
-                                                label="Incident date and time*"
+                                                label="Incident date and time"
                                                 type="datetime-local"
                                                 value={values.occured_date}
                                                 InputLabelProps={{ shrink: true }}

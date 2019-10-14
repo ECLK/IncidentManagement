@@ -89,8 +89,8 @@ function SearchForm(props) {
       onSubmit={(values, { setSubmitting }) => {
         let preparedValues = {
           ...values,
-          startTime: values.startTime !== "" ? moment(values.startTime).toDate() : null,
-          endTime: values.endTime !== "" ? moment(values.endTime).toDate() : null
+          startTime: values.startTime !== "" ? moment(values.startTime).format("YYYY-MM-DD HH:mm") : null,
+          endTime: values.endTime !== "" ? moment(values.endTime).format("YYYY-MM-DD HH:mm") : null
         };
         // alert(JSON.stringify(preparedValues));
         filterIncidents(preparedValues);
@@ -265,7 +265,7 @@ function SearchForm(props) {
                         id="start-time"
                         label="Start Time"
                         name="startTime"
-                        type="date"
+                        type="datetime-local"
                         value={values.startTime}
                         className={classes.textField}
                         InputLabelProps={{
@@ -279,7 +279,7 @@ function SearchForm(props) {
                         id="end-time"
                         label="End Time"
                         name="endTime"
-                        type="date"
+                        type="datetime-local"
                         value={values.endTime}
                         className={classes.textField}
                         InputLabelProps={{

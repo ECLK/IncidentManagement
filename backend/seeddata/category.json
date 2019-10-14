@@ -369,7 +369,7 @@
     "model": "common.category",
     "pk": 27,
     "fields": {
-      "code": "B-27",
+      "code": "Other",
       "top_category": "Other",
       "sub_category": "Other",
       "sn_top_category": "වෙනත්",
