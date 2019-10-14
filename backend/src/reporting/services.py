@@ -6,7 +6,7 @@ import numpy as np
 
 from ..common.models import Category, Channel
 from ..incidents.models import Incident
-from .functions import get_detailed_report, get_general_report, encode_column_names
+from .functions import get_detailed_report, get_general_report, encode_column_names, get_subcategory_report
 
 
 def get_category_summary(start_date, end_date, detailed_report):
@@ -52,7 +52,7 @@ def get_subcategory_summary(start_date, end_date, detailed_report):
                                           '%s'
                                 """ % (sqls, start_date, end_date)
         return get_detailed_report(sql1, columns)
-    return get_general_report("sub_category", "Subcategory", "common_category", "category", "id", start_date, end_date)
+    return get_subcategory_report("sub_category", "Subcategory", "common_category", "category", "id", start_date, end_date)
 
 
 def get_mode_summary(start_date, end_date, detailed_report):

@@ -106,7 +106,7 @@ class ReportingView(APIView):
             decode_column_names(table_html)
                 .replace(".0", "", -1)
                 .replace("(Total No. of Incidents)",
-                         "<strong>(Total No. of Incidents within the period)</strong>", -1)
+                         """<strong>(Total No. of Incidents from %s to %s)</strong>""" % (start_date, end_date), -1)
                 .replace("(Unassigned)", "<strong>(Unassigned)</strong>", -1)
             , table_title, layout, totalCount)
         response = HttpResponse(content_type='application/pdf')
