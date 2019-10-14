@@ -18,6 +18,42 @@ def get_data_frame(sql, columns):
     return dataframe.to_html()
 
 
+def get_subcategory_report(field_name, field_label, field_table, count_field, map_field, start_date, end_date):
+    sql = """
+            SELECT %s, Total FROM (SELECT %s,
+                   Sum(Total) AS Total
+            FROM   (SELECT ifnull(concat(top_category,' -> ',%s), '(Unassigned)') AS %s,
+                           Sum(Total)                 AS Total
+                    FROM   %s AS d
+                           RIGHT JOIN (SELECT %s,
+                                              '1' AS Total
+                                       FROM   incidents_incident
+                                       WHERE  incidents_incident.created_date BETWEEN '%s' AND
+                                                                   '%s') AS
+                                      incidents
+                                   ON incidents.%s = d.%s
+                    GROUP  BY incidents.%s
+                    UNION ALL
+                    SELECT concat(top_category,' -> ',sub_category)  AS %s,
+                           '0'
+                    FROM   %s) AS result
+            GROUP  BY result.%s
+            ORDER  BY Field(%s,'(Unassigned)') DESC,Total DESC) as result2
+            UNION
+            SELECT '(Total No. of Incidents)',
+                   Count(id)
+            FROM   incidents_incident
+            WHERE  incidents_incident.created_date BETWEEN '%s' AND '%s'
+           
+        """ % (
+        field_label, field_label, field_name, field_label, field_table, count_field, start_date, end_date, count_field,
+        map_field, count_field, field_name, field_table, field_label, field_label, start_date, end_date)
+    dataframe = pd.read_sql_query(sql, connection)
+    dataframe = dataframe.fillna(0)
+    print(sql)
+    return dataframe.to_html(index=False)
+
+
 def get_general_report(field_name, field_label, field_table, count_field, map_field, start_date, end_date):
     sql = """
             SELECT %s, Total FROM (SELECT %s,
@@ -38,7 +74,7 @@ def get_general_report(field_name, field_label, field_table, count_field, map_fi
                            '0'
                     FROM   %s) AS result
             GROUP  BY result.%s
-            ORDER  BY Total DESC) as result2
+            ORDER  BY Field(%s,'(Unassigned)') DESC,Total DESC) as result2
             UNION
             SELECT '(Total No. of Incidents)',
                    Count(id)
@@ -46,7 +82,7 @@ def get_general_report(field_name, field_label, field_table, count_field, map_fi
             WHERE  incidents_incident.created_date BETWEEN '%s' AND '%s'
         """ % (
         field_label, field_label, field_name, field_label, field_table, count_field, start_date, end_date, count_field,
-        map_field, count_field, field_name, field_table, field_label, start_date, end_date)
+        map_field, count_field, field_name, field_table, field_label, field_label, start_date, end_date)
     dataframe = pd.read_sql_query(sql, connection)
     dataframe = dataframe.fillna(0)
     return dataframe.to_html(index=False)
@@ -151,7 +187,7 @@ def apply_style(html, title, layout, total):
                 <div>
                 <br>
                 <p>
-                Total No.of reported incidents : %s
+                Total No. of Incidents Reported : %s
                 </p>
                 <p style="text-align:right;">
                 Report Submitted by

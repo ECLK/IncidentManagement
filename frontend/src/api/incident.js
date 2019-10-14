@@ -68,8 +68,8 @@ export const getIncidents = async (filters, page=1) => {
     }
 
     if(filters.startTime && filters.endTime){
-      const startDate = moment(filters.startTime).format("YYYY-MM-DD");
-      const endDate = moment(filters.endTime).format("YYYY-MM-DD");
+      const startDate = moment(filters.startTime).format("YYYY-MM-DD HH:mm");
+      const endDate = moment(filters.endTime).format("YYYY-MM-DD HH:mm");
       query += "&start_date=" + startDate + "&end_date=" + endDate;
     }
 
