@@ -340,6 +340,18 @@ class CompleteActionWorkflow(IncidentWorkflow):
     initiated_workflow = models.ForeignKey(EscalateExternalWorkflow, on_delete=models.DO_NOTHING)
     comment = models.TextField()
 
+class RequestAdviceWorkflow(IncidentWorkflow):
+    assigned_user = models.ForeignKey(User, 
+                    on_delete=models.DO_NOTHING, 
+                    related_name="advice_request_related",
+                    related_query_name="advice_requested_users")
+    comment = models.TextField()
+    is_advice_provided = models.BooleanField(default=False)
+
+class ProvideAdviceWorkflow(IncidentWorkflow):
+    initiated_workflow = models.ForeignKey(RequestAdviceWorkflow, on_delete=models.DO_NOTHING)
+    comment = models.TextField()
+
 class IncidentFilter(filters.FilterSet):
     current_status = filters.ChoiceFilter(choices=StatusType, method='my_custom_filter')
     

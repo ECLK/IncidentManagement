@@ -9,7 +9,9 @@ from .models import (
     IncidentPoliceReport,
     VerifyWorkflow,
     EscalateExternalWorkflow,
-    CompleteActionWorkflow
+    CompleteActionWorkflow,
+    RequestAdviceWorkflow,
+    ProvideAdviceWorkflow
 )
 from django.contrib.auth.models import User, Group
 
@@ -454,7 +456,16 @@ def incident_complete_external_action(user: User, incident: Incident, comment: s
 def incident_request_advice(user: User, incident: Incident, assignee: User, comment: str):
     if incident.current_status == StatusType.ADVICE_REQESTED.name:
         raise WorkflowException("Incident already has a pending advice request")
-
+    
+    # request workflow
+    workflow = RequestAdviceWorkflow(
+        incident=incident,
+        actioned_user=user,
+        comment=comment,
+        assigned_user=assignee
+    )
+    workflow.save()
+    
     status = IncidentStatus(
         current_status=StatusType.ADVICE_REQESTED,
         previous_status=incident.current_status,
@@ -466,7 +477,7 @@ def incident_request_advice(user: User, incident: Incident, assignee: User, comm
     incident.linked_individuals.add(assignee)
     incident.save()
 
-    event_services.update_status_with_description_event(user, incident, status, True, comment)
+    event_services.update_workflow_event(user, incident, workflow)
 
 
 def incident_provide_advice(user: User, incident: Incident, advice: str, start_event: Event):
@@ -475,6 +486,21 @@ def incident_provide_advice(user: User, incident: Incident, advice: str, start_e
 
     if incident.current_status != StatusType.ADVICE_REQESTED.name:
         raise WorkflowException("Incident does not have pending advice requests")
+
+    initiated_workflow = start_event.refered_model
+
+    # workflow
+    workflow = ProvideAdviceWorkflow(
+        incident=incident,
+        actioned_user=user,
+        comment=advice,
+        initiated_workflow=initiated_workflow
+    )
+    workflow.save()
+
+    # complete previous workflow
+    initiated_workflow.is_advice_provided = True
+    initiated_workflow.save()
 
     status = IncidentStatus(
         current_status=StatusType.ADVICE_PROVIDED,
@@ -487,7 +513,7 @@ def incident_provide_advice(user: User, incident: Incident, advice: str, start_e
     # check this
     incident.linked_individuals.remove(user.id)
 
-    event_services.provide_advice_event(user, incident, status, advice, start_event)
+    event_services.update_linked_workflow_event(user, incident, workflow, start_event)
 
 def incident_verify(user: User, incident: Incident, comment: str, proof: bool):
     if incident.current_status != StatusType.NEW.name:

@@ -324,13 +324,13 @@ class IncidentWorkflowView(APIView):
                 request.user, incident, comment, start_event)
 
         elif workflow == "request-advice":
-            comment = json.dumps(request.data['comment'])
+            comment = request.data['comment']
             assignee_id = request.data['assignee']
             assignee = get_user_by_id(assignee_id)
             incident_request_advice(request.user, incident, assignee, comment)
 
         elif workflow == "provide-advice":
-            comment = json.dumps(request.data['comment'])
+            comment = request.data['comment']
             start_event_id = request.data['start_event']
             start_event = event_service.get_event_by_id(start_event_id)
             incident_provide_advice(request.user, incident, comment, start_event)

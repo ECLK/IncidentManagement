@@ -9,7 +9,9 @@ from ..incidents.models import (
     IncidentSeverity, 
     VerifyWorkflow,
     EscalateExternalWorkflow,
-    CompleteActionWorkflow
+    CompleteActionWorkflow,
+    RequestAdviceWorkflow,
+    ProvideAdviceWorkflow
 )
 from django.contrib.auth.models import User
 
@@ -94,6 +96,26 @@ class GenericDataRelatedField(serializers.RelatedField):
             return {
                 "workflow": {
                     "type": "Complete Action",
+                    "data": {
+                        "comment": value.comment
+                    }
+                }
+            }
+        elif isinstance(value, RequestAdviceWorkflow):
+            return {
+                "workflow": {
+                    "type": "Request Advice",
+                    "data": {
+                        "comment": value.comment,
+                        "isCompleted": value.is_advice_provided,
+                        "assignee": value.assigned_user.get_full_name()
+                    }
+                }
+            }
+        elif isinstance(value, ProvideAdviceWorkflow):
+            return {
+                "workflow": {
+                    "type": "Provide Advice",
                     "data": {
                         "comment": value.comment
                     }

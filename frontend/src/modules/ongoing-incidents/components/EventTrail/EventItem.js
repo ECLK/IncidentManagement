@@ -127,6 +127,12 @@ function getActionText(event){
 
                     case "Complete Action":
                             return "provided action";
+
+                    case "Request Advice":
+                            return "requested advice"
+
+                    case "Provide Advice":
+                            return "provided advice"
                 }
         default:
             return "unknown action"
@@ -233,6 +239,18 @@ function getSecondaryItem(event){
                     {workflowData.comment}
                 </div>
             )
+        }else if(workflowType === "Request Advice"){
+            return (
+                <div>
+                    {workflowData.comment}
+                </div>
+            )
+        }else if(workflowType === "Provide Advice"){
+            return (
+                <div>
+                    {workflowData.comment}
+                </div>
+            )
         }
     }
     return (<></>);
@@ -241,6 +259,12 @@ function getSecondaryItem(event){
 function hasPendingAction(event){
     return event.action === "WORKFLOW_ACTIONED" &&
             event.data.workflow.type === "Escalate External" &&
+            !event.data.workflow.data.isCompleted;
+}
+
+function hasPendingAdvice(event){
+    return event.action === "WORKFLOW_ACTIONED" &&
+            event.data.workflow.type === "Request Advice" &&
             !event.data.workflow.data.isCompleted;
 }
 
@@ -274,9 +298,6 @@ const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
     const dispatch = useDispatch();
     const userData = useSelector((state)=>(state.user));
 
-    const hasPendingAdviceRequest = (event.action=== "ATTRIBUTE_CHANGED" && 
-                                    event.data.status.to_status_type === "ADVICE_REQESTED" &&
-                                    eventLinks[event.id]===undefined )
 
     let initiator = "Public User";
     if(event.initiator && event.initiator.userName !== "guest"){
@@ -343,7 +364,7 @@ const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
                     </div>
                 )}
 
-                {hasPendingAdviceRequest && 
+                {hasPendingAdvice(event) && 
                  (
                     <div className={classes.eventItemActions}>
                         <Button 
