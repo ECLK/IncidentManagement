@@ -46,6 +46,7 @@ function DatePickers(props) {
                     shrink: true,
                 }}
                 onChange={(e)=>{setDateTime({ ...dateTime, time:e.target.value})}}
+                helperText="hh:mm"
             />
         </form>
     );

@@ -51,7 +51,7 @@ function GuestFormSuccessPage(props) {
             <Grid item xs={6} style={{marginTop:'30px'}}>
             <div style={{display:'flex', flexGrow:1, justifyContent:'space-around'}}>
                 <Button variant='outlined' onClick={()=>{handleButtonClick('edit')}}>Add/ edit information</Button>
-                <Button variant='outlined' onClick={()=>{handleButtonClick('status')}}>Check  status</Button>
+                {/* <Button variant='outlined' onClick={()=>{handleButtonClick('status')}}>Check  status</Button> */}
                 <Button variant='outlined' onClick={()=>{handleButtonClick('create')}}>Create another complaint</Button>
             </div>
             </Grid>
