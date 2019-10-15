@@ -187,6 +187,7 @@ class ReportList extends Component {
 
                                             />
                                             <FormControlLabel
+                                                disabled={this.state.report_type === 'incident_date_wise_summary_report'}
                                                 value="true"
                                                 control={
                                                     <Radio/>
