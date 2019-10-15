@@ -3,6 +3,28 @@ import pandas as pd
 from ..reporting.models import SeveritySegment
 
 
+def incident_type_title(complain, inquiry):
+    print(complain, inquiry, complain and inquiry)
+    if complain and inquiry:
+        return "(Complaints and Inquiries)"
+    if complain:
+        return "(Complaints Only)"
+    if inquiry:
+        return "(Inquiries Only)"
+    return ""
+
+
+def incident_type_query(complain, inquiry):
+    print(complain, inquiry, complain and inquiry)
+    if complain and inquiry:
+        return "(incidents_incident.incidentType LIKE 'COMPLAINT' OR incidents_incident.incidentType LIKE 'INQUIRY')"
+    if complain:
+        return "incidents_incident.incidentType LIKE 'COMPLAINT'"
+    if inquiry:
+        return "incidents_incident.incidentType LIKE 'INQUIRY'"
+    return "(incidents_incident.incidentType LIKE 'COMPLAINT' OR incidents_incident.incidentType LIKE 'INQUIRY')"
+
+
 def get_data_frame(sql, columns):
     dataframe = pd.read_sql_query(sql, connection)
 
@@ -18,7 +40,8 @@ def get_data_frame(sql, columns):
     return dataframe.to_html()
 
 
-def get_subcategory_report(field_name, field_label, field_table, count_field, map_field, start_date, end_date):
+def get_subcategory_report(field_name, field_label, field_table, count_field, map_field, start_date, end_date,
+                           incident_type_query):
     sql = """
             SELECT %s, Total FROM (SELECT %s,
                    Sum(Total) AS Total
@@ -43,18 +66,20 @@ def get_subcategory_report(field_name, field_label, field_table, count_field, ma
             SELECT '(Total No. of Incidents)',
                    Count(id)
             FROM   incidents_incident
-            WHERE  incidents_incident.created_date BETWEEN '%s' AND '%s'
+            WHERE  incidents_incident.created_date BETWEEN '%s' AND '%s' AND %s
            
         """ % (
         field_label, field_label, field_name, field_label, field_table, count_field, start_date, end_date, count_field,
-        map_field, count_field, field_name, field_table, field_label, field_label, start_date, end_date)
+        map_field, count_field, field_name, field_table, field_label, field_label, start_date, end_date,
+        incident_type_query)
     dataframe = pd.read_sql_query(sql, connection)
     dataframe = dataframe.fillna(0)
     print(sql)
     return dataframe.to_html(index=False)
 
 
-def get_general_report(field_name, field_label, field_table, count_field, map_field, start_date, end_date):
+def get_general_report(field_name, field_label, field_table, count_field, map_field, start_date, end_date,
+                       incident_type_query):
     sql = """
             SELECT %s, Total FROM (SELECT %s,
                    Sum(Total) AS Total
@@ -79,10 +104,11 @@ def get_general_report(field_name, field_label, field_table, count_field, map_fi
             SELECT '(Total No. of Incidents)',
                    Count(id)
             FROM   incidents_incident
-            WHERE  incidents_incident.created_date BETWEEN '%s' AND '%s'
+            WHERE  incidents_incident.created_date BETWEEN '%s' AND '%s' AND %s
         """ % (
         field_label, field_label, field_name, field_label, field_table, count_field, start_date, end_date, count_field,
-        map_field, count_field, field_name, field_table, field_label, field_label, start_date, end_date)
+        map_field, count_field, field_name, field_table, field_label, field_label, start_date, end_date,
+        incident_type_query)
     dataframe = pd.read_sql_query(sql, connection)
     dataframe = dataframe.fillna(0)
     return dataframe.to_html(index=False)
@@ -147,7 +173,7 @@ def decode_column_names(text):
         .replace("_", " ", -1)
 
 
-def apply_style(html, title, layout, total):
+def apply_style(html, title, incident_type, layout, total):
     html = """
         <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
         <html>
@@ -180,14 +206,14 @@ def apply_style(html, title, layout, total):
                 </style>
             </head>
             <body>
-                <h1 align=center>No. of incidents reported within the period <br>%s</h1>
+                <h1 align=center>No. of incidents reported within the period %s <br>%s</h1>
                 <div>
                     %s
                 </div>
                 <div>
                 <br>
                 <p>
-                Total No. of Incidents Reported : %s
+                Total No. of Incidents Reported %s : %s
                 </p>
                 <p style="text-align:right;">
                 Report Submitted by
@@ -201,5 +227,5 @@ def apply_style(html, title, layout, total):
                 </div>
             </body>
         </html>
-           """ % (layout, title, html, total)
+           """ % (layout, incident_type, title, html, incident_type, total)
     return html

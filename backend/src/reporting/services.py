@@ -6,10 +6,12 @@ import numpy as np
 
 from ..common.models import Category, Channel
 from ..incidents.models import Incident
-from .functions import get_detailed_report, get_general_report, encode_column_names, get_subcategory_report
+from .functions import get_detailed_report, get_general_report, encode_column_names, get_subcategory_report, \
+    incident_type_query
 
 
-def get_category_summary(start_date, end_date, detailed_report):
+def get_category_summary(start_date, end_date, detailed_report, complain, inquiry):
+    sql3 = incident_type_query(complain, inquiry)
     if detailed_report:
         columns = set(Category.objects.all().values_list("top_category", flat=True))
         columns = encode_column_names(columns)
@@ -26,13 +28,15 @@ def get_category_summary(start_date, end_date, detailed_report):
                            left join common_category on category=common_category.id
                            WHERE  incidents_incident.created_date BETWEEN
                                   '%s' AND
-                                  '%s'
-                        """ % (sql2, start_date, end_date)
+                                  '%s' AND %s
+                        """ % (sql2, start_date, end_date, sql3)
         return get_detailed_report(sql1, columns)
-    return get_general_report("top_category", "Category", "common_category", "category", "id", start_date, end_date)
+    return get_general_report("top_category", "Category", "common_category", "category", "id", start_date, end_date,
+                              sql3)
 
 
-def get_subcategory_summary(start_date, end_date, detailed_report):
+def get_subcategory_summary(start_date, end_date, detailed_report, complain, inquiry):
+    sql3 = incident_type_query(complain, inquiry)
     if detailed_report:
         columns = set(Category.objects.all().values_list("sub_category", flat=True))
         columns = encode_column_names(columns)
@@ -49,13 +53,15 @@ def get_subcategory_summary(start_date, end_date, detailed_report):
                                    left join common_category on category=common_category.id
                                    WHERE  incidents_incident.created_date BETWEEN
                                           '%s' AND
-                                          '%s'
-                                """ % (sqls, start_date, end_date)
+                                          '%s' AND %s
+                                """ % (sqls, start_date, end_date, sql3)
         return get_detailed_report(sql1, columns)
-    return get_subcategory_report("sub_category", "Subcategory", "common_category", "category", "id", start_date, end_date)
+    return get_subcategory_report("sub_category", "Subcategory", "common_category", "category", "id", start_date,
+                                  end_date, sql3)
 
 
-def get_mode_summary(start_date, end_date, detailed_report):
+def get_mode_summary(start_date, end_date, detailed_report, complain, inquiry):
+    sql3 = incident_type_query(complain, inquiry)
     if detailed_report:
         columns = set(Channel.objects.all().values_list("name", flat=True))
         columns = encode_column_names(columns)
@@ -72,14 +78,15 @@ def get_mode_summary(start_date, end_date, detailed_report):
                    left join common_channel on infoChannel=common_channel.id
                    WHERE  incidents_incident.created_date BETWEEN
                           '%s' AND
-                          '%s'
-                """ % (sql2, start_date, end_date)
+                          '%s' AND %s
+                """ % (sql2, start_date, end_date, sql3)
         print(sql1)
         return get_detailed_report(sql1, columns)
-    return get_general_report("name", "Mode", "common_channel", "infoChannel", "id", start_date, end_date)
+    return get_general_report("name", "Mode", "common_channel", "infoChannel", "id", start_date, end_date, sql3)
 
 
-def get_incident_date_summary(start_date, end_date, detailed_report):
+def get_incident_date_summary(start_date, end_date, detailed_report, complain, inquiry):
+    sql3 = incident_type_query(complain, inquiry)
     sql = """
             SELECT incident_date as 'Incident Date', 
        Total 
@@ -93,7 +100,7 @@ FROM   (SELECT incident_date,
                                AS Total 
                 FROM   incidents_incident 
                 WHERE  incidents_incident.created_date BETWEEN 
-                       '%s' AND '%s' 
+                       '%s' AND '%s' AND %s
                 UNION ALL 
                 SELECT selected_date, 
                        '0' 
@@ -205,7 +212,7 @@ FROM   (SELECT incident_date,
                                ) 
                                AND 
                                Date_format('%s', 
-                               '%s' 
+                               '%s'
                                )) AS dateranges) AS result 
         GROUP  BY result.incident_date 
         ORDER  BY incident_date) AS result2 
@@ -214,18 +221,22 @@ SELECT '(Total No. of Incidents)',
        Count(id) 
 FROM   incidents_incident 
 WHERE  incidents_incident.created_date BETWEEN 
-       '%s' AND '%s' 
-            """ % ("%Y-%m-%d",start_date, end_date, start_date,"%Y-%m-%d", end_date,"%Y-%m-%d", start_date, end_date)
+       '%s' AND '%s' AND %s
+            """ % (
+        "%Y-%m-%d", start_date, end_date, sql3, start_date, "%Y-%m-%d", end_date, "%Y-%m-%d", start_date, end_date,
+        sql3)
     dataframe = pd.read_sql_query(sql, connection)
     dataframe = dataframe.fillna(0)
     return dataframe.to_html(index=False)
 
 
-def get_district_summary(start_date, end_date, detailed_report):
-    return get_general_report("name", "District", "common_district", "district", "code", start_date, end_date)
+def get_district_summary(start_date, end_date, detailed_report, complain, inquiry):
+    sql3 = incident_type_query(complain, inquiry)
+    return get_general_report("name", "District", "common_district", "district", "code", start_date, end_date, sql3)
 
 
-def get_severity_summary(start_date, end_date, detailed_report):
+def get_severity_summary(start_date, end_date, detailed_report, complain, inquiry):
+    sql3 = incident_type_query(complain, inquiry)
     if detailed_report:
         sql1 = """
         SELECT district,
@@ -249,8 +260,8 @@ def get_severity_summary(start_date, end_date, detailed_report):
            FROM   incidents_incident
            WHERE  incidents_incident.created_date BETWEEN
                   '%s' AND
-                  '%s'
-        """ % (start_date, end_date)
+                  '%s' AND %s
+        """ % (start_date, end_date, sql3)
         columns = ["High", "Medium", "Low"]
         return get_detailed_report(sql1, columns)
 
@@ -269,22 +280,23 @@ def get_severity_summary(start_date, end_date, detailed_report):
                                      END)                                           AS currentstate,
                                      Count(Ifnull(incidents_incident.severity,0)) AS subtotal
                             FROM     incidents_incident
-                            WHERE    incidents_incident.created_date BETWEEN '%s' AND      '%s'
+                            WHERE    incidents_incident.created_date BETWEEN '%s' AND      '%s' AND %s
                             GROUP BY currentstate) AS incidents
          ON        currentstate = d.name 
          UNION ALL
         SELECT '(Total No. of Incidents)',
                Count(id)
         FROM   incidents_incident
-        WHERE  incidents_incident.created_date BETWEEN '%s' AND '%s'
+        WHERE  incidents_incident.created_date BETWEEN '%s' AND '%s' AND %s
         ORDER  BY Field(Severity, 'High', 'Medium', 'Low', '(Total No. of Incidents)') 
-    """ % (start_date, end_date, start_date, end_date)
+    """ % (start_date, end_date, sql3, start_date, end_date, sql3)
     dataframe = pd.read_sql_query(sql, connection)
     dataframe = dataframe.fillna(0)
     return dataframe.to_html(index=False)
 
 
-def get_status_summary(start_date, end_date, detailed_report):
+def get_status_summary(start_date, end_date, detailed_report, complain, inquiry):
+    sql3 = incident_type_query(complain, inquiry)
     if detailed_report:
         sql1 = """
         SELECT district,( 
@@ -293,8 +305,8 @@ def get_status_summary(start_date, end_date, detailed_report):
                              1 AS Total
                       FROM   incidents_incident
                       WHERE  incidents_incident.created_date BETWEEN '%s' AND
-                                                  '%s'
-        """ % (start_date, end_date)
+                                                  '%s' AND %s
+        """ % (start_date, end_date, sql3)
         columns = ["Resolved", "Unresolved"]
         return get_detailed_report(sql1, columns)
 
@@ -313,16 +325,16 @@ def get_status_summary(start_date, end_date, detailed_report):
                                  Count(Ifnull(current_status, 1)) AS subtotal
                           FROM   incidents_incident
                           WHERE  incidents_incident.created_date BETWEEN '%s' AND
-                                                      '%s'
+                                                      '%s' AND %s
                           GROUP  BY currentstate) AS incidents
                       ON currentstate = d.name
         UNION ALL
         SELECT '(Total No. of Incidents)',
                Count(id)
         FROM   incidents_incident
-        WHERE  incidents_incident.created_date BETWEEN '%s' AND '%s'
+        WHERE  incidents_incident.created_date BETWEEN '%s' AND '%s' AND %s
         ORDER  BY Field(status, 'Resolved', 'Unresolved', '(Total No. of Incidents)') 
-    """ % (start_date, end_date, start_date, end_date)
+    """ % (start_date, end_date, sql3, start_date, end_date, sql3)
     dataframe = pd.read_sql_query(sql, connection)
     dataframe = dataframe.fillna(0)
     return dataframe.to_html(index=False)
