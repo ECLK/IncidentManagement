@@ -25,7 +25,9 @@ class ReportingView(APIView):
         param_report = self.request.query_params.get('report', None)
         start_date = self.request.query_params.get('start_date', '')
         end_date = self.request.query_params.get('end_date', '')
-        detailed_report = self.request.query_params.get('detailed_report', 'false')
+        detailed_report = True if self.request.query_params.get('detailed_report', 'false') == 'true' else False
+        complain = True if self.request.query_params.get('complain', 'false') == 'true' else False
+        inquiry = True if self.request.query_params.get('inquiry', 'false') == 'true' else False
 
         if start_date == '':
             start_date = datetime.date.today().strftime("%Y-%m-%d 16:00:00")
@@ -50,14 +52,14 @@ class ReportingView(APIView):
         title = """from %s to %s by """ % (start_date, end_date)
         if param_report == "category_wise_summary_report":
             table_html = get_category_summary(start_date, end_date, detailed_report)
-            if detailed_report == 'true':
+            if detailed_report:
                 table_title = title + "District and Category"
             else:
                 table_title = title + "Category"
 
         elif param_report == "mode_wise_summary_report":
             table_html = get_mode_summary(start_date, end_date, detailed_report)
-            if detailed_report == 'true':
+            if detailed_report:
                 layout = "A4 landscape"
                 table_title = title + "District and Mode"
             else:
@@ -69,14 +71,14 @@ class ReportingView(APIView):
 
         elif param_report == "severity_wise_summary_report":
             table_html = get_severity_summary(start_date, end_date, detailed_report)
-            if detailed_report == 'true':
+            if detailed_report:
                 table_title = title + "District and Severity"
             else:
                 table_title = title + "Severity"
 
         elif param_report == "subcategory_wise_summary_report":
             table_html = get_subcategory_summary(start_date, end_date, detailed_report)
-            if detailed_report == 'true':
+            if detailed_report:
                 layout = "A1 landscape"
                 table_title = title + "District and Subcategory"
             else:
@@ -88,7 +90,7 @@ class ReportingView(APIView):
 
         elif param_report == "status_wise_summary_report":
             table_html = get_status_summary(start_date, end_date, detailed_report)
-            if detailed_report == 'true':
+            if detailed_report:
                 table_title = title + "District and Status"
             else:
                 table_title = title + "Status"

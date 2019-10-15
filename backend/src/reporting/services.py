@@ -10,7 +10,7 @@ from .functions import get_detailed_report, get_general_report, encode_column_na
 
 
 def get_category_summary(start_date, end_date, detailed_report):
-    if detailed_report == 'true':
+    if detailed_report:
         columns = set(Category.objects.all().values_list("top_category", flat=True))
         columns = encode_column_names(columns)
         columns.insert(0, "Unassigned")
@@ -33,7 +33,7 @@ def get_category_summary(start_date, end_date, detailed_report):
 
 
 def get_subcategory_summary(start_date, end_date, detailed_report):
-    if detailed_report == 'true':
+    if detailed_report:
         columns = set(Category.objects.all().values_list("sub_category", flat=True))
         columns = encode_column_names(columns)
         columns.insert(0, "Unassigned")
@@ -56,7 +56,7 @@ def get_subcategory_summary(start_date, end_date, detailed_report):
 
 
 def get_mode_summary(start_date, end_date, detailed_report):
-    if detailed_report == 'true':
+    if detailed_report:
         columns = set(Channel.objects.all().values_list("name", flat=True))
         columns = encode_column_names(columns)
         columns.insert(0, "Unassigned")
@@ -226,7 +226,7 @@ def get_district_summary(start_date, end_date, detailed_report):
 
 
 def get_severity_summary(start_date, end_date, detailed_report):
-    if detailed_report == 'true':
+    if detailed_report:
         sql1 = """
         SELECT district,
                   ( CASE
@@ -285,7 +285,7 @@ def get_severity_summary(start_date, end_date, detailed_report):
 
 
 def get_status_summary(start_date, end_date, detailed_report):
-    if detailed_report == 'true':
+    if detailed_report:
         sql1 = """
         SELECT district,( 
                CASE WHEN Ifnull(current_status, 'Unassigned') LIKE 'CLOSED' THEN 1 ELSE 0 END )AS Resolved,

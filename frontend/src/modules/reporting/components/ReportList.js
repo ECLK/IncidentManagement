@@ -26,6 +26,7 @@ import RadioGroup from "@material-ui/core/RadioGroup/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
 import Radio from "@material-ui/core/Radio/Radio";
 import moment from 'moment'
+import Checkbox from '@material-ui/core/Checkbox';
 
 const drawerWidth = 240;
 
@@ -76,23 +77,29 @@ class ReportList extends Component {
             start_date: moment().subtract(1, 'd').format("YYYY-MM-DDT16:00"),
             end_date: moment().format("YYYY-MM-DDT16:00"),
             detailed_report: "false",
+            complain: true,
+            inquiry: true,
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleSubmit = () => {
-        if (this.state.report_type !== "") {
+    handleSubmit = (e) => {
+        e.preventDefault();
+        if (this.state.report_type !== "" && (this.state.complain || this.state.inquiry)) {
             this.props.history.push(`/app/reports/view?report=` + this.state.report_type +
                 "&start_date=" + this.state.start_date +
                 "&end_date=" + this.state.end_date +
-                "&detailed_report=" + this.state.detailed_report);
+                "&detailed_report=" + this.state.detailed_report +
+                "&complain=" + this.state.complain +
+                "&inquiry=" + this.state.inquiry
+            );
         }
     };
 
     handleChange(key, value) {
-        console.log("value", value);
         this.setState({[key]: value});
+        console.log(value);
     }
 
     render() {
@@ -112,13 +119,51 @@ class ReportList extends Component {
 
                                         >
                                             <MenuItem value="category_wise_summary_report"> Category Wise </MenuItem>
-                                            <MenuItem value="subcategory_wise_summary_report"> Subcategory Wise </MenuItem>
+                                            <MenuItem value="subcategory_wise_summary_report"> Subcategory
+                                                Wise </MenuItem>
                                             {/*<MenuItem value="district_wise_summary_report"> District Wise </MenuItem>*/}
                                             <MenuItem value="mode_wise_summary_report"> Mode Wise </MenuItem>
-                                            <MenuItem value="incident_date_wise_summary_report"> Incident Date Wise </MenuItem>
-                                            <MenuItem value="severity_wise_summary_report"> Severity Level Wise </MenuItem>
+                                            <MenuItem value="incident_date_wise_summary_report"> Incident Date
+                                                Wise </MenuItem>
+                                            <MenuItem value="severity_wise_summary_report"> Severity Level
+                                                Wise </MenuItem>
                                             <MenuItem value="status_wise_summary_report"> Status Wise </MenuItem>
                                         </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControl component="fieldset" className={classes.formControl}>
+                                        <FormLabel component="legend">Incident Types</FormLabel>
+                                        <Grid container spacing={24}>
+                                            <Grid item xs={6}>
+                                                <FormControlLabel
+                                                    control={
+                                                        <Checkbox
+                                                            id="complain"
+                                                            name="complain"
+                                                            checked={this.state.complain}
+                                                            onChange={(e) => this.handleChange("complain", e.target.checked)}
+                                                            color="primary"
+                                                        />
+                                                    }
+                                                    label="Complains"
+                                                />
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <FormControlLabel
+                                                    control={
+                                                        <Checkbox
+                                                            id="inquiry"
+                                                            name="inquiry"
+                                                            checked={this.state.inquiry}
+                                                            onChange={(e) => this.handleChange("inquiry", e.target.checked)}
+                                                            color="primary"
+                                                        />
+                                                    }
+                                                    label="Inquiries"
+                                                />
+                                            </Grid>
+                                        </Grid>
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={12}>
