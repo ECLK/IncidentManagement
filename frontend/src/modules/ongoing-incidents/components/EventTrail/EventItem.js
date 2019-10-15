@@ -121,6 +121,12 @@ function getActionText(event){
                 switch(event.data.workflow.type){
                     case "Verify":
                         return "verified the incident";
+                    
+                    case "Escalate External":
+                        return "escallated the incident to an outside entity";
+
+                    case "Complete Action":
+                            return "provided action";
                 }
         default:
             return "unknown action"
@@ -213,9 +219,29 @@ function getSecondaryItem(event){
                     {workflowData.hasProof ? "Yes" : "No"}
                 </div>
             )
+        }else if(workflowType === "Escalate External"){
+            return (
+                <div>
+                    <div><b>Entity:</b><br/> {workflowData.entity.type}</div><br/>
+                    <div><b>Name:</b><br/> {workflowData.entity.name}</div><br/>
+                    <div><b>Comment:</b><br/> {workflowData.comment}</div>
+                </div>
+            )
+        }else if(workflowType === "Complete Action"){
+            return (
+                <div>
+                    {workflowData.comment}
+                </div>
+            )
         }
     }
     return (<></>);
+}
+
+function hasPendingAction(event){
+    return event.action === "WORKFLOW_ACTIONED" &&
+            event.data.workflow.type === "Escalate External" &&
+            !event.data.workflow.data.isCompleted;
 }
 
 
@@ -276,7 +302,7 @@ const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
                 </div>
 
                 {
-                    (event.action === 'ACTION_STARTED' & !eventLinks[event.id]) ?
+                    hasPendingAction(event, eventLinks) ?
                     <div className={classes.eventItemActions}>
                         <Button 
                             color="primary"

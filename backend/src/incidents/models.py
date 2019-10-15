@@ -323,6 +323,23 @@ class VerifyWorkflow(IncidentWorkflow):
     comment = models.TextField()
     has_proof = models.BooleanField(default=False)
 
+class EscalateExternalWorkflow(IncidentWorkflow):
+    is_internal_user = models.BooleanField(default=False, null=False)
+    comment = models.TextField()
+    escalated_user = models.ForeignKey(User, 
+                    on_delete=models.DO_NOTHING, 
+                    null=True, 
+                    blank=True,
+                    related_name="escalation_related",
+                    related_query_name="escalated_users")
+    escalated_user_other = models.CharField(max_length=200, null=True, blank=True)
+    escalated_entity_other = models.CharField(max_length=200, null=True, blank=True)
+    is_action_completed = models.BooleanField(default=False)
+
+class CompleteActionWorkflow(IncidentWorkflow):
+    initiated_workflow = models.ForeignKey(EscalateExternalWorkflow, on_delete=models.DO_NOTHING)
+    comment = models.TextField()
+
 class IncidentFilter(filters.FilterSet):
     current_status = filters.ChoiceFilter(choices=StatusType, method='my_custom_filter')
     

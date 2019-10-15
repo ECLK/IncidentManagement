@@ -317,7 +317,7 @@ class IncidentWorkflowView(APIView):
             incident_escalate_external_action(request.user, incident, entity, comment)
 
         elif workflow == "complete-action":
-            comment = json.dumps(request.data['comment'])
+            comment = request.data['comment']
             start_event_id = request.data['start_event']
             start_event = event_service.get_event_by_id(start_event_id)
             incident_complete_external_action(

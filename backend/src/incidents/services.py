@@ -7,7 +7,9 @@ from .models import (
     Reporter,
     IncidentComment,
     IncidentPoliceReport,
-    VerifyWorkflow
+    VerifyWorkflow,
+    EscalateExternalWorkflow,
+    CompleteActionWorkflow
 )
 from django.contrib.auth.models import User, Group
 
@@ -377,29 +379,33 @@ def incident_escalate_external_action(user: User, incident: Incident, entity: ob
     evt_description = None
 
     is_internal_user = entity["isInternalUser"]
-
+    workflow = EscalateExternalWorkflow(
+        is_internal_user=is_internal_user,
+        incident=incident,
+        actioned_user=user,
+        comment=comment
+    )
+    
     if is_internal_user:
-        user = get_user_by_id(entity["name"])
-        group = get_group_by_id(entity["type"])
+        escalated_user = get_user_by_id(entity["name"])
         incident.linked_individuals.add(user)
         incident.save()
 
-        evt_description = {
-            "entity": {
-                "name": user.get_full_name(),
-                "type": group.name
-            },            
-            "comment": comment
-        }        
+        workflow.escalated_user = escalated_user
+
+        # evt_description = {
+        #     "entity": {
+        #         "name": user.get_full_name(),
+        #         "type": group.name
+        #     },            
+        #     "comment": comment
+        # }        
 
     else:
-        evt_description = {
-            "entity": {
-                "name": entity["name"],
-                "type": entity["type"]
-            },
-            "comment": comment
-        }
+        workflow.escalated_entity_other = entity["type"]
+        workflow.escalated_user_other = entity["name"]
+    
+    workflow.save()
 
     status = IncidentStatus(
         current_status=StatusType.ACTION_PENDING,
@@ -409,10 +415,30 @@ def incident_escalate_external_action(user: User, incident: Incident, entity: ob
     )
     status.save()
 
-    event_services.start_action_event(user, incident, status, json.dumps(evt_description))
+    event_services.update_workflow_event(user, incident, workflow)
 
 
 def incident_complete_external_action(user: User, incident: Incident, comment: str, start_event: Event):
+    initiated_workflow = start_event.refered_model
+
+    # complete workflow
+    workflow = CompleteActionWorkflow(
+        incident=incident,
+        actioned_user=user,
+        comment=comment,
+        initiated_workflow=initiated_workflow
+    )
+    workflow.save()
+
+    # complete previous workflow
+    initiated_workflow.is_action_completed = True
+
+    # TODO: find why django do this
+    if initiated_workflow.is_internal_user == None:
+        initiated_workflow.is_internal_user = False
+
+    initiated_workflow.save()
+    
     # new event
     status = IncidentStatus(
         current_status=StatusType.ACTION_TAKEN,
@@ -422,8 +448,7 @@ def incident_complete_external_action(user: User, incident: Incident, comment: s
     )
     status.save()
 
-    event_services.complete_action_event(
-        user, incident, status, comment, start_event)
+    event_services.update_linked_workflow_event(user, incident, workflow, start_event)
 
 
 def incident_request_advice(user: User, incident: Incident, assignee: User, comment: str):

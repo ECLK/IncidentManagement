@@ -3,7 +3,14 @@ from .models import Event
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
-from ..incidents.models import IncidentComment, IncidentStatus, IncidentSeverity, VerifyWorkflow
+from ..incidents.models import (
+    IncidentComment, 
+    IncidentStatus, 
+    IncidentSeverity, 
+    VerifyWorkflow,
+    EscalateExternalWorkflow,
+    CompleteActionWorkflow
+)
 from django.contrib.auth.models import User
 
 from ..incidents.serializers import IncidentSerializer, IncidentCommentSerializer
@@ -60,6 +67,35 @@ class GenericDataRelatedField(serializers.RelatedField):
                     "data": {
                         "comment": value.comment,
                         "hasProof": value.has_proof
+                    }
+                }
+            }
+        elif isinstance(value, EscalateExternalWorkflow):
+            entity = {}
+            if(value.is_internal_user):
+                entity["name"] = value.escalated_user.get_full_name()
+                if len(value.escalated_user.groups.all()) > 0:
+                    entity["type"] = value.escalated_user.groups.all()[0].name
+            else:
+                entity["name"] = value.escalated_user_other
+                entity["type"] = value.escalated_entity_other
+
+            return {
+                "workflow": {
+                    "type": "Escalate External",
+                    "data": {
+                        "comment": value.comment,
+                        "entity": entity,
+                        "isCompleted": value.is_action_completed
+                    }
+                }
+            }
+        elif isinstance(value, CompleteActionWorkflow):
+            return {
+                "workflow": {
+                    "type": "Complete Action",
+                    "data": {
+                        "comment": value.comment
                     }
                 }
             }
