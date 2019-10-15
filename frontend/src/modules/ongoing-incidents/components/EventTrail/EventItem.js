@@ -113,6 +113,15 @@ function getActionText(event){
             return ` escallated to ${JSON.parse(event.description).entity.type}`
         case "ACTION_COMPLETED":
             return ` marked as action completed`
+        case "WORKFLOW_ACTIONED":
+                if(!event.data){
+                    return "unknown workflow action";
+                }
+
+                switch(event.data.workflow.type){
+                    case "Verify":
+                        return "verified the incident";
+                }
         default:
             return "unknown action"
     }
@@ -127,7 +136,8 @@ function hasEventBody(event){
         "ACTION_COMPLETED",
         "ATTRIBUTE_CHANGED",
         "MEDIA_ATTACHED",
-        "ENTITY_ASSIGNED"
+        "ENTITY_ASSIGNED",
+        "WORKFLOW_ACTIONED"
     ];
 
     return actionsWithBody.indexOf(event.action) !== -1;
@@ -193,6 +203,17 @@ function getSecondaryItem(event){
         return (
             "No Comment"
         )
+    }else if(event.action === "WORKFLOW_ACTIONED"){
+        const workflowType = event.data.workflow.type;
+        const workflowData = event.data.workflow.data;
+
+        if(workflowType === "Verify"){
+            return (
+                <div><b>Has Proof?</b> <br /> 
+                    {workflowData.hasProof ? "Yes" : "No"}
+                </div>
+            )
+        }
     }
     return (<></>);
 }
@@ -223,7 +244,7 @@ function getDateDiff(event){
 
 
 const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
-
+    console.log(event);
     const dispatch = useDispatch();
     const userData = useSelector((state)=>(state.user));
 

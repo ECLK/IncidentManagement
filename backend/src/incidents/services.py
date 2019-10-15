@@ -7,6 +7,7 @@ from .models import (
     Reporter,
     IncidentComment,
     IncidentPoliceReport,
+    VerifyWorkflow
 )
 from django.contrib.auth.models import User, Group
 
@@ -470,6 +471,15 @@ def incident_verify(user: User, incident: Incident, comment: str, proof: bool):
     if incident.assignee != user:
         raise WorkflowException("Only assignee can verify the incident")
 
+    # create workflow action
+    workflow = VerifyWorkflow(
+        incident=incident,
+        actioned_user=user,
+        comment=comment,
+        has_proof=proof
+    )
+    workflow.save()
+
     status = IncidentStatus(
         current_status=StatusType.VERIFIED,
         previous_status=incident.current_status,
@@ -482,7 +492,7 @@ def incident_verify(user: User, incident: Incident, comment: str, proof: bool):
         incident.proof = True
         incident.save()
 
-    event_services.update_status_with_description_event(user, incident, status, True, comment)
+    event_services.update_workflow_event(user, incident, workflow)
 
 def incident_invalidate(user: User, incident: Incident, comment: str):
     if incident.current_status != StatusType.NEW.name:

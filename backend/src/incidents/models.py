@@ -305,6 +305,24 @@ class IncidentPoliceReport(models.Model):
     class Meta:
         ordering = ("created_date",)
 
+class IncidentWorkflow(models.Model):
+    incident = models.ForeignKey(Incident, 
+                    on_delete=models.DO_NOTHING, 
+                    related_name="%(app_label)s_%(class)s_related",
+                    related_query_name="%(app_label)s_%(class)ss")
+    actioned_user = models.ForeignKey(User, 
+                    on_delete=models.DO_NOTHING, 
+                    related_name="%(app_label)s_%(class)s_related",
+                    related_query_name="%(app_label)s_%(class)ss")
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+class VerifyWorkflow(IncidentWorkflow):
+    comment = models.TextField()
+    has_proof = models.BooleanField(default=False)
+
 class IncidentFilter(filters.FilterSet):
     current_status = filters.ChoiceFilter(choices=StatusType, method='my_custom_filter')
     
@@ -314,4 +332,8 @@ class IncidentFilter(filters.FilterSet):
     
     def my_custom_filter(self, queryset, name, value):
         print(queryset, name, value)
+
+
+
+
 

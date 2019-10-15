@@ -3,7 +3,7 @@ from .models import Event
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
-from ..incidents.models import IncidentComment, IncidentStatus, IncidentSeverity
+from ..incidents.models import IncidentComment, IncidentStatus, IncidentSeverity, VerifyWorkflow
 from django.contrib.auth.models import User
 
 from ..incidents.serializers import IncidentSerializer, IncidentCommentSerializer
@@ -50,6 +50,16 @@ class GenericDataRelatedField(serializers.RelatedField):
                         "id": value.id,
                         "name": value.original_name,
                         "extension": value.extension
+                    }
+                }
+            }
+        elif isinstance(value, VerifyWorkflow):
+            return {
+                "workflow": {
+                    "type": "Verify",
+                    "data": {
+                        "comment": value.comment,
+                        "hasProof": value.has_proof
                     }
                 }
             }
