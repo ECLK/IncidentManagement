@@ -151,6 +151,7 @@ STATIC_URL = '/static/'
 
 
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_RENDERER_CLASSES': (
         'src.renderer.CustomJSONRenderer',
         'rest_framework.renderers.JSONRenderer',
