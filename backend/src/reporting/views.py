@@ -99,6 +99,7 @@ class ReportingView(APIView):
         if table_html is None:
             return Response("Report not found", status=status.HTTP_400_BAD_REQUEST)
 
+        # Prepare report header
         sql3 = incident_type_query(complain, inquiry)
         sql = """SELECT 
                      Count(id) as TotalCount
