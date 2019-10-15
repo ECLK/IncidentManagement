@@ -305,6 +305,79 @@ class IncidentPoliceReport(models.Model):
     class Meta:
         ordering = ("created_date",)
 
+class IncidentWorkflow(models.Model):
+    incident = models.ForeignKey(Incident, 
+                    on_delete=models.DO_NOTHING, 
+                    related_name="%(app_label)s_%(class)s_related",
+                    related_query_name="%(app_label)s_%(class)ss")
+    actioned_user = models.ForeignKey(User, 
+                    on_delete=models.DO_NOTHING, 
+                    related_name="%(app_label)s_%(class)s_related",
+                    related_query_name="%(app_label)s_%(class)ss")
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+class VerifyWorkflow(IncidentWorkflow):
+    comment = models.TextField()
+    has_proof = models.BooleanField(default=False)
+
+class EscalateExternalWorkflow(IncidentWorkflow):
+    is_internal_user = models.BooleanField(default=False, null=False)
+    comment = models.TextField()
+    escalated_user = models.ForeignKey(User, 
+                    on_delete=models.DO_NOTHING, 
+                    null=True, 
+                    blank=True,
+                    related_name="escalation_related",
+                    related_query_name="escalated_users")
+    escalated_user_other = models.CharField(max_length=200, null=True, blank=True)
+    escalated_entity_other = models.CharField(max_length=200, null=True, blank=True)
+    is_action_completed = models.BooleanField(default=False)
+
+class CompleteActionWorkflow(IncidentWorkflow):
+    initiated_workflow = models.ForeignKey(EscalateExternalWorkflow, on_delete=models.DO_NOTHING)
+    comment = models.TextField()
+
+class RequestAdviceWorkflow(IncidentWorkflow):
+    assigned_user = models.ForeignKey(User, 
+                    on_delete=models.DO_NOTHING, 
+                    related_name="advice_request_related",
+                    related_query_name="advice_requested_users")
+    comment = models.TextField()
+    is_advice_provided = models.BooleanField(default=False)
+
+class ProvideAdviceWorkflow(IncidentWorkflow):
+    initiated_workflow = models.ForeignKey(RequestAdviceWorkflow, on_delete=models.DO_NOTHING)
+    comment = models.TextField()
+
+class AssignUserWorkflow(IncidentWorkflow):
+    assignee = models.ForeignKey(User, 
+                    on_delete=models.DO_NOTHING, 
+                    related_name="assignee_related",
+                    related_query_name="assigned_users")
+
+class EscalateWorkflow(IncidentWorkflow):
+    assignee = models.ForeignKey(User, 
+                    on_delete=models.DO_NOTHING, 
+                    related_name="escalation_assignee_related",
+                    related_query_name="escalation_assigned_users")
+    comment = models.TextField()
+    response_time = models.CharField(max_length=200, null=True, blank=True)
+
+class CloseWorkflow(IncidentWorkflow):
+    assignees = models.TextField()
+    entities = models.TextField()
+    departments = models.TextField()
+    individuals = models.TextField()
+    comment = models.TextField()
+
+class InvalidateWorkflow(IncidentWorkflow):
+    comment = models.TextField()
+    response_time = models.CharField(max_length=200, null=True, blank=True)
+
+
 class IncidentFilter(filters.FilterSet):
     current_status = filters.ChoiceFilter(choices=StatusType, method='my_custom_filter')
     
@@ -314,4 +387,8 @@ class IncidentFilter(filters.FilterSet):
     
     def my_custom_filter(self, queryset, name, value):
         print(queryset, name, value)
+
+
+
+
 

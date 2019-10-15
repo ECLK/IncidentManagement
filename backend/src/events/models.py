@@ -19,6 +19,7 @@ class EventAction(enum.Enum):
     ACTION_STARTED = "Started Action"
     ACTION_COMPLETED = "Ended Action"
     MEDIA_ATTACHED = "Media Attached"
+    WORKFLOW_ACTIONED = "Workflow Actioned"
 
     def __str__(self):
         return self.name

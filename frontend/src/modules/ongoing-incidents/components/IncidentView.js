@@ -212,7 +212,8 @@ class NavTabs extends Component {
                                     events={this.props.events}
                                     resolveEvent={this.onResolveEvent}
                                 />
-                                {activeIncident.currentStatus !== 'CLOSED'  && 
+                                {activeIncident.currentStatus !== 'CLOSED'  &&
+                                    activeIncident.currentStatus !== 'INVALIDATED'  && 
                                     <div className={classes.textEditorWrapper}>
                                         <Editor/>
                                         <DropZone/>
@@ -224,7 +225,7 @@ class NavTabs extends Component {
                     <Grid item xs={3}>
                         <div className={classes.sidePane}>
                             <div className={classes.editButtonWrapper}>
-                                {activeIncident.currentStatus !== 'CLOSED' && 
+                                {activeIncident.currentStatus !== 'CLOSED' && activeIncident.currentStatus !== 'INVALIDATED' && 
                                     <>
                                         {userCan(activeUser, activeIncident, USER_ACTIONS.RUN_WORKFLOW) &&
                                             <>
@@ -250,6 +251,11 @@ class NavTabs extends Component {
                                 {activeIncident.currentStatus === 'CLOSED' && 
                                     <ButtonBase disabled variant="outlined"  size="large" color="primary" className={classes.verifiedButton} >
                                         CLOSED
+                                    </ButtonBase>
+                                }
+                                {activeIncident.currentStatus === 'INVALIDATED' && 
+                                    <ButtonBase disabled variant="outlined"  size="large" color="primary"  >
+                                        INVALIDATED
                                     </ButtonBase>
                                 }
                             </div>
