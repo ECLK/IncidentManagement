@@ -11,7 +11,11 @@ from .models import (
     EscalateExternalWorkflow,
     CompleteActionWorkflow,
     RequestAdviceWorkflow,
-    ProvideAdviceWorkflow
+    ProvideAdviceWorkflow,
+    AssignUserWorkflow,
+    EscalateWorkflow,
+    CloseWorkflow,
+    InvalidateWorkflow
 )
 from django.contrib.auth.models import User, Group
 
@@ -293,7 +297,7 @@ def incident_auto_assign(incident: Incident, user_group: Group):
             raise WorkflowException("Error in finding auto assignment")
 
 
-def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP", comment=None):
+def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP", comment=None, response_time=None):
     if incident.assignee != user:
         raise WorkflowException("Only current incident assignee can escalate the incident")
     
@@ -322,17 +326,36 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP", 
         raise WorkflowException("Can't escalate %s from here" % escalate_dir)
 
     assignee = incident_auto_assign(incident, next_group)
-    event_services.create_assignment_event(user, incident, assignee, comment)
+
+    # workflow
+    workflow = EscalateWorkflow(
+        incident=incident,
+        actioned_user=user,
+        comment=comment,
+        response_time=response_time,
+        assignee=assignee
+    )
+    workflow.save()
+
+    event_services.update_workflow_event(user, incident, workflow)
 
 
 def incident_change_assignee(user: User, incident: Incident, assignee: User):
+    # workflow
+    workflow = AssignUserWorkflow(
+        incident=incident,
+        actioned_user=user,
+        assignee=assignee
+    )
+    workflow.save()
+
     incident.assignee = assignee
     incident.save()
 
-    event_services.create_assignment_event(user, incident, assignee)
+    event_services.update_workflow_event(user, incident, workflow)
 
 
-def incident_close(user: User, incident: Incident, comment: str):
+def incident_close(user: User, incident: Incident, details: str):
     # find number of outcomes for the incident
     outcomes = IncidentComment.objects.filter(
         incident=incident, is_outcome=True).count()
@@ -354,6 +377,18 @@ def incident_close(user: User, incident: Incident, comment: str):
         incident=incident
     )
 
+    # workflow
+    workflow = CloseWorkflow(
+        incident=incident,
+        actioned_user=user,
+        assignees=details["assignee"],
+        entities=details["entities"],
+        departments=details["departments"],
+        individuals=details["individuals"],
+        comment=details["remark"]
+    )
+    workflow.save()
+
     if user.has_perm("incidents.can_request_status_change"):
         # if user can't directly change the status
         # only a pending change is added
@@ -363,8 +398,8 @@ def incident_close(user: User, incident: Incident, comment: str):
         incident.hasPendingStatusChange = "T"
         incident.save()
 
-        event_services.update_status_with_description_event(
-            user, incident, status, False, comment)
+        # event_services.update_status_with_description_event(
+        #     user, incident, status, False, comment)
 
     elif user.has_perm("incidents.can_change_status"):
         status.approved = True
@@ -373,8 +408,10 @@ def incident_close(user: User, incident: Incident, comment: str):
         incident.hasPendingStatusChange = "F"
         incident.save()
 
-        event_services.update_status_with_description_event(
-            user, incident, status, True, comment)
+        # event_services.update_status_with_description_event(
+        #     user, incident, status, True, comment)
+
+    event_services.update_workflow_event(user, incident, workflow)
 
 
 def incident_escalate_external_action(user: User, incident: Incident, entity: object, comment: str):
@@ -547,10 +584,15 @@ def incident_verify(user: User, incident: Incident, comment: str, proof: bool):
 
 def incident_invalidate(user: User, incident: Incident, comment: str):
     if incident.current_status != StatusType.NEW.name:
-        raise WorkflowException("Only NEW incidents can be verified")
+        raise WorkflowException("Only NEW incidents can be invalidated")
 
-    if incident.assignee != user:
-        raise WorkflowException("Only assignee can verify the incident")
+    # workflow
+    workflow = InvalidateWorkflow(
+        incident=incident,
+        actioned_user=user,
+        comment=comment
+    )
+    workflow.save()
 
     status = IncidentStatus(
         previous_status=incident.current_status,
@@ -560,7 +602,7 @@ def incident_invalidate(user: User, incident: Incident, comment: str):
     )
     status.save()
 
-    event_services.update_status_with_description_event(user, incident, status, True, comment)
+    event_services.update_workflow_event(user, incident, workflow)
 
 def get_police_report_by_incident(incident: Incident):
     try:

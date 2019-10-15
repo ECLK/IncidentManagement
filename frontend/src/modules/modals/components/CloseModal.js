@@ -17,14 +17,7 @@ import { TextField } from '@material-ui/core';
 
 
 const onSubmitClick = (dispatch, incidentId, details) => {
-    // if(comment === "" || assignee === ""){
-    //     // show error because mandatory
-    //     return;
-    // }
-
-    dispatch(fetchUpdateWorkflow(incidentId, "close", {
-        comment: details
-    } ));
+    dispatch(fetchUpdateWorkflow(incidentId, "close", { details } ));
     dispatch(hideModal());
 }
 

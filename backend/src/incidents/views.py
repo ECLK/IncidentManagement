@@ -308,8 +308,8 @@ class IncidentWorkflowView(APIView):
             if not request.user.has_perm("incidents.can_change_status"):
                 return Response("User can't close incident", status=status.HTTP_401_UNAUTHORIZED)
 
-            comment = json.dumps(request.data['comment'])
-            incident_close(request.user, incident, comment)
+            details = request.data['details']
+            incident_close(request.user, incident, details)
 
         elif workflow == "request-action":
             entity = request.data['entity']
@@ -342,7 +342,7 @@ class IncidentWorkflowView(APIView):
             incident_escalate(request.user, incident)
 
         elif workflow == "invalidate":
-            comment = json.dumps(request.data['comment'])
+            comment = request.data['comment']
             incident_invalidate(request.user, incident, comment)
 
         elif workflow == "assign":
@@ -355,10 +355,9 @@ class IncidentWorkflowView(APIView):
             incident_change_assignee(request.user, incident, assignee)
 
         elif workflow == "escalate":
-            # comment is actually an object
-            # comment: { comment: "text", responseTime: 1 }
-            comment = json.dumps(request.data['comment'])
-            incident_escalate(request.user, incident, comment=comment)
+            comment = request.data['comment']
+            response_time = request.data['responseTime']
+            incident_escalate(request.user, incident, comment=comment, response_time=response_time)
 
         else:
             return Response("Invalid workflow", status=status.HTTP_400_BAD_REQUEST)

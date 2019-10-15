@@ -129,10 +129,22 @@ function getActionText(event){
                             return "provided action";
 
                     case "Request Advice":
-                            return "requested advice"
+                            return "requested advice";
 
                     case "Provide Advice":
-                            return "provided advice"
+                            return "provided advice";
+
+                    case "Assign":
+                            return `assigned ${event.data.workflow.data.assignee} to the incident`;
+
+                    case "Escalate":
+                        return `escalated the incident to ${event.data.workflow.data.assignee}`
+
+                    case "Close":
+                        return `closed the incident`
+
+                    case "Invalidate":
+                        return `invalidated the incident`
                 }
         default:
             return "unknown action"
@@ -246,6 +258,35 @@ function getSecondaryItem(event){
                 </div>
             )
         }else if(workflowType === "Provide Advice"){
+            return (
+                <div>
+                    {workflowData.comment}
+                </div>
+            )
+        }else if(workflowType === "Assign"){
+            return (
+                <div>
+                    N/A
+                </div>
+            )
+        }else if(workflowType === "Escalate"){
+            return (
+                <div>
+                    <div><b>Comment:</b><br/> {workflowData.comment}</div>
+                    <div><b>Response Time:</b><br/> {workflowData.responseTime} hours</div>
+                </div>
+            )
+        }else if(workflowType === "Close"){
+            return (
+                <div>
+                    <div><b>Assignee(s)/ contact point(s):</b><br/> {workflowData.assignees}</div><br/>
+                    <div><b>Name of external entities /internal entities:</b><br /> {workflowData.entities}</div><br/>
+                    <div><b>Department(s), if any:</b><br /> {workflowData.departments}</div><br/>
+                    <div><b>Name of individual(s), if any:</b><br /> {workflowData.individuals}</div><br/>
+                    <div><b>Additional remarks:</b><br /> {workflowData.remark}</div>
+                </div>
+            )
+        }else if(workflowType === "Invalidate"){
             return (
                 <div>
                     {workflowData.comment}

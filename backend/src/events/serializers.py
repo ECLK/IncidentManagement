@@ -11,7 +11,11 @@ from ..incidents.models import (
     EscalateExternalWorkflow,
     CompleteActionWorkflow,
     RequestAdviceWorkflow,
-    ProvideAdviceWorkflow
+    ProvideAdviceWorkflow,
+    AssignUserWorkflow,
+    EscalateWorkflow,
+    CloseWorkflow,
+    InvalidateWorkflow
 )
 from django.contrib.auth.models import User
 
@@ -116,6 +120,48 @@ class GenericDataRelatedField(serializers.RelatedField):
             return {
                 "workflow": {
                     "type": "Provide Advice",
+                    "data": {
+                        "comment": value.comment
+                    }
+                }
+            }
+        elif isinstance(value, AssignUserWorkflow):
+            return {
+                "workflow": {
+                    "type": "Assign",
+                    "data": {
+                        "assignee": value.assignee.get_full_name()
+                    }
+                }
+            }
+        elif isinstance(value, EscalateWorkflow):
+            return {
+                "workflow": {
+                    "type": "Escalate",
+                    "data": {
+                        "assignee": value.assignee.get_full_name(),
+                        "comment": value.comment,
+                        "responseTime": value.response_time
+                    }
+                }
+            }
+        elif isinstance(value, CloseWorkflow):
+            return {
+                "workflow": {
+                    "type": "Close",
+                    "data": {
+                        "assignees": value.assignees,
+                        "entities": value.entities,
+                        "departments": value.departments,
+                        "individuals": value.individuals,
+                        "remark": value.comment,
+                    }
+                }
+            }
+        elif isinstance(value, InvalidateWorkflow):
+            return {
+                "workflow": {
+                    "type": "Invalidate",
                     "data": {
                         "comment": value.comment
                     }
