@@ -7,5 +7,3 @@ services:
       context: .
     ports:
       - '80:80'
-    environment:
-      - API_BASE=http://localhost:5000
