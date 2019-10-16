@@ -25,7 +25,9 @@ const IncidentDescription = props => {
     handleElectionChange,
     description,
     elections,
-    selectedElection
+    selectedElection,
+    disableDescription,
+    formErrors
   } = props;
   let intl = useIntl();
 
@@ -36,7 +38,7 @@ const IncidentDescription = props => {
           <TextField
             autoFocus
             id="incidentDescription"
-            label="Description"
+            label="Description*"
             multiline
             fullWidth
             rowsMax="4"
@@ -46,6 +48,9 @@ const IncidentDescription = props => {
             }}
             className={classes.textField}
             margin="normal"
+            disabled={disableDescription}
+            helperText = {formErrors.incidentDescription || "Cannot be changed after Submitting"}
+            error={formErrors.incidentDescription?true:false}
           />
         </Grid>
 
@@ -67,7 +72,7 @@ const IncidentDescription = props => {
                 className: classes.menu
               }
             }}
-            helperText="Select the relevant election"
+            helperText="Select corresponding election"
             margin="normal"
           >
             {elections.map(option => (

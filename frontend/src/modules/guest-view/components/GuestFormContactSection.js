@@ -49,12 +49,27 @@ const IncidentContact = (props) => {
                 <Grid item xs={8}>
                     <TextField
                         id="incidentDescription"
-                        label="Phone number"
+                        label="Landline"
                         multiline
                         fullWidth
                         rowsMax="4"
                         value={contactDetials.phone}
                         onChange={(e) => { handleContactDetailsChange({ ...contactDetials, phone:e.target.value}) }}
+                        className={classes.textField}
+                        margin="normal"
+                    />
+                </Grid>
+                <Grid item xs={4}></Grid>
+
+                <Grid item xs={8}>
+                    <TextField
+                        id="incidentDescription"
+                        label="Mobile"
+                        multiline
+                        fullWidth
+                        rowsMax="4"
+                        value={contactDetials.mobile}
+                        onChange={(e) => { handleContactDetailsChange({ ...contactDetials, mobile:e.target.value}) }}
                         className={classes.textField}
                         margin="normal"
                     />
