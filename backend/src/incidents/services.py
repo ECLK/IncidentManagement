@@ -1,3 +1,4 @@
+
 from .models import (
     Incident,
     IncidentStatus,
@@ -123,7 +124,7 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
     # auto escalate it
     user_group = get_user_group(user)
     if user_group.name == "guest":
-        incident_escalate(user, incident)
+        incident_escalate(user, incident, comment="Incident reported from public form")
 
         # updating the created_by as "GUEST" for public user
         if not user.is_staff:
@@ -137,7 +138,8 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
         incident.linked_individuals.add(user)
         incident.save()
 
-        incident_escalate(guest_user, incident)
+        comment = "Incident reported from "+get_user_orgnaization(user).name
+        incident_escalate(guest_user, incident, comment=comment)
 
     status = IncidentStatus(current_status=StatusType.NEW,
                             incident=incident, approved=True)
@@ -321,7 +323,9 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP", 
     if escalate_dir == "DOWN":
         next_rank = current_rank + 1
 
-    next_group = Group.objects.get(rank=next_rank)
+    organization = get_user_orgnaization(user)
+    next_group = Group.objects.get(rank=next_rank, organization_id=organization)
+
     if next_group is None:
         raise WorkflowException("Can't escalate %s from here" % escalate_dir)
 
