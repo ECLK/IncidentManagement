@@ -30,6 +30,7 @@ services:
       - DATABASE_PORT=3306
       - DATABASE_USER=root
       - DATABASE_PWD=toor
+      - DATABASE_NAME=lsf
     volumes:
       - './src:/app/src'
       - './seeddata:/app/seeddata'

@@ -135,6 +135,23 @@ def update_status_with_description_event(initiator, incident, status, is_approve
                         description=description                     
                     )
 
+def update_workflow_event(initiator, incident, workflow):
+    create_event(
+                    EventAction.WORKFLOW_ACTIONED,
+                    initiator, 
+                    incident,
+                    refered_model=workflow           
+                )
+
+def update_linked_workflow_event(initiator, incident, workflow, start_event):
+    create_event(
+                    EventAction.WORKFLOW_ACTIONED,
+                    initiator, 
+                    incident,
+                    refered_model=workflow,
+                    linked_event=start_event           
+                )
+
 def start_action_event(initiator, incident, status, description):
     create_event(
         EventAction.ACTION_STARTED,
