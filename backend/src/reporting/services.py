@@ -7,19 +7,18 @@ import numpy as np
 from ..common.models import Category, Channel
 from ..incidents.models import Incident
 from .functions import get_detailed_report, get_general_report, encode_column_names, get_subcategory_report, \
-    incident_type_query, incident_list_query, date_list_query
+    incident_type_query, incident_list_query, date_list_query, encode_value
 
 
 def get_category_summary(start_date, end_date, detailed_report, complain, inquiry):
     sql3 = incident_type_query(complain, inquiry)
     incident_list = incident_list_query(start_date, end_date, sql3)
     if detailed_report:
-        columns = set(Category.objects.all().values_list("top_category", flat=True))
-        columns = encode_column_names(columns)
+        columns = list(Category.objects.all().values_list("top_category", flat=True))
         columns.insert(0, "Unassigned")
         sql2 = ", ".join(
             map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (
-                'top_category', c, c), columns))
+                'top_category', c, encode_value(c)), columns))
         sql1 = """
                         SELECT district,
                                    %s
@@ -29,6 +28,7 @@ def get_category_summary(start_date, end_date, detailed_report, complain, inquir
                            LEFT JOIN common_category ON category=common_category.id
                            %s
                         """ % (sql2, incident_list)
+        columns = encode_column_names(columns)
         return get_detailed_report(sql1, columns)
     return get_general_report("top_category", "Category", "common_category", "category", "id", start_date, end_date,
                               sql3)
@@ -38,12 +38,13 @@ def get_subcategory_summary(start_date, end_date, detailed_report, complain, inq
     sql3 = incident_type_query(complain, inquiry)
     incident_list = incident_list_query(start_date, end_date, sql3)
     if detailed_report:
-        columns = set(Category.objects.all().values_list("sub_category", flat=True))
-        columns = encode_column_names(columns)
+        print(type(Category.objects.all().values_list("top_category", flat=True)))
+        print(Category.objects.order_by().values("top_category").distinct())
+        columns = list(Category.objects.filter(top_category__exact="Violence").values_list("sub_category", flat=True))
         columns.insert(0, "Unassigned")
         sql = ", ".join(
             map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (
-                'sub_category', c, c), columns))
+                'sub_category', c, encode_value(c)), columns))
         sql1 = """
                                 SELECT district,
                                            %s
@@ -51,9 +52,10 @@ def get_subcategory_summary(start_date, end_date, detailed_report, complain, inq
                                           1       AS Total
                                    FROM   incidents_incident
                                    LEFT JOIN common_category ON category=common_category.id
-                                   %s
+                                   %s AND top_category LIKE 'Violence'
                                 """ % (sql, incident_list)
-        return get_detailed_report(sql1, columns)
+        columns = encode_column_names(columns)
+        return "Category: Violence" + get_detailed_report(sql1, columns)
     return get_subcategory_report("sub_category", "Subcategory", "common_category", "category", "id", start_date,
                                   end_date, sql3)
 
@@ -62,12 +64,11 @@ def get_mode_summary(start_date, end_date, detailed_report, complain, inquiry):
     sql3 = incident_type_query(complain, inquiry)
     incident_list = incident_list_query(start_date, end_date, sql3)
     if detailed_report:
-        columns = set(Channel.objects.all().values_list("name", flat=True))
-        columns = encode_column_names(columns)
+        columns = list(Channel.objects.all().values_list("name", flat=True))
         columns.insert(0, "Unassigned")
         sql2 = ", ".join(
             map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (
-                'name', c, c), columns))
+                'name', c, encode_value(c)), columns))
         sql1 = """
                 SELECT district,
                            %s
@@ -77,6 +78,7 @@ def get_mode_summary(start_date, end_date, detailed_report, complain, inquiry):
                    LEFT JOIN common_channel ON infoChannel=common_channel.id
                    %s
                 """ % (sql2, incident_list)
+        columns = encode_column_names(columns)
         return get_detailed_report(sql1, columns)
     return get_general_report("name", "Mode", "common_channel", "infoChannel", "id", start_date, end_date, sql3)
 

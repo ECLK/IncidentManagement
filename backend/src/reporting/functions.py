@@ -155,13 +155,18 @@ def get_detailed_report(sql1, columns):
     return dataframe.to_html(index=False)
 
 
+def encode_value(text):
+    text = text.replace(' ', '_') \
+        .replace('/', '__') \
+        .replace('.', '___') \
+        .replace(',', '____') \
+        .replace('(', '$') \
+        .replace(')', '$$')
+    return text
+
+
 def encode_column_names(columns):
-    columns = [name.replace(' ', '_') for name in columns]
-    columns = [name.replace('/', '__') for name in columns]
-    columns = [name.replace('.', '___') for name in columns]
-    columns = [name.replace(',', '____') for name in columns]
-    columns = [name.replace('(', '$') for name in columns]
-    columns = [name.replace(')', '$$') for name in columns]
+    columns = [encode_value(name) for name in columns]
     return columns
 
 
