@@ -339,7 +339,7 @@ class IncidentWorkflowView(APIView):
             comment = request.data['comment']
             proof = request.data['proof']
             incident_verify(request.user, incident, comment, proof)
-            incident_escalate(request.user, incident)
+            incident_escalate(request.user, incident, comment=comment)
 
         elif workflow == "invalidate":
             comment = request.data['comment']
@@ -398,7 +398,7 @@ class IncidentPublicUserView(APIView):
 
         if serializer.is_valid():
             incident = serializer.save()
-            create_incident_postscript(incident, None)            
+            create_incident_postscript(incident, None)
             return_data = serializer.data
 
             return Response(return_data, status=status.HTTP_201_CREATED)
