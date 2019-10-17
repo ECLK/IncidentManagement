@@ -108,7 +108,9 @@ const EventActions = (props) => {
                     </Avatar>
                     <ListItemText primary="Assigned to" secondary={activeIncident.assignees ? activeIncident.assignees[0].displayname : ""} />
                     
-                    {activeIncident.currentStatus !== 'CLOSED' && userCan(currentUser, activeIncident, USER_ACTIONS.CHANGE_ASSIGNEE) &&
+                    {activeIncident.currentStatus !== 'CLOSED' &&
+                        activeIncident.currentStatus !== 'INVALIDATED' && 
+                        userCan(currentUser, activeIncident, USER_ACTIONS.CHANGE_ASSIGNEE) &&
                         <ListItemSecondaryAction>
                             <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('CHANGE_ASSIGNEE_MODAL', { activeIncident, users })) }}>
                                 <EditIcon />
@@ -165,6 +167,7 @@ const EventActions = (props) => {
             <Divider variant="middle" className={classes.divider} />
 
             {activeIncident.currentStatus !== 'CLOSED'  && 
+            activeIncident.currentStatus !== 'INVALIDATED'  && 
               userCan(currentUser, activeIncident, USER_ACTIONS.RUN_WORKFLOW) && 
                 <>
                 {userCan(currentUser, activeIncident, USER_ACTIONS.ESCALATE_INCIDENT) && 
@@ -188,10 +191,17 @@ const EventActions = (props) => {
                 </Button> */}
 
                 {userCan(currentUser, activeIncident, USER_ACTIONS.CLOSE_INCIDENT) &&
+                    <>
                     <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('CLOSE_MODAL', { activeIncident })) }}>
                         <WhereToVoteIcon className={classes.actionButtonIcon} />
                         Close Incident
                     </Button>
+
+                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('INVALIDATE_MODAL', { activeIncident })) }}>
+                        <WhereToVoteIcon className={classes.actionButtonIcon} />
+                        Invalidate Incident
+                    </Button>
+                    </>
                 } 
                 </>
             }

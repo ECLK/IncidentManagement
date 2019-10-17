@@ -6,6 +6,7 @@ COPY package.json /app/package.json
 RUN npm install --silent
 RUN npm install react-scripts@3.0.1 -g --silent
 COPY . /app
+# commenting next line will set BASE_URL = http://localhost:8000
 ENV REACT_APP_API_BASE_URL=https://api.incidents.ecdev.opensource.lk
 RUN npm run build
 

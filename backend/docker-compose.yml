@@ -30,9 +30,10 @@ services:
       - DATABASE_PORT=3306
       - DATABASE_USER=root
       - DATABASE_PWD=toor
+      - DATABASE_NAME=lsf
     volumes:
       - './src:/app/src'
-      - './seed_data.json:/app/seed_data.json'
+      - './seeddata:/app/seeddata'
       - './media:/app/media'
     # command: gunicorn --bind=0.0.0.0:8000 src.wsgi:application
     command: python manage.py runserver 0.0.0.0:8000

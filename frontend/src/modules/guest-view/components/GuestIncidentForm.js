@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { withRouter } from "react-router";
 
 import { withStyles } from '@material-ui/core/styles';
@@ -24,6 +24,7 @@ import ContactSection from './GuestFormContactSection'
 import {
     fetchElections,
     fetchCategories,
+    fetchChannels
 } from '../../shared/state/Shared.actions';
 
 import {
@@ -34,7 +35,7 @@ import {
 } from '../../incident/state/incidentActions'
 
 import {
-    moveStepper
+    moveStepper,
 } from '../state/guestViewActions'
 
 const styles = theme => ({
@@ -48,6 +49,7 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
     },
     actionsContainer: {
+        marginTop: theme.spacing.unit * 2,
         marginBottom: theme.spacing.unit * 2,
     },
     resetContainer: {
@@ -58,36 +60,59 @@ const styles = theme => ({
 
 const VerticalLinearStepper = (props) => {
 
-
-    const [skippedSteps, setSkippedSets] = useState(new Set());
-    const [incidentDescription, setIncidentDescription] = useState(null);
-    const [incidentElection, setIncidentElection] = useState('');
-    const [incidentCatogory, setIncidentCatogory] = useState('');
-    const [incidentFiles, setIncidentFiles] = useState(null);
-    const [incidentDateTime, setIncidentDateTime] = useState({
-        date: null,
-        time: null
-    });
-    const [incidentLocation, setIncidentLocation] = useState('');
-    const [incidentContact, setIncidentContact] = useState({
-        name: '',
-        phone: '',
-        email: ''
-    });
+    useEffect(() => {
+        dispatch(fetchElections());
+        dispatch(fetchCategories());
+        dispatch(fetchChannels());
+    }, []);
 
     const dispatch = useDispatch();
-    const { elections, categories } = useSelector((state) => (state.sharedReducer));
+    const { elections, categories, channels } = useSelector((state) => (state.sharedReducer));
+    let webInfoChannelId = null;
+    if(channels.length>0){
+        webInfoChannelId =  channels.reduce((previousValue, currValue)=>{
+            previousValue=null;
+            if(currValue.name==="Web"){
+                previousValue=currValue.id;
+            }
+            return previousValue;
+        })
+    }
     const { activeIncident, activeIncidentReporter } = useSelector((state) => (state.incident));
-    const { activeStep, isFinished } = useSelector((state) => (state.guestView));
+    const { activeStep } = useSelector((state) => (state.guestView));
 
     const incidentId = activeIncident && activeIncident.data ? activeIncident.data.id : null
     let incidentData = incidentId ? JSON.parse(JSON.stringify(activeIncident.data)): {};
     let incidentReporterData = incidentId ? JSON.parse(JSON.stringify(activeIncidentReporter.data)) : null;
 
-    useEffect(() => {
-        dispatch(fetchElections());
-        dispatch(fetchCategories());
-    }, []);
+    const [skippedSteps, setSkippedSets] = useState(new Set());
+    const [incidentDescription, setIncidentDescription] = useState(incidentId? incidentData.description:null);
+    const [incidentElection, setIncidentElection] = useState(incidentId? incidentData.election:"");
+    const [incidentCatogory, setIncidentCatogory] = useState(incidentId? incidentData.category:"");
+    const [incidentFiles, setIncidentFiles] = useState(null);
+    const [incidentDateTime, setIncidentDateTime] = useState({
+        date: incidentId && incidentData.occured_date? moment(incidentData.occured_date).format('YYYY-MM-DD') :null,
+        time: incidentId && incidentData.occured_date? moment(incidentData.occured_date).format('HH:mm') :null,
+    });
+    const [incidentLocation, setIncidentLocation] = useState(incidentId? incidentData.location :'');
+    const [incidentContact, setIncidentContact] = useState({
+        name: incidentReporterData? incidentReporterData.name: '',
+        phone: incidentReporterData? incidentReporterData.telephone: '',
+        mobile: incidentReporterData? incidentReporterData.mobile: '',
+        email: incidentReporterData? incidentReporterData.email: ''
+    });
+    const [formErrors, setFormErrors] = useState({})
+
+    const getFormattedDateTime = ()=> {
+        let dateTime = null;
+        if(incidentDateTime.date && incidentDateTime.time){
+            dateTime = moment(
+                incidentDateTime.date + " " + 
+                incidentDateTime.time, 'YYYY-MM-DD HH:mm'
+            ).format()
+        }
+        return dateTime
+    }
 
     const stepDefinitions = {
 
@@ -99,30 +124,47 @@ const VerticalLinearStepper = (props) => {
                         handleElectionChange={setIncidentElection}
                         description={incidentDescription}
                         selectedElection={incidentElection}
-                        elections={elections} />
+                        elections={elections}
+                        disableDescription={incidentId?true:false}
+                        formErrors={formErrors}
+                    />
                     <div style={{height:20}}></div>
                     < DateTimeSection 
                         dateTime={incidentDateTime} 
-                        setDateTime={setIncidentDateTime} />
+                        setDateTime={setIncidentDateTime}
+                        formErrors={formErrors}
+                    />
                     </>,
             handler: () => {
-                //description and date time are mandatory
-                //asssumed that once this step is completed user won't be able to update description or datetime
-                if(!incidentId && incidentDateTime.date && incidentDateTime.time){
-                    let dateTime = moment(
-                                        incidentDateTime.date + " " + 
-                                        incidentDateTime.time, 'YYYY-MM-DD HH:mm'
-                                    ).format()
-                    dispatch(createGuestIncident({
-                        election: incidentElection,
-                        description: incidentDescription,
-                        title: 'Guest user submit',
-                        occured_date: dateTime
-                    }))
-                }else{
-                    if( incidentDescription && incidentDateTime.date && incidentDateTime.time){
-                        dispatch(updateGuestIncident(incidentId, {election: incidentElection,}))
+                if(!incidentId ){
+                    //creating new incident
+                    //description required
+                    if(incidentDescription){
+                        setFormErrors({...formErrors, incidentDescription:null})
+                        let incidentData = {
+                            election: incidentElection,
+                            description: incidentDescription,
+                            title: 'Guest user submit',
+                            infoChannel:webInfoChannelId //info channel is web by default.
+                        }
+                        const dateTime = getFormattedDateTime()
+                        if(dateTime){
+                            incidentData['occured_date'] = dateTime;
+                        }
+                        dispatch(createGuestIncident(incidentData))
+                    }else{
+                        setFormErrors({...formErrors, incidentDescription:"Description is mandatory!"})
                     }
+                }else{
+                    //updating an existing incident.
+                    //changing description/title is not allowed
+                    let incidentUpdate = incidentData
+                    incidentUpdate["election"] = incidentElection;
+                    const dateTime = getFormattedDateTime()
+                    if(dateTime){
+                        incidentUpdate['occured_date'] = dateTime
+                    }
+                    dispatch(updateGuestIncident(incidentId, incidentUpdate))
                 }
             }
         },
@@ -146,6 +188,8 @@ const VerticalLinearStepper = (props) => {
             handler: () => {
                 if (incidentFiles) {
                     dispatch(uploadFileGuest(incidentId, incidentFiles))
+                }else{
+                    dispatch(moveStepper({step:activeStep+1}));
                 }
             }
         },
@@ -159,27 +203,31 @@ const VerticalLinearStepper = (props) => {
                 if(incidentContact.name || incidentContact.phone || incidentContact.email){
                     incidentReporterData.name = incidentContact.name;
                     incidentReporterData.telephone = incidentContact.phone;
+                    incidentReporterData.mobile = incidentContact.mobile;
                     incidentReporterData.email = incidentContact.email;
                     dispatch(updateGuestIncidentReporter(incidentReporterData.id, incidentReporterData))
+                }else{
+                    dispatch(moveStepper({step:activeStep+1}));
                 }
             }
         },
 
-        4:{
-            title:'Select the most suitable category for the incident',
-            content: <CategorySection
-                        categories={categories}
-                        selectedCategory={incidentCatogory}
-                        setSelectedCategory={setIncidentCatogory} />,
-            handler: () => {
-                if(incidentCatogory){
-                    incidentData.category = incidentCatogory;
-                    dispatch(updateGuestIncident(incidentId, incidentData))
-                }else{
-                    dispatch(moveStepper({step:activeStep+1})) 
-                }
-            }
-        },
+        // 4:{
+        //     title:'Select the most suitable category for the incident',
+        //     content: <CategorySection
+        //                 categories={categories}
+        //                 selectedCategory={incidentCatogory}
+        //                 setSelectedCategory={setIncidentCatogory} />,
+        //     handler: () => {
+        //         if(incidentCatogory){
+        //             incidentData.category = incidentCatogory;
+        //             dispatch(updateGuestIncident(incidentId, incidentData))
+        //         }else{
+        //             dispatch(moveStepper({step:activeStep+1})) 
+        //         }
+
+        //     }
+        // },
         
     }
 
@@ -230,8 +278,8 @@ const VerticalLinearStepper = (props) => {
     const { classes } = props;
     const GoBackLink = props => <Link to="/" {...props} />
 
-    if(isFinished){
-        props.history.push('/report/success')
+    if(activeStep===Object.keys(stepDefinitions).length){
+        return <Redirect to='/report/success'/>
     }
 
     return (
@@ -239,7 +287,7 @@ const VerticalLinearStepper = (props) => {
         <div className={classes.root}>
 
             <Button variant="outlined" onClick={()=>{window.history.back();}}> Back </Button>
-            <h3>Report Incident</h3>
+            <Typography style={{width:'100%'}} align="center" variant="h5">Report Incident</Typography>
 
             <Stepper activeStep={activeStep} orientation="vertical">
                 {steps.map((label, index) => {
@@ -248,7 +296,11 @@ const VerticalLinearStepper = (props) => {
                     const labelProps = {};
                     if (isStepOptional(index)) {
                         if(index===3){
-                            labelProps.optional = <Typography variant="caption">Optional - you may submit your complaint anonymously. If you choose to do so, you will not be able to obtain status updates from the Election Commission of Sri Lanka</Typography>;
+                            labelProps.optional = <Typography variant="caption">
+                                Optional - you may submit your complaint anonymously. 
+                                If you choose to do so, you will not be able to obtain 
+                                status updates from the Election Commission of Sri Lanka.
+                                </Typography>;
                         }else{
                             labelProps.optional = <Typography variant="caption">Optional</Typography>;
                         }
@@ -261,7 +313,7 @@ const VerticalLinearStepper = (props) => {
                     <Step key={label} {...props}>
                         <StepLabel {...labelProps}>{label}</StepLabel>
                         <StepContent>
-                            <Typography>{getStepContent(index)}</Typography>
+                            <Typography style={{minHeight:300}}>{getStepContent(index)}</Typography>
                             <div className={classes.actionsContainer}>
                                 <div>
                                     <Button
