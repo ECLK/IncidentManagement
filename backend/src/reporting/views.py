@@ -80,7 +80,7 @@ class ReportingView(APIView):
         elif param_report == "subcategory_wise_summary_report":
             table_html = get_subcategory_summary(start_date, end_date, detailed_report, complain, inquiry)
             if detailed_report:
-                layout = "A4 landscape"
+                layout = "A3 landscape"
                 table_title = title + "District and Subcategory"
             else:
                 table_title = title + "Subcategory"

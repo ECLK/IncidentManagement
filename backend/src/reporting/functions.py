@@ -1,6 +1,7 @@
 from django.db import connection
 import pandas as pd
 from ..reporting.models import SeveritySegment
+from ..common.models import Category
 
 
 def incident_type_title(complain, inquiry):
@@ -42,6 +43,25 @@ def get_data_frame(sql, columns):
     dataframe.index.names = ["District"]
 
     return dataframe.to_html()
+
+
+def get_subcategory_categorized_report(incident_list, category_name):
+    columns = list(Category.objects.filter(top_category__exact=category_name).values_list("sub_category", flat=True))
+    columns.insert(0, "Unassigned")
+    sql = ", ".join(
+        map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (
+            'sub_category', c, encode_value(c)), columns))
+    sql1 = """
+                                    SELECT district,
+                                               %s
+                                              ,
+                                              1       AS Total
+                                       FROM   incidents_incident
+                                       LEFT JOIN common_category ON category=common_category.id
+                                       %s AND top_category LIKE '%s'
+                                    """ % (sql, incident_list, category_name)
+    columns = encode_column_names(columns)
+    return """<b>Category: %s</b>""" % category_name + get_detailed_report(sql1, columns)
 
 
 def get_subcategory_report(field_name, field_label, field_table, count_field, map_field, start_date, end_date,
