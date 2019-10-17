@@ -7,28 +7,28 @@ import numpy as np
 from ..common.models import Category, Channel
 from ..incidents.models import Incident
 from .functions import get_detailed_report, get_general_report, encode_column_names, get_subcategory_report, \
-    incident_type_query, incident_list_query, date_list_query
+    incident_type_query, incident_list_query, date_list_query, encode_value, get_subcategory_categorized_report
 
 
 def get_category_summary(start_date, end_date, detailed_report, complain, inquiry):
     sql3 = incident_type_query(complain, inquiry)
     incident_list = incident_list_query(start_date, end_date, sql3)
     if detailed_report:
-        columns = set(Category.objects.all().values_list("top_category", flat=True))
-        columns = encode_column_names(columns)
+        columns = list(Category.objects.all().values_list("top_category", flat=True))
         columns.insert(0, "Unassigned")
         sql2 = ", ".join(
             map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (
-                'top_category', c, c), columns))
+                'top_category', c, encode_value(c)), columns))
         sql1 = """
                         SELECT district,
                                    %s
                                   ,
                                   1       AS Total
                            FROM   incidents_incident
-                           left join common_category on category=common_category.id
+                           LEFT JOIN common_category ON category=common_category.id
                            %s
                         """ % (sql2, incident_list)
+        columns = encode_column_names(columns)
         return get_detailed_report(sql1, columns)
     return get_general_report("top_category", "Category", "common_category", "category", "id", start_date, end_date,
                               sql3)
@@ -38,22 +38,10 @@ def get_subcategory_summary(start_date, end_date, detailed_report, complain, inq
     sql3 = incident_type_query(complain, inquiry)
     incident_list = incident_list_query(start_date, end_date, sql3)
     if detailed_report:
-        columns = set(Category.objects.all().values_list("sub_category", flat=True))
-        columns = encode_column_names(columns)
-        columns.insert(0, "Unassigned")
-        sqls = ", ".join(
-            map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (
-                'sub_category', c, c), columns))
-        sql1 = """
-                                SELECT district,
-                                           %s
-                                          ,
-                                          1       AS Total
-                                   FROM   incidents_incident
-                                   left join common_category on category=common_category.id
-                                   %s
-                                """ % (sqls, incident_list)
-        return get_detailed_report(sql1, columns)
+        tables = ""
+        for category in list(Category.objects.order_by().values_list("top_category", flat=True).distinct()):
+            tables += "<br><br><br><br>" + (get_subcategory_categorized_report(incident_list, category))
+        return tables
     return get_subcategory_report("sub_category", "Subcategory", "common_category", "category", "id", start_date,
                                   end_date, sql3)
 
@@ -62,21 +50,21 @@ def get_mode_summary(start_date, end_date, detailed_report, complain, inquiry):
     sql3 = incident_type_query(complain, inquiry)
     incident_list = incident_list_query(start_date, end_date, sql3)
     if detailed_report:
-        columns = set(Channel.objects.all().values_list("name", flat=True))
-        columns = encode_column_names(columns)
+        columns = list(Channel.objects.all().values_list("name", flat=True))
         columns.insert(0, "Unassigned")
         sql2 = ", ".join(
             map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (
-                'name', c, c), columns))
+                'name', c, encode_value(c)), columns))
         sql1 = """
                 SELECT district,
                            %s
                           ,
                           1       AS Total
                    FROM   incidents_incident
-                   left join common_channel on infoChannel=common_channel.id
+                   LEFT JOIN common_channel ON infoChannel=common_channel.id
                    %s
                 """ % (sql2, incident_list)
+        columns = encode_column_names(columns)
         return get_detailed_report(sql1, columns)
     return get_general_report("name", "Mode", "common_channel", "infoChannel", "id", start_date, end_date, sql3)
 
@@ -89,7 +77,7 @@ def get_incident_date_summary(start_date, end_date, detailed_report, complain, i
        Total 
 FROM   (SELECT incident_date, 
                Sum(Total) AS Total 
-        FROM   (SELECT Date_format(occured_date + INTERVAL 8 hour, '%s') 
+        FROM   (SELECT Date_format(occured_date + INTERVAL 8 HOUR, '%s') 
                        AS 
                        incident_date 
                                , 
@@ -205,7 +193,7 @@ def get_status_summary(start_date, end_date, detailed_report, complain, inquiry)
                                                                        THEN
                                      'Resolved'
                                      ELSE 'Unresolved'
-                                   end )                          AS currentState,
+                                   END )                          AS currentState,
                                  Count(Ifnull(current_status, 1)) AS subtotal
                           FROM   incidents_incident
                           %s
@@ -229,10 +217,10 @@ def get_police_division_summary():
             incident.province,
             incident.di_division,
             incident.police_division,
-            COUNT(incident.police_station) as police_station_count,
-            COUNT(incident.id) as division_total,
-            COUNT(CASE WHEN cs.current_status <> "CLOSED" THEN 1 ELSE NULL END) as open_total,
-            COUNT(CASE WHEN cs.current_status = "CLOSED" THEN 1 ELSE NULL END) as closed_total
+            COUNT(incident.police_station) AS police_station_count,
+            COUNT(incident.id) AS division_total,
+            COUNT(CASE WHEN cs.current_status <> "CLOSED" THEN 1 ELSE NULL END) AS open_total,
+            COUNT(CASE WHEN cs.current_status = "CLOSED" THEN 1 ELSE NULL END) AS closed_total
           FROM incidents_incident incident,
           ( 
             SELECT b.incident_id, b.current_status
@@ -243,7 +231,7 @@ def get_police_division_summary():
               GROUP BY i.incident_id
             ) c 
             ON c.incident_id = b.incident_id AND c.cdate = b.created_date
-          ) as cs 
+          ) AS cs 
           WHERE cs.incident_id = incident.id
           GROUP BY incident.province, incident.di_division, incident.police_division
         """

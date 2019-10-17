@@ -80,7 +80,7 @@ class ReportingView(APIView):
         elif param_report == "subcategory_wise_summary_report":
             table_html = get_subcategory_summary(start_date, end_date, detailed_report, complain, inquiry)
             if detailed_report:
-                layout = "A1 landscape"
+                layout = "A3 landscape"
                 table_title = title + "District and Subcategory"
             else:
                 table_title = title + "Subcategory"
@@ -99,6 +99,7 @@ class ReportingView(APIView):
         if table_html is None:
             return Response("Report not found", status=status.HTTP_400_BAD_REQUEST)
 
+        # Prepare report header
         sql3 = incident_type_query(complain, inquiry)
         sql = """SELECT 
                      Count(id) as TotalCount
