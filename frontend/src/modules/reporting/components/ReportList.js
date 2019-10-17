@@ -75,7 +75,7 @@ class ReportList extends Component {
         this.state = {
             report_type: "category_wise_summary_report",
             start_date: moment().subtract(1, 'd').format("YYYY-MM-DDT16:00"),
-            end_date: moment().format("YYYY-MM-DDT16:00"),
+            end_date: moment().format("YYYY-MM-DDT15:59"),
             detailed_report: "false",
             complain: true,
             inquiry: true,
@@ -146,7 +146,7 @@ class ReportList extends Component {
                                                             color="primary"
                                                         />
                                                     }
-                                                    label="Complains"
+                                                    label="Complaints"
                                                 />
                                             </Grid>
                                             <Grid item xs={6}>
