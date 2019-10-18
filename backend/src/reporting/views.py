@@ -105,7 +105,7 @@ class ReportingView(APIView):
                      Count(id) as TotalCount
                  FROM   incidents_incident WHERE %s""" % sql3
         dataframe = pd.read_sql_query(sql, connection)
-        totalCount = dataframe['TotalCount'][0]
+        total_count = dataframe['TotalCount'][0]
 
         table_html = apply_style(
             decode_column_names(table_html)
@@ -113,9 +113,11 @@ class ReportingView(APIView):
                 .replace("(Total No. of Incidents)",
                          """<strong>(Total No. of Incidents from %s to %s)</strong>""" % (start_date, end_date), -1)
                 .replace("(Unassigned)", "<strong>(Unassigned)</strong>", -1)
-            , table_title, incident_type_string, layout, totalCount)
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="Report.pdf"'
-        pisa.CreatePDF(table_html, dest=response)
+            , table_title, incident_type_string, layout, total_count)
 
+        response = HttpResponse(content_type='application/pdf')
+        response['Access-Control-Expose-Headers'] = 'Title'
+        response['Title'] = """Incidents reported within the period %s %s %s.pdf""" % (
+            table_title, incident_type_string, datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        pisa.CreatePDF(table_html, dest=response)
         return response
