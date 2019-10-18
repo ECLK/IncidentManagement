@@ -13,7 +13,7 @@ import { fetchCategories } from "../../shared/state/Shared.actions";
 import SearchForm from "./SearchForm";
 import { Grid, Button } from "@material-ui/core";
 import { getIncidents } from "../../../api/incident";
-import IncidentList from "../../home/components/IncidentList";
+import IncidentListReview from "./IncidentListReview";
 
 const styles = theme => ({
   root: {
@@ -105,7 +105,7 @@ class ReviewIncidentListView extends React.Component {
             </Button>
           </Grid>
         </Grid>
-        <IncidentList
+        <IncidentListReview
             incidents={pagedIncidents.incidents}
             pageNumber={pagedIncidents.pageNumber-1}
             count={pagedIncidents.count}

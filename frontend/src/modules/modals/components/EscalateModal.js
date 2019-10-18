@@ -27,10 +27,8 @@ const onSubmitClick = (dispatch, incidentId, comment, responseTime) => {
     }
 
     dispatch(fetchUpdateWorkflow(incidentId, "escalate", {
-        comment: {
-            comment: comment,
-            responseTime: responseTime
-        }
+        comment: comment,
+        responseTime: responseTime
     } ));
     dispatch(hideModal());
 }

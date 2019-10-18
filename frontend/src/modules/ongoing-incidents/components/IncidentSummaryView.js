@@ -288,8 +288,15 @@ function ContactTab(props){
 
                         <Grid container spacing={24}>
                             <Grid item xs>
-                                <Typography variant="caption" className={classes.label}> Contact Number </Typography>
+                                <Typography variant="caption" className={classes.label}> Landline </Typography>
                                 <Typography gutterBottom> {reporter.telephone} </Typography>
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing={24}>
+                            <Grid item xs>
+                                <Typography variant="caption" className={classes.label}> Mobile </Typography>
+                                <Typography gutterBottom> {reporter.mobile} </Typography>
                             </Grid>
                         </Grid>
 

@@ -15,6 +15,7 @@ const styles = theme => ({
     display:'flex',
     alignItems:'center',
     justifyContent:'center',
+    flexWrap:'wrap'
   },
   paperSelected: {
     height: 140,
@@ -41,7 +42,7 @@ const CatogorySection = (props) => {
         selectedCategory, 
         setSelectedCategory } = props;
 
-    let fullCategories = [{sub_category:'Other', id:"Other"}].concat(categories)
+    let fullCategories = categories || [];
 
     return (
       <Grid container className={classes.root} spacing={16}>
@@ -53,7 +54,10 @@ const CatogorySection = (props) => {
                 <Paper 
                     className={ selectedCategory===value.id? classes.paperSelected : classes.paper} 
                     onClick={()=>{setSelectedCategory(value.id)}}>
-                    <h3 className={classes.categoryText}>{value.sub_category}</h3>
+                    <h5 className={classes.categoryText}>{value.sub_category}</h5>
+                    {/* <h5 className={classes.categoryText}>{value.sn_sub_category}</h5> */}
+                    {/* <h5 className={classes.categoryText}>{value.tm_sub_category}</h5> */}
+                    
                 </Paper>
               </Grid>
             ))}

@@ -26,14 +26,13 @@ import {
 } from '../../incident/state/incidentActions'
 
 import {
-    moveStepper
+    moveStepper,
 } from './guestViewActions'
 
 
 const initialState = {
     isLoading: false,
     activeStep: 0,
-    isFinished: false
 }
 
 const incidentReducer = createReducer(initialState, {
@@ -49,10 +48,6 @@ const incidentReducer = createReducer(initialState, {
         state.isLoading = true;
     },
     [updateGuestIncidentSuccess] : (state, action) => {
-        if(state.activeStep===4){
-            //indicates view that the stepper reached  the end
-            state.isFinished = true;
-        }
         state.activeStep = state.activeStep + 1;
         state.isLoading = false;
     },
@@ -68,10 +63,6 @@ const incidentReducer = createReducer(initialState, {
         state.isLoading = false;
     },
     [moveStepper]  : (state, action) => {
-        if(state.activeStep===4){
-            //indicates view that the stepper reached  the end
-            state.isFinished = true;
-        }
         state.activeStep = action.payload.step
     },
 
