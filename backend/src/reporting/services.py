@@ -14,7 +14,7 @@ def get_category_summary(start_date, end_date, detailed_report, complain, inquir
     sql3 = incident_type_query(complain, inquiry)
     incident_list = incident_list_query(start_date, end_date, sql3)
     if detailed_report:
-        columns = list(Category.objects.all().values_list("top_category", flat=True))
+        columns = list(set(Category.objects.all().values_list("top_category", flat=True)))
         columns.insert(0, "Unassigned")
         sql2 = ", ".join(
             map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (
@@ -50,7 +50,7 @@ def get_mode_summary(start_date, end_date, detailed_report, complain, inquiry):
     sql3 = incident_type_query(complain, inquiry)
     incident_list = incident_list_query(start_date, end_date, sql3)
     if detailed_report:
-        columns = list(Channel.objects.all().values_list("name", flat=True))
+        columns = list(set(Channel.objects.all().values_list("name", flat=True)))
         columns.insert(0, "Unassigned")
         sql2 = ", ".join(
             map(lambda c: "(CASE WHEN ifnull(%s,'Unassigned') LIKE '%s' THEN 1 ELSE 0 END) AS '%s'" % (

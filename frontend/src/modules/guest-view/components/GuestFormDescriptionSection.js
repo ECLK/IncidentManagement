@@ -45,12 +45,13 @@ const IncidentDescription = props => {
             value={description}
             onChange={e => {
               handledDescriptionChange(e.target.value);
+              formErrors.incidentDescriptionErrorMsg = null;
             }}
             className={classes.textField}
             margin="normal"
             disabled={disableDescription}
-            helperText = {formErrors.incidentDescription || "Cannot be changed after Submitting"}
-            error={formErrors.incidentDescription?true:false}
+            helperText = {formErrors.incidentDescriptionErrorMsg || "Cannot be changed after Submitting"}
+            error={formErrors.incidentDescriptionErrorMsg?true:false}
           />
         </Grid>
 
@@ -66,13 +67,15 @@ const IncidentDescription = props => {
             value={selectedElection}
             onChange={e => {
               handleElectionChange(e.target.value);
+              formErrors.incidentElectionErrorMsg = null;
             }}
             SelectProps={{
               MenuProps: {
                 className: classes.menu
               }
             }}
-            helperText="Select corresponding election"
+            helperText={formErrors.incidentElectionErrorMsg || "Select corresponding election"}
+            error={formErrors.incidentElectionErrorMsg?true:false}
             margin="normal"
           >
             {elections.map(option => (
