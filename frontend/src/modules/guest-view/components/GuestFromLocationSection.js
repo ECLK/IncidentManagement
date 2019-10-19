@@ -19,34 +19,62 @@ const styles = theme => ({
 });
 
 
-const  IncidentLocation = (props) =>  {
+const IncidentLocation = (props) => {
 
-        const { 
-            classes,
-            handledLocationChange,
-            location,
-         } = props;
+    const {
+        classes,
+        location,
+        handledLocationChange,
+        address,
+        handleAddressChange,
+        city,
+        handleCityChange
+    } = props;
 
-        return (
-            <form className={classes.container} noValidate autoComplete="off">
-
-                
-                <TextField
-                    autoFocus
-                    id="incidentLocation"
-                    label="Describe location"
-                    multiline
-                    fullWidth
-                    rowsMax="4"
-                    value={location}
-                    onChange={(e)=>{handledLocationChange(e.target.value)}}
-                    className={classes.textField}
-                    margin="normal"
-                />
-
-
-            </form>
-        );
+    return (
+        <form className={classes.container} noValidate autoComplete="off">
+            <Grid container spacing={24}>
+                <Grid item xs={12}>
+                    <TextField
+                        autoFocus
+                        id="incidentLocation"
+                        label="Location name or description"
+                        multiline
+                        fullWidth
+                        rowsMax="5"
+                        value={location}
+                        onChange={(e) => { handledLocationChange(e.target.value) }}
+                        className={classes.textField}
+                        margin="normal"
+                    />
+                </Grid>
+                <Grid item xs={12} sm={8}>
+                    <TextField
+                        id="incidentAddress"
+                        label="Address of the incident loaction"
+                        multiline
+                        fullWidth
+                        rowsMax="5"
+                        value={address}
+                        onChange={(e) => { handleAddressChange(e.target.value) }}
+                        className={classes.textField}
+                        margin="normal"
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        id="incidentCity"
+                        label="City of the incident location"
+                        fullWidth
+                        value={city}
+                        onChange={(e) => { handleCityChange(e.target.value) }}
+                        className={classes.textField}
+                        margin="normal"
+                    />
+                </Grid>
+            </Grid>
+        </form>
+    );
 }
 
 IncidentLocation.propTypes = {

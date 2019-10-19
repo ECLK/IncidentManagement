@@ -18,7 +18,7 @@ const styles = theme => ({
 
 function DatePickers(props) {
 
-    const { classes, dateTime, setDateTime  } = props;
+    const { classes, dateTime, setDateTime, formErrors } = props;
 
     return (
         <form className={classes.container} noValidate>
@@ -32,8 +32,12 @@ function DatePickers(props) {
                 InputLabelProps={{
                     shrink: true,
                 }}
-                onChange={(e)=>{setDateTime({...dateTime, date:e.target.value})}}
+                onChange={(e)=>{
+                    setDateTime({...dateTime, date:e.target.value});
+                    formErrors.incidentDatetimeErrorMsg = null;
+                }}
                 helperText="mm/dd/yyyy"
+                error={formErrors.incidentDatetimeErrorMsg?true:false}
             />
 
             <TextField
@@ -45,8 +49,12 @@ function DatePickers(props) {
                 InputLabelProps={{
                     shrink: true,
                 }}
-                onChange={(e)=>{setDateTime({ ...dateTime, time:e.target.value})}}
-                helperText="hh:mm"
+                onChange={(e)=>{
+                    setDateTime({ ...dateTime, time:e.target.value});
+                    formErrors.incidentDatetimeErrorMsg = null;
+                }}
+                helperText="hh:mm aa"
+                error={formErrors.incidentDatetimeErrorMsg?true:false}
             />
         </form>
     );
