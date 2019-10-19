@@ -85,7 +85,7 @@ def get_subcategory_report(field_name, field_label, field_table, count_field, ma
                            '0'
                     FROM   %s) AS result
             GROUP  BY result.%s
-            ORDER  BY Field(%s,'(Unassigned)') DESC,Total DESC) as result2
+            ORDER  BY Field(%s, '(Unassigned)') DESC,Total DESC) as result2
             UNION
             SELECT '(Total No. of Incidents)',
                    Count(id)
