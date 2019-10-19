@@ -103,15 +103,35 @@ const VerticalLinearStepper = (props) => {
     });
     const [formErrors, setFormErrors] = useState({})
 
-    const getFormattedDateTime = ()=> {
+    const getFormattedDateTime = () => {
         let dateTime = null;
         if(incidentDateTime.date && incidentDateTime.time){
             dateTime = moment(
                 incidentDateTime.date + " " + 
-                incidentDateTime.time, 'YYYY-MM-DD HH:mm'
+                incidentDateTime.time, 'YYYY-MM-DD h:mm a'
             ).format()
         }
         return dateTime
+    }
+
+    const validInputs = () => {
+        setFormErrors({...formErrors, incidentDescriptionErrorMsg:null, incidentElectionErrorMsg:null, incidentDatetimeErrorMsg:null})
+        let errorMsg = {...formErrors};
+        let valid = true;
+        if(!incidentDescription){
+            errorMsg = {...errorMsg, incidentDescriptionErrorMsg:"Description is required."};
+            valid = false;
+        }
+        if(!incidentElection){
+            errorMsg = {...errorMsg, incidentElectionErrorMsg:"Election is required."};
+            valid = false;
+        }
+        if(getFormattedDateTime() == null){
+            errorMsg = {...errorMsg, incidentDatetimeErrorMsg:"Datetime is required."};
+            valid = false;
+        }
+        setFormErrors({...errorMsg});
+        return valid;
     }
 
     const stepDefinitions = {
@@ -139,8 +159,7 @@ const VerticalLinearStepper = (props) => {
                 if(!incidentId ){
                     //creating new incident
                     //description required
-                    if(incidentDescription){
-                        setFormErrors({...formErrors, incidentDescription:null})
+                    if(validInputs()){
                         let incidentData = {
                             election: incidentElection,
                             description: incidentDescription,
@@ -152,19 +171,19 @@ const VerticalLinearStepper = (props) => {
                             incidentData['occured_date'] = dateTime;
                         }
                         dispatch(createGuestIncident(incidentData))
-                    }else{
-                        setFormErrors({...formErrors, incidentDescription:"Description is mandatory!"})
                     }
                 }else{
                     //updating an existing incident.
                     //changing description/title is not allowed
-                    let incidentUpdate = incidentData
-                    incidentUpdate["election"] = incidentElection;
-                    const dateTime = getFormattedDateTime()
-                    if(dateTime){
-                        incidentUpdate['occured_date'] = dateTime
+                    if(validInputs()){
+                        let incidentUpdate = incidentData
+                        incidentUpdate["election"] = incidentElection;
+                        const dateTime = getFormattedDateTime()
+                        if(dateTime){
+                            incidentUpdate['occured_date'] = dateTime
+                        }
+                        dispatch(updateGuestIncident(incidentId, incidentUpdate))
                     }
-                    dispatch(updateGuestIncident(incidentId, incidentUpdate))
                 }
             }
         },
