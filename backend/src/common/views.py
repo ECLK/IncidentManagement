@@ -18,6 +18,7 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
 class ChannelList(generics.ListCreateAPIView):
     queryset = Channel.objects.all().order_by(F('order').asc(nulls_last=True))
     serializer_class = ChannelSerializer
+    permission_classes = []
 
 class ProvinceList(generics.ListCreateAPIView):
     queryset = Province.objects.all()
