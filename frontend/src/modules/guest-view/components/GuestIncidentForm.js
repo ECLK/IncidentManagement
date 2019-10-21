@@ -126,6 +126,7 @@ const VerticalLinearStepper = (props) => {
         setFormErrors({ ...formErrors, incidentDescriptionErrorMsg: null, incidentElectionErrorMsg: null, incidentDatetimeErrorMsg: null })
         let errorMsg = { ...formErrors };
         let valid = true;
+
         if (!incidentDescription) {
             errorMsg = { ...errorMsg, incidentDescriptionErrorMsg: "Description is required." };
             valid = false;
@@ -166,7 +167,6 @@ const VerticalLinearStepper = (props) => {
             handler: () => {
                 if (!incidentId) {
                     //creating new incident
-                    //description required
                     if (validInputs()) {
                         let incidentData = {
                             election: incidentElection,
