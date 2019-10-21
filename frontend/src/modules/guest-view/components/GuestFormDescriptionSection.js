@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { useIntl } from "react-intl";
@@ -31,6 +31,12 @@ const IncidentDescription = props => {
   } = props;
   let intl = useIntl();
 
+  useEffect(() => {
+    if (!selectedElection && elections.length == 1) {
+      handleElectionChange(elections[0].code);
+    }
+  })
+
   return (
     <form className={classes.container} noValidate autoComplete="off">
       <Grid container>
@@ -50,8 +56,8 @@ const IncidentDescription = props => {
             className={classes.textField}
             margin="normal"
             disabled={disableDescription}
-            helperText = {formErrors.incidentDescriptionErrorMsg || "Cannot be changed after Submitting"}
-            error={formErrors.incidentDescriptionErrorMsg?true:false}
+            helperText={formErrors.incidentDescriptionErrorMsg || "Cannot be changed after Submitting"}
+            error={formErrors.incidentDescriptionErrorMsg ? true : false}
           />
         </Grid>
 
@@ -75,7 +81,7 @@ const IncidentDescription = props => {
               }
             }}
             helperText={formErrors.incidentElectionErrorMsg || "Select corresponding election"}
-            error={formErrors.incidentElectionErrorMsg?true:false}
+            error={formErrors.incidentElectionErrorMsg ? true : false}
             margin="normal"
           >
             {elections.map(option => (

@@ -15,7 +15,7 @@ const uuidv4 = require("uuid/v4");
 export function getElections() {
     return {
         status: 200,
-        data: elections
+        data: elections.filter( (election) => {return election.status == true; }) // send only the active elections
     };
 }
 
