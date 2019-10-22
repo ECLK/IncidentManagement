@@ -32,7 +32,7 @@ import Breadcrumbs from '../Breadcrumbs';
 import { userCan, USER_ACTIONS } from '../../../utils/userUtils';
 
 const HomeLink = props => <Link to="/app/home" {...props} />
-const ReportLink = props => <Link to="/app/incident" {...props} />
+const ReportLink = props => <Link to="/app/create" {...props} />
 const ReviewLink = props => <Link to="/app/review" {...props} />
 const StaticReportLink = props => <Link to="/app/reports" {...props} />
 const ArchiveLink = props => <Link to="/app/archive" {...props} />

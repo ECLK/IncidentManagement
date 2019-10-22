@@ -19,7 +19,7 @@ const styles = theme => ({
 
 const breadcrumbNameMap = {
     '/app': 'Home',
-    '/app/incident': 'Create',
+    '/app/create': 'Create',
     '/app/report': 'Report',  
     '/app/review': 'Review',
     '/app/review/incident': 'Incident',
