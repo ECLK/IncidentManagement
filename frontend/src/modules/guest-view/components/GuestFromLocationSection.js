@@ -51,7 +51,7 @@ const IncidentLocation = (props) => {
                 <Grid item xs={12} sm={8}>
                     <TextField
                         id="incidentAddress"
-                        label="Address of the incident loaction"
+                        label="Address"
                         multiline
                         fullWidth
                         rowsMax="5"
@@ -64,7 +64,7 @@ const IncidentLocation = (props) => {
                 <Grid item xs={12} sm={4}>
                     <TextField
                         id="incidentCity"
-                        label="City of the incident location"
+                        label="City"
                         fullWidth
                         value={city}
                         onChange={(e) => { handleCityChange(e.target.value) }}

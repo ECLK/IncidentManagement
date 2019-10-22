@@ -197,7 +197,7 @@ const VerticalLinearStepper = (props) => {
         },
 
         1: {
-            title: 'Describe the location',
+            title: 'Describe the incident location',
             content: < LocationSection
                 location={incidentLocation}
                 handledLocationChange={setIncidentLocation}
@@ -362,6 +362,7 @@ const VerticalLinearStepper = (props) => {
 
             {/* <Button variant="outlined" onClick={() => { window.history.back(); }}> Back </Button> */}
             <Typography style={{ width: '100%' }} align="center" variant="h5" marginTop="20">Report Incident</Typography>
+            <Typography style={{ width: '100%' }} align="left" variant="" marginTop="20">*fields are mandatory</Typography>
 
             <Stepper activeStep={activeStep} orientation="vertical">
                 {steps.map((label, index) => {

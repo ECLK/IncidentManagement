@@ -25,7 +25,7 @@ function DatePickers(props) {
             <TextField
                 autoFocus
                 id="date"
-                label="Date"
+                label="Date*"
                 type="date"
                 value={dateTime.date}
                 className={classes.textField}
@@ -42,7 +42,7 @@ function DatePickers(props) {
 
             <TextField
                 id="date"
-                label="Time"
+                label="Time*"
                 type="time"
                 value={dateTime.time}
                 className={classes.textField}

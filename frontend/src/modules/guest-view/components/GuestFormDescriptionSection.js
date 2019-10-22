@@ -56,7 +56,7 @@ const IncidentDescription = props => {
             className={classes.textField}
             margin="normal"
             disabled={disableDescription}
-            helperText={formErrors.incidentDescriptionErrorMsg || "Cannot be changed after Submitting"}
+            helperText={formErrors.incidentDescriptionErrorMsg || "Describe the incident"}
             error={formErrors.incidentDescriptionErrorMsg ? true : false}
           />
         </Grid>
@@ -66,8 +66,8 @@ const IncidentDescription = props => {
             id="election"
             select
             label={intl.formatMessage({
-              id: "eclk.incident.management.report.incidents.election",
-              defaultMessage: "Election"
+              id: "eclk.incident.management.report.incidents.election"+"*",
+              defaultMessage: "Election*"
             })}
             className={classes.textField}
             value={selectedElection}
@@ -80,7 +80,7 @@ const IncidentDescription = props => {
                 className: classes.menu
               }
             }}
-            helperText={formErrors.incidentElectionErrorMsg || "Select corresponding election"}
+            helperText={formErrors.incidentElectionErrorMsg || "Select election"}
             error={formErrors.incidentElectionErrorMsg ? true : false}
             margin="normal"
           >
