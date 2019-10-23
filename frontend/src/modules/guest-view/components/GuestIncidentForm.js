@@ -131,15 +131,15 @@ const VerticalLinearStepper = (props) => {
         let valid = true;
 
         if (!incidentDescription) {
-            errorMsg = { ...errorMsg, incidentDescriptionErrorMsg: "Description is required." };
+            errorMsg = { ...errorMsg, incidentDescriptionErrorMsg: f({id:"eclk.incident.management.report.incidents.description.error.message", defaultMessage:"Description is required"}) };
             valid = false;
         }
         if (!incidentElection) {
-            errorMsg = { ...errorMsg, incidentElectionErrorMsg: "Election is required." };
+            errorMsg = { ...errorMsg, incidentElectionErrorMsg: f({id:"eclk.incident.management.report.incidents.election.error.message", defaultMessage:"Election is required"})  };
             valid = false;
         }
         if (getFormattedDateTime() == null) {
-            errorMsg = { ...errorMsg, incidentDatetimeErrorMsg: "Datetime is required." };
+            errorMsg = { ...errorMsg, incidentDatetimeErrorMsg: f({id:"eclk.incident.management.report.incidents.datetime.error.message", defaultMessage:"Date and time are required"}) };
             valid = false;
         }
         setFormErrors({ ...errorMsg });
