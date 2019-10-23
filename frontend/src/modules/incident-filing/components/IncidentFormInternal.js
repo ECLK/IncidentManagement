@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { withRouter } from "react-router";
 import { withStyles } from '@material-ui/core/styles';
 import { Formik } from 'formik';
+import * as Yup from 'yup';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
@@ -119,7 +121,7 @@ class IncidentFormInternal extends Component {
         infoChannel: "",
         title: "",
         description: "",
-        occurrence: "OCCURRED",
+        occurrence: null,
         occured_date: null,
         time: "",
         otherCat: "",
@@ -163,6 +165,8 @@ class IncidentFormInternal extends Component {
         court_case_no: "",
 
     }
+
+    
 
     componentDidMount() {
         this.props.getChannels();
@@ -287,17 +291,33 @@ class IncidentFormInternal extends Component {
             })
         );
 
+        const IncidentSchema = Yup.object().shape({
+            incidentType: Yup.mixed().required('Required'),
+            infoChannel: Yup.mixed().required('Required'),
+            title: Yup.string().required('Required'),
+            description: Yup.string()
+              .required('Required'),
+            occurrence: Yup.mixed().required('Required'),
+            category: Yup.mixed().required('Required'),
+            election: Yup.mixed().required('Required'),
+            severity: Yup.mixed().required('Required'),
+          });
+
         return (
             <div className={classes.root}>
                 <Formik
                     enableReinitialize={reinit}
                     initialValues={this.getInitialValues()}
                     onSubmit={(values, actions) => {
-                        console.log(values)
                         this.handleSubmit(values, actions)
                     }}
+                    validationSchema={IncidentSchema}
                     render={
-                        ({ handleSubmit, handleChange, handleBlur, values, errors, setFieldValue }) => (
+                        ({ handleSubmit, handleChange, handleBlur, values, errors, touched, setFieldValue, isValid }) => {
+                            if(!isValid){
+                                window.scroll(0,0);
+                            }
+                            return(
                             <form className={classes.container} noValidate autoComplete="off" onSubmit={handleSubmit}>
                                 <div style={{ display: "none" }}>{this.props.incident.id}</div>
                                 {/* basic incident detail information */}
@@ -320,20 +340,34 @@ class IncidentFormInternal extends Component {
                                                     <FormControlLabel value="COMPLAINT" control={<Radio color="primary" />} label="Complaint" />
                                                     <FormControlLabel value="INQUIRY" control={<Radio color="primary" />} label="Inquiry" />
                                                 </RadioGroup>
+                                                {errors.incidentType ? (<FormHelperText>{errors.incidentType}</FormHelperText>) : null}
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12}>
-                                            <FormLabel component="legend">Incident receipt mode*</FormLabel>
+                                            <FormLabel component="legend">
+                                                <div style={{color:(errors.infoChannel && touched.infoChannel)?'red':null}}>Incident receipt mode* </div>  
+                                            </FormLabel>
+                                            
                                             {this.props.channels.map((c, k) => (
                                                 <Button
+                                                    key={k}
                                                     variant="contained"
                                                     color={(values.infoChannel == c.id) ? "primary" : ""}
                                                     className={classes.button}
-                                                    onClick={() => { setFieldValue("infoChannel", c.id, false) }}
+                                                    onClick={() => { setFieldValue("infoChannel", c.id, true) }}
                                                 >
                                                     {c.name}
                                                 </Button>
                                             ))}
+
+                                            <FormHelperText>
+                                                {
+                                                    (errors.infoChannel && touched.infoChannel)?
+                                                    <div style={{color:'red'}}>Required</div>
+                                                    :
+                                                    ''
+                                                }
+                                            </FormHelperText>
 
                                             {/* testbox to keep value of channel selected */}
                                             <TextField
@@ -354,6 +388,8 @@ class IncidentFormInternal extends Component {
                                                 value={values.title}
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
+                                                error={ touched.title && errors.title}
+                                                helperText={touched.title ? errors.title : null}
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
@@ -367,10 +403,15 @@ class IncidentFormInternal extends Component {
                                                 value={values.description}
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
+                                                error={ touched.description && errors.description}
+                                                helperText={touched.description ? errors.description : null}
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
-                                            <FormControl component="fieldset" className={classes.formControl}>
+                                            <FormControl 
+                                                error={ touched.occurrence && errors.occurrence} 
+                                                component="fieldset" 
+                                                className={classes.formControl}>
                                                 <FormLabel component="legend">Occurrence*</FormLabel>
                                                 <RadioGroup
                                                     name="occurrence"
@@ -384,6 +425,7 @@ class IncidentFormInternal extends Component {
                                                     <FormControlLabel value="OCCURRING" control={<Radio color="primary" />} label="Occurring" />
                                                     <FormControlLabel value="WILL_OCCUR" control={<Radio color="primary" />} label="Will Occur" />
                                                 </RadioGroup>
+                                                {errors.occurrence ? (<FormHelperText>{errors.occurrence}</FormHelperText>) : null}
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={6} sm={3}>
@@ -397,7 +439,10 @@ class IncidentFormInternal extends Component {
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
-                                            <FormControl className={classes.formControl}>
+                                            <FormControl 
+                                                className={classes.formControl}
+                                                error={touched.category && errors.category}
+                                            >
                                                 <InputLabel htmlFor="category">Category*</InputLabel>
                                                 <Select
                                                     value={values.category}
@@ -421,6 +466,7 @@ class IncidentFormInternal extends Component {
                                                         </MenuItem>
                                                     ))}
                                                 </Select>
+                                                <FormHelperText>{(touched.category && errors.category)?errors.category:""}</FormHelperText>
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
@@ -435,8 +481,8 @@ class IncidentFormInternal extends Component {
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
-                                            <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="election" >Election*</InputLabel>
+                                            <FormControl error={touched.election && errors.election} className={classes.formControl}>
+                                                <InputLabel htmlFor="election">Election*</InputLabel>
                                                 <Select
                                                     value={values.election}
                                                     onChange={handleChange}
@@ -450,6 +496,7 @@ class IncidentFormInternal extends Component {
                                                         <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
                                                     ))}
                                                 </Select>
+                                                <FormHelperText>{(touched.election && errors.election)?errors.election:""}</FormHelperText>
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
@@ -476,7 +523,7 @@ class IncidentFormInternal extends Component {
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
-                                            <FormControl component="fieldset" className={classes.formControl}>
+                                            <FormControl error={touched.severity && errors.severity} component="fieldset" className={classes.formControl}>
                                                 <FormLabel component="legend">Severity</FormLabel>
                                                 <RadioGroup
                                                     name="severity"
@@ -660,6 +707,7 @@ class IncidentFormInternal extends Component {
                                                         }}
                                                     />
                                                 </RadioGroup>
+                                                <FormHelperText>{(touched.severity && errors.severity)?errors.severity:""}</FormHelperText>
                                             </FormControl>
                                         </Grid>
 
@@ -1002,7 +1050,7 @@ class IncidentFormInternal extends Component {
                                     </Grid>
                                 </Grid>
                             </form>
-                        )}
+                        )}}
                 />
 
                 <Snackbar
