@@ -102,6 +102,8 @@ def get_guest_user():
     except:
         raise IncidentException("No guest user available")
 
+def create_reporter():
+    return Reporter()
 
 def create_incident_postscript(incident: Incident, user: User) -> None:
     """Function to take care of event, status and severity creation"""
@@ -114,7 +116,9 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
     reporter.save()
 
     incident.created_by = get_user_orgnaization(user).name
-    incident.reporter = reporter
+    if(not incident.reporter):
+        incident.reporter = reporter
+    # incident.reporter = reporter
     incident.assignee = user
     incident.save()
 
