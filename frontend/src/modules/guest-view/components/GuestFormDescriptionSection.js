@@ -59,7 +59,7 @@ const IncidentDescription = props => {
             className={classes.textField}
             margin="normal"
             disabled={disableDescription}
-            helperText={formErrors.incidentDescriptionErrorMsg || "Describe the incident"}
+            helperText={formErrors.incidentDescriptionErrorMsg || ""}
             error={formErrors.incidentDescriptionErrorMsg ? true : false}
           />
         </Grid>
@@ -83,13 +83,14 @@ const IncidentDescription = props => {
                 className: classes.menu
               }
             }}
-            helperText={formErrors.incidentElectionErrorMsg || "Select election"}
+            helperText={formErrors.incidentElectionErrorMsg || ""}
             error={formErrors.incidentElectionErrorMsg ? true : false}
             margin="normal"
+            fullWidth
           >
             {elections.map(option => (
               <MenuItem key={option.value} value={option.code}>
-                {option.name}
+                {option.name} | {option.sn_name} | {option.tm_name}
               </MenuItem>
             ))}
           </TextField>
