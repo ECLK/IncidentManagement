@@ -194,13 +194,15 @@ class SMSIncident(APIView):
     def post(self, request, format=None):
 
         sms_incident_data = request.data
-        sms_incident_data["title"] = "SMS by " + request.data["telephone"]
+        telephone = request.data.get("telephone", "No Telephone Number")
+        sms_incident_data["title"] = "SMS by " + telephone
+        sms_incident_data["infoChannel"] = "SMS"
         serializer = IncidentSerializer(data=sms_incident_data)
 
         if serializer.is_valid():
             incident = serializer.save()
             reporter = create_reporter()
-            reporter.telephone = request.data["telephone"]
+            reporter.telephone = telephone
             reporter.save()
             incident.reporter = reporter
             return_data = serializer.data
