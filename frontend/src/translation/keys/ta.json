@@ -1,10 +1,41 @@
 {
   "eclk.incident.management.incidents": "சம்பவங்கள்",
   "eclk.incident.management.incidents.reporting.system": "தேர்தல் மீறல் சம்பவங்கள் அறிக்கை அறிக்கை",
+  
+  "eclk.incident.management.report.incidents.forms.label.optional": "Optional",
+  "eclk.incident.management.report.incidents.forms.label.none": "None",
+
+  "eclk.incident.management.report.incidents.forms.button.back": "Back",
+  "eclk.incident.management.report.incidents.forms.button.next": "Next",
+  "eclk.incident.management.report.incidents.forms.button.skip": "Skip",
+  "eclk.incident.management.report.incidents.forms.button.finish": "Finish",
+  
+
   "eclk.incident.management.report.incidents": "ஒரு சம்பவம் குறித்து புகாரளி",
-  "eclk.incident.management.ongoing.incidents": "ஒரு சம்பவத்தை நிர்வகி",
-  "eclk.incident.management.historic.reports": "சம்பவ அறிக்கைகள்",
+  "eclk.incident.management.report.incidents.helper.text": "*fields are mandatory",
+  
+  "eclk.incident.management.report.incidents.section.describe": "Describe the incident",
+  "eclk.incident.management.report.incidents.description": "Description",
+  "eclk.incident.management.report.incidents.election": "Election",
+  "eclk.incident.management.report.incidents.date": "Date",
+  "eclk.incident.management.report.incidents.time": "Time",
+
+  "eclk.incident.management.report.incidents.section.location": "Describe the incident location",
+  "eclk.incident.management.report.incidents.location": "Location name or description",
+  "eclk.incident.management.report.incidents.address": "Address",
+  "eclk.incident.management.report.incidents.city": "City",
+
+  "eclk.incident.management.report.incidents.section.attachment": "Attach files related to incident",
+  "eclk.incident.management.report.incidents.seleted.file": "Selected File",
+
+  "eclk.incident.management.report.incidents.section.contact": "Your contact details",
+  "eclk.incident.management.report.incidents.contact.name": "Name",
+  "eclk.incident.management.report.incidents.contact.mobile": "Mobile",
+  "eclk.incident.management.report.incidents.contact.landline": "Landline",
+  "eclk.incident.management.report.incidents.contact.email": "Email",
+
   "eclk.incident.management.check.incident.status": "சம்பவ நிலையை சரிபார்க்கவும்",
+  "eclk.incident.management.historic.reports": "சம்பவ அறிக்கைகள்",
 
   "eclk.incident.management.filing.guest.form.steps.basic.details": "சம்பவ விவரங்கள்",
   "eclk.incident.management.filing.guest.form.steps.location.details": "சம்பவ இட விவரங்கள்",

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import { useIntl } from 'react-intl';
 
 import { withStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -21,6 +22,8 @@ const styles = theme => ({
 
 const IncidentLocation = (props) => {
 
+    const { formatMessage: f} = useIntl();
+
     const {
         classes,
         location,
@@ -38,7 +41,7 @@ const IncidentLocation = (props) => {
                     <TextField
                         autoFocus
                         id="incidentLocation"
-                        label="Location name or description"
+                        label= {f({ id: "eclk.incident.management.report.incidents.location", defaultMessage: "Location name or description" })}
                         multiline
                         fullWidth
                         rowsMax="5"
@@ -51,7 +54,7 @@ const IncidentLocation = (props) => {
                 <Grid item xs={12} sm={8}>
                     <TextField
                         id="incidentAddress"
-                        label="Address"
+                        label= {f({ id: "eclk.incident.management.report.incidents.address", defaultMessage: "Address" })}
                         multiline
                         fullWidth
                         rowsMax="5"
@@ -64,7 +67,7 @@ const IncidentLocation = (props) => {
                 <Grid item xs={12} sm={4}>
                     <TextField
                         id="incidentCity"
-                        label="City"
+                        label= {f({ id: "eclk.incident.management.report.incidents.city", defaultMessage: "City" })}
                         fullWidth
                         value={city}
                         onChange={(e) => { handleCityChange(e.target.value) }}

@@ -44,7 +44,10 @@ const IncidentDescription = props => {
           <TextField
             autoFocus
             id="incidentDescription"
-            label="Description*"
+            label={intl.formatMessage({
+              id: "eclk.incident.management.report.incidents.description",
+              defaultMessage: "Description"
+            })+"*"}
             multiline
             fullWidth
             rowsMax="4"
@@ -66,9 +69,9 @@ const IncidentDescription = props => {
             id="election"
             select
             label={intl.formatMessage({
-              id: "eclk.incident.management.report.incidents.election"+"*",
-              defaultMessage: "Election*"
-            })}
+              id: "eclk.incident.management.report.incidents.election",
+              defaultMessage: "Election"
+            })+"*"}
             className={classes.textField}
             value={selectedElection}
             onChange={e => {
