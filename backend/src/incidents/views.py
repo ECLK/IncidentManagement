@@ -45,7 +45,8 @@ from .services import (
     attach_media,
     get_fitlered_incidents_report,
     get_guest_user,
-    get_incident_by_reporter_unique_id
+    get_incident_by_reporter_unique_id,
+    create_reporter
 )
 
 from ..events import services as event_service
@@ -186,6 +187,30 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         raise IncidentException(serializer.errors)
         # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class SMSIncident(APIView):
+
+    serializer_class = IncidentSerializer
+
+    def post(self, request, format=None):
+
+        sms_incident_data = request.data
+        sms_incident_data["title"] = "SMS by " + request.data["telephone"]
+        serializer = IncidentSerializer(data=sms_incident_data)
+
+        if serializer.is_valid():
+            incident = serializer.save()
+            reporter = create_reporter()
+            reporter.telephone = request.data["telephone"]
+            reporter.save()
+            incident.reporter = reporter
+            return_data = serializer.data
+            
+            incident_data = IncidentSerializer(create_incident_postscript(incident, request.user)).data
+            return_data = incident_data
+
+            return Response(return_data, status=status.HTTP_201_CREATED)
+
+        raise IncidentException(serializer.errors)
 
 class IncidentDetail(APIView):
     """
