@@ -41,6 +41,7 @@ import {
 import {
     moveStepper,
 } from '../state/guestViewActions'
+import FileUploader from '../../shared/components/FileUploader';
 
 const styles = theme => ({
     root: {
@@ -221,10 +222,17 @@ const VerticalLinearStepper = (props) => {
 
         2: {
             title: f({ id:"eclk.incident.management.report.incidents.section.attachment", defaultMessage:"Attach files related to incident"}),
-            content: < FileUploadSection setSelectedFile={setIncidentFiles} />,
+            content: <FileUploader 
+                        files={incidentFiles} 
+                        setFiles={setIncidentFiles} 
+                    />,
             handler: () => {
                 if (incidentFiles) {
-                    dispatch(uploadFileGuest(incidentId, incidentFiles))
+                    const fileData = new FormData();
+                    for(var file of incidentFiles){
+                        fileData.append("files[]", file);
+                    }
+                    dispatch(uploadFileGuest(incidentId, fileData))
                 } else {
                     dispatch(moveStepper({ step: activeStep + 1 }));
                 }

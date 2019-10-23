@@ -57,6 +57,7 @@ import {
 import DropZoneBase from '../../shared/components/DropZoneBase';
 import IntlSelect from './IntlSelect';
 import moment from 'moment';
+import FileUploader from '../../shared/components/FileUploader';
 
 const styles = theme => ({
     root: {
@@ -146,7 +147,7 @@ class IncidentFormInternal extends Component {
         reporterMobile: "",
         reporterLandline: "",
         reporterEmail: "",
-        file: null,
+        files: [],
         politicalParty: "",
         injuredParties: [],
         respondents: [],
@@ -214,7 +215,11 @@ class IncidentFormInternal extends Component {
             this.props.updateInternalIncident(paramIncidentId, values);
             this.props.history.push(`/app/review/${paramIncidentId}`);
         } else {
-            this.props.submitInternalIncident(values, this.state.file);
+            const fileData = new FormData();
+            for(var file of this.state.files){
+                fileData.append("files[]", file);
+            }
+            this.props.submitInternalIncident(values, fileData);
             // this.props.history.push('/app/review');
         }
     }
@@ -247,9 +252,9 @@ class IncidentFormInternal extends Component {
         return initData;
     }
 
-    handleFileSelect = (selectedFile) => {
+    handleFileSelect = (selectedFiles) => {
         this.setState({
-            file: selectedFile
+            files: selectedFiles
         })
     }
 
@@ -714,7 +719,11 @@ class IncidentFormInternal extends Component {
                                         {!paramIncidentId &&
                                             <Grid item xs={12} sm={6}>
                                                 <InputLabel htmlFor="election" >Upload File</InputLabel>
-                                                <DropZoneBase setSelectedFiles={this.handleFileSelect} />
+                                                <FileUploader 
+                                                    files={this.state.files}
+                                                    setFiles={this.handleFileSelect}
+                                                />
+                                                {/* <DropZoneBase setSelectedFiles={this.handleFileSelect} /> */}
                                             </Grid>
                                         }
 
