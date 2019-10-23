@@ -64,8 +64,8 @@ class MainRouter extends Component {
                 <PrivateRoute exact path="/app/home" component={Home} /> 
                 <PrivateRoute exact path="/app/reports" component={ReportList} /> 
                 <PrivateRoute exact path="/app/reports/view" component={ReportViewer} /> 
-                <PrivateRoute exact path="/app/incident" component={IncidentFormInternal} /> 
-                <PrivateRoute exact path="/app/incident/:paramIncidentId" component={IncidentFormInternal} /> 
+                <PrivateRoute exact path="/app/create" component={IncidentFormInternal} /> 
+                {/* <PrivateRoute exact path="/app/create/:paramIncidentId" component={IncidentFormInternal} />  */}
                 <PrivateRoute exact path="/app/review" component={ReviewIncidentListView} />
                 <PrivateRoute exact path="/app/review/:paramIncidentId" component={IncidentView} />
                 <PrivateRoute exact path="/app/review/:paramIncidentId/edit" component={IncidentFormInternal} />
