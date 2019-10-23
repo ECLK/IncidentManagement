@@ -378,11 +378,8 @@ const VerticalLinearStepper = (props) => {
                     const labelProps = {};
                     if (isStepOptional(index)) {
                         if (index === 3) {
-                            // labelProps.optional = <Typography variant="caption">
-                            //     Optional - you may submit your complaint anonymously. 
-                            //     If you choose to do so, you will not be able to obtain 
-                            //     status updates from the Election Commission of Sri Lanka.
-                            //     </Typography>;
+                            // expected here to gives more information on 'contact info'
+                            labelProps.optional = <Typography variant="caption">{f({ id: "eclk.incident.management.report.incidents.forms.label.optional", defaultMessage: "Optional" })}</Typography>;
                         } else {
                             labelProps.optional = <Typography variant="caption">{f({ id: "eclk.incident.management.report.incidents.forms.label.optional", defaultMessage: "Optional" })}</Typography>;
                         }
