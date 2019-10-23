@@ -16,9 +16,12 @@
 
   "eclk.incident.management.report.incidents.section.describe": "Describe the incident",
   "eclk.incident.management.report.incidents.description": "Description",
+  "eclk.incident.management.report.incidents.description.error.message": "Description is required",
   "eclk.incident.management.report.incidents.election": "Election",
+  "eclk.incident.management.report.incidents.election.error.message": "Election is required",
   "eclk.incident.management.report.incidents.date": "Date",
   "eclk.incident.management.report.incidents.time": "Time",
+  "eclk.incident.management.report.incidents.datetime.error.message": "Date and time are required",
 
   "eclk.incident.management.report.incidents.section.location": "Describe the incident location",
   "eclk.incident.management.report.incidents.location": "Location name or description",
