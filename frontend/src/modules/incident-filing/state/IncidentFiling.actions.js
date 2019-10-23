@@ -194,7 +194,7 @@ export function submitInternalIncidentData(incidentData, fileData) {
             if(fileData){
                 let result = await uploadFile(incident.id, fileData);
                 const mediaData = {
-                    "file_id": result.data.id
+                    "file_id_set": result.data.map(file => file.id)
                   };
                 result = await attachMedia(incident.id, mediaData);
             }
