@@ -29,13 +29,18 @@ class FileView(APIView):
     return Response(serializer.data, status=status.HTTP_200_OK)
       
   def post(self, request, incident_id):
-    
-    file_data = request.data
-    file_data["incident"] = incident_id
-    file_data["extension"] = file_data["file"].name.split('.')[-1]
-    file_data["original_name"] = file_data["file"].name
+    files = request.data.getlist("files[]")
+    file_data = []
+    for _file in files:
+      file_dict = dict()
+      file_dict["file"] = _file
+      file_dict["incident"] = incident_id
+      file_dict["extension"] = _file.name.split('.')[-1]
+      file_dict["original_name"] = _file.name
 
-    file_serializer = FileSerializer(data=file_data)
+      file_data.append(file_dict)
+
+    file_serializer = FileSerializer(data=file_data, many=True)
     if file_serializer.is_valid():
       file_serializer.save()
       return Response(file_serializer.data, status=status.HTTP_201_CREATED)

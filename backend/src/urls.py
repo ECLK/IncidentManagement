@@ -61,6 +61,7 @@ urlpatterns = [
     path("politicalparties/", common_views.PoliticalPartyList.as_view()),
 
     path("incidents/", incident_views.IncidentList.as_view()),
+    path("incidents/sms", incident_views.SMSIncident.as_view()),
     path("incidents/<uuid:incident_id>", incident_views.IncidentDetail.as_view()),
     path("incidents/<uuid:incident_id>/events", event_views.get_event_trail),
   

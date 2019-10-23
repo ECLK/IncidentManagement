@@ -79,7 +79,7 @@ export const uploadFileGuest = (incidentId, formData) => {
         dispatch(uploadFileGuestRequest())
         let result = await incidentsApi.uploadFile(incidentId, formData)
         const mediaData = {
-            "file_id": result.data.id
+            "file_id_set": result.data.map(file => file.id)
         };
         result = await publicApi.attachMedia(incidentId, mediaData);
         dispatch(uploadFileGuestSuccess(result))

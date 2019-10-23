@@ -45,7 +45,8 @@ from .services import (
     attach_media,
     get_fitlered_incidents_report,
     get_guest_user,
-    get_incident_by_reporter_unique_id
+    get_incident_by_reporter_unique_id,
+    create_reporter
 )
 
 from ..events import services as event_service
@@ -186,6 +187,32 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         raise IncidentException(serializer.errors)
         # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class SMSIncident(APIView):
+
+    serializer_class = IncidentSerializer
+
+    def post(self, request, format=None):
+
+        sms_incident_data = request.data
+        telephone = request.data.get("telephone", "No Telephone Number")
+        sms_incident_data["title"] = "SMS by " + telephone
+        sms_incident_data["infoChannel"] = "SMS"
+        serializer = IncidentSerializer(data=sms_incident_data)
+
+        if serializer.is_valid():
+            incident = serializer.save()
+            reporter = create_reporter()
+            reporter.telephone = telephone
+            reporter.save()
+            incident.reporter = reporter
+            return_data = serializer.data
+            
+            incident_data = IncidentSerializer(create_incident_postscript(incident, request.user)).data
+            return_data = incident_data
+
+            return Response(return_data, status=status.HTTP_201_CREATED)
+
+        raise IncidentException(serializer.errors)
 
 class IncidentDetail(APIView):
     """
@@ -368,9 +395,10 @@ class IncidentMediaView(APIView):
     def post(self, request, incident_id, format=None):
 
         incident = get_incident_by_id(incident_id)
-        file_id = request.data['file_id']
-        uploaded_file = file_services.get_file_by_id(file_id)
-        attach_media(request.user, incident, uploaded_file)
+        file_id_set = request.data['file_id_set']
+
+        for file_id in file_id_set:
+            attach_media(request.user, incident, file_services.get_file_by_id(file_id))
 
         return Response("Incident workflow success", status=status.HTTP_200_OK)
 
@@ -438,9 +466,10 @@ class IncidentMediaPublicUserView(APIView):
     def post(self, request, incident_id, format=None):
 
         incident = get_incident_by_id(incident_id)
-        file_id = request.data['file_id']
-        uploaded_file = file_services.get_file_by_id(file_id)
-        attach_media(get_guest_user(), incident, uploaded_file)
+        file_id_set = request.data['file_id_set']
+
+        for file_id in file_id_set:
+            attach_media(get_guest_user(), incident, file_services.get_file_by_id(file_id))
 
         return Response("Incident workflow success", status=status.HTTP_200_OK)
 

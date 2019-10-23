@@ -26,7 +26,8 @@ import {
     resolveEvent,
     fetchAllUsers,
     setIncidentAssignee,
-    fetchEscallateIncident
+    fetchEscallateIncident,
+    attachFile
 } from '../state/OngoingIncidents.actions';
 import { 
     fetchActiveIncidentData,
@@ -39,6 +40,7 @@ import {
 import { EventActions } from './EventTrail'
 import {showModal} from '../../modals/state/modal.actions'
 import { userCan, USER_ACTIONS } from '../../utils/userUtils';
+import FileUploader from '../../shared/components/FileUploader';
 
 const styles = theme => ({
     label: {
@@ -117,7 +119,8 @@ class NavTabs extends Component {
             top_category: "Violence",
             sub_category: "Interrupting propaganda"
         },
-        isCommentVisible: false
+        isCommentVisible: false,
+        files: []
     };
 
     handleChange = (event, value) => {
@@ -163,6 +166,23 @@ class NavTabs extends Component {
 
     onRequestAdviceClick = () => {
         this.props.showRequestAdviceModal(this.props.activeIncident.id, this.props.users);
+    }
+
+    onSelectFiles = (files) => {
+        this.setState({
+            files: files
+        })
+    }
+
+    onUploadClick = () => {
+        const formData = new FormData();
+        for(var file of this.state.files){
+            formData.append("files[]", file);
+        }
+        this.props.attachFiles(this.props.activeIncident.id, formData);
+        this.setState({
+            files: []
+        })
     }
 
     render() {
@@ -216,7 +236,15 @@ class NavTabs extends Component {
                                     activeIncident.currentStatus !== 'INVALIDATED'  && 
                                     <div className={classes.textEditorWrapper}>
                                         <Editor/>
-                                        <DropZone/>
+                                        {/* <DropZone/> */}
+                                        <FileUploader 
+                                            files={this.state.files}
+                                            setFiles={this.onSelectFiles}
+                                        />
+                                        <Button disabled={!this.state.files.length} onClick={this.onUploadClick}>
+                                            Upload
+                                        </Button>
+
                                     </div>
                                 }
                             </div>
@@ -358,6 +386,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         getDistricts: () => {
             dispatch(fetchDistricts());
+        },
+        attachFiles: (incidentId, formData) => {
+            dispatch(attachFile(incidentId, formData));
         }
     }
 }
