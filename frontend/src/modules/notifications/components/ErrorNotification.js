@@ -10,7 +10,7 @@ const ErrorNotification = (props) => {
     if(errors){
         if(errors.response && errors.response.data){
             if(errors.response.data.data){
-                message = errors.response.data.data.message;
+                message = errors.response.data.data.message || errors.response.data.data.non_field_errors[0] || "unknown error";
             }else{
                 message = "Server error"
             }

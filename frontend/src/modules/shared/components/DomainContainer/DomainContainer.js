@@ -24,9 +24,7 @@ import { loadUsers } from '../../../user/state/userActions'
 
 import RootModal from '../../../modals/components/RootModal'
 import Notification from '../../../notifications/components/Notification';
-import ErrorNotification from '../../../notifications/components/ErrorNotification';
-import ConfirmNotification from '../../../notifications/components/ConfirmNotification';
-import LoadingNotification from '../../../notifications/components/LoadingNotification';
+
 import Breadcrumbs from '../Breadcrumbs';
 
 import { userCan, USER_ACTIONS } from '../../../utils/userUtils';
@@ -176,9 +174,6 @@ class DomainContainer extends React.Component {
 
     return (
       <div className={classes.root}>
-        <ErrorNotification />
-        <ConfirmNotification />
-        <LoadingNotification />
         <CssBaseline />
 
 
