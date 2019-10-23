@@ -393,9 +393,10 @@ class IncidentMediaView(APIView):
     def post(self, request, incident_id, format=None):
 
         incident = get_incident_by_id(incident_id)
-        file_id = request.data['file_id']
-        uploaded_file = file_services.get_file_by_id(file_id)
-        attach_media(request.user, incident, uploaded_file)
+        file_id_set = request.data['file_id_set']
+
+        for file_id in file_id_set:
+            attach_media(request.user, incident, file_services.get_file_by_id(file_id))
 
         return Response("Incident workflow success", status=status.HTTP_200_OK)
 
@@ -463,9 +464,10 @@ class IncidentMediaPublicUserView(APIView):
     def post(self, request, incident_id, format=None):
 
         incident = get_incident_by_id(incident_id)
-        file_id = request.data['file_id']
-        uploaded_file = file_services.get_file_by_id(file_id)
-        attach_media(get_guest_user(), incident, uploaded_file)
+        file_id_set = request.data['file_id_set']
+
+        for file_id in file_id_set:
+            attach_media(get_guest_user(), incident, file_services.get_file_by_id(file_id))
 
         return Response("Incident workflow success", status=status.HTTP_200_OK)
 
