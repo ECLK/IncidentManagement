@@ -83,7 +83,7 @@ class SignInPage extends Component {
                     <Typography component="h1" variant="h5">
                         Sign in
                 </Typography>
-                    <form className={classes.form}>
+                    <form className={classes.form} onSubmit={(e)=>{e.preventDefault(); this.handleSignIn()}}>
                         <FormControl margin="normal" required fullWidth>
                             <InputLabel htmlFor="email">User Name</InputLabel>
                             <Input id="email" name="email" value={this.state.userName} 
@@ -93,6 +93,7 @@ class SignInPage extends Component {
                             <InputLabel htmlFor="password">Password</InputLabel>
                             <Input name="password" type="password" id="password" autoComplete="current-password"
                                 onChange={(e)=>{this.setState({password:e.target.value})}} />
+                            <input type="submit" style={{height: 0, width: 0, border: 'none', padding: 0,}} hidefocus="true" />
                         </FormControl>
                         <FormControlLabel
                             control={<Checkbox checked={rememberMe} value="remember" color="primary" onChange={toggleRememberMe} />}

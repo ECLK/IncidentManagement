@@ -684,12 +684,11 @@ export function fetchSignIn(userName, password) {
                 }
             }else{
                 token = signInData.token;
-            }   
-            console.log(signInData, token);
+            }
             axios.defaults.headers.common['Authorization'] = "JWT " + token;
             dispatch(requestSignInSuccess(signInData.data));
         }catch(error){
-            dispatch(getActiveIncidentDataError(error));
+            dispatch(requestSignInError(error));
         }
     }
 }
