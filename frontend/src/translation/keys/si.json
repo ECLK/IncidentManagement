@@ -1,6 +1,6 @@
 {
   "eclk.incident.management.incidents": "සිදුවීම්",
-  "eclk.incident.management.incidents.reporting.system": "මැතිවරණ ප්‍රචණ්ඩක්ක්‍රියා  වාර්තාකරණ පද්ධතිය",
+  "eclk.incident.management.incidents.reporting.system": "මැතිවරණ ප්‍රචණ්ඩක්ක්‍රියා වාර්තාකරණ පද්ධතිය",
   
   "eclk.incident.management.report.incidents.forms.label.optional": "අභිමතය පරිදි",
   "eclk.incident.management.report.incidents.forms.label.none": "නැත",
@@ -16,9 +16,12 @@
 
   "eclk.incident.management.report.incidents.section.describe": "සිදුවීම පිළිබඳ තොරතුරු",
   "eclk.incident.management.report.incidents.description": "විස්තරය",
+  "eclk.incident.management.report.incidents.description.error.message": "විස්තරය අවශ්‍ය වේ",
   "eclk.incident.management.report.incidents.election": "මැතිවරණය",
+  "eclk.incident.management.report.incidents.election.error.message": "මැතිවරණය අවශ්‍ය වේ",
   "eclk.incident.management.report.incidents.date": "දිනය",
   "eclk.incident.management.report.incidents.time": "වේලාව",
+  "eclk.incident.management.report.incidents.datetime.error.message": "දිනය සහ වේලාව අවශ්‍ය වේ",
   
   "eclk.incident.management.report.incidents.section.location": "සිදුවූ ස්ථානය පිළිබඳ තොරතුරු",
   "eclk.incident.management.report.incidents.location": "සිදුවූ ස්ථානයේ නාමය හෝ විස්තරය",

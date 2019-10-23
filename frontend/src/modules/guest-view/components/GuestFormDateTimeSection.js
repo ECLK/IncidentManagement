@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { useIntl } from 'react-intl';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
     container: {
@@ -15,6 +17,10 @@ const styles = theme => ({
         marginBottom: theme.spacing.unit*2,
         width: 200,
     },
+    errorMessage: {
+        marginLeft: theme.spacing.unit,
+        marginTop: -8
+    }
 });
 
 function DatePickers(props) {
@@ -58,6 +64,17 @@ function DatePickers(props) {
                 helperText="hh:mm aa"
                 error={formErrors.incidentDatetimeErrorMsg?true:false}
             />
+            <Grid container>
+            <Typography 
+                align="left"
+                variant="caption"
+                color="error"
+                className={classes.errorMessage}
+
+            >
+                { (formErrors.incidentDatetimeErrorMsg)?f({id:"eclk.incident.management.report.incidents.datetime.error.message", defaultMessage:"Date and time are required"}):'' }
+            </Typography>
+            </Grid>
         </form>
     );
 }
