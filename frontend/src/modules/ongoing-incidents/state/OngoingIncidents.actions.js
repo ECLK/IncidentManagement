@@ -504,7 +504,7 @@ export function attachFile(incidentId, formData) {
           dispatch(attachFileRequest());
           let result = await incidentAPI.uploadFile(incidentId, formData)
           const mediaData = {
-            "file_id": result.data.id
+            "file_id_set": result.data.map(file => file.id)
           };
           result = await incidentAPI.attachMedia(incidentId, mediaData);
           dispatch(attachFileSuccess(result))
