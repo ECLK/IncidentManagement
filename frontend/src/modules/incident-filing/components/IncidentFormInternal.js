@@ -58,6 +58,7 @@ import DropZoneBase from '../../shared/components/DropZoneBase';
 import IntlSelect from './IntlSelect';
 import moment from 'moment';
 import FileUploader from '../../shared/components/FileUploader';
+import { showNotification } from '../../notifications/state/notifications.actions';
 
 const styles = theme => ({
     root: {
@@ -319,11 +320,19 @@ class IncidentFormInternal extends Component {
                     validationSchema={IncidentSchema}
                     render={
                         ({ handleSubmit, handleChange, handleBlur, values, errors, touched, setFieldValue, isValid }) => {
-                            if(!isValid){
-                                window.scroll(0,0);
-                            }
                             return(
-                            <form className={classes.container} noValidate autoComplete="off" onSubmit={handleSubmit}>
+                            <form 
+                                className={classes.container} 
+                                noValidate autoComplete="off" 
+                                onSubmit={(e)=>{
+                                    e.preventDefault()
+                                    if(!isValid){
+                                        this.props.showNotification("Missing required values")
+                                        window.scroll(0,0)
+                                    }
+                                    handleSubmit(e)
+                                }}
+                            >
                                 <div style={{ display: "none" }}>{this.props.incident.id}</div>
                                 {/* basic incident detail information */}
                                 <Paper className={classes.paper}>
@@ -1165,6 +1174,10 @@ const mapDispatchToProps = (dispatch) => {
 
         resetIncidentForm: () => {
             dispatch(resetIncidentForm())
+        },
+
+        showNotification: (message) => {
+            dispatch(showNotification({message}, null))
         }
     }
 }

@@ -14,6 +14,9 @@ export function notificationReducer(state = initState, action) {
 
         if (type === SHOW_NOTIFICATION){
             draft.isOpen = true;
+            draft.isLoading = false;
+            draft.confirms = confirm;
+            draft.errors = error;
             return draft;
         }else if(type === HIDE_NOTIFICATION){
             draft.isOpen = false;
