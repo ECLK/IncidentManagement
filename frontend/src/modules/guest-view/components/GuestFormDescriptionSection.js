@@ -44,7 +44,10 @@ const IncidentDescription = props => {
           <TextField
             autoFocus
             id="incidentDescription"
-            label="Description*"
+            label={intl.formatMessage({
+              id: "eclk.incident.management.report.incidents.description",
+              defaultMessage: "Description"
+            })+"*"}
             multiline
             fullWidth
             rowsMax="4"
@@ -56,7 +59,7 @@ const IncidentDescription = props => {
             className={classes.textField}
             margin="normal"
             disabled={disableDescription}
-            helperText={formErrors.incidentDescriptionErrorMsg || "Cannot be changed after Submitting"}
+            helperText={formErrors.incidentDescriptionErrorMsg || ""}
             error={formErrors.incidentDescriptionErrorMsg ? true : false}
           />
         </Grid>
@@ -68,7 +71,7 @@ const IncidentDescription = props => {
             label={intl.formatMessage({
               id: "eclk.incident.management.report.incidents.election",
               defaultMessage: "Election"
-            })}
+            })+"*"}
             className={classes.textField}
             value={selectedElection}
             onChange={e => {
@@ -80,13 +83,14 @@ const IncidentDescription = props => {
                 className: classes.menu
               }
             }}
-            helperText={formErrors.incidentElectionErrorMsg || "Select corresponding election"}
+            helperText={formErrors.incidentElectionErrorMsg || ""}
             error={formErrors.incidentElectionErrorMsg ? true : false}
             margin="normal"
+            fullWidth
           >
             {elections.map(option => (
               <MenuItem key={option.value} value={option.code}>
-                {option.name}
+                {option.name} | {option.sn_name} | {option.tm_name}
               </MenuItem>
             ))}
           </TextField>

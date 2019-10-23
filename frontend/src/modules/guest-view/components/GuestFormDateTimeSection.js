@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import { useIntl } from 'react-intl';
 
 const styles = theme => ({
     container: {
@@ -18,6 +19,7 @@ const styles = theme => ({
 
 function DatePickers(props) {
 
+    const {formatMessage: f} = useIntl();
     const { classes, dateTime, setDateTime, formErrors } = props;
 
     return (
@@ -25,7 +27,7 @@ function DatePickers(props) {
             <TextField
                 autoFocus
                 id="date"
-                label="Date"
+                label={f({ id: "eclk.incident.management.report.incidents.date", defaultMessage:"Date" })+"*"}
                 type="date"
                 value={dateTime.date}
                 className={classes.textField}
@@ -42,7 +44,7 @@ function DatePickers(props) {
 
             <TextField
                 id="date"
-                label="Time"
+                label={f({ id: "eclk.incident.management.report.incidents.time", defaultMessage:"Time" })+"*"}
                 type="time"
                 value={dateTime.time}
                 className={classes.textField}

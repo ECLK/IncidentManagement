@@ -1,5 +1,6 @@
 import React, { useMemo, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { useIntl } from 'react-intl';
 
 import Button from '@material-ui/core/Button';
 
@@ -35,6 +36,7 @@ const rejectStyle = {
 export default function DropZoneBase(props) {
 
     const { handleUpload, setSelectedFiles } = props
+    const { formatMessage: f } = useIntl();
 
     let files = null
 
@@ -84,7 +86,7 @@ export default function DropZoneBase(props) {
                 <input {...getInputProps()} />
                 <p>Drag and drop your file(s) here or click to select files</p>
             </div>
-            <h4>Selected File: {files[0] ? files[0].key : 'None'}</h4>
+            <h4>{f({id:"eclk.incident.management.report.incidents.seleted.file", defaultMessage:"Selected File"})}: {files[0] ? files[0].key : f({id:"eclk.incident.management.report.incidents.forms.label.none", defaultMessage:"None"})}</h4>
             {handleUpload && <div style={{ display: 'flex' }}>
                 <Button disabled={!files[0]} onClick={() => { handleUpload(acceptedFiles) }}>
                     Upload

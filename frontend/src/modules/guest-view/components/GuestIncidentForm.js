@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { Link, Redirect } from 'react-router-dom';
 import { withRouter } from "react-router";
+import { useIntl } from "react-intl";
 
 import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
@@ -68,6 +69,8 @@ const VerticalLinearStepper = (props) => {
         dispatch(fetchCategories());
         dispatch(fetchChannels());
     }, []);
+
+    const {formatMessage: f} = useIntl();
 
     const dispatch = useDispatch();
     const { elections, categories, channels } = useSelector((state) => (state.sharedReducer));
@@ -146,7 +149,7 @@ const VerticalLinearStepper = (props) => {
     const stepDefinitions = {
 
         0: {
-            title: 'Describe the incident',
+            title: f({ id: "eclk.incident.management.report.incidents.section.describe", defaultMessage: "Describe the incident"}),
             content: <>
                 <DescriptionSection
                     handledDescriptionChange={setIncidentDescription}
@@ -197,7 +200,7 @@ const VerticalLinearStepper = (props) => {
         },
 
         1: {
-            title: 'Describe the location',
+            title: f({ id: "eclk.incident.management.report.incidents.section.location", defaultMessage: "Describe the incident location" }),
             content: < LocationSection
                 location={incidentLocation}
                 handledLocationChange={setIncidentLocation}
@@ -217,7 +220,7 @@ const VerticalLinearStepper = (props) => {
         },
 
         2: {
-            title: 'Attach files related to incident',
+            title: f({ id:"eclk.incident.management.report.incidents.section.attachment", defaultMessage:"Attach files related to incident"}),
             content: < FileUploadSection setSelectedFile={setIncidentFiles} />,
             handler: () => {
                 if (incidentFiles) {
@@ -229,7 +232,7 @@ const VerticalLinearStepper = (props) => {
         },
 
         3: {
-            title: 'Your contact details',
+            title: f({id:"eclk.incident.management.report.incidents.section.contact", defaultMessage:"Your contact details"}),
             content: < ContactSection
                 contactDetials={incidentContact}
                 handleContactDetailsChange={setIncidentContact} />,
@@ -361,7 +364,12 @@ const VerticalLinearStepper = (props) => {
             </Grid>
 
             {/* <Button variant="outlined" onClick={() => { window.history.back(); }}> Back </Button> */}
-            <Typography style={{ width: '100%' }} align="center" variant="h5" marginTop="20">Report Incident</Typography>
+            <Typography style={{ width: '100%' }} align="center" variant="h5" marginTop="20">
+                {f({ id: "eclk.incident.management.report.incidents", defaultMessage: "Report Incident" })}
+            </Typography>
+            <Typography style={{ width: '100%' }} align="left" variant="" marginTop="20">
+                {f({ id: "eclk.incident.management.report.incidents.helper.text", defaultMessage: "*fields are mandatory" })}
+            </Typography>
 
             <Stepper activeStep={activeStep} orientation="vertical">
                 {steps.map((label, index) => {
@@ -376,7 +384,7 @@ const VerticalLinearStepper = (props) => {
                             //     status updates from the Election Commission of Sri Lanka.
                             //     </Typography>;
                         } else {
-                            labelProps.optional = <Typography variant="caption">Optional</Typography>;
+                            labelProps.optional = <Typography variant="caption">{f({ id: "eclk.incident.management.report.incidents.forms.label.optional", defaultMessage: "Optional" })}</Typography>;
                         }
                     }
                     if (isStepSkipped(index)) {
@@ -395,7 +403,7 @@ const VerticalLinearStepper = (props) => {
                                             onClick={handleBack}
                                             className={classes.button}
                                         >
-                                            Back
+                                            {f({ id:"eclk.incident.management.report.incidents.forms.button.back", defaultMessage: "Back"})}
                                     </Button>
                                         {isStepOptional(activeStep) && (
                                             <Button
@@ -404,7 +412,7 @@ const VerticalLinearStepper = (props) => {
                                                 onClick={handleSkip}
                                                 className={classes.button}
                                             >
-                                                Skip
+                                                {f({id:"eclk.incident.management.report.incidents.forms.button.skip", defaultMessage:"Skip"})}
                                     </Button>
                                         )}
                                         <Button
@@ -413,7 +421,9 @@ const VerticalLinearStepper = (props) => {
                                             onClick={handleNext}
                                             className={classes.button}
                                         >
-                                            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                                            {activeStep === steps.length - 1 ? 
+                                                f({id:"eclk.incident.management.report.incidents.forms.button.finish", defaultMessage:"Finish"}) : 
+                                                f({id:"eclk.incident.management.report.incidents.forms.button.next", defaultMessage:"Next"})}
                                         </Button>
                                     </div>
                                 </div>
