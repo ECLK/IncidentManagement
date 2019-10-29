@@ -59,6 +59,7 @@ import IntlSelect from './IntlSelect';
 import moment from 'moment';
 import FileUploader from '../../shared/components/FileUploader';
 import { showNotification } from '../../notifications/state/notifications.actions';
+import  TelephoneInput from './TelephoneInput';
 
 const styles = theme => ({
     root: {
@@ -297,16 +298,18 @@ class IncidentFormInternal extends Component {
             })
         );
 
+        //validation schema
         const IncidentSchema = Yup.object().shape({
             incidentType: Yup.mixed().required('Required'),
             infoChannel: Yup.mixed().required('Required'),
             title: Yup.string().required('Required'),
-            description: Yup.string()
-              .required('Required'),
+            description: Yup.string().required('Required'),
             occurrence: Yup.mixed().required('Required'),
             category: Yup.mixed().required('Required'),
             election: Yup.mixed().required('Required'),
             severity: Yup.mixed().required('Required'),
+            reporterMobile: Yup.number(),
+            reporterEmail: Yup.string().email('Invalid email')
           });
 
         return (
@@ -932,11 +935,10 @@ class IncidentFormInternal extends Component {
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                id="reporterMobile"
+                                            <TelephoneInput
+                                                className={classes.textField}
                                                 name="reporterMobile"
                                                 label="Complainer Mobile"
-                                                className={classes.textField}
                                                 value={values.reporterMobile}
                                                 onChange={handleChange}
                                             />
@@ -949,6 +951,8 @@ class IncidentFormInternal extends Component {
                                                 className={classes.textField}
                                                 value={values.reporterEmail}
                                                 onChange={handleChange}
+                                                error={ touched.reporterEmail && errors.reporterEmail}
+                                                helperText={touched.reporterEmail ? errors.reporterEmail : null}
                                             />
                                         </Grid>
                                         <Grid item xs={12} >
