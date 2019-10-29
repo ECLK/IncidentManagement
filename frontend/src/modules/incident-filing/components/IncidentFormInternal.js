@@ -939,8 +939,6 @@ class IncidentFormInternal extends Component {
                                                 className={classes.textField}
                                                 name="reporterMobile"
                                                 label="Complainer Mobile"
-                                                value={values.reporterMobile}
-                                                onChange={handleChange}
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={6}>

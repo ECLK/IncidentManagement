@@ -17,17 +17,17 @@ const styles = theme => ({
 });
 
 function NumberFormatCustom(props) {
-    const { inputRef, onChange, ...other } = props;
+    const { inputRef, onChange, name, ...other } = props;
 
     return (
         <NumberFormat
             {...other}
             getInputRef={inputRef}
-            name="reporterMobile"
             onValueChange={values => {
                 onChange({
                     target: {
                         value: values.value,
+                        name:name
                     },
                 });
             }}
@@ -45,32 +45,37 @@ NumberFormatCustom.propTypes = {
 class TelephoneInput extends React.Component {
 
     render() {
-
+        
         const { classes, name,
             label,
             placeholder,
-            multiline,
-            value,
-            onChange
-        } = this.props;
+            multiline } = this.props;
 
         return (
-            <TextField
-                label={label}
-                placeholder={placeholder}
-                // error={form.touched.title && form.errors.title}
-                // helperText={form.touched.title ? form.errors.title : null}
-                multiline={multiline}
-                className={classes.formControl}
-                InputProps={{
-                    inputComponent: NumberFormatCustom,
-                }}
-                placeholder="+94 (___) ___-____"
-                onChange={onChange}
-                value={value}
-            />
+            <Field 
+            name={name}>
+            {({
+              field, // { name, value, onChange, onBlur }
+              form, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
+              meta,
+            }) => (
+                <TextField
+                    {...field}
+                    label={label}
+                    placeholder={placeholder}
+                    error={form.touched.title && form.errors.title}
+                    helperText={form.touched.title ? form.errors.title : null}
+                    multiline={multiline}
+                    className={classes.formControl}
+                    InputProps={{
+                        inputComponent: NumberFormatCustom,
+                    }}
+                    name={name}
+                />
+            )}
+          </Field>
 
-
+            
         );
     }
 }
