@@ -236,7 +236,7 @@ class NavTabs extends Component {
                                     activeIncident.currentStatus !== 'INVALIDATED'  && 
                                     <div className={classes.textEditorWrapper}>
                                         <Editor/>
-                                        <DropZone/>
+                                        {/* <DropZone/> */}
                                         <FileUploader 
                                             files={this.state.files}
                                             setFiles={this.onSelectFiles}

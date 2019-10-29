@@ -26,6 +26,7 @@ import RootModal from '../../../modals/components/RootModal'
 import Notification from '../../../notifications/components/Notification';
 
 import Breadcrumbs from '../Breadcrumbs';
+import { API_BASE_URL } from '../../../../config'
 
 import { userCan, USER_ACTIONS } from '../../../utils/userUtils';
 
@@ -164,6 +165,10 @@ class DomainContainer extends React.Component {
     changeLanguage(lang);
   }
 
+  handlePasswordChange = () => {
+    window.open(API_BASE_URL+'/admin/password_change/', '_blank');
+  }
+
   render() {
     const { classes, selectedLanguage, signedInUser, location } = this.props;
     const { open, anchorEl, anchorLang } = this.state;
@@ -175,21 +180,18 @@ class DomainContainer extends React.Component {
     return (
       <div className={classes.root}>
         <CssBaseline />
-
-
         <AppBar
           position="static"
-
         >
             <Toolbar disableGutters={!open}>
 
                 <Typography variant="h6" color="inherit" className={classes.grow}>
                     Incident Management
-
+                    
                     <Button 
                         variant={selectedMainSection==='home'?'outlined': 'flat'} 
                         color="inherit" component={HomeLink} className={classes.homeButton}>Home</Button>
-                    <Button variant={selectedMainSection==='incident'?'outlined': 'flat'} 
+                    <Button variant={selectedMainSection==='create'?'outlined': 'flat'} 
                         color="inherit" component={ReportLink}>Create</Button>
                     
                     {userCan(signedInUser, null, USER_ACTIONS.REVIEW_INCIDENTS) && (
@@ -250,6 +252,7 @@ class DomainContainer extends React.Component {
                             onClose={this.handleMenuClose}
                         >
                             <MenuItem >Profile</MenuItem>
+                            <MenuItem onClick={this.handlePasswordChange}>Change Password</MenuItem>
                             <MenuItem onClick={this.handleSignOut}>Sign Out</MenuItem>
                         </Menu>
 
@@ -262,8 +265,8 @@ class DomainContainer extends React.Component {
                             {signedInUser.displayname}
                             <AccountCircle style={{ margin: 5 }} />
                         </Button>
-            </Toolbar>
-        </AppBar>
+                    </Toolbar>
+                </AppBar>
                 <main
                     className={classNames(classes.content, {
                         [classes.contentShift]: open,
@@ -271,7 +274,7 @@ class DomainContainer extends React.Component {
                 >
                     <RootModal />
 
-                    <div className={classes.breadCrumbWrapper}><Breadcrumbs pathname={location.pathname}/></div>
+                    <div className={classes.breadCrumbWrapper}><Breadcrumbs pathname={location.pathname} /></div>
 
                     {this.props.content}
 
