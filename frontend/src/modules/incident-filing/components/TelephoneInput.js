@@ -63,8 +63,8 @@ class TelephoneInput extends React.Component {
                     {...field}
                     label={label}
                     placeholder={placeholder}
-                    error={form.touched.title && form.errors.title}
-                    helperText={form.touched.title ? form.errors.title : null}
+                    error={form.touched[name] && form.errors[name]}
+                    helperText={form.touched[name] ? form.errors[name] : null}
                     multiline={multiline}
                     className={classes.formControl}
                     InputProps={{
