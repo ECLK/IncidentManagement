@@ -24,20 +24,22 @@ class UserSerializer(serializers.ModelSerializer):
         return obj.first_name + " " + obj.last_name
 
     def get_entity(self, obj):
-        if obj.groups.count() > 0:
-            group = obj.groups.all()[0]
-
-            if group.organization is None:
-                return None 
-
-            return { 
-                "gid" : group.organization.id,
-                "name": group.organization.name
+        if hasattr(obj, "profile"):
+            if obj.profile.organization is not None:
+                return { 
+                "gid" : obj.profile.organization.code,
+                "name": obj.profile.organization.displayName
             }
 
         return None
     
     def get_permissions(self, obj):
+        if hasattr(obj, "profile"):
+            if obj.profile.level is not None:
+                permissions = Permission.objects.filter(group=obj.profile.level.role)
+                permission_data = map(lambda p: p.codename, permissions)
+                return permission_data
+
         if obj.groups.count() > 0:
             group = obj.groups.all()[0]
             permissions = Permission.objects.filter(group=group)

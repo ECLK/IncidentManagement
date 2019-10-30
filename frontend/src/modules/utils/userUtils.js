@@ -40,7 +40,7 @@ export function userCan(user, incident, action){
             return true;
         }
     }else if(action === USER_ACTIONS.REVIEW_INCIDENTS){
-        if(findPermission(user.userPermissions, "can_review_incidents")){
+        if(findPermission(user.userPermissions, "CAN_REVIEW_INCIDENTS")){
             return true;
         }
     }else if(action === USER_ACTIONS.VIEW_REPORTS){
@@ -48,7 +48,9 @@ export function userCan(user, incident, action){
             return true;
         }
     }else if(action === USER_ACTIONS.RUN_WORKFLOW){
-        return user.isStaff;
+        if(findPermission(user.userPermissions, "CAN_RUN_WORKFLOW")){
+            return true;
+        }
     }
 
     return false;

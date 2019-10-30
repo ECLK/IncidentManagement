@@ -6,7 +6,6 @@ from rest_framework.exceptions import APIException
 from ..incidents.models import (
     IncidentComment, 
     IncidentStatus, 
-    IncidentSeverity, 
     VerifyWorkflow,
     EscalateExternalWorkflow,
     CompleteActionWorkflow,
@@ -47,13 +46,6 @@ class GenericDataRelatedField(serializers.RelatedField):
                 "status": {
                     "from_status_type": value.previous_status,
                     "to_status_type": value.current_status
-                }
-            }
-        elif isinstance(value, IncidentSeverity):
-            return {
-                "status": {
-                    "from_severity_type": value.previous_severity,
-                    "to_severity_type": value.current_severity
                 }
             }
         elif isinstance(value, File):

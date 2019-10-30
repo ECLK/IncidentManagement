@@ -7,7 +7,7 @@
 # ===============================================================================
 
 from rest_framework import serializers
-from .models import Incident, IncidentStatus, IncidentSeverity, Reporter, IncidentComment, IncidentPoliceReport, IncidentPerson, IncidentVehicle
+from .models import Incident, IncidentStatus, Reporter, IncidentComment, IncidentPoliceReport, IncidentPerson, IncidentVehicle
 from ..common.serializers import DistrictSerializer, PoliceStationSerializer
 from ..common.models import PoliceStation
 from ..custom_auth.serializers import UserSerializer
@@ -17,13 +17,6 @@ class IncidentStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = IncidentStatus
         fields = "__all__"
-
-
-class IncidentSeveritySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = IncidentSeverity
-        fields = "__all__"
-
 
 class ReporterSerializer(serializers.ModelSerializer):
     class Meta:

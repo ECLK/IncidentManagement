@@ -7,6 +7,7 @@ import { Card, Grid, CardContent, CardHeader } from '@material-ui/core';
 import IncidentList from './IncidentList';
 import ManagedIncidentList from './ManagedIncidentList';
 import { useSelector } from 'react-redux';
+import { userCan, USER_ACTIONS } from '../../utils/userUtils';
 
 const drawerWidth = 240;
 const styles = theme => ({
@@ -19,7 +20,7 @@ const Home = ({classes, ...props}) =>{
 
     return (
         <Grid container>
-            {user.isStaff && (
+            {userCan(user, null, USER_ACTIONS.RUN_WORKFLOW) && (
                 <>
                 <Grid item>
                     <Card xs={6}>
@@ -49,7 +50,7 @@ const Home = ({classes, ...props}) =>{
                 </>
             )}
 
-            {!user.isStaff && (
+            {!userCan(user, null, USER_ACTIONS.RUN_WORKFLOW) && (
                 <>
                 <Grid item style={{paddingTop:"10px"}}>
                     <Card xs={6}>

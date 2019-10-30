@@ -12,7 +12,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from django.db.models import Q
 
 from .models import Incident, StatusType, SeverityType
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 from .serializers import (
     IncidentSerializer,
     ReporterSerializer,
@@ -24,11 +24,10 @@ from .services import (
     create_incident_postscript,
     update_incident_postscript,
     update_incident_status,
-    update_incident_severity,
     get_reporter_by_id,
     get_comments_by_incident,
     create_incident_comment_postscript,
-    incident_auto_assign,
+    # incident_auto_assign,
     incident_escalate,
     incident_change_assignee,
     incident_close,
@@ -45,7 +44,10 @@ from .services import (
     attach_media,
     get_fitlered_incidents_report,
     get_guest_user,
-    get_incident_by_reporter_unique_id
+    get_incident_by_reporter_unique_id,
+    user_level_has_permission,
+    find_incident_assignee,
+    find_escalation_candidate
 )
 
 from ..events import services as event_service
@@ -55,7 +57,7 @@ from ..renderer import CustomJSONRenderer
 from rest_framework.renderers import JSONRenderer
 
 import json
-
+from ..custom_auth.models import UserLevel
 
 class IncidentResultsSetPagination(PageNumberPagination):
     page_size = 15
@@ -82,12 +84,17 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         )
 
     def get(self, request, format=None):
+        # #debug
+        # _user = get_guest_user()
+        # _user = User.objects.get(username="police1")
+        # print("assigneee", find_incident_assignee(_user))
+
         incidents = Incident.objects.all().order_by('created_date').reverse()
         user = request.user
 
         # for external entities, they can only view related incidents
-        if not user.is_staff:
-            incidents = incidents.filter(linked_individuals__id=user.id)
+        # if not user.is_staff:
+        #     incidents = incidents.filter(linked_individuals__id=user.id)
 
         # filtering
         param_query = self.request.query_params.get('q', None)
@@ -339,7 +346,7 @@ class IncidentWorkflowView(APIView):
             comment = request.data['comment']
             proof = request.data['proof']
             incident_verify(request.user, incident, comment, proof)
-            incident_escalate(request.user, incident, comment=comment)
+            # incident_escalate(request.user, incident, comment=comment)
 
         elif workflow == "invalidate":
             comment = request.data['comment']
@@ -375,11 +382,13 @@ class IncidentMediaView(APIView):
 
         return Response("Incident workflow success", status=status.HTTP_200_OK)
 
+# NO AUTO ESCALATE FOR NOW
 class IncidentAutoEscalate(APIView):
     def get(self, request):
-        escalated_incidents = auto_escalate_incidents()
+        pass
+        # escalated_incidents = auto_escalate_incidents()
 
-        return Response(escalated_incidents, status=status.HTTP_200_OK)
+        # return Response(escalated_incidents, status=status.HTTP_200_OK)
 
 class Test(APIView):
     def get(self, request):

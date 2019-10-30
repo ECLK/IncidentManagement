@@ -2,7 +2,6 @@
 from .models import (
     Incident,
     IncidentStatus,
-    IncidentSeverity,
     StatusType,
     SeverityType,
     Reporter,
@@ -18,11 +17,12 @@ from .models import (
     CloseWorkflow,
     InvalidateWorkflow
 )
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 
 from ..events import services as event_services
 from ..events.models import Event
 from ..file_upload.models import File
+from ..custom_auth.models import Division, UserLevel
 from django.db import connection
 
 from .exceptions import WorkflowException, IncidentException
@@ -30,7 +30,8 @@ import pandas as pd
 from django.http import HttpResponse
 from xhtml2pdf import pisa
 import json
-
+from django.db.models import Q
+from .permissions import *
 
 def is_valid_incident(incident_id: str) -> bool:
     try:
@@ -102,6 +103,137 @@ def get_guest_user():
     except:
         raise IncidentException("No guest user available")
 
+def user_level_has_permission(user_level: UserLevel, permission: Permission):
+    permissions = Permission.objects.filter(group=user_level.role)
+    return permission in permissions
+
+def get_user_from_level(user_level: UserLevel, division: Division) -> User:
+    print(user_level, division)
+    """ This function would take in a user level and find the user
+        within the level that has the least workload
+        It will query the assignee counts for each user and get the 
+        one with lowest assignments
+    """
+    
+    sql = """
+            SELECT usr.id, COUNT(incident.id) as incident_count FROM `auth_user` as usr 
+            LEFT JOIN incidents_incident as incident on incident.assignee_id = usr.id 
+            INNER JOIN custom_auth_profile as prf on prf.user_id = usr.id
+            INNER JOIN custom_auth_userlevel as ulvl on prf.level_id = ulvl.id
+            INNER JOIN auth_group as grp on ulvl.role_id = grp.id
+            INNER JOIN custom_auth_division as udiv on prf.division_id = udiv.id
+            WHERE ulvl.code = "%s" AND udiv.code = "%s"
+            GROUP BY usr.id
+            ORDER BY incident_count ASC
+          """ % (user_level.code, division.code)
+
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        row = cursor.fetchone()
+        
+        if row is None:
+            return None
+        
+        try:
+            assignee = User.objects.get(id=row[0])
+            return assignee
+        except:
+            return None
+
+def find_candidate_from_division(current_division: Division, current_level: UserLevel, required_permission: Permission=None):
+    parent_level = current_level.parent
+
+    new_assignee = None
+
+    while new_assignee is None:
+        if parent_level is None:
+            # reached the top most position of current division
+            break
+        
+        if required_permission is None or (
+            required_permission is not None and user_level_has_permission(parent_level, required_permission)
+        ):
+            assignee = get_user_from_level(parent_level, current_division)
+
+            if assignee is not None:
+                new_assignee = assignee
+                break
+
+        # if the current user level doesn't have the permission or no assignees from
+        # current level
+        # check the parent user level of the current parent
+        # ie: traversing upwards the user hierarchy
+        parent_level = parent_level.parent
+    
+    return new_assignee
+
+
+def find_escalation_candidate(current_user: User) -> User:
+    """ This function finds an esclation candidate within the
+        <b>same organization</b>
+    """
+    current_division = current_user.profile.division
+    current_level = current_user.profile.level
+
+    # first check if we can find a candidate from the same division
+    # ex: EC Gampaha Cordinator -> EC Gampaha Manager
+    new_assignee = find_candidate_from_division(current_division, current_level)
+
+    # either found an assignee or exhausted the current division
+    if new_assignee is not None:
+        return new_assignee
+    
+    # this part means we have to search in the HQ of the organization
+    # for an assignee
+    hq_division = Division.objects.get(Q(is_hq=True) & 
+                                        Q(organization=current_user.profile.organization))
+    if hq_division is None:
+        raise WorkflowException("Organization Hierarchy Configure Error - No HQ defined")
+    
+    # in the new divsion, we start the search from the
+    # same level as the current user's parent
+    # if current user is Cordinator, we start with Managers in HQ
+    new_assignee = find_candidate_from_division(hq_division, current_level)
+
+    if new_assignee is None:
+        raise WorkflowException("Can't find escalation candidate for current user")
+
+    return new_assignee
+
+def find_incident_assignee(current_user: User):
+    assignee = None
+    required_permission = Permission.objects.get(codename=CAN_MANAGE_INCIDENT)
+    default_division = Division.objects.get(is_default_division=True)
+
+    # first if a public user case
+    if current_user.username == "guest":
+        # guest is a user level under EC organization
+        # ideally we can check if the parent of the current user has 
+        # permissions
+        assignee = find_candidate_from_division(default_division, current_user.profile.level)
+
+    else:
+        # this is a logged in user
+        # first check if the current user has the permission to manage an incident
+        if user_level_has_permission(current_user.profile.level, required_permission):
+            # if so assign it to self
+            return current_user
+        else:
+            # if not, first check if the current user is from EC -> or default org
+            if current_user.profile.organization == default_division.organization:
+                # then we can do a escalation on the assignment
+                assignee = find_escalation_candidate(current_user)
+            else:
+                # then this should be Police or anything else
+                # then we ONLY try to assign this to someone at the EC HQ
+                # ie: default division HQ
+                guest_user = get_guest_user()
+                assignee = find_candidate_from_division(default_division, guest_user.profile.level)
+
+    if assignee is None:
+        raise WorkflowException("Error in finding assignee")
+    
+    return assignee
 
 def create_incident_postscript(incident: Incident, user: User) -> None:
     """Function to take care of event, status and severity creation"""
@@ -113,33 +245,43 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
     reporter = Reporter()
     reporter.save()
 
-    incident.created_by = get_user_orgnaization(user).name
+    incident.created_by = user
     incident.reporter = reporter
     incident.assignee = user
     incident.save()
 
     event_services.create_incident_event(user, incident)
 
-    # if the user is from the guest group (public user or data entry operator)
-    # auto escalate it
-    user_group = get_user_group(user)
-    if user_group.name == "guest":
-        incident_escalate(user, incident, comment="Incident reported from public form")
+    # # if the user is from the guest group (public user or data entry operator)
+    # # auto escalate it
+    # user_group = get_user_group(user)
+    # if user_group.name == "guest":
+    #     incident_escalate(user, incident, comment="Incident reported from public form")
 
-        # updating the created_by as "GUEST" for public user
-        if not user.is_staff:
-            incident.created_by = "GUEST"
-            incident.save()
+    #     # updating the created_by as "GUEST" for public user
+    #     if not user.is_staff:
+    #         incident.created_by = "GUEST"
+    #         incident.save()
 
-    elif not user.is_staff:
-        # for external entity users, we assign a staff member
-        guest_user = get_guest_user()
-        incident.assignee = guest_user
+    # elif not user.is_staff:
+    #     # for external entity users, we assign a staff member
+    #     guest_user = get_guest_user()
+    #     incident.assignee = guest_user
+    #     incident.linked_individuals.add(user)
+    #     incident.save()
+
+    #     comment = "Incident reported from "+get_user_orgnaization(user).name
+    #     incident_escalate(guest_user, incident, comment=comment)
+
+    assignee = find_incident_assignee(user)
+    incident.assignee = assignee
+
+    # TODO: for police users, set the linked individuals property
+    if user.profile.organization != assignee.profile.organization:
         incident.linked_individuals.add(user)
-        incident.save()
 
-        comment = "Incident reported from "+get_user_orgnaization(user).name
-        incident_escalate(guest_user, incident, comment=comment)
+    incident.save()
+    
 
     status = IncidentStatus(current_status=StatusType.NEW,
                             incident=incident, approved=True)
@@ -194,49 +336,6 @@ def update_incident_status(
 
     return ("success", "Status updated")
 
-
-def update_incident_severity(
-    incident: Incident, user: User, severity_type_str: str
-) -> None:
-
-    if incident.hasPendingSeverityChange == "T":
-        return ("error", "Incident severity is locked for pending changes")
-
-    try:
-        # check for valid severity type
-        severity_type = SeverityType[severity_type_str]
-    except:
-        return ("error", "Invalid severity type")
-
-    if user.has_perm("incidents.can_request_severity_change"):
-        severity = IncidentSeverity(
-            current_severity=severity_type,
-            previous_severity=incident.current_severity,
-            incident=incident,
-            approved=False,
-        )
-        severity.save()
-        incident.hasPendingSeverityChange = "T"
-        incident.save()
-        event_services.update_incident_severity_event(
-            user, incident, severity, False)
-
-    elif user.has_perm("incidents.can_change_severity"):
-        severity = IncidentSeverity(
-            current_severity=severity_type,
-            previous_severity=incident.current_severity,
-            incident=incident,
-            approved=True,
-        )
-        severity.save()
-        incident.hasPendingSeverityChange = "F"
-        incident.save()
-        event_services.update_incident_severity_event(
-            user, incident, severity, True)
-
-    return ("success", "Severity updated")
-
-
 def create_incident_comment_postscript(
     incident: Incident, user: User, comment: IncidentComment
 ) -> None:
@@ -265,40 +364,6 @@ def get_incidents_before_date(date: str) -> Incident:
         return None
 
 
-def incident_auto_assign(incident: Incident, user_group: Group):
-    """auto assign will find the user from the given user group with minimum
-       # of incidents already assigned
-    """
-
-    # should we move this to a view / procedure lateron?
-    # also query optimizations here are welcome
-    sql = """
-            SELECT usr.id, COUNT(incident.id) as incident_count FROM `auth_user` as usr 
-            LEFT JOIN incidents_incident as incident on incident.assignee_id = usr.id 
-            INNER JOIN auth_user_groups on usr.id = auth_user_groups.user_id
-            INNER JOIN auth_group as grp on grp.id = auth_user_groups.group_id
-            WHERE grp.rank = %d
-            AND usr.is_staff = 1
-            GROUP BY usr.id
-            ORDER BY incident_count ASC
-          """ % user_group.rank
-
-    with connection.cursor() as cursor:
-        cursor.execute(sql)
-        row = cursor.fetchone()
-        if row is None:
-            raise WorkflowException("Error in finding auto assignment")
-        
-        try:
-            assignee = User.objects.get(id=row[0])
-            incident.assignee = assignee
-            incident.save()
-
-            return assignee
-        except:
-            raise WorkflowException("Error in finding auto assignment")
-
-
 def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP", comment=None, response_time=None):
     if incident.assignee != user:
         raise WorkflowException("Only current incident assignee can escalate the incident")
@@ -310,26 +375,30 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP", 
         or incident.current_status == StatusType.ADVICE_REQESTED.name
     ) :
         raise WorkflowException("Incident cannot be escalated")
-
+    
     # find the rank of the current incident assignee
-    assignee_groups = incident.assignee.groups.all()
-    if len(assignee_groups) == 0:
-        raise WorkflowException("No group for current assignee")
+    # assignee_groups = incident.assignee.groups.all()
+    # if len(assignee_groups) == 0:
+    #     raise WorkflowException("No group for current assignee")
 
-    current_rank = assignee_groups[0].rank
+    # current_rank = assignee_groups[0].rank
 
-    # if escalate UP
-    next_rank = current_rank - 1
-    if escalate_dir == "DOWN":
-        next_rank = current_rank + 1
+    # # if escalate UP
+    # next_rank = current_rank - 1
+    # if escalate_dir == "DOWN":
+    #     next_rank = current_rank + 1
 
-    organization = get_user_orgnaization(user)
-    next_group = Group.objects.get(rank=next_rank, organization_id=organization)
+    # organization = get_user_orgnaization(user)
+    # next_group = Group.objects.get(rank=next_rank, organization_id=organization)
 
-    if next_group is None:
-        raise WorkflowException("Can't escalate %s from here" % escalate_dir)
+    # if next_group is None:
+    #     raise WorkflowException("Can't escalate %s from here" % escalate_dir)
 
-    assignee = incident_auto_assign(incident, next_group)
+    # assignee = incident_auto_assign(incident, next_group)
+
+    assignee = find_escalation_candidate(user)
+    incident.assignee = assignee
+    incident.save()
 
     # workflow
     workflow = EscalateWorkflow(
