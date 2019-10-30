@@ -35,7 +35,13 @@ const ReportLink = props => <Link to="/app/create" {...props} />
 const ReviewLink = props => <Link to="/app/review" {...props} />
 const StaticReportLink = props => <Link to="/app/reports" {...props} />
 const ArchiveLink = props => <Link to="/app/archive" {...props} />
+
 const ManageUsers = props => <Link to="/manage/users" {...props} />
+const ManageOrgs = props => <Link to="/manage/organizations" {...props} />
+const ManageDivisions = props => <Link to="/manage/divisions" {...props} />
+const ManageLevels = props => <Link to="/manage/levels" {...props} />
+const ManageRoles = props => <Link to="/manage/roles" {...props} />
+const ManagePermissions = props => <Link to="/manage/permissions" {...props} />
 
 
 const drawerWidth = 240;
@@ -180,7 +186,7 @@ class DomainContainer extends React.Component {
 
   render() {
     const { classes, selectedLanguage, signedInUser, location } = this.props;
-    const { open, anchorEl, anchorLang, anchorManage, adminUserPortal } = this.state;
+    const { open, anchorEl, anchorLang, anchorManage } = this.state;
     const menuOpen = Boolean(anchorEl);
     const langMenuOpen = Boolean(anchorLang);
     const manageMenuOpen = Boolean(anchorManage);
@@ -198,25 +204,30 @@ class DomainContainer extends React.Component {
                 <Typography variant="h6" color="inherit" className={classes.grow}>
                     Incident Management
                     
-                    <Button 
-                    variant={selectedMainSection==='home'?'outlined': 'flat'} 
-                    color="inherit" component={HomeLink} className={classes.homeButton}>Home</Button>
-                <Button variant={selectedMainSection==='create'?'outlined': 'flat'} 
-                    color="inherit" component={ReportLink}>Create</Button>
+                <Button variant={selectedMainSection==='users'?'outlined': 'flat'} 
+                    color="inherit" component={ManageUsers} className={classes.homeButton}>Users</Button>
+
+                <Button variant={selectedMainSection==='organizations'?'outlined': 'flat'} 
+                    color="inherit" component={ManageOrgs}>Organizations</Button>
                 
+
+                <Button variant={selectedMainSection==='divisions'?'outlined': 'flat'} 
+                    color="inherit" component={ManageDivisions}>Divisions</Button>
+                
+
                 {userCan(signedInUser, null, USER_ACTIONS.REVIEW_INCIDENTS) && (
-                    <Button variant={selectedMainSection==='review'?'outlined': 'flat'} 
-                        color="inherit" component={ReviewLink}>Review</Button>
+                    <Button variant={selectedMainSection==='levels'?'outlined': 'flat'} 
+                        color="inherit" component={ManageLevels}>Levels</Button>
                 )}
                 
                 {userCan(signedInUser, null, USER_ACTIONS.VIEW_REPORTS) && (
-                    <Button variant={selectedMainSection==='reports'?'outlined': 'flat'} 
-                        color="inherit" component={StaticReportLink}>Reports</Button>
+                    <Button variant={selectedMainSection==='roles'?'outlined': 'flat'} 
+                        color="inherit" component={ManageRoles}>Roles</Button>
                 )}
 
                 {userCan(signedInUser, null, USER_ACTIONS.REVIEW_INCIDENTS) && (
-                    <Button variant={selectedMainSection==='archive'?'outlined': 'flat'} 
-                        color="inherit" component={ArchiveLink}>Archive</Button>
+                    <Button variant={selectedMainSection==='permissions'?'outlined': 'flat'} 
+                        color="inherit" component={ManagePermissions}>Permissions</Button>
                 )}
                     
                 </Typography>

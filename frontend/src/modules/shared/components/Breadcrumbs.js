@@ -25,7 +25,14 @@ const breadcrumbNameMap = {
     '/app/review/incident': 'Incident',
     '/app/review/incident/edit': 'Edit',
     '/app/reports':'Reports',
-    '/app/archive':'Archive'
+    '/app/archive':'Archive',
+    '/manage': 'Manage',
+    '/manage/users': 'Users',
+    '/manage/organizations': 'Organizations',
+    '/manage/divisions': 'Divisions',
+    '/manage/levels': 'Levels',
+    '/manage/roles': 'Roles',
+    '/manage/permissions': 'Permissions'
 };
 
 function SimpleBreadcrumbs(props) {

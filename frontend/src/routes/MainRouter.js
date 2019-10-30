@@ -16,6 +16,7 @@ import PrivateRoute from "./PrivateRoute";
 
 import {ReviewIncidentListView} from '../modules/ongoing-incidents';
 import DomainContainer from '../modules/shared/components/DomainContainer';
+import AdminDomainContainer from '../modules/shared/components/AdminDomainContainer';
 
 import { LandingPage } from '../modules/guest-view';
 
@@ -47,6 +48,25 @@ class Layout extends React.Component{
   }
 }
 
+class AdminLayout extends React.Component{
+  render() {
+    return(
+      <AdminDomainContainer
+      header={() =>
+          <Typography variant="h5" color='inherit' noWrap className='line-height-fix'>
+              <FormattedMessage
+                  id='eclk.incident.management.report.incidents'
+                  description='Report an Incident'
+                  defaultMessage='Report an Incident'
+              />
+          </Typography>
+      }
+      content={this.props.children}
+      />
+    )
+  }
+}
+
 class MainRouter extends Component {
   render() {
     let { selectedLanguage } = this.props;
@@ -59,17 +79,30 @@ class MainRouter extends Component {
       > 
         <Router history={history}>
           <div>
+
+            {/* basic app portal */}
             <PrivateRoute path="/app" component={Layout}>
               <Switch>
                 <PrivateRoute exact path="/app/home" component={Home} /> 
                 <PrivateRoute exact path="/app/reports" component={ReportList} /> 
                 <PrivateRoute exact path="/app/reports/view" component={ReportViewer} /> 
-                <PrivateRoute exact path="/app/create" component={IncidentFormInternal} /> 
-                {/* <PrivateRoute exact path="/app/create/:paramIncidentId" component={IncidentFormInternal} />  */}
+                <PrivateRoute exact path="/app/create" component={IncidentFormInternal} />
                 <PrivateRoute exact path="/app/review" component={ReviewIncidentListView} />
                 <PrivateRoute exact path="/app/review/:paramIncidentId" component={IncidentView} />
                 <PrivateRoute exact path="/app/review/:paramIncidentId/edit" component={IncidentFormInternal} />
                 <PrivateRoute exact path="/app/archive" component={ArchiveIncidentListView} />
+              </Switch>
+            </PrivateRoute>
+
+            {/* user management portal */}
+            <PrivateRoute path="/manage" component={AdminLayout}>
+              <Switch>
+                <PrivateRoute exact path="/manage/users" component={Home} /> 
+                <PrivateRoute exact path="/manage/organizations" component={Home} /> 
+                <PrivateRoute exact path="/manage/divisions" component={Home} /> 
+                <PrivateRoute exact path="/manage/levels" component={Home} /> 
+                <PrivateRoute exact path="/manage/roles" component={Home} /> 
+                <PrivateRoute exact path="/manage/permissions" component={Home} /> 
               </Switch>
             </PrivateRoute>
 
