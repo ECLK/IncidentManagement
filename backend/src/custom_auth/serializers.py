@@ -19,6 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
     userPermissions = serializers.SerializerMethodField('get_permissions')
     isStaff = serializers.BooleanField(source="is_staff")
     entity = serializers.SerializerMethodField()
+    profile = serializers.SerializerMethodField()
 
     def get_full_name(self, obj):
         return obj.first_name + " " + obj.last_name
@@ -27,12 +28,30 @@ class UserSerializer(serializers.ModelSerializer):
         if hasattr(obj, "profile"):
             if obj.profile.organization is not None:
                 return { 
-                "gid" : obj.profile.organization.code,
-                "name": obj.profile.organization.displayName
-            }
+                    "gid" : obj.profile.organization.code,
+                    "name": obj.profile.organization.displayName
+                }
 
         return None
-    
+
+    def get_profile(self, obj):
+        if hasattr(obj, "profile"):
+            profile = {}
+            if obj.profile.organization is not None:
+                profile["organization"] = {
+                    "code": obj.profile.organization.code,
+                    "name": obj.profile.organization.displayName
+                }
+
+            if obj.profile.division is not None:
+                profile["division"] = {
+                    "code": obj.profile.division.code,
+                    "divisionType": type(obj.profile.division.refered_model).__name__,
+                    "name": obj.profile.division.refered_model.name
+                }
+        
+        return profile
+
     def get_permissions(self, obj):
         if hasattr(obj, "profile"):
             if obj.profile.level is not None:
@@ -51,6 +70,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('uid', 'userName', 'displayname', 'isActive', 'userPermissions', 'isStaff', 'entity')
+        fields = ('uid', 'userName', 'displayname', 'isActive', 'userPermissions', 'isStaff', 'entity', 'profile')
         # fields = "__all__"
 

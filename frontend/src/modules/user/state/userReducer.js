@@ -7,6 +7,14 @@ import {
 } from './userActions'
 
 const initialState = {
+    organizations: {
+        byIds:{},
+        allIds:[]
+    },
+    divisions: {
+        byIds:{},
+        idsByOrganization: {}
+    },
     users : {
         byIds:{},
         idsByEntity:{},
