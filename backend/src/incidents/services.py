@@ -234,6 +234,8 @@ def find_incident_assignee(current_user: User):
         raise WorkflowException("Error in finding assignee")
     
     return assignee
+def create_reporter():
+    return Reporter()
 
 def create_incident_postscript(incident: Incident, user: User) -> None:
     """Function to take care of event, status and severity creation"""

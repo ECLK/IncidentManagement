@@ -34,7 +34,11 @@ const CloseModal = (props) => {
     //maintains selected value in local state until change is confirmed
     const [comment, setComment] = useState("");
     const [details, setDetails] = useState({
-
+        assignee:"",
+        entities:"",
+        departments:"",
+        individuals:"",
+        remark:""
     });
 
     return (
