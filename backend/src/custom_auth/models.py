@@ -26,9 +26,8 @@ class Organization(models.Model):
 class Division(models.Model):
     code = models.CharField(max_length=100)
     organization = models.ForeignKey(Organization, on_delete=models.DO_NOTHING)
-    reference_id = models.IntegerField(null=True, blank=True)
-    refered_model_type = models.ForeignKey(ContentType, on_delete=models.DO_NOTHING, null=True, blank=True)
-    refered_model = GenericForeignKey('refered_model_type', 'reference_id')
+    division_type = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
     is_default_division = models.BooleanField(default=False)
     is_hq = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
