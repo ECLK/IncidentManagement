@@ -47,7 +47,7 @@ from .services import (
     get_incident_by_reporter_unique_id,
     user_level_has_permission,
     find_incident_assignee,
-    find_escalation_candidate
+    find_escalation_candidate,
     create_reporter
 )
 
@@ -380,7 +380,7 @@ class IncidentWorkflowView(APIView):
             incident_invalidate(request.user, incident, comment)
 
         elif workflow == "assign":
-            if not request.user.has_perm("incidents.can_change_assignee"):
+            if not request.user.has_perm("incidents.CAN_CHANGE_ASSIGNEE"):
                 return Response("User can't change assignee", status=status.HTTP_401_UNAUTHORIZED)
 
             assignee_id = self.request.data['assignee']
