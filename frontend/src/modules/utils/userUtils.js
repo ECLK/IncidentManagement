@@ -36,7 +36,7 @@ export function userCan(user, incident, action){
             return true;
         }
     }else if(action === USER_ACTIONS.CLOSE_INCIDENT){
-        if(findPermission(user.userPermissions, "can_change_status")){
+        if(findPermission(user.userPermissions, "CAN_CLOSE_INCIDENT")){
             return true;
         }
     }else if(action === USER_ACTIONS.REVIEW_INCIDENTS){

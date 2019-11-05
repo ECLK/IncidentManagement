@@ -339,7 +339,7 @@ class IncidentWorkflowView(APIView):
         incident = get_incident_by_id(incident_id)
 
         if workflow == "close":
-            if not request.user.has_perm("incidents.can_change_status"):
+            if not request.user.has_perm("incidents.CAN_CLOSE_INCIDENT"):
                 return Response("User can't close incident", status=status.HTTP_401_UNAUTHORIZED)
 
             details = request.data['details']
