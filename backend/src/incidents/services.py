@@ -15,7 +15,8 @@ from .models import (
     AssignUserWorkflow,
     EscalateWorkflow,
     CloseWorkflow,
-    InvalidateWorkflow
+    InvalidateWorkflow,
+    ReopenWorkflow
 )
 from django.contrib.auth.models import User, Group, Permission
 
@@ -354,6 +355,7 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP", 
     if (
         # incident.current_status == StatusType.VERIFIED.name 
         incident.current_status == StatusType.NEW.name
+        or incident.current_status == StatusType.REOPENED.name
         or incident.current_status == StatusType.ACTION_PENDING.name
         or incident.current_status == StatusType.ADVICE_REQESTED.name
     ) :
@@ -416,11 +418,7 @@ def incident_close(user: User, incident: Incident, details: str):
     outcomes = IncidentComment.objects.filter(
         incident=incident, is_outcome=True).count()
 
-    # TODO: need to check for any pending actions before closing
-    # if incident.hasPendingStatusChange == "T":
-    #     raise WorkflowException("Incident has pending changes, can not close")
-
-    if incident.current_status == StatusType.ACTION_PENDING:
+    if incident.current_status == StatusType.ACTION_PENDING.name:
         raise WorkflowException(
             "All pending actions needs to be resolved first")
 
@@ -433,6 +431,7 @@ def incident_close(user: User, incident: Incident, details: str):
         previous_status=incident.current_status,
         incident=incident
     )
+    status.save()
 
     # workflow
     workflow = CloseWorkflow(
@@ -445,29 +444,6 @@ def incident_close(user: User, incident: Incident, details: str):
         comment=details["remark"]
     )
     workflow.save()
-
-    # users who do not have close permission will request to close 
-    if user.has_perm("incidents.can_request_status_change"):
-        # if user can't directly change the status
-        # only a pending change is added
-        status.approved = False
-        status.save()
-
-        incident.hasPendingStatusChange = "T"
-        incident.save()
-
-        # event_services.update_status_with_description_event(
-        #     user, incident, status, False, comment)
-
-    elif user.has_perm("incidents.CAN_CLOSE_INCIDENT"):
-        status.approved = True
-        status.save()
-
-        # incident.hasPendingStatusChange = "F"
-        # incident.save()
-
-        # event_services.update_status_with_description_event(
-        #     user, incident, status, True, comment)
 
     event_services.update_workflow_event(user, incident, workflow)
 
@@ -605,7 +581,8 @@ def incident_provide_advice(user: User, incident: Incident, advice: str, start_e
     event_services.update_linked_workflow_event(user, incident, workflow, start_event)
 
 def incident_verify(user: User, incident: Incident, comment: str, proof: bool):
-    if incident.current_status != StatusType.NEW.name:
+    if not (incident.current_status == StatusType.NEW.name or \
+            incident.current_status == StatusType.REOPENED.name):
         raise WorkflowException("Can only verify unverified incidents")
 
     if incident.assignee != user:
@@ -635,8 +612,9 @@ def incident_verify(user: User, incident: Incident, comment: str, proof: bool):
     event_services.update_workflow_event(user, incident, workflow)
 
 def incident_invalidate(user: User, incident: Incident, comment: str):
-    if incident.current_status != StatusType.NEW.name:
-        raise WorkflowException("Only NEW incidents can be invalidated")
+    if not (incident.current_status == StatusType.NEW.name or \
+            incident.current_status == StatusType.REOPENED.name):
+        raise WorkflowException("Only NEW or REOPENED incidents can be invalidated")
 
     # workflow
     workflow = InvalidateWorkflow(
@@ -649,6 +627,28 @@ def incident_invalidate(user: User, incident: Incident, comment: str):
     status = IncidentStatus(
         previous_status=incident.current_status,
         current_status=StatusType.INVALIDATED,
+        incident=incident,
+        approved=True
+    )
+    status.save()
+
+    event_services.update_workflow_event(user, incident, workflow)
+
+def incident_reopen(user: User, incident: Incident, comment: str):
+    if incident.current_status != StatusType.CLOSED.name:
+        raise WorkflowException("Only CLOSED incidents can be invalidated")
+
+    # workflow
+    workflow = ReopenWorkflow(
+        incident=incident,
+        actioned_user=user,
+        comment=comment
+    )
+    workflow.save()
+
+    status = IncidentStatus(
+        previous_status=incident.current_status,
+        current_status=StatusType.REOPENED,
         incident=incident,
         approved=True
     )

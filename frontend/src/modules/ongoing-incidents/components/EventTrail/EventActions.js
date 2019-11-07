@@ -198,7 +198,7 @@ const EventActions = (props) => {
                     Request for advice
                 </Button>
 
-                {userCan(currentUser, activeIncident, USER_ACTIONS.CLOSE_INCIDENT) &&
+                {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_CLOSE_INCIDENT) &&
                     
                     <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('CLOSE_MODAL', { activeIncident })) }}>
                         <WhereToVoteIcon className={classes.actionButtonIcon} />
@@ -206,7 +206,7 @@ const EventActions = (props) => {
                     </Button>
                 }
                 
-                {activeIncident.currentStatus === "NEW" && 
+                { (activeIncident.currentStatus === "NEW" || activeIncident.currentStatus === "REOPENED") && 
                     userCan(currentUser, activeIncident, USER_ACTIONS.CAN_INVALIDATE_INCIDENT) &&
                 (
                         <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('INVALIDATE_MODAL', { activeIncident })) }}>
@@ -214,9 +214,15 @@ const EventActions = (props) => {
                             Invalidate Incident
                         </Button>
                 )}
-                    
                  
                 </>
+            }
+
+            {activeIncident.currentStatus === 'CLOSED'  &&
+                <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REOPEN_MODAL', { activeIncident })) }}>
+                    <WhereToVoteIcon className={classes.actionButtonIcon} />
+                    Reopen Incident
+                </Button>
             }
         </div>
     );

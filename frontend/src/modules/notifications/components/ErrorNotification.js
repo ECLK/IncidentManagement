@@ -11,8 +11,9 @@ const ErrorNotification = (props) => {
         if(errors.response && errors.response.data){
             if(errors.response.data.data){
                 message = errors.response.data.data.message || 
-                (errors.response.data.data.non_field_errors ? errors.response.data.data.non_field_errors[0]:null) || 
-                "unknown error";
+                          errors.response.data.data ||
+                          (errors.response.data.data.non_field_errors ? errors.response.data.data.non_field_errors[0]:null) ||
+                          "Unknown error";
             }else{
                 message = "Server error"
             }

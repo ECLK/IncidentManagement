@@ -14,7 +14,8 @@ from ..incidents.models import (
     AssignUserWorkflow,
     EscalateWorkflow,
     CloseWorkflow,
-    InvalidateWorkflow
+    InvalidateWorkflow,
+    ReopenWorkflow
 )
 from django.contrib.auth.models import User
 
@@ -155,6 +156,15 @@ class GenericDataRelatedField(serializers.RelatedField):
             return {
                 "workflow": {
                     "type": "Invalidate",
+                    "data": {
+                        "comment": value.comment
+                    }
+                }
+            }
+        elif isinstance(value, ReopenWorkflow):
+            return {
+                "workflow": {
+                    "type": "Reopen",
                     "data": {
                         "comment": value.comment
                     }

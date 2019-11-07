@@ -27,6 +27,7 @@ class StatusType(enum.Enum):
     ADVICE_REQESTED = "Advice Requested"
     VERIFIED = "Verified"
     INVALIDATED = "Invalidated"
+    REOPENED = "Reopened"
 
     def __str__(self):
         return self.name
@@ -212,6 +213,7 @@ class Incident(models.Model):
             (CAN_ESCALATE_INCIDENT, "Can escalate incident"),
             (CAN_ESCALATE_EXTERNAL, "Can refer incident to external organization"),
             (CAN_INVALIDATE_INCIDENT, "Can invalidate incident"),
+            (CAN_REOPEN_INCIDENT, "Can reopen incident"),
 
             (CAN_VIEW_REPORTS, "Can view inciddent reports"),
         )
@@ -337,6 +339,8 @@ class InvalidateWorkflow(IncidentWorkflow):
     comment = models.TextField()
     response_time = models.CharField(max_length=200, null=True, blank=True)
 
+class ReopenWorkflow(IncidentWorkflow):
+    comment = models.TextField()
 
 class IncidentFilter(filters.FilterSet):
     current_status = filters.ChoiceFilter(choices=StatusType, method='my_custom_filter')

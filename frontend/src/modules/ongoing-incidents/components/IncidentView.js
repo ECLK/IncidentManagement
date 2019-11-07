@@ -257,15 +257,15 @@ class NavTabs extends Component {
                             <div className={classes.editButtonWrapper}>
                                 {activeIncident.currentStatus !== 'CLOSED' && activeIncident.currentStatus !== 'INVALIDATED' && 
                                     <>
-                                        {userCan(activeUser, activeIncident, USER_ACTIONS.RUN_WORKFLOW) &&
+                                        {activeIncident.currentStatus === 'VERIFIED' &&
+                                            <ButtonBase disabled variant="outlined"  size="large" color="secondary" className={classes.verifiedButton} >
+                                                <DoneOutlineIcon className={classes.verifiedIcon}/>
+                                                VERIFIED
+                                            </ButtonBase>
+                                        }
+                                        {userCan(activeUser, activeIncident, USER_ACTIONS.CAN_RUN_WORKFLOW) &&
                                             <>
-                                            {activeIncident.currentStatus !== 'NEW' &&
-                                                <ButtonBase disabled variant="outlined"  size="large" color="secondary" className={classes.verifiedButton} >
-                                                    <DoneOutlineIcon className={classes.verifiedIcon}/>
-                                                    VERIFIED
-                                                </ButtonBase>
-                                            }
-                                            {activeIncident.currentStatus === 'NEW' &&
+                                            { (activeIncident.currentStatus === 'NEW' || activeIncident.currentStatus === 'REOPENED') &&
                                                 <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick} className={classes.editButton} >
                                                     Verify
                                                 </Button>

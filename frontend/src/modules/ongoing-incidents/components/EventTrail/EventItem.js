@@ -105,6 +105,9 @@ function getActionText(event){
 
                     case "Invalidate":
                         return `invalidated the incident`
+
+                    case "Reopen":
+                        return `reopened the incident`
                 }
         default:
             return "unknown action"
@@ -199,6 +202,12 @@ function getSecondaryItem(event){
                 </div>
             )
         }else if(workflowType === "Invalidate"){
+            return (
+                <div>
+                    {workflowData.comment}
+                </div>
+            )
+        }else if(workflowType === "Reopen"){
             return (
                 <div>
                     {workflowData.comment}

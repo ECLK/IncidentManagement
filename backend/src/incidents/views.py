@@ -37,6 +37,7 @@ from .services import (
     incident_provide_advice,
     incident_verify,
     incident_invalidate,
+    incident_reopen,
     get_user_by_id,
     get_police_report_by_incident,
     get_incidents_to_escalate,
@@ -345,6 +346,9 @@ class IncidentWorkflowView(APIView):
             incident_close(request.user, incident, details)
 
         elif workflow == "request-action":
+            if not user_can(request.user, CAN_ESCALATE_EXTERNAL):
+                return Response("User can't refer incident to external organization", status=status.HTTP_401_UNAUTHORIZED)
+
             entity = request.data['entity']
             comment = request.data['comment']
             incident_escalate_external_action(request.user, incident, entity, comment)
@@ -369,12 +373,18 @@ class IncidentWorkflowView(APIView):
             incident_provide_advice(request.user, incident, comment, start_event)
 
         elif workflow == "verify":
+            if not user_can(request.user, CAN_VERIFY_INCIDENT):
+                return Response("User can't verify incident", status=status.HTTP_401_UNAUTHORIZED)
+
             comment = request.data['comment']
             proof = request.data['proof']
             incident_verify(request.user, incident, comment, proof)
             # incident_escalate(request.user, incident, comment=comment)
 
         elif workflow == "invalidate":
+            if not user_can(request.user, CAN_INVALIDATE_INCIDENT):
+                return Response("User can't invalidate incident", status=status.HTTP_401_UNAUTHORIZED)
+
             comment = request.data['comment']
             incident_invalidate(request.user, incident, comment)
 
@@ -388,9 +398,19 @@ class IncidentWorkflowView(APIView):
             incident_change_assignee(request.user, incident, assignee)
 
         elif workflow == "escalate":
+            if not user_can(request.user, CAN_ESCALATE_INCIDENT):
+                return Response("User can't escalate incident", status=status.HTTP_401_UNAUTHORIZED)
+
             comment = request.data['comment']
             response_time = request.data['responseTime']
             incident_escalate(request.user, incident, comment=comment, response_time=response_time)
+
+        elif workflow == "reopen":
+            if not user_can(request.user, CAN_REOPEN_INCIDENT):
+                return Response("User can't reopen incident", status=status.HTTP_401_UNAUTHORIZED)
+
+            comment = request.data['comment']
+            incident_reopen(request.user, incident, comment)
 
         else:
             return Response("Invalid workflow", status=status.HTTP_400_BAD_REQUEST)
