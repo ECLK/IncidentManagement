@@ -1,17 +1,19 @@
 import React from 'react';
 
-import  DropZoneBase  from '../../shared/components/DropZoneBase'
 import FileUploader from '../../shared/components/FileUploader';
+import {
+    uploadFileGuestRequest
+} from '../../incident/state/incidentActions'
 
 
 
 export default function Dropzone(props) {
     const { files, setSelectedFile } = props
     return (
-        // <DropZoneBase setSelectedFiles = { setSelectedFile }/>
         <FileUploader 
             files={files}
             setFiles={setSelectedFile}
+            watchedActions={[uploadFileGuestRequest]}
         />
     );
 }

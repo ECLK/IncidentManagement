@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from "react-router";
 import { withStyles } from '@material-ui/core/styles';
@@ -40,7 +39,11 @@ import yellow from '@material-ui/core/colors/yellow';
 import {
     resetIncidentForm,
     submitInternalIncidentData,
-    fetchUpdateInternalIncidentData
+    requestInternalIncidentData,
+
+    fetchUpdateInternalIncidentData,
+    updateInternalIncidentData
+
 } from '../state/IncidentFiling.actions'
 import {
     fetchChannels,
@@ -65,6 +68,7 @@ import moment from 'moment';
 import FileUploader from '../../shared/components/FileUploader';
 import { showNotification } from '../../notifications/state/notifications.actions';
 import TelephoneInput from './TelephoneInput';
+import {useLoadingStatus} from '../../loading-spinners/loadingHook'
 
 const styles = theme => ({
     root: {
@@ -219,6 +223,9 @@ class IncidentFormInternal extends Component {
 
         if (values.occured_date) {
             values.occured_date = moment(values.occured_date).format()
+        }else{
+            // to avoid sending an empty string to backend.
+            values.occured_date = null
         }
 
         if (paramIncidentId) {
@@ -240,7 +247,7 @@ class IncidentFormInternal extends Component {
         } else {
             this.setState({ 
                 showConfirmationModal: true,
-                handleConfirmSubmit: ()=>{this.handleSubmit(values,actions)}
+                handleConfirmSubmit: ()=>{this.handleSubmit(values, actions)}
             });
         }
     }
@@ -343,9 +350,12 @@ class IncidentFormInternal extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, isIncidentSubmitting, isIncidentUpdating } = this.props;
         const { paramIncidentId } = this.props.match.params
 
+        //TODO: convert this component to a fuctional component and get isProcessing status from useLoadingStauts hook.
+        
+        const isProcessing = isIncidentSubmitting || isIncidentUpdating
         const reinit = paramIncidentId ? true : false;
 
         const politicalPartyLookup = Object.assign({},
@@ -1173,7 +1183,7 @@ class IncidentFormInternal extends Component {
                         <Button onClick={()=>this.hideConfirmModal(false)} color="primary">
                             Back
                         </Button>
-                        <Button onClick={()=>this.hideConfirmModal(true)} color="primary" autoFocus>
+                        <Button disabled={isProcessing} onClick={()=>this.hideConfirmModal(true)} color="primary" autoFocus>
                             Submit
                         </Button>
                     </DialogActions>
@@ -1185,15 +1195,9 @@ class IncidentFormInternal extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        isIncidentBasicDetailsSubmitting: state.incidentReducer.guestIncidentForm.isSubmitting,
-        incidentFormActiveStep: state.incidentReducer.guestIncidentForm.activeStep,
 
-        isIncidentLoading: state.sharedReducer.activeIncident.isLoading,
         incident: state.sharedReducer.activeIncident.data,
         reporter: state.sharedReducer.activeIncidentReporter,
-
-        incidentId: state.sharedReducer.activeIncident.data ? state.sharedReducer.activeIncident.data.id : null,
-        reporterId: state.sharedReducer.activeIncidentReporter ? state.sharedReducer.activeIncidentReporter.id : null,
 
         channels: state.sharedReducer.channels,
         categories: state.sharedReducer.categories,
@@ -1208,6 +1212,9 @@ const mapStateToProps = (state, ownProps) => {
         wards: state.sharedReducer.wards,
         elections: state.sharedReducer.elections,
         politicalParties: state.sharedReducer.politicalParties,
+
+        // isIncidentSubmitting: state.loading.SUBMIT_INTERNAL_INCIDENT,
+        // isIncidentUpdating: state.loading.UPDATE_INTERNAL_INCIDENT,
 
         ...ownProps
     }
@@ -1280,7 +1287,8 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default withRouter(compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    withStyles(styles)
-)(IncidentFormInternal));
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(
+        withStyles(styles)(IncidentFormInternal)
+    )
+);

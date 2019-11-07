@@ -9,7 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 
 import CommentEvent from './EventItem';
-import Avatar from './Avatar'
+import Avatar from './Avatar';
 
 
 const styles = theme => ({
