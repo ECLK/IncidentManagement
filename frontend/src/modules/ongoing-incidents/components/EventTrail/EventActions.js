@@ -219,10 +219,13 @@ const EventActions = (props) => {
             }
 
             {activeIncident.currentStatus === 'CLOSED'  &&
+                userCan(currentUser, activeIncident, USER_ACTIONS.CAN_REOPEN_INCIDENT) &&
+                (
                 <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REOPEN_MODAL', { activeIncident })) }}>
                     <WhereToVoteIcon className={classes.actionButtonIcon} />
                     Reopen Incident
                 </Button>
+                )
             }
         </div>
     );

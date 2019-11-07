@@ -53,7 +53,7 @@ const ReopenModal = (props) => {
                 <Button 
                     onClick={() => onSubmitClick(dispatch, props.activeIncident.id, comment)} 
                     color="secondary">
-                    Invalidate
+                    Reopen
                 </Button>
             </DialogActions>
         </div>
