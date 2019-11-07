@@ -1,13 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
+import ReactHtmlParser from 'react-html-parser';
 
 import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 
-import Avatar from './Avatar';
 import * as moment from 'moment';
 import Button from '@material-ui/core/Button';
+import PlaylistAddCheck from '@material-ui/icons/PlaylistAddCheck';
 
 import { showModal } from '../../../modals/state/modal.actions'
 import { API_BASE_URL } from '../../../../config';
@@ -16,11 +16,20 @@ import { API_BASE_URL } from '../../../../config';
 const styles = {
     truncate: {
         width: "100%",
-        whiteSpace: 'wrap'
+        whiteSpace: 'wrap',
+        display:'flex',
+        justifyContent:'space-between'
     },
     eventItem: {
         backgroundColor: "#fff",
         border: "1px solid #ccc",
+        display: "flex",
+        padding: "0px 0px 0px 0px",
+        flexDirection: "column"
+    },
+    eventItemOutcome: {
+        backgroundColor: "#fff",
+        border: "2px solid #53AF72",
         display: "flex",
         padding: "0px 0px 0px 0px",
         flexDirection: "column"
@@ -37,7 +46,9 @@ const styles = {
     },
     eventItemUserDetails: {
         marginLeft: "10px",
-        lineHeight: "35px"
+        marginRight: "10px",
+        lineHeight: "35px",
+        width: '100%'
     },
     eventItemBody: {
         width: "100%",
@@ -216,7 +227,7 @@ function getDateDiff(event){
 }
 
 
-const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
+const EventItemView = ({ event, classes }) => {
     const dispatch = useDispatch();
     const userData = useSelector((state)=>(state.user));
 
@@ -228,23 +239,25 @@ const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
     let initiatorData = userData.users.byIds[event.initiator.uid];
 
     return (
-    <li className={classes.eventItem}>
+    <li className={event.action==='OUTCOME_ADDED'? classes.eventItemOutcome : classes.eventItem}>
         <div className={classes.eventItemDetails}>
-            {/* <div className={classes.eventItemAvatar}>
-                <Avatar user={event.author} />
-            </div> */}
             <Chip label={!!(initiatorData) ? initiatorData.entity.name : ""} className={classes.chip} variant="outlined" />
             <div className={classes.eventItemUserDetails}>
                 <div className={classes.truncate}>
-                    <strong>
-                        {initiator}
-                    </strong>{' '}
-                     {getActionText(event)}
-                    <span> ({getDateDiff(event)})</span>
+                    {/* left end */}
+                    <div> 
+                        <strong>
+                            {initiator}
+                        </strong>{' '}
+                        {getActionText(event)}
+                        <span> ({getDateDiff(event)})</span>
+                    </div>
+                    {/* right end */}
+                    { event.action==='OUTCOME_ADDED' && <PlaylistAddCheck/>}
                 </div>
 
                 {
-                    hasPendingAction(event, eventLinks) && (
+                    hasPendingAction(event) && (
                         <div className={classes.eventItemActions}>
                             <Button 
                                 color="primary"
