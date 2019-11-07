@@ -241,15 +241,7 @@ class IncidentVehicle(models.Model):
 class IncidentPoliceReport(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     incident = models.ForeignKey("Incident", on_delete=models.DO_NOTHING)
-    # division_serial_number
-    # police_station_serial_number
-    # policedivision
-    # police sation *
-    # elec division
-    # date
-    # time
-    # place
-    # complained date
+
     nature_of_incident = models.CharField(max_length=200, null=True, blank=True)
     complainers_name = models.CharField(max_length=200, null=True, blank=True)
     complainers_address = models.CharField(max_length=200, null=True, blank=True)
