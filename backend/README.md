@@ -82,36 +82,51 @@ All responses have the same structure. This is enforced centrally, no need to ch
 
 4. **Different apps should ONLY communicate through services. Donot invoke view methods of other apps directly**
 
-### Mock Election - Deployement Process
 
-1. Make fresh install - delete `data` directory
-2. Follow steps under **Docker run** above
-3. Create the following groups first (important that the ranks are kept as given). You can use django admin view for this.
+### Tests
 
-```bash
-+-------------------+---------------------+------+
-| name              | permissions         | rank |
-+-------------------+---------------------+------+
-| leadership        | can_change_status   | 1    |
-|                   |                     |      |
-|                   | can_change_assignee |      |
-+-------------------+---------------------+------+
-| cheif-coordinator | can_change_status   | 2    |
-|                   |                     |      |
-|                   | can_change_assignee |      |
-+-------------------+---------------------+------+
-| manager           | can_change_status   | 3    |
-|                   |                     |      |
-|                   | can_change_assignee |      |
-+-------------------+---------------------+------+
-| coordinator       |                     | 4    |
-+-------------------+---------------------+------+
-| guest             |                     | 5    |
-+-------------------+---------------------+------+
-```
+#### Incident Create
 
-4. Create user(s) for each group above. When creating a new user, you can select the group in the same form. Only select one group per user.
+1. Public user creates incident 
+    Get assigned to HQ coordinator
 
-5. **IMPORTANT** a mandatory user named _guest_ must be created under _guest_ group so that public claim filing work as expected.
+2. Coodinator HQ creates incident
+    Get assigned to ownself
 
-6. Create user per group
+3. Coodinator in Division creates incident
+    Get assigned to ownself
+
+4. Data Entry in Division with coordinator creates incident
+    Get assigned to coodinator in own division
+
+5. Data Entry in Division without coordinator creates incident
+    Get assigned to coordinator in HQ
+
+6. Police user creates incident
+    Get assigned to coordinator in HQ
+    Police user is added as a linked individual
+
+#### Escalate
+
+1. Coordinator with manager escalates
+    Get assigned to same division manager
+
+2. Coordinator without manager in same division escalates
+    Get assigned to HQ manager
+
+#### Assignment
+
+Only users with CAN_CHANGE_ASSIGNEE can change the assignment
+
+#### Refer to organization
+
+Refered entity is added as a linked individual
+
+#### Complete action
+
+1. If only one action pending, then state change to action taken
+2. If more than one action pending, then state change to action pending
+
+#### Request for advice
+
+1. User from whom  advice is requested is added to linked individuals list

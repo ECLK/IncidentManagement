@@ -256,27 +256,6 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
 
     event_services.create_incident_event(user, incident)
 
-    # # if the user is from the guest group (public user or data entry operator)
-    # # auto escalate it
-    # user_group = get_user_group(user)
-    # if user_group.name == "guest":
-    #     incident_escalate(user, incident, comment="Incident reported from public form")
-
-    #     # updating the created_by as "GUEST" for public user
-    #     if not user.is_staff:
-    #         incident.created_by = "GUEST"
-    #         incident.save()
-
-    # elif not user.is_staff:
-    #     # for external entity users, we assign a staff member
-    #     guest_user = get_guest_user()
-    #     incident.assignee = guest_user
-    #     incident.linked_individuals.add(user)
-    #     incident.save()
-
-    #     comment = "Incident reported from "+get_user_orgnaization(user).name
-    #     incident_escalate(guest_user, incident, comment=comment)
-
     assignee = find_incident_assignee(user)
     incident.assignee = assignee
 
@@ -506,19 +485,10 @@ def incident_escalate_external_action(user: User, incident: Incident, entity: ob
     
     if is_internal_user:
         escalated_user = get_user_by_id(entity["name"])
-        incident.linked_individuals.add(user)
+        incident.linked_individuals.add(escalated_user)
         incident.save()
 
         workflow.escalated_user = escalated_user
-
-        # evt_description = {
-        #     "entity": {
-        #         "name": user.get_full_name(),
-        #         "type": group.name
-        #     },            
-        #     "comment": comment
-        # }        
-
     else:
         workflow.escalated_entity_other = entity["type"]
         workflow.escalated_user_other = entity["name"]
@@ -556,15 +526,18 @@ def incident_complete_external_action(user: User, incident: Incident, comment: s
         initiated_workflow.is_internal_user = False
 
     initiated_workflow.save()
-    
-    # new event
-    status = IncidentStatus(
-        current_status=StatusType.ACTION_TAKEN,
-        previous_status=incident.current_status,
-        incident=incident,
-        approved=True
-    )
-    status.save()
+
+    # check if there are any more pending actions
+    pending_actions = EscalateExternalWorkflow.objects.filter(Q(incident=incident) & Q(is_action_completed=False))
+    if pending_actions.count() == 0:
+        # new event
+        status = IncidentStatus(
+            current_status=StatusType.ACTION_TAKEN,
+            previous_status=incident.current_status,
+            incident=incident,
+            approved=True
+        )
+        status.save()
 
     event_services.update_linked_workflow_event(user, incident, workflow, start_event)
 

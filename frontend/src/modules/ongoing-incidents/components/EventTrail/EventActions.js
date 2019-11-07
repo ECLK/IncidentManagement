@@ -201,10 +201,12 @@ const EventActions = (props) => {
                         Close Incident
                     </Button>
 
-                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('INVALIDATE_MODAL', { activeIncident })) }}>
-                        <WhereToVoteIcon className={classes.actionButtonIcon} />
-                        Invalidate Incident
-                    </Button>
+                    {activeIncident.currentStatus === "NEW" && (
+                        <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('INVALIDATE_MODAL', { activeIncident })) }}>
+                            <WhereToVoteIcon className={classes.actionButtonIcon} />
+                            Invalidate Incident
+                        </Button>
+                    )}
                     </>
                 } 
                 </>
