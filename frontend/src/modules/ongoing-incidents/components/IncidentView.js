@@ -14,7 +14,6 @@ import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 
 import EventList from './EventTrail/EventList';
 import Editor from './EventTrail/RichTextEditor'
-import DropZone from './EventTrail/EventTrailDropZone'
 
 import SummaryTabView from './IncidentSummaryView';
 
@@ -27,7 +26,8 @@ import {
     fetchAllUsers,
     setIncidentAssignee,
     fetchEscallateIncident,
-    attachFile
+    attachFile,
+    attachFileRequest
 } from '../state/OngoingIncidents.actions';
 import { 
     fetchActiveIncidentData,
@@ -93,6 +93,11 @@ const styles = theme => ({
     textEditorWrapper:{
         paddingLeft: theme.spacing.unit * 9,
         paddingRight: theme.spacing.unit * 4
+    },
+    uploadButtonWrapper:{
+        display:'flex',
+        flexGrow:1,
+        flexDirection:'row-reverse'
     }
 });
 
@@ -236,15 +241,18 @@ class NavTabs extends Component {
                                     activeIncident.currentStatus !== 'INVALIDATED'  && 
                                     <div className={classes.textEditorWrapper}>
                                         <Editor/>
-                                        {/* <DropZone/> */}
                                         <FileUploader 
                                             files={this.state.files}
                                             setFiles={this.onSelectFiles}
+                                            watchedActions={[
+                                                attachFileRequest()
+                                            ]}
                                         />
+                                        <div className={classes.uploadButtonWrapper}>
                                         <Button disabled={!this.state.files.length} onClick={this.onUploadClick}>
                                             Upload
                                         </Button>
-
+                                        </div>
                                     </div>
                                 }
                             </div>
