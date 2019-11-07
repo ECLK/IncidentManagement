@@ -194,17 +194,17 @@ class DomainContainer extends React.Component {
                     <Button variant={selectedMainSection==='create'?'outlined': 'flat'} 
                         color="inherit" component={ReportLink}>Create</Button>
                     
-                    {userCan(signedInUser, null, USER_ACTIONS.REVIEW_INCIDENTS) && (
+                    {userCan(signedInUser, null, USER_ACTIONS.CAN_REVIEW_INCIDENTS) && (
                         <Button variant={selectedMainSection==='review'?'outlined': 'flat'} 
                             color="inherit" component={ReviewLink}>Review</Button>
                     )}
                     
-                    {userCan(signedInUser, null, USER_ACTIONS.VIEW_REPORTS) && (
+                    {userCan(signedInUser, null, USER_ACTIONS.CAN_VIEW_REPORTS) && (
                         <Button variant={selectedMainSection==='reports'?'outlined': 'flat'} 
                             color="inherit" component={StaticReportLink}>Reports</Button>
                     )}
 
-                    {userCan(signedInUser, null, USER_ACTIONS.REVIEW_INCIDENTS) && (
+                    {userCan(signedInUser, null, USER_ACTIONS.CAN_REVIEW_INCIDENTS) && (
                         <Button variant={selectedMainSection==='archive'?'outlined': 'flat'} 
                             color="inherit" component={ArchiveLink}>Archive</Button>
                     )}

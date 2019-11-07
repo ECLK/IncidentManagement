@@ -205,10 +205,12 @@ class NavTabs extends Component {
             elections,
             channels,
             categories,
+            organizations,
+            divisions
         } = this.props;
 
         const EditIncidentLink = props => <Link to={`/app/review/${activeIncident.id}/edit`} {...props} />
-
+        
         return (
             <NoSsr>
                 <Grid container spacing={24} >
@@ -263,15 +265,15 @@ class NavTabs extends Component {
                             <div className={classes.editButtonWrapper}>
                                 {activeIncident.currentStatus !== 'CLOSED' && activeIncident.currentStatus !== 'INVALIDATED' && 
                                     <>
-                                        {userCan(activeUser, activeIncident, USER_ACTIONS.RUN_WORKFLOW) &&
+                                        {activeIncident.currentStatus === 'VERIFIED' &&
+                                            <ButtonBase disabled variant="outlined"  size="large" color="secondary" className={classes.verifiedButton} >
+                                                <DoneOutlineIcon className={classes.verifiedIcon}/>
+                                                VERIFIED
+                                            </ButtonBase>
+                                        }
+                                        {userCan(activeUser, activeIncident, USER_ACTIONS.CAN_RUN_WORKFLOW) &&
                                             <>
-                                            {activeIncident.currentStatus !== 'NEW' &&
-                                                <ButtonBase disabled variant="outlined"  size="large" color="secondary" className={classes.verifiedButton} >
-                                                    <DoneOutlineIcon className={classes.verifiedIcon}/>
-                                                    VERIFIED
-                                                </ButtonBase>
-                                            }
-                                            {activeIncident.currentStatus === 'NEW' &&
+                                            { (activeIncident.currentStatus === 'NEW' || activeIncident.currentStatus === 'REOPENED') &&
                                                 <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick} className={classes.editButton} >
                                                     Verify
                                                 </Button>
@@ -301,6 +303,8 @@ class NavTabs extends Component {
                                 onSeverityChange={changeSeverity}
                                 activeUser={activeUser}
                                 users={users}
+                                organizations={organizations}
+                                divisions={divisions}
                                 getUsers={getUsers}
                                 setIncidentAssignee={setIncidentAssignee}
                                 events={this.props.events}
@@ -337,7 +341,9 @@ const mapStateToProps = (state, ownProps) => {
         categories: state.sharedReducer.categories,
 
         activeUser: state.sharedReducer.signedInUser.data,
-        users: state.ongoingIncidentReducer.users,
+        users: state.user.users,
+        divisions: state.user.divisions,
+        organizations: state.user.organizations,
         ...ownProps
     }
 }

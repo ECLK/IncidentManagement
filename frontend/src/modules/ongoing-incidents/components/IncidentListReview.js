@@ -105,6 +105,8 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
               <CustomTableCell align="center">Status</CustomTableCell>
               <CustomTableCell align="center">Incident Type</CustomTableCell>
               <CustomTableCell align="center">Category</CustomTableCell>
+              <CustomTableCell align="center">Assigned From</CustomTableCell>
+              <CustomTableCell align="center">Assigned To</CustomTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -136,6 +138,28 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
                 <CustomTableCell align="left">
                   <p>{ categories.map((value, index)=>(value.id==row.category? value.code+" | "+value.sub_category:null)) }</p>
                 </CustomTableCell>
+
+                {row.lastAssignment !== null && (
+                  <>
+                    <CustomTableCell align="center">
+                      <p>{row.lastAssignment.assigned_from}</p>
+                    </CustomTableCell>
+                    <CustomTableCell align="center">
+                      <p>{row.lastAssignment.assigned_to}</p>
+                    </CustomTableCell>
+                  </>
+                )}
+
+                {row.lastAssignment === null && (
+                  <>
+                    <CustomTableCell align="center">
+                      <p>N/A</p>
+                    </CustomTableCell>
+                    <CustomTableCell align="center">
+                      <p>N/A</p>
+                    </CustomTableCell>
+                  </>
+                )}
 
                 {/* <CustomTableCell align="center">
                   <div style={{display:"flex"}}>

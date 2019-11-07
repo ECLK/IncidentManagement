@@ -11,6 +11,7 @@ import PlaylistAddCheck from '@material-ui/icons/PlaylistAddCheck';
 
 import { showModal } from '../../../modals/state/modal.actions'
 import { API_BASE_URL } from '../../../../config';
+import FilePreviewer from '../../../shared/components/FilePreviewer/FilePreviewer';
 
 
 const styles = {
@@ -105,6 +106,9 @@ function getActionText(event){
 
                     case "Invalidate":
                         return `invalidated the incident`
+
+                    case "Reopen":
+                        return `reopened the incident`
                 }
         default:
             return "unknown action"
@@ -136,7 +140,11 @@ function getSecondaryItem(event){
         const file = event.data.media.file;
         return (
             <div>
-                <a href={`${API_BASE_URL}/incidents/files/download/${file.id}`}>{file.name}</a>
+                <FilePreviewer 
+                    url={`${API_BASE_URL}/incidents/files/download/${file.id}`}
+                    filename={file.name}
+                    ext={file.extension}
+                />
             </div>
         )
     }else if(event.action === "WORKFLOW_ACTIONED"){
@@ -199,6 +207,12 @@ function getSecondaryItem(event){
                 </div>
             )
         }else if(workflowType === "Invalidate"){
+            return (
+                <div>
+                    {workflowData.comment}
+                </div>
+            )
+        }else if(workflowType === "Reopen"){
             return (
                 <div>
                     {workflowData.comment}

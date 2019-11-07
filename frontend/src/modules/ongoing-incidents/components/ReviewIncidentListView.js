@@ -85,7 +85,7 @@ class ReviewIncidentListView extends React.Component {
 
   render() {
     const { classes, pagedIncidents, categories } = this.props;
-
+    
     return (
       <Paper className={classes.root}>
         <SearchForm 

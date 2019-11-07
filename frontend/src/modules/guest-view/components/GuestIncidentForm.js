@@ -92,16 +92,15 @@ const VerticalLinearStepper = (props) => {
 
     const dispatch = useDispatch();
     const { elections, categories, channels } = useSelector((state) => (state.sharedReducer));
-    let webInfoChannelId = null;
-    if (channels.length > 0) {
-        webInfoChannelId = channels.reduce((previousValue, currValue) => {
-            previousValue = null;
-            if (currValue.name === "Web") {
-                previousValue = currValue.id;
-            }
-            return previousValue;
-        })
-    }
+    
+    let webInfoChannelId = "Web";
+    // for(var channel of channels){
+    //     if(channel.name === "Web"){
+    //         webInfoChannelId = channel.id;
+    //         break;
+    //     }
+    // }
+
     const { activeIncident, activeIncidentReporter } = useSelector((state) => (state.incident));
     const { activeStep, isLoadingIncident } = useSelector((state) => (state.guestView));
 
