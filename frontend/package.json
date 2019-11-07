@@ -14,6 +14,7 @@
     "draft-js-plugins-editor": "^2.1.1",
     "draftjs-to-html": "^0.8.4",
     "filepond": "^4.7.2",
+    "filepond-plugin-file-validate-size": "^2.2.0",
     "formik": "^1.5.8",
     "immer": "^2.1.4",
     "immutable": "^4.0.0-rc.12",
