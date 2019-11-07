@@ -133,9 +133,6 @@ class IncidentList(APIView, IncidentResultsSetPagination):
                 # get incidents of the current user
                 incidents = incidents.filter(linked_individuals__id=user.id)
 
-
-        # this will load all incidents to memory
-        # change this to a better way next time
         param_status = self.request.query_params.get('status', None)
         if param_status is not None:
             try:
@@ -150,7 +147,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
                 param_severity = int(param_severity)
                 if param_severity < 1 or param_severity > 10:
                     raise IncidentException("Severity level must be between 1 - 10")
-                incidents = incidents.filter(current_severity=param_severity)
+                incidents = incidents.filter(severity=param_severity)
             except:
                 raise IncidentException("Severity level must be a number")
 
