@@ -234,6 +234,8 @@ def find_incident_assignee(current_user: User):
         raise WorkflowException("Error in finding assignee")
     
     return assignee
+def create_reporter():
+    return Reporter()
 
 def create_incident_postscript(incident: Incident, user: User) -> None:
     """Function to take care of event, status and severity creation"""
@@ -246,7 +248,9 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
     reporter.save()
 
     incident.created_by = user
-    incident.reporter = reporter
+    if(not incident.reporter):
+        incident.reporter = reporter
+    # incident.reporter = reporter
     incident.assignee = user
     incident.save()
 

@@ -17,13 +17,15 @@ import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
 import { changeLanguage } from "../../shared/state/Shared.actions";
 import Logo from "../../shared/components/Logo";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import green from '@material-ui/core/colors/green';
 
 import DescriptionSection from './GuestFormDescriptionSection';
 // import CategorySection from './GuestFormCatogorySection';
 import FileUploadSection from './GuestFormFileUploadSection';
 import DateTimeSection from './GuestFormDateTimeSection';
 import LocationSection from './GuestFromLocationSection';
-import ContactSection from './GuestFormContactSection'
+import ContactSection from './GuestFormContactSection';
 
 import {
     fetchElections,
@@ -60,6 +62,16 @@ const styles = theme => ({
     resetContainer: {
         padding: theme.spacing.unit * 3,
     },
+    buttonProgress: {
+        color: green[500],
+        position: 'absolute',
+        marginTop: 15,
+        marginLeft: -53,
+    },
+    wrapper: {
+        margin: theme.spacing.unit,
+        position: 'relative',
+    },
 });
 
 
@@ -86,7 +98,7 @@ const VerticalLinearStepper = (props) => {
         })
     }
     const { activeIncident, activeIncidentReporter } = useSelector((state) => (state.incident));
-    const { activeStep } = useSelector((state) => (state.guestView));
+    const { activeStep, isLoading } = useSelector((state) => (state.guestView));
 
     const incidentId = activeIncident && activeIncident.data ? activeIncident.data.id : null
     let incidentData = incidentId ? JSON.parse(JSON.stringify(activeIncident.data)) : {};
@@ -216,6 +228,8 @@ const VerticalLinearStepper = (props) => {
                     incidentData.address = incidentAddress;
                     incidentData.city = incidentCity;
                     dispatch(updateGuestIncident(incidentId, incidentData))
+                }else{
+                    dispatch(moveStepper({ step: activeStep + 1 }));
                 }
             }
         },
@@ -404,32 +418,35 @@ const VerticalLinearStepper = (props) => {
                                 <div className={classes.actionsContainer}>
                                     <div>
                                         <Button
-                                            disabled={activeStep === 0}
+                                            disabled={activeStep === 0 || isLoading}
                                             onClick={handleBack}
                                             className={classes.button}
                                         >
                                             {f({ id:"eclk.incident.management.report.incidents.forms.button.back", defaultMessage: "Back"})}
-                                    </Button>
+                                        </Button>
                                         {isStepOptional(activeStep) && (
                                             <Button
                                                 variant="contained"
                                                 color="primary"
                                                 onClick={handleSkip}
                                                 className={classes.button}
+                                                disabled={isLoading}
                                             >
                                                 {f({id:"eclk.incident.management.report.incidents.forms.button.skip", defaultMessage:"Skip"})}
-                                    </Button>
+                                            </Button>
                                         )}
                                         <Button
                                             variant="contained"
                                             color="primary"
                                             onClick={handleNext}
                                             className={classes.button}
+                                            disabled={isLoading}
                                         >
                                             {activeStep === steps.length - 1 ? 
                                                 f({id:"eclk.incident.management.report.incidents.forms.button.finish", defaultMessage:"Finish"}) : 
                                                 f({id:"eclk.incident.management.report.incidents.forms.button.next", defaultMessage:"Next"})}
                                         </Button>
+                                        {isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
                                     </div>
                                 </div>
                             </StepContent>
