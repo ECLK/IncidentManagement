@@ -49,6 +49,7 @@ class FileView(APIView):
 
 class FileDownload(APIView):
   permission_classes = []
+
   def get(self, request, file_id):
     uploaded_file = get_file_by_id(file_id)
     file_path = uploaded_file.file.url
@@ -74,5 +75,5 @@ class FileDownload(APIView):
     else:
         # For others like Firefox
         filename_header = 'filename*=UTF-8\'\'%s' % file_full_name
-    response['Content-Disposition'] = 'attachment; ' + filename_header
+    # response['Content-Disposition'] = 'attachment; ' + filename_header
     return response

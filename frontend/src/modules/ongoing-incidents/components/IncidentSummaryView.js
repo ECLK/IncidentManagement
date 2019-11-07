@@ -5,7 +5,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { withStyles, Tabs } from '@material-ui/core';
+import { withStyles, Tabs, Table, TableHead, TableCell, TableRow, TableBody } from '@material-ui/core';
 import { elections } from '../../../data/elections';
 
 
@@ -335,69 +335,87 @@ function PoliceTab(props){
                     <Paper elevation={1} className={classes.paper}>
 
                         <Grid container spacing={24}>
-                            <Grid item xs>
-                                <Typography className={classes.label}> Nature of incident  </Typography>
-                                <Typography variant="h6" gutterBottom> {incident.nature_of_incident} </Typography>
+                            <Grid item xs={12}>
+                                <Typography className={classes.label}><b>Injured Parties</b></Typography>
                             </Grid>
+                            {incident.injuredParties &&
+                            <Grid item xs={12}>
+                                <Table className={classes.table} aria-label="simple table">
+                                    <TableHead>
+                                    <TableRow>
+                                        <TableCell>Name</TableCell>
+                                        <TableCell>Address</TableCell>
+                                        <TableCell>Political Affliation</TableCell>
+                                    </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {incident.injuredParties.map((p) => (
+                                            <TableRow key={p.id}>
+                                                <TableCell>{p.name}</TableCell>
+                                                <TableCell>{p.address}</TableCell>
+                                                <TableCell>{p.political_affliation}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </Grid>
+                            }
                         </Grid>
 
-                        <Grid container spacing={24}>
-                            <Grid item xs>
-                                <Typography className={classes.label}> Complainers Name </Typography>
-                                <Typography variant="h6" gutterBottom> {incident.complainers_name} </Typography>
+                        <Grid container spacing={24} style={{marginTop:"20px"}}>
+                            <Grid item xs={12}>
+                                <Typography className={classes.label}><b>Respondents</b></Typography>
                             </Grid>
-                            <Grid item xs>
-                                <Typography className={classes.label}> Complainers Address </Typography>
-                                <Typography variant="h6" gutterBottom> {incident.complainers_address} </Typography>
+                            {incident.respondents &&
+                            <Grid item xs={12}>
+                                <Table className={classes.table} aria-label="simple table">
+                                    <TableHead>
+                                    <TableRow>
+                                        <TableCell>Name</TableCell>
+                                        <TableCell>Address</TableCell>
+                                        <TableCell>Political Affliation</TableCell>
+                                    </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {incident.respondents.map((p) => (
+                                            <TableRow key={p.id}>
+                                                <TableCell>{p.name}</TableCell>
+                                                <TableCell>{p.address}</TableCell>
+                                                <TableCell>{p.political_affliation}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
                             </Grid>
+                            }
                         </Grid>
 
-                        <Grid container spacing={24}>
-                            <Grid item xs>
-                                <Typography className={classes.label}> Victims Name </Typography>
-                                <Typography variant="h6" gutterBottom> {incident.victims_name} </Typography>
-                            </Grid>
-                            <Grid item xs>
-                                <Typography className={classes.label}> Victims Address </Typography>
-                                <Typography variant="h6" gutterBottom> {incident.victims_address} </Typography>
-                            </Grid>
-                        </Grid>
 
-                        <Grid container spacing={24}>
-                            <Grid item xs>
-                                <Typography className={classes.label}> Respondents Name </Typography>
-                                <Typography variant="h6" gutterBottom> {incident.respondents_name} </Typography>
+                        <Grid container spacing={24} style={{marginTop:"20px"}}>
+                            <Grid item xs={12}>
+                                <Typography className={classes.label}><b>Detaine Vehicles</b></Typography>
                             </Grid>
-                            <Grid item xs>
-                                <Typography className={classes.label}> Respondents Address </Typography>
-                                <Typography variant="h6" gutterBottom> {incident.respondents_address} </Typography>
+                            {incident.detainedVehicles &&
+                            <Grid item xs={12}>
+                                <Table className={classes.table} aria-label="simple table">
+                                    <TableHead>
+                                    <TableRow>
+                                        <TableCell>Vehicle Number</TableCell>
+                                        <TableCell>Government / Private</TableCell>
+                                    </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {incident.detainedVehicles.map((p) => (
+                                            <TableRow key={p.id}>
+                                                <TableCell>{p.vehicle_no}</TableCell>
+                                                <TableCell>{p.ownership === "government" ? "Government" : "Private"}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
                             </Grid>
-                        </Grid>
-
-                        <Grid container spacing={24}>
-                            <Grid item xs>
-                                <Typography className={classes.label}> No. of Vehicles Arrested </Typography>
-                                <Typography variant="h6" gutterBottom> {incident.no_of_vehicles_arrested} </Typography>
-                            </Grid>
-                        </Grid>
-
-                        <Grid container spacing={24}>
-                            <Grid item xs>
-                                <Typography className={classes.label}> Steps Taken  </Typography>
-                                <Typography variant="h6" gutterBottom> {incident.steps_taken} </Typography>
-                            </Grid>
-                        </Grid>
-
-                        <Grid container spacing={24}>
-                            <Grid item xs>
-                                <Typography className={classes.label}> Court Case Number  </Typography>
-                                <Typography variant="h6" gutterBottom> {incident.court_case_no} </Typography>
-                            </Grid>
-                        </Grid>
-
-                        
-
-
+                            }
+                        </Grid>   
                     </Paper>
                 </Grid>
             </Grid>

@@ -6,7 +6,6 @@ from rest_framework.exceptions import APIException
 from ..incidents.models import (
     IncidentComment, 
     IncidentStatus, 
-    IncidentSeverity, 
     VerifyWorkflow,
     EscalateExternalWorkflow,
     CompleteActionWorkflow,
@@ -15,7 +14,8 @@ from ..incidents.models import (
     AssignUserWorkflow,
     EscalateWorkflow,
     CloseWorkflow,
-    InvalidateWorkflow
+    InvalidateWorkflow,
+    ReopenWorkflow
 )
 from django.contrib.auth.models import User
 
@@ -49,13 +49,6 @@ class GenericDataRelatedField(serializers.RelatedField):
                     "to_status_type": value.current_status
                 }
             }
-        elif isinstance(value, IncidentSeverity):
-            return {
-                "status": {
-                    "from_severity_type": value.previous_severity,
-                    "to_severity_type": value.current_severity
-                }
-            }
         elif isinstance(value, File):
             return {
                 "media": {
@@ -80,8 +73,9 @@ class GenericDataRelatedField(serializers.RelatedField):
             entity = {}
             if(value.is_internal_user):
                 entity["name"] = value.escalated_user.get_full_name()
-                if len(value.escalated_user.groups.all()) > 0:
-                    entity["type"] = value.escalated_user.groups.all()[0].name
+                if hasattr(value.escalated_user, "profile"):
+                    if value.escalated_user.profile is not None:
+                        entity["type"] = value.escalated_user.profile.organization.displayName
             else:
                 entity["name"] = value.escalated_user_other
                 entity["type"] = value.escalated_entity_other
@@ -162,6 +156,15 @@ class GenericDataRelatedField(serializers.RelatedField):
             return {
                 "workflow": {
                     "type": "Invalidate",
+                    "data": {
+                        "comment": value.comment
+                    }
+                }
+            }
+        elif isinstance(value, ReopenWorkflow):
+            return {
+                "workflow": {
+                    "type": "Reopen",
                     "data": {
                         "comment": value.comment
                     }
