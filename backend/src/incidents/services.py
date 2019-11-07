@@ -30,6 +30,7 @@ import pandas as pd
 from django.http import HttpResponse
 from xhtml2pdf import pisa
 import json
+from rest_framework.renderers import StaticHTMLRenderer
 
 
 def is_valid_incident(incident_id: str) -> bool:
@@ -662,6 +663,8 @@ def attach_media(user:User, incident:Incident, uploaded_file:File):
     event_services.media_attached_event(user, incident, uploaded_file)
 
 def get_fitlered_incidents_report(incidents: Incident, output_format: str):
+
+    
     dataframe = pd.DataFrame(list(incidents.values("refId", "title", "description", "current_status", "current_severity", "response_time", "category")))
     dataframe.columns = ["Ref ID", "Title", "Description", "Status", "Severity", "Response Time", "Category"]
     
@@ -671,15 +674,79 @@ def get_fitlered_incidents_report(incidents: Incident, output_format: str):
         dataframe.to_csv(path_or_buf=response,sep=';',float_format='%.2f',index=False,decimal=",")
         return response
     
-    if output_format == "pdf":
-        output = dataframe.to_html(float_format='%.2f',index=False)
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="incidents.pdf"'
-        pisa.CreatePDF(output, dest=response)
-        return response
+    if output_format == "html":
+        # output = dataframe.to_html(float_format='%.2f',index=False)
+        output = write_to_html_file(dataframe, "Incidents")
+        output = output.encode('utf-8')
+    
+        response = HttpResponse(content_type='text/html')
+
+        # response = HttpResponse(content_type='application/pdf')        
+        # response['Content-Disposition'] = 'attachment; filename="incidents.pdf"'
+        # pisa.CreatePDF(output, dest=response)
+        # pisa.CreatePDF(output.encode('utf-8'), dest=response)
+        # pisa.CreatePDF(output.encode("ISO-8859-1"), dest=response)        
+        # return response
+
+        return HttpResponse(output)
 
     # if it's an unrecognized format, raise exception
     raise IncidentException("Unrecognized export format '%s'" % output_format)
+
+def write_to_html_file(df, title=''):
+    '''
+    Write an entire dataframe to an HTML file with nice formatting.
+    '''
+
+    result = '''
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+
+    @media print
+    {    
+        button
+        {
+            display: none !important;
+        }
+    }
+
+    h2 {
+        text-align: center;
+    }
+    table { 
+        margin-left: auto;
+        margin-right: auto;
+    }
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 5px;
+        text-align: center;
+        font-size: 90%;
+    }
+    table tbody tr:hover {
+        background-color: #dddddd;
+    }
+    .wide {
+        width: 90%; 
+    }
+
+</style>
+</head>
+<body>
+    <button onclick="window.print();return false;"> Print </button>
+    '''
+    result += '<h2> %s </h2>\n' % title
+    result += df.to_html(classes='wide', escape=False)
+    result += '''
+</body>
+</html>
+'''
+    return result
 
 def get_incident_by_reporter_unique_id(unique_id):
     try:
