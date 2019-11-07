@@ -89,22 +89,22 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
         <Table className={classes.table}>
           <colgroup>
             <col style={{ width: "2%" }} />
+            <col style={{ width: "10%" }} />
             <col style={{ width: "20%" }} />
             <col style={{ width: "30%" }} />
             <col style={{ width: "2%" }} />
             <col style={{ width: "15%" }} />
             <col style={{ width: "10%" }} />
-            <col style={{ width: "10%" }} />
           </colgroup>
           <TableHead>
             <TableRow>
               <CustomTableCell align="center">Ref Id</CustomTableCell>
+              <CustomTableCell align="center">Logged Date</CustomTableCell>
               <CustomTableCell align="center">Title</CustomTableCell>
               <CustomTableCell align="center">Description</CustomTableCell>
               <CustomTableCell align="center">Status</CustomTableCell>
               <CustomTableCell align="center">Incident Type</CustomTableCell>
               <CustomTableCell align="center">Category</CustomTableCell>
-              <CustomTableCell align="center">Logged Date</CustomTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -117,6 +117,9 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
               >
                 <CustomTableCell scope="center">
                   <p>{row.refId}</p>
+                </CustomTableCell>
+                <CustomTableCell align="center">
+                  <p>{moment(row.createdDate).format('YYYY-MM-DD  h:mm a')}</p>
                 </CustomTableCell>
                 <CustomTableCell scope="center">
                   <p>{row.title}</p>
@@ -132,9 +135,6 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
                 </CustomTableCell>
                 <CustomTableCell align="left">
                   <p>{ categories.map((value, index)=>(value.id==row.category? value.code+" | "+value.sub_category:null)) }</p>
-                </CustomTableCell>
-                <CustomTableCell align="center">
-                  <p>{moment(row.createdDate).format('YYYY-MM-DD  h:mm a')}</p>
                 </CustomTableCell>
 
                 {/* <CustomTableCell align="center">
