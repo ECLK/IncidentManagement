@@ -31,13 +31,9 @@ import pandas as pd
 from django.http import HttpResponse
 from xhtml2pdf import pisa
 import json
-<<<<<<< HEAD
 from rest_framework.renderers import StaticHTMLRenderer
-
-=======
 from django.db.models import Q
 from .permissions import *
->>>>>>> 2280bf9d85eedc085a815940199c34b03cd13c7a
 
 def is_valid_incident(incident_id: str) -> bool:
     try:
