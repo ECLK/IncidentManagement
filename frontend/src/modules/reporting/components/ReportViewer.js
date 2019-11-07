@@ -46,7 +46,7 @@ const ReportViewer = ({classes, ...props}) => {
 
     async function loadPDF(url) {
         const response = (await handler.get(url));
-        console.log(response.headers.title);
+        console.log(response);
         const data = response.data;
         const blob = new Blob([data], {type: 'application/pdf'});
         const uri = URL.createObjectURL(blob);
@@ -54,19 +54,19 @@ const ReportViewer = ({classes, ...props}) => {
     }
 
     return (
-        < Paper
+        <Paper
     className = {classes.root
 }>
     {
         report && (
-        < iframe
-        src = {uri}
-        width = "100%"
-        height = "1000px" > < /iframe>
+        <iframe
+            src = {uri}
+            width = "100%"
+            height = "1000px"> 
+        </iframe>
     )
     }
-<
-    /Paper>
+        </Paper>
 )
 }
 

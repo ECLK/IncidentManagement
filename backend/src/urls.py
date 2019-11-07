@@ -82,7 +82,7 @@ urlpatterns = [
         file_views.FileView.as_view(),
     ),
     path(
-        "incidents/files/download/<int:file_id>",
+        "incidents/files/download/<str:file_id>",
         file_views.FileDownload.as_view(),
     ),
     path(

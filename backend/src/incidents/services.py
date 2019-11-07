@@ -418,6 +418,10 @@ def incident_close(user: User, incident: Incident, details: str):
     outcomes = IncidentComment.objects.filter(
         incident=incident, is_outcome=True).count()
 
+    if incident.current_status == StatusType.ADVICE_REQESTED.name:
+        raise WorkflowException(
+            "All pending advices must be resolved first")
+
     if incident.current_status == StatusType.ACTION_PENDING.name:
         raise WorkflowException(
             "All pending actions needs to be resolved first")

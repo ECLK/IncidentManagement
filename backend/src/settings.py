@@ -176,6 +176,7 @@ JWT_AUTH = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+X_FRAME_OPTIONS = "ALLOW ALL"
 
 # file uload parameters
 MEDIA_URL = '/app/media/'

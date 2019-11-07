@@ -11,6 +11,7 @@ import PlaylistAddCheck from '@material-ui/icons/PlaylistAddCheck';
 
 import { showModal } from '../../../modals/state/modal.actions'
 import { API_BASE_URL } from '../../../../config';
+import FilePreviewer from '../../../shared/components/FilePreviewer/FilePreviewer';
 
 
 const styles = {
@@ -139,7 +140,11 @@ function getSecondaryItem(event){
         const file = event.data.media.file;
         return (
             <div>
-                <a href={`${API_BASE_URL}/incidents/files/download/${file.id}`}>{file.name}</a>
+                <FilePreviewer 
+                    url={`${API_BASE_URL}/incidents/files/download/${file.id}`}
+                    filename={file.name}
+                    ext={file.extension}
+                />
             </div>
         )
     }else if(event.action === "WORKFLOW_ACTIONED"){
