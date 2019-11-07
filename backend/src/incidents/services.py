@@ -437,8 +437,9 @@ def incident_close(user: User, incident: Incident, details: str):
     outcomes = IncidentComment.objects.filter(
         incident=incident, is_outcome=True).count()
 
-    if incident.hasPendingStatusChange == "T":
-        raise WorkflowException("Incident has pending changes, can not close")
+    # TODO: need to check for any pending actions before closing
+    # if incident.hasPendingStatusChange == "T":
+    #     raise WorkflowException("Incident has pending changes, can not close")
 
     if incident.current_status == StatusType.ACTION_PENDING:
         raise WorkflowException(
@@ -446,7 +447,7 @@ def incident_close(user: User, incident: Incident, details: str):
 
     if outcomes == 0:
         raise WorkflowException(
-            "Incident need at least 1 outcome before closing")
+            "Incident need at least 1 resolution outcome before closing")
 
     status = IncidentStatus(
         current_status=StatusType.CLOSED,
@@ -466,6 +467,7 @@ def incident_close(user: User, incident: Incident, details: str):
     )
     workflow.save()
 
+    # users who do not have close permission will request to close 
     if user.has_perm("incidents.can_request_status_change"):
         # if user can't directly change the status
         # only a pending change is added
@@ -478,12 +480,12 @@ def incident_close(user: User, incident: Incident, details: str):
         # event_services.update_status_with_description_event(
         #     user, incident, status, False, comment)
 
-    elif user.has_perm("incidents.can_change_status"):
+    elif user.has_perm("incidents.CAN_CLOSE_INCIDENT"):
         status.approved = True
         status.save()
 
-        incident.hasPendingStatusChange = "F"
-        incident.save()
+        # incident.hasPendingStatusChange = "F"
+        # incident.save()
 
         # event_services.update_status_with_description_event(
         #     user, incident, status, True, comment)
