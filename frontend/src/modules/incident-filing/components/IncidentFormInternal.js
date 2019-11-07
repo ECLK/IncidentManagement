@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from 'react';
-import { connect } from 'react-redux'
-import { withRouter, useSelector, useDispatch } from "react-router";
+import { connect, useSelector, useDispatch } from 'react-redux'
+import { withRouter } from "react-router";
 import { withStyles } from '@material-ui/core/styles';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -18,7 +18,6 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -40,11 +39,10 @@ import {
     resetIncidentForm,
     submitInternalIncidentData,
     requestInternalIncidentData,
-
     fetchUpdateInternalIncidentData,
     updateInternalIncidentData
+} from '../state/IncidentFiling.actions';
 
-} from '../state/IncidentFiling.actions'
 import {
     fetchChannels,
     fetchElections,
@@ -65,9 +63,9 @@ import {
 import IntlSelect from './IntlSelect';
 import moment from 'moment';
 import FileUploader from '../../shared/components/FileUploader';
-import { showNotification } from '../../notifications/state/notifications.actions';
+import {showNotification} from '../../notifications/state/notifications.actions';
 import TelephoneInput from './TelephoneInput';
-import { useLoadingStatus } from '../../loading-spinners/loadingHook'
+import {useLoadingStatus} from '../../loading-spinners/loadingHook'
 
 const styles = theme => ({
     root: {
@@ -127,6 +125,28 @@ const styles = theme => ({
 
 function IncidentFormInternal(props) {
 
+    const {
+        channels,
+        categories,
+        districts,
+        provinces,
+        divisionalSecretariats,
+        gramaNiladharis,
+        pollingDivisions,
+        pollingStations,
+        policeStations,
+        policeDivisions,
+        wards,
+        elections,
+        politicalParties,
+
+        activeIncident,
+        activeIncidentReporter,
+        
+    } = useSelector((state)=>(state.sharedReducer))
+
+    const incident = activeIncident.data;
+
     const [incidentData, setIncidentData] = useState({
         incidentType: "COMPLAINT",
         infoChannel: "",
@@ -176,58 +196,52 @@ function IncidentFormInternal(props) {
         court_case_no: "",
 
     })
-
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [handleConfirmSubmit, setHandleConfirmSubmit] = useState(false);
 
-
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        props.getChannels();
-        props.getElections();
-        props.getCategories();
-        props.getProvinces();
-        props.getDistricts();
-        props.getDivisionalSecretariats();
-        props.getGramaNiladharis();
-        props.getPollingDivisions();
-        props.getPollingStations();
-        props.getPoliceStations();
-        props.getPoliceDivisions();
-        props.getWards();
-        props.getPoliticalParties();
-        props.resetIncidentForm();
-
+        dispatch(fetchChannels());
+        dispatch(fetchElections());
+        dispatch(fetchCategories());
+        dispatch(fetchProvinces());
+        dispatch(fetchDistricts());
+        dispatch(fetchDivisionalSecretariats());
+        dispatch(fetchGramaNiladharis());
+        dispatch(fetchPollingDivisions());
+        dispatch(fetchPollingStations());
+        dispatch(fetchPoliceStations());
+        dispatch(fetchPoliceDivisions());
+        dispatch(fetchWards());
+        dispatch(fetchPoliticalParties());
+        dispatch(resetIncidentForm());
         const { paramIncidentId } = props.match.params
-
         if (paramIncidentId) {
-            props.getIncident(paramIncidentId);
+            dispatch(fetchActiveIncidentData(paramIncidentId))
         } else {
-            props.resetActiveIncident();
+            dispatch(resetActiveIncident());
         }
     },[incidentData])
 
+
     const handleSubmit = (values, actions) => {
-
         const { paramIncidentId } = props.match.params
-
-
         if (values.occured_date) {
             values.occured_date = moment(values.occured_date).format()
         } else {
             // to avoid sending an empty string to backend.
             values.occured_date = null
         }
-
         if (paramIncidentId) {
-            props.updateInternalIncident(paramIncidentId, values);
+            dispatch(fetchUpdateInternalIncidentData(paramIncidentId, incidentData));
             props.history.push(`/app/review/${paramIncidentId}`);
         } else {
             const fileData = new FormData();
             for (var file of incidentData.files) {
                 fileData.append("files[]", file);
             }
-            props.submitInternalIncident(values, fileData);
+            dispatch(submitInternalIncidentData(values, fileData))
         }
     }
 
@@ -236,7 +250,7 @@ function IncidentFormInternal(props) {
             handleSubmit(values, actions)
         } else {
             setShowConfirmationModal(true);
-            setHandleConfirmSubmit(() => { handleSubmit(values, actions) })
+            setHandleConfirmSubmit(() => {handleSubmit(values, actions)})
         }
     }
 
@@ -248,8 +262,8 @@ function IncidentFormInternal(props) {
             return incidentData;
         }
 
-        var initData = { ...incidentData, ...props.incident };
-        const reporter = props.reporter;
+        var initData = { ...incidentData, ...incident };
+        const reporter = activeIncidentReporter;
 
         if (reporter) {
             Object.assign(initData, {
@@ -337,18 +351,15 @@ function IncidentFormInternal(props) {
         setShowConfirmationModal(false)
     }
 
-    const { classes, isIncidentSubmitting, isIncidentUpdating } = props;
     const { paramIncidentId } = props.match.params
 
     //TODO: get isProcessing status from useLoadingStauts hook.
-
-    const isProcessing = isIncidentSubmitting || isIncidentUpdating
     const reinit = paramIncidentId ? true : false;
 
     const politicalPartyLookup = Object.assign({},
-        ...props.politicalParties.allCodes.map((c, k) => {
-            const curParty = props.politicalParties.byCode[c];
-            return { [curParty.code]: props.politicalParties.byCode[c].name }
+        ...politicalParties.allCodes.map((c, k) => {
+            const curParty = politicalParties.byCode[c];
+            return { [curParty.code]: politicalParties.byCode[c].name }
         })
     );
 
@@ -365,6 +376,8 @@ function IncidentFormInternal(props) {
         reporterMobile: Yup.number(),
         reporterEmail: Yup.string().email('Invalid email'),
     });
+
+    const {classes} = props;
 
     return (
         <div className={classes.root}>
@@ -393,13 +406,13 @@ function IncidentFormInternal(props) {
                                 onSubmit={(e) => {
                                     e.preventDefault()
                                     if (!isValid) {
-                                        props.showNotification("Missing required values")
+                                        dispatch(showNotification("Missing required values", null))
                                         window.scroll(0, 0)
                                     }
                                     handleSubmit(e)
                                 }}
                             >
-                                <div style={{ display: "none" }}>{props.incident.id}</div>
+                                <div style={{ display: "none" }}>{incident.id}</div>
                                 {/* basic incident detail information */}
                                 <Paper className={classes.paper}>
                                     <Typography variant="h5" gutterBottom>
@@ -428,7 +441,7 @@ function IncidentFormInternal(props) {
                                                 <div style={{ color: (errors.infoChannel && touched.infoChannel) ? 'red' : null }}>Incident receipt mode* </div>
                                             </FormLabel>
 
-                                            {props.channels.map((c, k) => (
+                                            {channels.map((c, k) => (
                                                 <Button
                                                     key={k}
                                                     variant="contained"
@@ -538,7 +551,7 @@ function IncidentFormInternal(props) {
                                                         id: 'category',
                                                     }}
                                                 >
-                                                    {props.categories.map((c, k) => (
+                                                    {categories.map((c, k) => (
                                                         <MenuItem value={c.id} key={k}>
                                                             <div className={classes.langCats}>
                                                                 <div>{c.code}</div>
@@ -578,7 +591,7 @@ function IncidentFormInternal(props) {
                                                     }}
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {props.elections.map((c, k) => (
+                                                    {elections.map((c, k) => (
                                                         <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
                                                     ))}
                                                 </Select>
@@ -597,8 +610,8 @@ function IncidentFormInternal(props) {
                                                     }}
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {props.politicalParties.allCodes.map((c, k) => {
-                                                        let currParty = props.politicalParties.byCode[c]
+                                                    {politicalParties.allCodes.map((c, k) => {
+                                                        let currParty = politicalParties.byCode[c]
                                                         return (
                                                             <MenuItem value={currParty.code} key={k}>
                                                                 {currParty.name}
@@ -857,8 +870,8 @@ function IncidentFormInternal(props) {
                                                     }}
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {props.provinces.allCodes.map((c, k) => {
-                                                        let currProvince = props.provinces.byCode[c]
+                                                    {provinces.allCodes.map((c, k) => {
+                                                        let currProvince = provinces.byCode[c]
                                                         return (
                                                             <MenuItem value={currProvince.code} key={k}>
                                                                 {currProvince.name}
@@ -880,8 +893,8 @@ function IncidentFormInternal(props) {
                                                     }}
                                                 >
                                                     <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {props.districts.allCodes.map((c, k) => {
-                                                        let currDistrict = props.districts.byCode[c]
+                                                    {districts.allCodes.map((c, k) => {
+                                                        let currDistrict = districts.byCode[c]
                                                         return currDistrict.name !== 'NONE' &&
                                                             <MenuItem value={currDistrict.code} key={k}>
                                                                 {currDistrict.name}
@@ -897,7 +910,7 @@ function IncidentFormInternal(props) {
                                                     value={values.divisionalSecretariat}
                                                     handleChange={handleChange}
                                                     name='divisionalSecretariat'
-                                                    dataObj={props.divisionalSecretariats}
+                                                    dataObj={divisionalSecretariats}
                                                 />
                                             </FormControl>
                                         </Grid>
@@ -908,7 +921,7 @@ function IncidentFormInternal(props) {
                                                     value={values.pollingDivision}
                                                     handleChange={handleChange}
                                                     name='pollingDivision'
-                                                    dataObj={props.pollingDivisions}
+                                                    dataObj={pollingDivisions}
                                                 />
                                             </FormControl>
                                         </Grid>
@@ -919,7 +932,7 @@ function IncidentFormInternal(props) {
                                                     value={values.pollingStation}
                                                     handleChange={handleChange}
                                                     name='pollingStation'
-                                                    dataObj={props.pollingStations}
+                                                    dataObj={pollingStations}
                                                 />
                                             </FormControl>
                                         </Grid>
@@ -930,7 +943,7 @@ function IncidentFormInternal(props) {
                                                     value={values.gramaNiladhari}
                                                     handleChange={handleChange}
                                                     name='gramaNiladhari'
-                                                    dataObj={props.gramaNiladharis}
+                                                    dataObj={gramaNiladharis}
                                                 />
                                             </FormControl>
                                         </Grid>
@@ -941,7 +954,7 @@ function IncidentFormInternal(props) {
                                                     value={values.policeStation}
                                                     handleChange={handleChange}
                                                     name='policeStation'
-                                                    dataObj={props.policeStations}
+                                                    dataObj={policeStations}
                                                 />
                                             </FormControl>
                                         </Grid>
@@ -952,7 +965,7 @@ function IncidentFormInternal(props) {
                                                     value={values.policeDivision}
                                                     handleChange={handleChange}
                                                     name='policeDivision'
-                                                    dataObj={props.policeDivisions}
+                                                    dataObj={policeDivisions}
                                                 />
                                             </FormControl>
                                         </Grid>
@@ -1159,7 +1172,7 @@ function IncidentFormInternal(props) {
                     <Button onClick={() => hideConfirmModal(false)} color="primary">
                         Back
                         </Button>
-                    <Button disabled={isProcessing} onClick={() => hideConfirmModal(true)} color="primary" autoFocus>
+                    <Button onClick={() => hideConfirmModal(true)} color="primary" autoFocus>
                         Submit
                         </Button>
                 </DialogActions>
@@ -1169,102 +1182,6 @@ function IncidentFormInternal(props) {
 
 }
 
-const mapStateToProps = (state, ownProps) => {
-    return {
 
-        incident: state.sharedReducer.activeIncident.data,
-        reporter: state.sharedReducer.activeIncidentReporter,
 
-        channels: state.sharedReducer.channels,
-        categories: state.sharedReducer.categories,
-        districts: state.sharedReducer.districts,
-        provinces: state.sharedReducer.provinces,
-        divisionalSecretariats: state.sharedReducer.divisionalSecretariats,
-        gramaNiladharis: state.sharedReducer.gramaNiladharis,
-        pollingDivisions: state.sharedReducer.pollingDivisions,
-        pollingStations: state.sharedReducer.pollingStations,
-        policeStations: state.sharedReducer.policeStations,
-        policeDivisions: state.sharedReducer.policeDivisions,
-        wards: state.sharedReducer.wards,
-        elections: state.sharedReducer.elections,
-        politicalParties: state.sharedReducer.politicalParties,
-
-        isIncidentSubmitting: state.loading.SUBMIT_INTERNAL_INCIDENT,
-        isIncidentUpdating: state.loading.UPDATE_INTERNAL_INCIDENT,
-
-        ...ownProps
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        submitInternalIncident: (values, fileData) => {
-            dispatch(submitInternalIncidentData(values, fileData))
-        },
-        updateInternalIncident: (incidentId, incidentData) => {
-            dispatch(fetchUpdateInternalIncidentData(incidentId, incidentData));
-        },
-
-        getChannels: () => {
-            dispatch(fetchChannels())
-        },
-        getElections: () => {
-            dispatch(fetchElections());
-        },
-        getCategories: () => {
-            dispatch(fetchCategories())
-        },
-        getProvinces: () => {
-            dispatch(fetchProvinces())
-        },
-        getDistricts: () => {
-            dispatch(fetchDistricts())
-        },
-        getDivisionalSecretariats: () => {
-            dispatch(fetchDivisionalSecretariats())
-        },
-        getGramaNiladharis: () => {
-            dispatch(fetchGramaNiladharis())
-        },
-        getPollingDivisions: () => {
-            dispatch(fetchPollingDivisions())
-        },
-        getPollingStations: () => {
-            dispatch(fetchPollingStations())
-        },
-        getPoliceStations: () => {
-            dispatch(fetchPoliceStations())
-        },
-        getPoliceDivisions: () => {
-            dispatch(fetchPoliceDivisions())
-        },
-        getWards: () => {
-            dispatch(fetchWards())
-        },
-        getPoliticalParties: () => {
-            dispatch(fetchPoliticalParties())
-        },
-
-        getIncident: (incidentId) => {
-            dispatch(fetchActiveIncidentData(incidentId))
-        },
-
-        resetActiveIncident: () => {
-            dispatch(resetActiveIncident())
-        },
-
-        resetIncidentForm: () => {
-            dispatch(resetIncidentForm())
-        },
-
-        showNotification: (message) => {
-            dispatch(showNotification({ message }, null))
-        }
-    }
-}
-
-export default withRouter(
-    connect(mapStateToProps, mapDispatchToProps)(
-        withStyles(styles)(IncidentFormInternal)
-    )
-);
+export default withRouter(withStyles(styles)(IncidentFormInternal));
