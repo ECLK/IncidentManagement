@@ -77,8 +77,12 @@ const getLastActionTime = (events) => {
 
 const EventActions = (props) => {
 
-    const { classes, getUsers,
-        setIncidentAssignee, users } = props;
+    const { 
+        classes,
+        users,
+        divisions,
+        organizations 
+    } = props;
 
     var hourlyResponseTimes = []
     for (var i = 1; i < 24; i++) {
@@ -112,7 +116,7 @@ const EventActions = (props) => {
                         activeIncident.currentStatus !== 'INVALIDATED' && 
                         userCan(currentUser, activeIncident, USER_ACTIONS.CHANGE_ASSIGNEE) &&
                         <ListItemSecondaryAction>
-                            <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('CHANGE_ASSIGNEE_MODAL', { activeIncident, users })) }}>
+                            <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('CHANGE_ASSIGNEE_MODAL', { activeIncident, users, divisions })) }}>
                                 <EditIcon />
                             </IconButton>
                         </ListItemSecondaryAction>

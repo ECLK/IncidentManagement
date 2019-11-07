@@ -50,8 +50,8 @@ const RequestAdviceModal = (props) => {
                     displayEmpty
                     onChange={(e)=>{setAssignee(e.target.value)}}
                 >
-                    {props.users.map((user, index) => {
-                        return (<MenuItem key={index} value={user.uid}>{user.displayname}</MenuItem>)
+                    {props.users.allIds.map((uid, index) => {
+                        return (<MenuItem key={index} value={uid}>{props.users.byIds[uid].displayname}</MenuItem>)
                     })}
                 </Select>
 

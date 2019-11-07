@@ -72,8 +72,9 @@ class GenericDataRelatedField(serializers.RelatedField):
             entity = {}
             if(value.is_internal_user):
                 entity["name"] = value.escalated_user.get_full_name()
-                if len(value.escalated_user.groups.all()) > 0:
-                    entity["type"] = value.escalated_user.groups.all()[0].name
+                if hasattr(value.escalated_user, "profile"):
+                    if value.escalated_user.profile is not None:
+                        entity["type"] = value.escalated_user.profile.organization.displayName
             else:
                 entity["name"] = value.escalated_user_other
                 entity["type"] = value.escalated_entity_other

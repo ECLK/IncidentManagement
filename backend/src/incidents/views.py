@@ -59,6 +59,8 @@ from rest_framework.renderers import JSONRenderer
 
 import json
 from ..custom_auth.models import UserLevel
+from ..custom_auth.services import user_can
+from .permissions import *
 
 class IncidentResultsSetPagination(PageNumberPagination):
     page_size = 15
@@ -339,7 +341,7 @@ class IncidentWorkflowView(APIView):
         incident = get_incident_by_id(incident_id)
 
         if workflow == "close":
-            if not request.user.has_perm("incidents.can_change_status"):
+            if not user_can(request.user, CAN_CLOSE_INCIDENT):
                 return Response("User can't close incident", status=status.HTTP_401_UNAUTHORIZED)
 
             details = request.data['details']
@@ -380,7 +382,7 @@ class IncidentWorkflowView(APIView):
             incident_invalidate(request.user, incident, comment)
 
         elif workflow == "assign":
-            if not request.user.has_perm("incidents.can_change_assignee"):
+            if not user_can(request.user, CAN_CHANGE_ASSIGNEE):
                 return Response("User can't change assignee", status=status.HTTP_401_UNAUTHORIZED)
 
             assignee_id = self.request.data['assignee']

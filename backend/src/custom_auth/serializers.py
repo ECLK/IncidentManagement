@@ -37,6 +37,7 @@ class UserSerializer(serializers.ModelSerializer):
     def get_profile(self, obj):
         if hasattr(obj, "profile"):
             profile = {}
+            
             if obj.profile.organization is not None:
                 profile["organization"] = {
                     "code": obj.profile.organization.code,

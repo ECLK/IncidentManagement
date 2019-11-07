@@ -32,7 +32,7 @@ export function userCan(user, incident, action){
 
     // hierarchy based rules
     if(action === USER_ACTIONS.CHANGE_ASSIGNEE){
-        if(findPermission(user.userPermissions, "can_change_assignee")){
+        if(findPermission(user.userPermissions, "CAN_CHANGE_ASSIGNEE")){
             return true;
         }
     }else if(action === USER_ACTIONS.CLOSE_INCIDENT){
