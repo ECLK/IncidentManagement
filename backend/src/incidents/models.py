@@ -199,13 +199,21 @@ class Incident(models.Model):
         ordering = ("created_date",)
 
         permissions = (
-            (CAN_CHANGE_ASSIGNEE, "Can directly change assignee"),
             (CAN_REVIEW_INCIDENTS, "Can review created incidents"),
-            (CAN_VIEW_REPORTS, "Can view inciddent reports"),
-            (CAN_CLOSE_INCIDENT, "Can close incident"),
+            (CAN_REVIEW_OWN_INCIDENTS, "Can review own incidents"),
+            (CAN_REVIEW_ALL_INCIDENTS, "Can review all incidents"),
+            
             (CAN_MANAGE_INCIDENT, "Can manage incident"),
+            
+            (CAN_RUN_WORKFLOW, "Can run incident workflows"),
+            (CAN_CHANGE_ASSIGNEE, "Can change incident assignee"),
             (CAN_VERIFY_INCIDENT, "Can verify incident"),
-            (CAN_RUN_WORKFLOW, "Can run incident workflows")
+            (CAN_CLOSE_INCIDENT, "Can close incident"),
+            (CAN_ESCALATE_INCIDENT, "Can escalate incident"),
+            (CAN_ESCALATE_EXTERNAL, "Can refer incident to external organization"),
+            (CAN_INVALIDATE_INCIDENT, "Can invalidate incident"),
+
+            (CAN_VIEW_REPORTS, "Can view inciddent reports"),
         )
 
 # the following signals will update the current status and severity fields

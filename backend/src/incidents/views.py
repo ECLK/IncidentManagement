@@ -96,8 +96,8 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         user = request.user
 
         # for external entities, they can only view related incidents
-        # if not user.is_staff:
-        #     incidents = incidents.filter(linked_individuals__id=user.id)
+        if not user_can(user, CAN_REVIEW_ALL_INCIDENTS):
+            incidents = incidents.filter(linked_individuals__id=user.id)
 
         # filtering
         param_query = self.request.query_params.get('q', None)
