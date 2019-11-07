@@ -21,41 +21,41 @@ class ChannelList(generics.ListCreateAPIView):
     permission_classes = []
 
 class ProvinceList(generics.ListCreateAPIView):
-    queryset = Province.objects.all()
+    queryset = Province.objects.all().order_by('name')
     serializer_class = ProvinceSerializer
 
 class DistrictList(generics.ListCreateAPIView):
-    queryset = District.objects.all()
+    queryset = District.objects.all().order_by('name')
     serializer_class = DistrictSerializer
 
 class PoliceStationList(generics.ListCreateAPIView):
-    queryset = PoliceStation.objects.all()
+    queryset = PoliceStation.objects.all().order_by('name')
     serializer_class = PoliceStationSerializer
 
 class PollingStationList(generics.ListCreateAPIView):
-    queryset = PollingStation.objects.all()
+    queryset = PollingStation.objects.all().order_by('name')
     serializer_class = PollingStationSerializer
 
 class DSDivisionList(generics.ListCreateAPIView):
-    queryset = DSDivision.objects.all()
+    queryset = DSDivision.objects.all().order_by('name')
     serializer_class = DSDivisionSerializer
 
 class GNDivisionList(generics.ListCreateAPIView):
-    queryset = GNDivision.objects.all()
+    queryset = GNDivision.objects.all().order_by('name')
     serializer_class = GNDivisionSerializer
 
 class WardList(generics.ListCreateAPIView):
-    queryset = Ward.objects.all()
+    queryset = Ward.objects.all().order_by('name')
     serializer_class = WardSerializer
 
 class PoliceDivisionList(generics.ListCreateAPIView):
-    queryset = PoliceDivision.objects.all()
+    queryset = PoliceDivision.objects.all().order_by('name')
     serializer_class = PoliceDivisionSerializer
 
 class PollingDivisionList(generics.ListCreateAPIView):
-    queryset = PollingDivision.objects.all()
+    queryset = PollingDivision.objects.all().order_by('name')
     serializer_class = PollingDivisionSerializer
 
 class PoliticalPartyList(generics.ListCreateAPIView):
-    queryset = PoliticalParty.objects.all()
+    queryset = PoliticalParty.objects.all().order_by('name')
     serializer_class = PoliticalPartySerializer
