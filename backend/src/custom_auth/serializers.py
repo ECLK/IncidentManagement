@@ -47,8 +47,8 @@ class UserSerializer(serializers.ModelSerializer):
             if obj.profile.division is not None:
                 profile["division"] = {
                     "code": obj.profile.division.code,
-                    "divisionType": type(obj.profile.division.refered_model).__name__,
-                    "name": obj.profile.division.refered_model.name
+                    "divisionType": obj.profile.division.division_type,
+                    "name": obj.profile.division.name
                 }
         
         return profile

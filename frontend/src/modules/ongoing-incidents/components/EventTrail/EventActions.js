@@ -185,7 +185,7 @@ const EventActions = (props) => {
                     <SubdirectoryArrowLeftIcon className={classes.actionButtonIcon} />
                     Refer to organization 
                 </Button>
-                <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REQUEST_ADVICE_MODAL', { activeIncident, users })) }}>
+                <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REQUEST_ADVICE_MODAL', { activeIncident, users, divisions })) }}>
                     <HelpIcon className={classes.actionButtonIcon} />
                     Request for advice
                 </Button>

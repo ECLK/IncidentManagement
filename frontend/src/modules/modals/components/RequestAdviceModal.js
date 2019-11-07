@@ -30,30 +30,50 @@ const onSubmitClick = (dispatch, incidentId, comment, assignee) => {
 }
 
 const RequestAdviceModal = (props) => {
-
+    const defaultOrg = "eclk";
+    const { users, divisions } = props;
     const dispatch = useDispatch();
 
     //maintains selected value in local state until change is confirmed
-    const [assignee, setAssignee] = useState("");
+    const [assignee, setAssignee] = useState(null);
     const [comment, setComment] = useState("");
+    const [division, setDivision] = useState(null);
 
     return (
         <div>
             <DialogTitle id="form-dialog-title">Request for advice</DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                    Select assignee for the incident
+            <DialogContentText>
+                    Select EC Division of the assignee
                 </DialogContentText>
                 <Select
-                    value={assignee}
-                    name="assignee"
+                    value={division}
+                    name="division"
                     displayEmpty
-                    onChange={(e)=>{setAssignee(e.target.value)}}
+                    onChange={(e)=>{setDivision(e.target.value)}}
                 >
-                    {props.users.allIds.map((uid, index) => {
-                        return (<MenuItem key={index} value={uid}>{props.users.byIds[uid].displayname}</MenuItem>)
+                    {divisions.idsByOrganization[defaultOrg].map((did, index) => {
+                        return (<MenuItem key={index} value={divisions.byIds[did].code}>{divisions.byIds[did].name}</MenuItem>)
                     })}
                 </Select>
+                
+                { division !== null && (
+                    <>
+                    <DialogContentText>
+                        Select Assignee from division
+                    </DialogContentText>
+                    <Select
+                        value={assignee}
+                        name="assignee"
+                        displayEmpty
+                        onChange={(e)=>{setAssignee(e.target.value)}}
+                    >
+                        {users.idsByDivision[division].map((uid, index) => {
+                            return (<MenuItem key={index} value={users.byIds[uid].uid}>{users.byIds[uid].displayname}</MenuItem>)
+                        })}
+                    </Select>
+                    </>
+                )}
 
                 <DialogContentText>
                     Comment

@@ -23,7 +23,7 @@ const ChangeAssigneeModal = (props) => {
     //maintains selected value in local state until change is confirmed
     const [division, setDivision] = useState(null);
     const [assignee, setAssignee] = useState(null);
-    console.log(users, divisions);
+
     return (
         <div>
             <DialogTitle id="form-dialog-title">Change Assignee</DialogTitle>
