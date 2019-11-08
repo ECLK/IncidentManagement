@@ -54,10 +54,11 @@ const handleValueChange = (oldValues, field, value, setValue) => {
 }
 
 const EscallateOutsideModal = (props) => {
-
     const dispatch = useDispatch();
     const entities = useSelector(state => state.user.groups);
     const users = useSelector(state => state.user.users);
+    const divisions = useSelector(state => state.user.divisions);
+    const organizations = useSelector(state => state.user.organizations);
     const {incidentId} = props
     
     //maintains selected value in local state until change is confirmed
@@ -67,13 +68,14 @@ const EscallateOutsideModal = (props) => {
         entity_user: null,
         comment:""
     });
+    const [division, setDivision] = useState(null);
 
     // function handleEntityTypeChange(value){
     //     if(value === "other"){
 
     //     }
     // }
-
+    console.log(escallationInfo);
     return (
         <div>
             <DialogTitle id="form-dialog-title">Refer to organization entity: </DialogTitle>
@@ -99,9 +101,9 @@ const EscallateOutsideModal = (props) => {
                     // onChange = {(e) => handleEntityTypeChange(e.target.value)}
                     margin="dense"
                     >
-                    {entities.allIds.map(id => (   
+                    {organizations.allIds.map(id => (   
                         <MenuItem key={id} value={id}>
-                            {entities.byIds[id].name}
+                            {organizations.byIds[id].name}
                         </MenuItem>
                     ))}
                     <MenuItem value="other">Other</MenuItem>
@@ -109,15 +111,6 @@ const EscallateOutsideModal = (props) => {
 
                 { escallationInfo.entity_type === "other" && (
                     <>
-                        <TextField
-                            margin="dense"
-                            id="name"
-                            label="Specify Entity Name"
-                            type="text"
-                            value={escallationInfo.entity_type_other}
-                            fullWidth
-                            onChange = {(e)=>{handleValueChange(escallationInfo, 'entity_type_other', e.target.value, setEscallationInfo)}}
-                        />
                         <TextField
                             margin="dense"
                             id="name"
@@ -133,27 +126,62 @@ const EscallateOutsideModal = (props) => {
                 <br />
 
                 { escallationInfo.entity_type !== "other" && escallationInfo.entity_type !== null && (
+                    <>
+                    <DialogContentText>
+                        Select Division.
+                    </DialogContentText>
                     <TextField
                         autoFocus
-                        id="entity"
+                        id="division"
                         select
-                        label="Entity User"
-                        value={escallationInfo.entity_user}
+                        label="Division"
+                        value={division}
                         SelectProps={{
                             MenuProps: {
                             // className: classes.menu,
                             },
                         }}
-                        onChange = {(e)=>{handleValueChange(escallationInfo, 'entity_user', e.target.value, setEscallationInfo)}}
+                        onChange = {(e)=>{setDivision(e.target.value)}}
                         // onChange = {(e) => handleEntityTypeChange(e.target.value)}
                         margin="dense"
                         >
-                        {users.idsByEntity[escallationInfo.entity_type].map(option => (   
-                            <MenuItem key={option} value={option}>
-                                {users.byIds[option].displayname}
+                        {divisions.idsByOrganization[escallationInfo.entity_type].map(did => (   
+                            <MenuItem key={did} value={did}>
+                                {divisions.byIds[did].name}
                             </MenuItem>
                         ))}
                     </TextField>
+                    
+                    { division !== null && (
+                        <>
+                        <DialogContentText>
+                            Select Entity User.
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            id="entity"
+                            select
+                            label="Entity User"
+                            value={escallationInfo.entity_user}
+                            SelectProps={{
+                                MenuProps: {
+                                // className: classes.menu,
+                                },
+                            }}
+                            onChange = {(e)=>{handleValueChange(escallationInfo, 'entity_user', e.target.value, setEscallationInfo)}}
+                            // onChange = {(e) => handleEntityTypeChange(e.target.value)}
+                            margin="dense"
+                            >
+                            {users.idsByDivision[division].map(option => (   
+                                <MenuItem key={option} value={option}>
+                                    {users.byIds[option].displayname}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                        </>
+                    )}
+                
+                    </>
                 ) }
 
                 

@@ -14,7 +14,8 @@ import { notificationReducer }
 import newIncidentReducer from '../modules/incident/state/incidentReducer';
 import guestViewReducer from '../modules/guest-view/state/guestViewReducer';
 
-import userReducer from '../modules/user/state/userReducer'
+import userReducer from '../modules/user/state/userReducer';
+import loadingReducer from '../modules/loading-spinners/state/loadingSpinnerReducer'
 
 
 const reducer = combineReducers({
@@ -26,6 +27,7 @@ const reducer = combineReducers({
     incident:newIncidentReducer,
     guestView:guestViewReducer,
     user:userReducer,
+    loading:loadingReducer,
 })
 
 const store = createStore(

@@ -1,26 +1,36 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
+import ReactHtmlParser from 'react-html-parser';
 
 import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 
-import Avatar from './Avatar';
 import * as moment from 'moment';
 import Button from '@material-ui/core/Button';
+import PlaylistAddCheck from '@material-ui/icons/PlaylistAddCheck';
 
 import { showModal } from '../../../modals/state/modal.actions'
 import { API_BASE_URL } from '../../../../config';
+import FilePreviewer from '../../../shared/components/FilePreviewer/FilePreviewer';
 
 
 const styles = {
     truncate: {
         width: "100%",
-        whiteSpace: 'wrap'
+        whiteSpace: 'wrap',
+        display:'flex',
+        justifyContent:'space-between'
     },
     eventItem: {
         backgroundColor: "#fff",
         border: "1px solid #ccc",
+        display: "flex",
+        padding: "0px 0px 0px 0px",
+        flexDirection: "column"
+    },
+    eventItemOutcome: {
+        backgroundColor: "#fff",
+        border: "2px solid #53AF72",
         display: "flex",
         padding: "0px 0px 0px 0px",
         flexDirection: "column"
@@ -37,7 +47,9 @@ const styles = {
     },
     eventItemUserDetails: {
         marginLeft: "10px",
-        lineHeight: "35px"
+        marginRight: "10px",
+        lineHeight: "35px",
+        width: '100%'
     },
     eventItemBody: {
         width: "100%",
@@ -94,6 +106,9 @@ function getActionText(event){
 
                     case "Invalidate":
                         return `invalidated the incident`
+
+                    case "Reopen":
+                        return `reopened the incident`
                 }
         default:
             return "unknown action"
@@ -125,7 +140,11 @@ function getSecondaryItem(event){
         const file = event.data.media.file;
         return (
             <div>
-                <a href={`${API_BASE_URL}/incidents/files/download/${file.id}`}>{file.name}</a>
+                <FilePreviewer 
+                    url={`${API_BASE_URL}/incidents/files/download/${file.id}`}
+                    filename={file.name}
+                    ext={file.extension}
+                />
             </div>
         )
     }else if(event.action === "WORKFLOW_ACTIONED"){
@@ -193,6 +212,12 @@ function getSecondaryItem(event){
                     {workflowData.comment}
                 </div>
             )
+        }else if(workflowType === "Reopen"){
+            return (
+                <div>
+                    {workflowData.comment}
+                </div>
+            )
         }
     }
     return (<></>);
@@ -216,7 +241,7 @@ function getDateDiff(event){
 }
 
 
-const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
+const EventItemView = ({ event, classes }) => {
     const dispatch = useDispatch();
     const userData = useSelector((state)=>(state.user));
 
@@ -228,23 +253,25 @@ const EventItemView = ({ event, eventAction, classes, eventLinks }) => {
     let initiatorData = userData.users.byIds[event.initiator.uid];
 
     return (
-    <li className={classes.eventItem}>
+    <li className={event.action==='OUTCOME_ADDED'? classes.eventItemOutcome : classes.eventItem}>
         <div className={classes.eventItemDetails}>
-            {/* <div className={classes.eventItemAvatar}>
-                <Avatar user={event.author} />
-            </div> */}
             <Chip label={!!(initiatorData) ? initiatorData.entity.name : ""} className={classes.chip} variant="outlined" />
             <div className={classes.eventItemUserDetails}>
                 <div className={classes.truncate}>
-                    <strong>
-                        {initiator}
-                    </strong>{' '}
-                     {getActionText(event)}
-                    <span> ({getDateDiff(event)})</span>
+                    {/* left end */}
+                    <div> 
+                        <strong>
+                            {initiator}
+                        </strong>{' '}
+                        {getActionText(event)}
+                        <span> ({getDateDiff(event)})</span>
+                    </div>
+                    {/* right end */}
+                    { event.action==='OUTCOME_ADDED' && <PlaylistAddCheck/>}
                 </div>
 
                 {
-                    hasPendingAction(event, eventLinks) && (
+                    hasPendingAction(event) && (
                         <div className={classes.eventItemActions}>
                             <Button 
                                 color="primary"

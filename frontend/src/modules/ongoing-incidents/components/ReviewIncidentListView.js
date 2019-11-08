@@ -69,13 +69,25 @@ class ReviewIncidentListView extends React.Component {
 
     try{
       const response = await getIncidents(filters);
-      const url = window.URL.createObjectURL(new Blob([response]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'incidents.' + exportType);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      if (exportType === "csv") {
+          const url = window.URL.createObjectURL(new Blob([response]));
+          const link = document.createElement('a');
+          link.href = url;     
+          link.setAttribute('download', 'incidents.' + exportType);
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+
+      } else {
+          var w = window.open('about:blank');
+          w.document.open();
+          w.document.write(response);
+          w.document.close();
+      }
+
+
+
+
     }catch{
 
     }
@@ -85,7 +97,7 @@ class ReviewIncidentListView extends React.Component {
 
   render() {
     const { classes, pagedIncidents, categories } = this.props;
-
+    
     return (
       <Paper className={classes.root}>
         <SearchForm 
@@ -100,7 +112,7 @@ class ReviewIncidentListView extends React.Component {
             </Button>
           </Grid>
           <Grid item>
-            <Button variant={"contained"} onClick={() => this.handleExportClick("pdf")} className={classes.exportButton}>
+            <Button variant={"contained"} onClick={() => this.handleExportClick("html")} className={classes.exportButton}>
               Export as PDF
             </Button>
           </Grid>

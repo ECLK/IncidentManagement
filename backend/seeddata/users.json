@@ -615,501 +615,1119 @@
         "model": "auth.permission",
         "pk": 69,
         "fields": {
-            "name": "Can add incident",
+            "name": "Can add province",
             "content_type": 18,
-            "codename": "add_incident"
+            "codename": "add_province"
         }
     },
     {
         "model": "auth.permission",
         "pk": 70,
         "fields": {
-            "name": "Can change incident",
+            "name": "Can change province",
             "content_type": 18,
-            "codename": "change_incident"
+            "codename": "change_province"
         }
     },
     {
         "model": "auth.permission",
         "pk": 71,
         "fields": {
-            "name": "Can delete incident",
+            "name": "Can delete province",
             "content_type": 18,
-            "codename": "delete_incident"
+            "codename": "delete_province"
         }
     },
     {
         "model": "auth.permission",
         "pk": 72,
         "fields": {
-            "name": "Can view incident",
+            "name": "Can view province",
             "content_type": 18,
-            "codename": "view_incident"
+            "codename": "view_province"
         }
     },
     {
         "model": "auth.permission",
         "pk": 73,
         "fields": {
-            "name": "Can directly change assignee",
-            "content_type": 18,
-            "codename": "can_change_assignee"
+            "name": "Can add division",
+            "content_type": 19,
+            "codename": "add_division"
         }
     },
     {
         "model": "auth.permission",
         "pk": 74,
         "fields": {
-            "name": "Can review created incidents",
-            "content_type": 18,
-            "codename": "can_review_incidents"
+            "name": "Can change division",
+            "content_type": 19,
+            "codename": "change_division"
         }
     },
     {
         "model": "auth.permission",
         "pk": 75,
         "fields": {
-            "name": "Can view inciddent reports",
-            "content_type": 18,
-            "codename": "can_view_incident_reports"
+            "name": "Can delete division",
+            "content_type": 19,
+            "codename": "delete_division"
         }
     },
     {
         "model": "auth.permission",
         "pk": 76,
         "fields": {
-            "name": "Can add reporter",
+            "name": "Can view division",
             "content_type": 19,
-            "codename": "add_reporter"
+            "codename": "view_division"
         }
     },
     {
         "model": "auth.permission",
         "pk": 77,
         "fields": {
-            "name": "Can change reporter",
-            "content_type": 19,
-            "codename": "change_reporter"
+            "name": "Can add organization",
+            "content_type": 20,
+            "codename": "add_organization"
         }
     },
     {
         "model": "auth.permission",
         "pk": 78,
         "fields": {
-            "name": "Can delete reporter",
-            "content_type": 19,
-            "codename": "delete_reporter"
+            "name": "Can change organization",
+            "content_type": 20,
+            "codename": "change_organization"
         }
     },
     {
         "model": "auth.permission",
         "pk": 79,
         "fields": {
-            "name": "Can view reporter",
-            "content_type": 19,
-            "codename": "view_reporter"
+            "name": "Can delete organization",
+            "content_type": 20,
+            "codename": "delete_organization"
         }
     },
     {
         "model": "auth.permission",
         "pk": 80,
         "fields": {
-            "name": "Can add incident status",
+            "name": "Can view organization",
             "content_type": 20,
-            "codename": "add_incidentstatus"
+            "codename": "view_organization"
         }
     },
     {
         "model": "auth.permission",
         "pk": 81,
         "fields": {
-            "name": "Can change incident status",
-            "content_type": 20,
-            "codename": "change_incidentstatus"
+            "name": "Can add user level",
+            "content_type": 21,
+            "codename": "add_userlevel"
         }
     },
     {
         "model": "auth.permission",
         "pk": 82,
         "fields": {
-            "name": "Can delete incident status",
-            "content_type": 20,
-            "codename": "delete_incidentstatus"
+            "name": "Can change user level",
+            "content_type": 21,
+            "codename": "change_userlevel"
         }
     },
     {
         "model": "auth.permission",
         "pk": 83,
         "fields": {
-            "name": "Can view incident status",
-            "content_type": 20,
-            "codename": "view_incidentstatus"
+            "name": "Can delete user level",
+            "content_type": 21,
+            "codename": "delete_userlevel"
         }
     },
     {
         "model": "auth.permission",
         "pk": 84,
         "fields": {
-            "name": "Can directly change status",
-            "content_type": 20,
-            "codename": "can_change_status"
+            "name": "Can view user level",
+            "content_type": 21,
+            "codename": "view_userlevel"
         }
     },
     {
         "model": "auth.permission",
         "pk": 85,
         "fields": {
-            "name": "Can request to change status",
-            "content_type": 20,
-            "codename": "can_request_status_change"
+            "name": "Can add profile",
+            "content_type": 22,
+            "codename": "add_profile"
         }
     },
     {
         "model": "auth.permission",
         "pk": 86,
         "fields": {
-            "name": "Can approve a status change request",
-            "content_type": 20,
-            "codename": "can_approve_status_change"
+            "name": "Can change profile",
+            "content_type": 22,
+            "codename": "change_profile"
         }
     },
     {
         "model": "auth.permission",
         "pk": 87,
         "fields": {
-            "name": "Can reject a status change request",
-            "content_type": 20,
-            "codename": "can_reject_status_change"
+            "name": "Can delete profile",
+            "content_type": 22,
+            "codename": "delete_profile"
         }
     },
     {
         "model": "auth.permission",
         "pk": 88,
         "fields": {
-            "name": "Can add incident severity",
-            "content_type": 21,
-            "codename": "add_incidentseverity"
+            "name": "Can view profile",
+            "content_type": 22,
+            "codename": "view_profile"
         }
     },
     {
         "model": "auth.permission",
         "pk": 89,
         "fields": {
-            "name": "Can change incident severity",
-            "content_type": 21,
-            "codename": "change_incidentseverity"
+            "name": "Can add incident",
+            "content_type": 23,
+            "codename": "add_incident"
         }
     },
     {
         "model": "auth.permission",
         "pk": 90,
         "fields": {
-            "name": "Can delete incident severity",
-            "content_type": 21,
-            "codename": "delete_incidentseverity"
+            "name": "Can change incident",
+            "content_type": 23,
+            "codename": "change_incident"
         }
     },
     {
         "model": "auth.permission",
         "pk": 91,
         "fields": {
-            "name": "Can view incident severity",
-            "content_type": 21,
-            "codename": "view_incidentseverity"
+            "name": "Can delete incident",
+            "content_type": 23,
+            "codename": "delete_incident"
         }
     },
     {
         "model": "auth.permission",
         "pk": 92,
         "fields": {
-            "name": "Can directly change severity",
-            "content_type": 21,
-            "codename": "can_change_severity"
+            "name": "Can view incident",
+            "content_type": 23,
+            "codename": "view_incident"
         }
     },
     {
         "model": "auth.permission",
         "pk": 93,
         "fields": {
-            "name": "Can request to change severity",
-            "content_type": 21,
-            "codename": "can_request_severity_change"
+            "name": "Can review created incidents",
+            "content_type": 23,
+            "codename": "CAN_REVIEW_INCIDENTS"
         }
     },
     {
         "model": "auth.permission",
         "pk": 94,
         "fields": {
-            "name": "Can approve a severity change request",
-            "content_type": 21,
-            "codename": "can_approve_severity_change"
+            "name": "Can review own incidents",
+            "content_type": 23,
+            "codename": "CAN_REVIEW_OWN_INCIDENTS"
         }
     },
     {
         "model": "auth.permission",
         "pk": 95,
         "fields": {
-            "name": "Can reject a severity change request",
-            "content_type": 21,
-            "codename": "can_reject_severity_change"
+            "name": "Can review all incidents",
+            "content_type": 23,
+            "codename": "CAN_REVIEW_ALL_INCIDENTS"
         }
     },
     {
         "model": "auth.permission",
         "pk": 96,
         "fields": {
-            "name": "Can add incident police report",
-            "content_type": 22,
-            "codename": "add_incidentpolicereport"
+            "name": "Can manage incident",
+            "content_type": 23,
+            "codename": "CAN_MANAGE_INCIDENT"
         }
     },
     {
         "model": "auth.permission",
         "pk": 97,
         "fields": {
-            "name": "Can change incident police report",
-            "content_type": 22,
-            "codename": "change_incidentpolicereport"
+            "name": "Can run incident workflows",
+            "content_type": 23,
+            "codename": "CAN_RUN_WORKFLOW"
         }
     },
     {
         "model": "auth.permission",
         "pk": 98,
         "fields": {
-            "name": "Can delete incident police report",
-            "content_type": 22,
-            "codename": "delete_incidentpolicereport"
+            "name": "Can change incident assignee",
+            "content_type": 23,
+            "codename": "CAN_CHANGE_ASSIGNEE"
         }
     },
     {
         "model": "auth.permission",
         "pk": 99,
         "fields": {
-            "name": "Can view incident police report",
-            "content_type": 22,
-            "codename": "view_incidentpolicereport"
+            "name": "Can verify incident",
+            "content_type": 23,
+            "codename": "CAN_VERIFY_INCIDENT"
         }
     },
     {
         "model": "auth.permission",
         "pk": 100,
         "fields": {
-            "name": "Can add incident comment",
+            "name": "Can close incident",
             "content_type": 23,
-            "codename": "add_incidentcomment"
+            "codename": "CAN_CLOSE_INCIDENT"
         }
     },
     {
         "model": "auth.permission",
         "pk": 101,
         "fields": {
-            "name": "Can change incident comment",
+            "name": "Can escalate incident",
             "content_type": 23,
-            "codename": "change_incidentcomment"
+            "codename": "CAN_ESCALATE_INCIDENT"
         }
     },
     {
         "model": "auth.permission",
         "pk": 102,
         "fields": {
-            "name": "Can delete incident comment",
+            "name": "Can refer incident to external organization",
             "content_type": 23,
-            "codename": "delete_incidentcomment"
+            "codename": "CAN_ESCALATE_EXTERNAL"
         }
     },
     {
         "model": "auth.permission",
         "pk": 103,
         "fields": {
-            "name": "Can view incident comment",
+            "name": "Can invalidate incident",
             "content_type": 23,
-            "codename": "view_incidentcomment"
+            "codename": "CAN_INVALIDATE_INCIDENT"
         }
     },
     {
         "model": "auth.permission",
         "pk": 104,
         "fields": {
-            "name": "Can add event",
-            "content_type": 24,
-            "codename": "add_event"
+            "name": "Can view inciddent reports",
+            "content_type": 23,
+            "codename": "CAN_VIEW_REPORTS"
         }
     },
     {
         "model": "auth.permission",
         "pk": 105,
         "fields": {
-            "name": "Can change event",
+            "name": "Can add reporter",
             "content_type": 24,
-            "codename": "change_event"
+            "codename": "add_reporter"
         }
     },
     {
         "model": "auth.permission",
         "pk": 106,
         "fields": {
-            "name": "Can delete event",
+            "name": "Can change reporter",
             "content_type": 24,
-            "codename": "delete_event"
+            "codename": "change_reporter"
         }
     },
     {
         "model": "auth.permission",
         "pk": 107,
         "fields": {
-            "name": "Can view event",
+            "name": "Can delete reporter",
             "content_type": 24,
-            "codename": "view_event"
+            "codename": "delete_reporter"
         }
     },
     {
         "model": "auth.permission",
         "pk": 108,
         "fields": {
-            "name": "Can add severity segment",
-            "content_type": 25,
-            "codename": "add_severitysegment"
+            "name": "Can view reporter",
+            "content_type": 24,
+            "codename": "view_reporter"
         }
     },
     {
         "model": "auth.permission",
         "pk": 109,
         "fields": {
-            "name": "Can change severity segment",
+            "name": "Can add incident status",
             "content_type": 25,
-            "codename": "change_severitysegment"
+            "codename": "add_incidentstatus"
         }
     },
     {
         "model": "auth.permission",
         "pk": 110,
         "fields": {
-            "name": "Can delete severity segment",
+            "name": "Can change incident status",
             "content_type": 25,
-            "codename": "delete_severitysegment"
+            "codename": "change_incidentstatus"
         }
     },
     {
         "model": "auth.permission",
         "pk": 111,
         "fields": {
-            "name": "Can view severity segment",
+            "name": "Can delete incident status",
             "content_type": 25,
-            "codename": "view_severitysegment"
+            "codename": "delete_incidentstatus"
         }
     },
     {
         "model": "auth.permission",
         "pk": 112,
         "fields": {
-            "name": "Can add status segment",
-            "content_type": 26,
-            "codename": "add_statussegment"
+            "name": "Can view incident status",
+            "content_type": 25,
+            "codename": "view_incidentstatus"
         }
     },
     {
         "model": "auth.permission",
         "pk": 113,
         "fields": {
-            "name": "Can change status segment",
+            "name": "Can add incident police report",
             "content_type": 26,
-            "codename": "change_statussegment"
+            "codename": "add_incidentpolicereport"
         }
     },
     {
         "model": "auth.permission",
         "pk": 114,
         "fields": {
-            "name": "Can delete status segment",
+            "name": "Can change incident police report",
             "content_type": 26,
-            "codename": "delete_statussegment"
+            "codename": "change_incidentpolicereport"
         }
     },
     {
         "model": "auth.permission",
         "pk": 115,
         "fields": {
-            "name": "Can view status segment",
+            "name": "Can delete incident police report",
             "content_type": 26,
-            "codename": "view_statussegment"
+            "codename": "delete_incidentpolicereport"
         }
     },
     {
         "model": "auth.permission",
         "pk": 116,
         "fields": {
-            "name": "Can add file",
-            "content_type": 27,
-            "codename": "add_file"
+            "name": "Can view incident police report",
+            "content_type": 26,
+            "codename": "view_incidentpolicereport"
         }
     },
     {
         "model": "auth.permission",
         "pk": 117,
         "fields": {
-            "name": "Can change file",
+            "name": "Can add incident comment",
             "content_type": 27,
-            "codename": "change_file"
+            "codename": "add_incidentcomment"
         }
     },
     {
         "model": "auth.permission",
         "pk": 118,
         "fields": {
-            "name": "Can delete file",
+            "name": "Can change incident comment",
             "content_type": 27,
-            "codename": "delete_file"
+            "codename": "change_incidentcomment"
         }
     },
     {
         "model": "auth.permission",
         "pk": 119,
         "fields": {
-            "name": "Can view file",
+            "name": "Can delete incident comment",
             "content_type": 27,
+            "codename": "delete_incidentcomment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 120,
+        "fields": {
+            "name": "Can view incident comment",
+            "content_type": 27,
+            "codename": "view_incidentcomment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 121,
+        "fields": {
+            "name": "Can add incident person",
+            "content_type": 28,
+            "codename": "add_incidentperson"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 122,
+        "fields": {
+            "name": "Can change incident person",
+            "content_type": 28,
+            "codename": "change_incidentperson"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 123,
+        "fields": {
+            "name": "Can delete incident person",
+            "content_type": 28,
+            "codename": "delete_incidentperson"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 124,
+        "fields": {
+            "name": "Can view incident person",
+            "content_type": 28,
+            "codename": "view_incidentperson"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 125,
+        "fields": {
+            "name": "Can add incident vehicle",
+            "content_type": 29,
+            "codename": "add_incidentvehicle"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 126,
+        "fields": {
+            "name": "Can change incident vehicle",
+            "content_type": 29,
+            "codename": "change_incidentvehicle"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 127,
+        "fields": {
+            "name": "Can delete incident vehicle",
+            "content_type": 29,
+            "codename": "delete_incidentvehicle"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 128,
+        "fields": {
+            "name": "Can view incident vehicle",
+            "content_type": 29,
+            "codename": "view_incidentvehicle"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 129,
+        "fields": {
+            "name": "Can add verify workflow",
+            "content_type": 30,
+            "codename": "add_verifyworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 130,
+        "fields": {
+            "name": "Can change verify workflow",
+            "content_type": 30,
+            "codename": "change_verifyworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 131,
+        "fields": {
+            "name": "Can delete verify workflow",
+            "content_type": 30,
+            "codename": "delete_verifyworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 132,
+        "fields": {
+            "name": "Can view verify workflow",
+            "content_type": 30,
+            "codename": "view_verifyworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 133,
+        "fields": {
+            "name": "Can add escalate external workflow",
+            "content_type": 31,
+            "codename": "add_escalateexternalworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 134,
+        "fields": {
+            "name": "Can change escalate external workflow",
+            "content_type": 31,
+            "codename": "change_escalateexternalworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 135,
+        "fields": {
+            "name": "Can delete escalate external workflow",
+            "content_type": 31,
+            "codename": "delete_escalateexternalworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 136,
+        "fields": {
+            "name": "Can view escalate external workflow",
+            "content_type": 31,
+            "codename": "view_escalateexternalworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 137,
+        "fields": {
+            "name": "Can add complete action workflow",
+            "content_type": 32,
+            "codename": "add_completeactionworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 138,
+        "fields": {
+            "name": "Can change complete action workflow",
+            "content_type": 32,
+            "codename": "change_completeactionworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 139,
+        "fields": {
+            "name": "Can delete complete action workflow",
+            "content_type": 32,
+            "codename": "delete_completeactionworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 140,
+        "fields": {
+            "name": "Can view complete action workflow",
+            "content_type": 32,
+            "codename": "view_completeactionworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 141,
+        "fields": {
+            "name": "Can add request advice workflow",
+            "content_type": 33,
+            "codename": "add_requestadviceworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 142,
+        "fields": {
+            "name": "Can change request advice workflow",
+            "content_type": 33,
+            "codename": "change_requestadviceworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 143,
+        "fields": {
+            "name": "Can delete request advice workflow",
+            "content_type": 33,
+            "codename": "delete_requestadviceworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 144,
+        "fields": {
+            "name": "Can view request advice workflow",
+            "content_type": 33,
+            "codename": "view_requestadviceworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 145,
+        "fields": {
+            "name": "Can add provide advice workflow",
+            "content_type": 34,
+            "codename": "add_provideadviceworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 146,
+        "fields": {
+            "name": "Can change provide advice workflow",
+            "content_type": 34,
+            "codename": "change_provideadviceworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 147,
+        "fields": {
+            "name": "Can delete provide advice workflow",
+            "content_type": 34,
+            "codename": "delete_provideadviceworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 148,
+        "fields": {
+            "name": "Can view provide advice workflow",
+            "content_type": 34,
+            "codename": "view_provideadviceworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 149,
+        "fields": {
+            "name": "Can add invalidate workflow",
+            "content_type": 35,
+            "codename": "add_invalidateworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 150,
+        "fields": {
+            "name": "Can change invalidate workflow",
+            "content_type": 35,
+            "codename": "change_invalidateworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 151,
+        "fields": {
+            "name": "Can delete invalidate workflow",
+            "content_type": 35,
+            "codename": "delete_invalidateworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 152,
+        "fields": {
+            "name": "Can view invalidate workflow",
+            "content_type": 35,
+            "codename": "view_invalidateworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 153,
+        "fields": {
+            "name": "Can add escalate workflow",
+            "content_type": 36,
+            "codename": "add_escalateworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 154,
+        "fields": {
+            "name": "Can change escalate workflow",
+            "content_type": 36,
+            "codename": "change_escalateworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 155,
+        "fields": {
+            "name": "Can delete escalate workflow",
+            "content_type": 36,
+            "codename": "delete_escalateworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 156,
+        "fields": {
+            "name": "Can view escalate workflow",
+            "content_type": 36,
+            "codename": "view_escalateworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 157,
+        "fields": {
+            "name": "Can add close workflow",
+            "content_type": 37,
+            "codename": "add_closeworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 158,
+        "fields": {
+            "name": "Can change close workflow",
+            "content_type": 37,
+            "codename": "change_closeworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 159,
+        "fields": {
+            "name": "Can delete close workflow",
+            "content_type": 37,
+            "codename": "delete_closeworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 160,
+        "fields": {
+            "name": "Can view close workflow",
+            "content_type": 37,
+            "codename": "view_closeworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 161,
+        "fields": {
+            "name": "Can add assign user workflow",
+            "content_type": 38,
+            "codename": "add_assignuserworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 162,
+        "fields": {
+            "name": "Can change assign user workflow",
+            "content_type": 38,
+            "codename": "change_assignuserworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 163,
+        "fields": {
+            "name": "Can delete assign user workflow",
+            "content_type": 38,
+            "codename": "delete_assignuserworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 164,
+        "fields": {
+            "name": "Can view assign user workflow",
+            "content_type": 38,
+            "codename": "view_assignuserworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 165,
+        "fields": {
+            "name": "Can add event",
+            "content_type": 39,
+            "codename": "add_event"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 166,
+        "fields": {
+            "name": "Can change event",
+            "content_type": 39,
+            "codename": "change_event"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 167,
+        "fields": {
+            "name": "Can delete event",
+            "content_type": 39,
+            "codename": "delete_event"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 168,
+        "fields": {
+            "name": "Can view event",
+            "content_type": 39,
+            "codename": "view_event"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 169,
+        "fields": {
+            "name": "Can add severity segment",
+            "content_type": 40,
+            "codename": "add_severitysegment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 170,
+        "fields": {
+            "name": "Can change severity segment",
+            "content_type": 40,
+            "codename": "change_severitysegment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 171,
+        "fields": {
+            "name": "Can delete severity segment",
+            "content_type": 40,
+            "codename": "delete_severitysegment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 172,
+        "fields": {
+            "name": "Can view severity segment",
+            "content_type": 40,
+            "codename": "view_severitysegment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 173,
+        "fields": {
+            "name": "Can add status segment",
+            "content_type": 41,
+            "codename": "add_statussegment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 174,
+        "fields": {
+            "name": "Can change status segment",
+            "content_type": 41,
+            "codename": "change_statussegment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 175,
+        "fields": {
+            "name": "Can delete status segment",
+            "content_type": 41,
+            "codename": "delete_statussegment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 176,
+        "fields": {
+            "name": "Can view status segment",
+            "content_type": 41,
+            "codename": "view_statussegment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 177,
+        "fields": {
+            "name": "Can add file",
+            "content_type": 42,
+            "codename": "add_file"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 178,
+        "fields": {
+            "name": "Can change file",
+            "content_type": 42,
+            "codename": "change_file"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 179,
+        "fields": {
+            "name": "Can delete file",
+            "content_type": 42,
+            "codename": "delete_file"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 180,
+        "fields": {
+            "name": "Can view file",
+            "content_type": 42,
             "codename": "view_file"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 181,
+        "fields": {
+            "name": "Can reopen incident",
+            "content_type": 23,
+            "codename": "CAN_REOPEN_INCIDENT"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 182,
+        "fields": {
+            "name": "Can add reopen workflow",
+            "content_type": 43,
+            "codename": "add_reopenworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 183,
+        "fields": {
+            "name": "Can change reopen workflow",
+            "content_type": 43,
+            "codename": "change_reopenworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 184,
+        "fields": {
+            "name": "Can delete reopen workflow",
+            "content_type": 43,
+            "codename": "delete_reopenworkflow"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 185,
+        "fields": {
+            "name": "Can view reopen workflow",
+            "content_type": 43,
+            "codename": "view_reopenworkflow"
         }
     },
     {
         "model": "auth.group",
         "pk": 1,
         "fields": {
-            "name": "EC",
-            "rank": false,
-            "organization": null,
-            "permissions": []
+            "name": "manager-view",
+            "permissions": [
+                102,
+                101,
+                95,
+                93,
+                94,
+                97,
+                104
+            ]
         }
     },
     {
         "model": "auth.group",
         "pk": 2,
         "fields": {
-            "name": "POLICE",
-            "rank": false,
-            "organization": null,
-            "permissions": []
+            "name": "manager-action",
+            "permissions": [
+                98,
+                100,
+                102,
+                101,
+                103,
+                96,
+                181,
+                95,
+                93,
+                94,
+                97,
+                99,
+                104
+            ]
         }
     },
     {
         "model": "auth.group",
         "pk": 3,
         "fields": {
-            "name": "guest",
-            "rank": 5,
-            "organization": 1,
-            "permissions": []
+            "name": "coordinator-action",
+            "permissions": [
+                102,
+                101,
+                103,
+                96,
+                95,
+                93,
+                94,
+                97,
+                99,
+                104
+            ]
         }
     },
     {
         "model": "auth.group",
         "pk": 4,
         "fields": {
-            "name": "coordinator",
-            "rank": 4,
-            "organization": 1,
+            "name": "create-incident",
             "permissions": [
-                74,
-                75
+                101
             ]
         }
     },
@@ -1117,68 +1735,12 @@
         "model": "auth.group",
         "pk": 5,
         "fields": {
-            "name": "manager",
-            "rank": 3,
-            "organization": 1,
+            "name": "police-manager-view",
             "permissions": [
-                73,
-                74,
-                75,
-                84,
-                81
-            ]
-        }
-    },
-    {
-        "model": "auth.group",
-        "pk": 6,
-        "fields": {
-            "name": "chief-manager",
-            "rank": 2,
-            "organization": 1,
-            "permissions": [
-                73,
-                74,
-                75,
-                84,
-                81
-            ]
-        }
-    },
-    {
-        "model": "auth.group",
-        "pk": 7,
-        "fields": {
-            "name": "leadership",
-            "rank": 1,
-            "organization": 1,
-            "permissions": [
-                74,
-                75
-            ]
-        }
-    },
-    {
-        "model": "auth.group",
-        "pk": 8,
-        "fields": {
-            "name": "police-hq",
-            "rank": 1,
-            "organization": 2,
-            "permissions": [
-                74
-            ]
-        }
-    },
-    {
-        "model": "auth.group",
-        "pk": 9,
-        "fields": {
-            "name": "police-station",
-            "rank": 2,
-            "organization": 2,
-            "permissions": [
-                74
+                102,
+                93,
+                94,
+                97
             ]
         }
     },
@@ -1186,16 +1748,16 @@
         "model": "auth.user",
         "pk": 1,
         "fields": {
-            "password": "pbkdf2_sha256$150000$bMafjhbVpaNY$56XXBRiwFyisQMNt7id+/2lwkSYcJSdEr9zSnGuM2Ss=",
-            "last_login": "2019-10-03T07:02:13.310Z",
+            "password": "pbkdf2_sha256$150000$jknnn5Zmx8xG$1NbBKXYfCIq9XVTjJuK6Bh7jsap1/2D5CA7aIJD4Y4E=",
+            "last_login": "2019-11-07T19:16:05.560Z",
             "is_superuser": true,
             "username": "admin",
             "first_name": "",
             "last_name": "",
-            "email": "admin@email.com",
+            "email": "admin@email.co",
             "is_staff": true,
             "is_active": true,
-            "date_joined": "2019-10-01T15:14:44.321Z",
+            "date_joined": "2019-11-07T11:20:52.979Z",
             "groups": [],
             "user_permissions": []
         }
@@ -1204,7 +1766,97 @@
         "model": "auth.user",
         "pk": 2,
         "fields": {
-            "password": "pbkdf2_sha256$150000$OX4LSKUBdgCG$L3DMkWjHzLeSLsJe65IpJlyD5vmdIsyl+YTEgWQk5xA=",
+            "password": "pbkdf2_sha256$150000$jiWyPzFEFL51$wK/MdHyX7FGII6RDuYGEtnbxK4Nqg3eoTrkehDWrf+0=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "leadership",
+            "first_name": "Leadership",
+            "last_name": "eclk",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2019-11-07T11:33:07Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 3,
+        "fields": {
+            "password": "pbkdf2_sha256$150000$EJFIhcurJ5fu$eENv1fH+DeRmTl6tbI3CT1yoZee9xXEckSF3qjPAN+8=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "chief",
+            "first_name": "chief",
+            "last_name": "eclk",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2019-11-07T11:33:30Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 4,
+        "fields": {
+            "password": "pbkdf2_sha256$150000$8h1yy8wcvoju$iLXM3v1LvPV4QppiyhNPfY0d0/GShYO+8zHulgjVm5Y=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "manager",
+            "first_name": "manager",
+            "last_name": "eclk",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2019-11-07T11:33:53Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 5,
+        "fields": {
+            "password": "pbkdf2_sha256$150000$5uJVokDyViZ8$IxjSVZtiZdC00WlyZV/l5K9ms13C5Zgvkc1J08aXbZI=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "coordinator",
+            "first_name": "coordinator",
+            "last_name": "eclk",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2019-11-07T11:34:15Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 6,
+        "fields": {
+            "password": "pbkdf2_sha256$150000$wPdiF7Dmikz7$2ptl73Bd0RBvdMJm/ky/ssfDZZYASTYkRl+YpCNJP2c=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "dataentry",
+            "first_name": "dataentry",
+            "last_name": "eclk",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2019-11-07T11:34:45Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 7,
+        "fields": {
+            "password": "pbkdf2_sha256$150000$SsomDd3SAMuL$uBXWHhsye4QSbXHbq1GbClomu8Tj7Sx52Js+3TvSAJI=",
             "last_login": null,
             "is_superuser": false,
             "username": "guest",
@@ -1213,110 +1865,8 @@
             "email": "",
             "is_staff": false,
             "is_active": true,
-            "date_joined": "2019-10-01T15:32:52Z",
-            "groups": [
-                3
-            ],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 3,
-        "fields": {
-            "password": "pbkdf2_sha256$150000$BxbSBIygB7o9$6tpmy5BudHr4rGUQho6hlggvdMbdV/sD2yFVM4+aQKM=",
-            "last_login": null,
-            "is_superuser": false,
-            "username": "coordinator",
-            "first_name": "coordinator",
-            "last_name": "eclk",
-            "email": "",
-            "is_staff": true,
-            "is_active": true,
-            "date_joined": "2019-10-01T15:33:16Z",
-            "groups": [
-                4
-            ],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 4,
-        "fields": {
-            "password": "pbkdf2_sha256$150000$qbZNBBawcdzo$r1Itw7NsWBoFUiGgiWn+b9BWmVbHlkkcTjB+RuMs434=",
-            "last_login": null,
-            "is_superuser": false,
-            "username": "manager",
-            "first_name": "manager",
-            "last_name": "eclk",
-            "email": "",
-            "is_staff": true,
-            "is_active": true,
-            "date_joined": "2019-10-01T15:33:57Z",
-            "groups": [
-                5
-            ],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 5,
-        "fields": {
-            "password": "pbkdf2_sha256$150000$mL5N4uCAVm41$j/1xfe58QAGoK40i0MQn4U4Rxld7KGAeCb1vnOrEDmc=",
-            "last_login": null,
-            "is_superuser": false,
-            "username": "chief",
-            "first_name": "chief",
-            "last_name": "eclk",
-            "email": "",
-            "is_staff": true,
-            "is_active": true,
-            "date_joined": "2019-10-01T15:34:29Z",
-            "groups": [
-                6
-            ],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 6,
-        "fields": {
-            "password": "pbkdf2_sha256$150000$Dp4BlaGgLmYp$GVA5RkNWfggYr2MxxCziOM2Yt8UbkNWC+I5GS9kaym8=",
-            "last_login": null,
-            "is_superuser": false,
-            "username": "leadership",
-            "first_name": "leadership",
-            "last_name": "eclk",
-            "email": "",
-            "is_staff": true,
-            "is_active": true,
-            "date_joined": "2019-10-01T15:35:07Z",
-            "groups": [
-                7
-            ],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 7,
-        "fields": {
-            "password": "pbkdf2_sha256$150000$VjEhpi37tKAk$nCvpkbhBplTJ0hzrhqb0iEY0WqJ7NS9WnaE5Yo+ZInk=",
-            "last_login": null,
-            "is_superuser": false,
-            "username": "policehq",
-            "first_name": "policehq",
-            "last_name": "user",
-            "email": "",
-            "is_staff": false,
-            "is_active": true,
-            "date_joined": "2019-10-01T15:49:56Z",
-            "groups": [
-                8
-            ],
+            "date_joined": "2019-11-07T11:36:18Z",
+            "groups": [],
             "user_permissions": []
         }
     },
@@ -1324,19 +1874,17 @@
         "model": "auth.user",
         "pk": 8,
         "fields": {
-            "password": "pbkdf2_sha256$150000$ohmztK4jD9tq$4PME4jON6HQ2KqIw1MHTwcQosem5y5/+it7GpiPBjLM=",
+            "password": "pbkdf2_sha256$150000$vkya4v6QRNol$FknDOvEVusBJ2vA9GS6Unitph9Xv3ENB0j/USCmGJos=",
             "last_login": null,
             "is_superuser": false,
-            "username": "police",
-            "first_name": "policestation",
-            "last_name": "user",
+            "username": "pleadership",
+            "first_name": "Police",
+            "last_name": "Leadership",
             "email": "",
             "is_staff": false,
             "is_active": true,
-            "date_joined": "2019-10-01T15:50:49Z",
-            "groups": [
-                9
-            ],
+            "date_joined": "2019-11-07T13:22:01Z",
+            "groups": [],
             "user_permissions": []
         }
     },
@@ -1344,20 +1892,340 @@
         "model": "auth.user",
         "pk": 9,
         "fields": {
-            "password": "pbkdf2_sha256$150000$5ddYrbC192Ft$GvyZTY5sOLuH9x1m25WsLiqUemK4kbZYp06VZr0HmEc=",
+            "password": "pbkdf2_sha256$150000$PXqJG3mZZ8wc$PO7sk1lqg33tJeVaYGJBACC/W31eQ+OFjny0N9d0q+k=",
             "last_login": null,
             "is_superuser": false,
-            "username": "dataentry",
-            "first_name": "dataentry",
-            "last_name": "eclk",
+            "username": "pmanager",
+            "first_name": "Police",
+            "last_name": "Manager",
             "email": "",
-            "is_staff": true,
+            "is_staff": false,
             "is_active": true,
-            "date_joined": "2019-10-03T12:57:00Z",
-            "groups": [
-                3
-            ],
+            "date_joined": "2019-11-07T13:22:35Z",
+            "groups": [],
             "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 10,
+        "fields": {
+            "password": "pbkdf2_sha256$150000$ml2FRTND8d2S$X6Y0xG1i+6julzq9hcr+OkUPbLid9K7Hnb3ZL/0pous=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "pdataentry",
+            "first_name": "Police",
+            "last_name": "Dataentry",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2019-11-07T13:23:06Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "custom_auth.organization",
+        "pk": 1,
+        "fields": {
+            "code": "eclk",
+            "displayName": "Election Commission",
+            "created_date": "2019-11-07T11:21:56.468Z"
+        }
+    },
+    {
+        "model": "custom_auth.organization",
+        "pk": 2,
+        "fields": {
+            "code": "police",
+            "displayName": "Police",
+            "created_date": "2019-11-07T11:22:08.958Z"
+        }
+    },
+    {
+        "model": "custom_auth.division",
+        "pk": 1,
+        "fields": {
+            "code": "ec-hq",
+            "organization": 1,
+            "division_type": "District-Branch",
+            "name": "EC HQ",
+            "is_default_division": true,
+            "is_hq": true,
+            "created_date": "2019-11-07T11:22:58.174Z"
+        }
+    },
+    {
+        "model": "custom_auth.division",
+        "pk": 2,
+        "fields": {
+            "code": "ec-cmb-city",
+            "organization": 1,
+            "division_type": "District-Branch",
+            "name": "EC Colombo City",
+            "is_default_division": false,
+            "is_hq": false,
+            "created_date": "2019-11-07T11:23:26.959Z"
+        }
+    },
+    {
+        "model": "custom_auth.division",
+        "pk": 3,
+        "fields": {
+            "code": "ec-kegalle",
+            "organization": 1,
+            "division_type": "District-Branch",
+            "name": "EC Kegalle",
+            "is_default_division": false,
+            "is_hq": false,
+            "created_date": "2019-11-07T11:23:46.879Z"
+        }
+    },
+    {
+        "model": "custom_auth.division",
+        "pk": 4,
+        "fields": {
+            "code": "police-hq",
+            "organization": 2,
+            "division_type": "police-station",
+            "name": "Police HQ",
+            "is_default_division": false,
+            "is_hq": true,
+            "created_date": "2019-11-07T12:23:37.223Z"
+        }
+    },
+    {
+        "model": "custom_auth.division",
+        "pk": 5,
+        "fields": {
+            "code": "police-colombo",
+            "organization": 2,
+            "division_type": "police-station",
+            "name": "Colombo Police Station",
+            "is_default_division": false,
+            "is_hq": false,
+            "created_date": "2019-11-07T12:25:20.474Z"
+        }
+    },
+    {
+        "model": "custom_auth.division",
+        "pk": 6,
+        "fields": {
+            "code": "police-kegalle",
+            "organization": 2,
+            "division_type": "police-station",
+            "name": "Kegalle Police Station",
+            "is_default_division": false,
+            "is_hq": false,
+            "created_date": "2019-11-07T12:26:39.557Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 1,
+        "fields": {
+            "code": "leadership",
+            "displayName": "Leadership",
+            "organization": 1,
+            "parent": null,
+            "role": 1,
+            "created_date": "2019-11-07T11:25:55.250Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 2,
+        "fields": {
+            "code": "chief-manager",
+            "displayName": "Chief Manager",
+            "organization": 1,
+            "parent": 1,
+            "role": 2,
+            "created_date": "2019-11-07T11:26:37.838Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 3,
+        "fields": {
+            "code": "manager",
+            "displayName": "Manager",
+            "organization": 1,
+            "parent": 2,
+            "role": 2,
+            "created_date": "2019-11-07T11:27:18.895Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 4,
+        "fields": {
+            "code": "coordinator",
+            "displayName": "Coordinator",
+            "organization": 1,
+            "parent": 3,
+            "role": 3,
+            "created_date": "2019-11-07T11:28:39.330Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 5,
+        "fields": {
+            "code": "ec-dataentry",
+            "displayName": "EC Dataentry",
+            "organization": 1,
+            "parent": 4,
+            "role": 4,
+            "created_date": "2019-11-07T11:31:53.161Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 6,
+        "fields": {
+            "code": "guest",
+            "displayName": "Guest",
+            "organization": 1,
+            "parent": 4,
+            "role": 4,
+            "created_date": "2019-11-07T11:32:33.188Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 7,
+        "fields": {
+            "code": "police-leadership",
+            "displayName": "Leadership",
+            "organization": 2,
+            "parent": null,
+            "role": 5,
+            "created_date": "2019-11-07T12:43:22.793Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 8,
+        "fields": {
+            "code": "police-manager",
+            "displayName": "Manager",
+            "organization": 2,
+            "parent": 7,
+            "role": 5,
+            "created_date": "2019-11-07T12:44:53.044Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 9,
+        "fields": {
+            "code": "police-dataentry",
+            "displayName": "Dataentry",
+            "organization": 2,
+            "parent": 8,
+            "role": 4,
+            "created_date": "2019-11-07T12:45:33.538Z"
+        }
+    },
+    {
+        "model": "custom_auth.profile",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "organization": null,
+            "division": null,
+            "level": null
+        }
+    },
+    {
+        "model": "custom_auth.profile",
+        "pk": 2,
+        "fields": {
+            "user": 2,
+            "organization": 1,
+            "division": 1,
+            "level": 1
+        }
+    },
+    {
+        "model": "custom_auth.profile",
+        "pk": 3,
+        "fields": {
+            "user": 3,
+            "organization": 1,
+            "division": 1,
+            "level": 2
+        }
+    },
+    {
+        "model": "custom_auth.profile",
+        "pk": 4,
+        "fields": {
+            "user": 4,
+            "organization": 1,
+            "division": 1,
+            "level": 3
+        }
+    },
+    {
+        "model": "custom_auth.profile",
+        "pk": 5,
+        "fields": {
+            "user": 5,
+            "organization": 1,
+            "division": 1,
+            "level": 4
+        }
+    },
+    {
+        "model": "custom_auth.profile",
+        "pk": 6,
+        "fields": {
+            "user": 6,
+            "organization": 1,
+            "division": 1,
+            "level": 5
+        }
+    },
+    {
+        "model": "custom_auth.profile",
+        "pk": 7,
+        "fields": {
+            "user": 7,
+            "organization": 1,
+            "division": 1,
+            "level": 6
+        }
+    },
+    {
+        "model": "custom_auth.profile",
+        "pk": 8,
+        "fields": {
+            "user": 8,
+            "organization": 2,
+            "division": 4,
+            "level": 7
+        }
+    },
+    {
+        "model": "custom_auth.profile",
+        "pk": 9,
+        "fields": {
+            "user": 9,
+            "organization": 2,
+            "division": 4,
+            "level": 8
+        }
+    },
+    {
+        "model": "custom_auth.profile",
+        "pk": 10,
+        "fields": {
+            "user": 10,
+            "organization": 2,
+            "division": 1,
+            "level": 9
         }
     }
 ]

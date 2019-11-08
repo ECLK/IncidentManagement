@@ -12,7 +12,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from django.db.models import Q
 
 from .models import Incident, StatusType, SeverityType
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 from .serializers import (
     IncidentSerializer,
     ReporterSerializer,
@@ -24,11 +24,10 @@ from .services import (
     create_incident_postscript,
     update_incident_postscript,
     update_incident_status,
-    update_incident_severity,
     get_reporter_by_id,
     get_comments_by_incident,
     create_incident_comment_postscript,
-    incident_auto_assign,
+    # incident_auto_assign,
     incident_escalate,
     incident_change_assignee,
     incident_close,
@@ -38,6 +37,7 @@ from .services import (
     incident_provide_advice,
     incident_verify,
     incident_invalidate,
+    incident_reopen,
     get_user_by_id,
     get_police_report_by_incident,
     get_incidents_to_escalate,
@@ -46,6 +46,9 @@ from .services import (
     get_fitlered_incidents_report,
     get_guest_user,
     get_incident_by_reporter_unique_id,
+    user_level_has_permission,
+    find_incident_assignee,
+    find_escalation_candidate,
     create_reporter
 )
 
@@ -56,7 +59,9 @@ from ..renderer import CustomJSONRenderer
 from rest_framework.renderers import JSONRenderer
 
 import json
-
+from ..custom_auth.models import UserLevel
+from ..custom_auth.services import user_can
+from .permissions import *
 
 class IncidentResultsSetPagination(PageNumberPagination):
     page_size = 15
@@ -83,11 +88,16 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         )
 
     def get(self, request, format=None):
+        # #debug
+        # _user = get_guest_user()
+        # _user = User.objects.get(username="police1")
+        # print("assigneee", find_incident_assignee(_user))
+
         incidents = Incident.objects.all().order_by('created_date').reverse()
         user = request.user
 
         # for external entities, they can only view related incidents
-        if not user.is_staff:
+        if not user_can(user, CAN_REVIEW_ALL_INCIDENTS):
             incidents = incidents.filter(linked_individuals__id=user.id)
 
         # filtering
@@ -124,9 +134,6 @@ class IncidentList(APIView, IncidentResultsSetPagination):
                 # get incidents of the current user
                 incidents = incidents.filter(linked_individuals__id=user.id)
 
-
-        # this will load all incidents to memory
-        # change this to a better way next time
         param_status = self.request.query_params.get('status', None)
         if param_status is not None:
             try:
@@ -141,7 +148,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
                 param_severity = int(param_severity)
                 if param_severity < 1 or param_severity > 10:
                     raise IncidentException("Severity level must be between 1 - 10")
-                incidents = incidents.filter(current_severity=param_severity)
+                incidents = incidents.filter(severity=param_severity)
             except:
                 raise IncidentException("Severity level must be a number")
 
@@ -332,13 +339,16 @@ class IncidentWorkflowView(APIView):
         incident = get_incident_by_id(incident_id)
 
         if workflow == "close":
-            if not request.user.has_perm("incidents.can_change_status"):
+            if not user_can(request.user, CAN_CLOSE_INCIDENT):
                 return Response("User can't close incident", status=status.HTTP_401_UNAUTHORIZED)
 
             details = request.data['details']
             incident_close(request.user, incident, details)
 
         elif workflow == "request-action":
+            if not user_can(request.user, CAN_ESCALATE_EXTERNAL):
+                return Response("User can't refer incident to external organization", status=status.HTTP_401_UNAUTHORIZED)
+
             entity = request.data['entity']
             comment = request.data['comment']
             incident_escalate_external_action(request.user, incident, entity, comment)
@@ -363,17 +373,23 @@ class IncidentWorkflowView(APIView):
             incident_provide_advice(request.user, incident, comment, start_event)
 
         elif workflow == "verify":
+            if not user_can(request.user, CAN_VERIFY_INCIDENT):
+                return Response("User can't verify incident", status=status.HTTP_401_UNAUTHORIZED)
+
             comment = request.data['comment']
             proof = request.data['proof']
             incident_verify(request.user, incident, comment, proof)
-            incident_escalate(request.user, incident, comment=comment)
+            # incident_escalate(request.user, incident, comment=comment)
 
         elif workflow == "invalidate":
+            if not user_can(request.user, CAN_INVALIDATE_INCIDENT):
+                return Response("User can't invalidate incident", status=status.HTTP_401_UNAUTHORIZED)
+
             comment = request.data['comment']
             incident_invalidate(request.user, incident, comment)
 
         elif workflow == "assign":
-            if not request.user.has_perm("incidents.can_change_assignee"):
+            if not user_can(request.user, CAN_CHANGE_ASSIGNEE):
                 return Response("User can't change assignee", status=status.HTTP_401_UNAUTHORIZED)
 
             assignee_id = self.request.data['assignee']
@@ -382,9 +398,19 @@ class IncidentWorkflowView(APIView):
             incident_change_assignee(request.user, incident, assignee)
 
         elif workflow == "escalate":
+            if not user_can(request.user, CAN_ESCALATE_INCIDENT):
+                return Response("User can't escalate incident", status=status.HTTP_401_UNAUTHORIZED)
+
             comment = request.data['comment']
             response_time = request.data['responseTime']
             incident_escalate(request.user, incident, comment=comment, response_time=response_time)
+
+        elif workflow == "reopen":
+            if not user_can(request.user, CAN_REOPEN_INCIDENT):
+                return Response("User can't reopen incident", status=status.HTTP_401_UNAUTHORIZED)
+
+            comment = request.data['comment']
+            incident_reopen(request.user, incident, comment)
 
         else:
             return Response("Invalid workflow", status=status.HTTP_400_BAD_REQUEST)
@@ -402,11 +428,13 @@ class IncidentMediaView(APIView):
 
         return Response("Incident workflow success", status=status.HTTP_200_OK)
 
+# NO AUTO ESCALATE FOR NOW
 class IncidentAutoEscalate(APIView):
     def get(self, request):
-        escalated_incidents = auto_escalate_incidents()
+        pass
+        # escalated_incidents = auto_escalate_incidents()
 
-        return Response(escalated_incidents, status=status.HTTP_200_OK)
+        # return Response(escalated_incidents, status=status.HTTP_200_OK)
 
 class Test(APIView):
     def get(self, request):

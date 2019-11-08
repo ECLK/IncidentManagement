@@ -77,8 +77,12 @@ const getLastActionTime = (events) => {
 
 const EventActions = (props) => {
 
-    const { classes, getUsers,
-        setIncidentAssignee, users } = props;
+    const { 
+        classes,
+        users,
+        divisions,
+        organizations 
+    } = props;
 
     var hourlyResponseTimes = []
     for (var i = 1; i < 24; i++) {
@@ -96,6 +100,10 @@ const EventActions = (props) => {
         return null
     }
 
+    function showChangeAssigneeModal(){
+        dispatch(showModal('CHANGE_ASSIGNEE_MODAL', { activeIncident, users, divisions }));
+    }
+
     return (
         <div className={classes.card}>
 
@@ -110,9 +118,9 @@ const EventActions = (props) => {
                     
                     {activeIncident.currentStatus !== 'CLOSED' &&
                         activeIncident.currentStatus !== 'INVALIDATED' && 
-                        userCan(currentUser, activeIncident, USER_ACTIONS.CHANGE_ASSIGNEE) &&
+                        userCan(currentUser, activeIncident, USER_ACTIONS.CAN_CHANGE_ASSIGNEE) &&
                         <ListItemSecondaryAction>
-                            <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('CHANGE_ASSIGNEE_MODAL', { activeIncident, users })) }}>
+                            <IconButton aria-label="Edit" onClick={showChangeAssigneeModal}>
                                 <EditIcon />
                             </IconButton>
                         </ListItemSecondaryAction>
@@ -148,7 +156,7 @@ const EventActions = (props) => {
                         primary="Close this before" 
                         secondary={timeLimitText}
                         classes = {{
-                            inset:true,
+                            // inset:true,
                             secondary: calculateDeadline(activeIncident).status === 'OVERDUE' && classes.timeLimitOverDue
                         }}
                     />
@@ -168,42 +176,56 @@ const EventActions = (props) => {
 
             {activeIncident.currentStatus !== 'CLOSED'  && 
             activeIncident.currentStatus !== 'INVALIDATED'  && 
-              userCan(currentUser, activeIncident, USER_ACTIONS.RUN_WORKFLOW) && 
+              userCan(currentUser, activeIncident, USER_ACTIONS.CAN_RUN_WORKFLOW) && 
                 <>
-                {userCan(currentUser, activeIncident, USER_ACTIONS.ESCALATE_INCIDENT) && 
+                {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_ESCALATE_INCIDENT) && 
                     <Button color="primary" size="large" variant='text' className={classes.button} onClick={props.escallateIncident}>
                         <ArrowUpwardIcon className={classes.actionButtonIcon} />
                         Escalate
                     </Button>
                 }
                 
-                <Button color="primary" size="large" variant='text' className={classes.button} onClick={()=>{dispatch(showModal('ESCALLATE_OUTSIDE', { incidentId: activeIncident.id }))}}>
-                    <SubdirectoryArrowLeftIcon className={classes.actionButtonIcon} />
-                    Refer to organization 
-                </Button>
-                <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REQUEST_ADVICE_MODAL', { activeIncident, users })) }}>
+            
+                {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_ESCALATE_EXTERNAL) && 
+                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={()=>{dispatch(showModal('ESCALLATE_OUTSIDE', { incidentId: activeIncident.id }))}}>
+                        <SubdirectoryArrowLeftIcon className={classes.actionButtonIcon} />
+                        Refer to organization 
+                    </Button>
+                }
+                
+                <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REQUEST_ADVICE_MODAL', { activeIncident, users, divisions })) }}>
                     <HelpIcon className={classes.actionButtonIcon} />
                     Request for advice
                 </Button>
-                {/* <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('PROVIDE_ADVICE_MODAL', { activeIncident })) }}>
-                    <SpeackerNotesIcon className={classes.actionButtonIcon} />
-                    Provide advice
-                </Button> */}
 
-                {userCan(currentUser, activeIncident, USER_ACTIONS.CLOSE_INCIDENT) &&
-                    <>
+                {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_CLOSE_INCIDENT) &&
+                    
                     <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('CLOSE_MODAL', { activeIncident })) }}>
                         <WhereToVoteIcon className={classes.actionButtonIcon} />
                         Close Incident
                     </Button>
-
-                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('INVALIDATE_MODAL', { activeIncident })) }}>
-                        <WhereToVoteIcon className={classes.actionButtonIcon} />
-                        Invalidate Incident
-                    </Button>
-                    </>
-                } 
+                }
+                
+                { (activeIncident.currentStatus === "NEW" || activeIncident.currentStatus === "REOPENED") && 
+                    userCan(currentUser, activeIncident, USER_ACTIONS.CAN_INVALIDATE_INCIDENT) &&
+                (
+                        <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('INVALIDATE_MODAL', { activeIncident })) }}>
+                            <WhereToVoteIcon className={classes.actionButtonIcon} />
+                            Invalidate Incident
+                        </Button>
+                )}
+                 
                 </>
+            }
+
+            {activeIncident.currentStatus === 'CLOSED'  &&
+                userCan(currentUser, activeIncident, USER_ACTIONS.CAN_REOPEN_INCIDENT) &&
+                (
+                <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REOPEN_MODAL', { activeIncident })) }}>
+                    <WhereToVoteIcon className={classes.actionButtonIcon} />
+                    Reopen Incident
+                </Button>
+                )
             }
         </div>
     );

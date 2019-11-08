@@ -17,6 +17,7 @@ import ProvideAdviceModal from './ProvideAdviceModal';
 import CloseModal from './CloseModal';
 import CompleteOutsideActionModal from './CompleteOutsideActionModal'
 import InvalidateModal from './InvalidateModal';
+import ReopenModal from './ReopenModal';
 
 const MODAL_COMPONENTS = {
     'RESPOSE_TIME_EDIT': ResponseTimeEditModal,
@@ -28,7 +29,8 @@ const MODAL_COMPONENTS = {
     'PROVIDE_ADVICE_MODAL': ProvideAdviceModal,
     'CLOSE_MODAL': CloseModal,
     'COMPLETE_OUTSIDE_ACTION_MODAL':CompleteOutsideActionModal,
-    'INVALIDATE_MODAL': InvalidateModal
+    'INVALIDATE_MODAL': InvalidateModal,
+    'REOPEN_MODAL': ReopenModal
     /* other modals */
 }
 

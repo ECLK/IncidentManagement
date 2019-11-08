@@ -19,25 +19,47 @@ class UserSerializer(serializers.ModelSerializer):
     userPermissions = serializers.SerializerMethodField('get_permissions')
     isStaff = serializers.BooleanField(source="is_staff")
     entity = serializers.SerializerMethodField()
+    profile = serializers.SerializerMethodField()
 
     def get_full_name(self, obj):
         return obj.first_name + " " + obj.last_name
 
     def get_entity(self, obj):
-        if obj.groups.count() > 0:
-            group = obj.groups.all()[0]
-
-            if group.organization is None:
-                return None 
-
-            return { 
-                "gid" : group.organization.id,
-                "name": group.organization.name
-            }
+        if hasattr(obj, "profile"):
+            if obj.profile.organization is not None:
+                return { 
+                    "gid" : obj.profile.organization.code,
+                    "name": obj.profile.organization.displayName
+                }
 
         return None
-    
+
+    def get_profile(self, obj):
+        if hasattr(obj, "profile"):
+            profile = {}
+            
+            if obj.profile.organization is not None:
+                profile["organization"] = {
+                    "code": obj.profile.organization.code,
+                    "name": obj.profile.organization.displayName
+                }
+
+            if obj.profile.division is not None:
+                profile["division"] = {
+                    "code": obj.profile.division.code,
+                    "divisionType": obj.profile.division.division_type,
+                    "name": obj.profile.division.name
+                }
+        
+        return profile
+
     def get_permissions(self, obj):
+        if hasattr(obj, "profile"):
+            if obj.profile.level is not None:
+                permissions = Permission.objects.filter(group=obj.profile.level.role)
+                permission_data = map(lambda p: p.codename, permissions)
+                return permission_data
+
         if obj.groups.count() > 0:
             group = obj.groups.all()[0]
             permissions = Permission.objects.filter(group=group)
@@ -49,6 +71,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('uid', 'userName', 'displayname', 'isActive', 'userPermissions', 'isStaff', 'entity')
+        fields = ('uid', 'userName', 'displayname', 'isActive', 'userPermissions', 'isStaff', 'entity', 'profile')
         # fields = "__all__"
 

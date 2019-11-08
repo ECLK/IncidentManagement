@@ -83,14 +83,15 @@ function SearchForm(props) {
   }, []);
   const { classes, categories } = props;
   const severityValues = Array(10).fill(0).map((e,i)=>i+1);
+  console.log(props);
   return (
     <Formik
       initialValues={props.incidentSearchFilter}
       onSubmit={(values, { setSubmitting }) => {
         let preparedValues = {
           ...values,
-          startTime: values.startTime !== "" ? moment(values.startTime).format("YYYY-MM-DD HH:mm") : null,
-          endTime: values.endTime !== "" ? moment(values.endTime).format("YYYY-MM-DD HH:mm") : null
+          startTime: values.startTime !== null ? moment(values.startTime).format("YYYY-MM-DD HH:mm") : null,
+          endTime: values.endTime !== null ? moment(values.endTime).format("YYYY-MM-DD HH:mm") : null
         };
         // alert(JSON.stringify(preparedValues));
         filterIncidents(preparedValues);

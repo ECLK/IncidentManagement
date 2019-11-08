@@ -7,23 +7,16 @@
 # ===============================================================================
 
 from rest_framework import serializers
-from .models import Incident, IncidentStatus, IncidentSeverity, Reporter, IncidentComment, IncidentPoliceReport, IncidentPerson, IncidentVehicle
+from .models import Incident, IncidentStatus, Reporter, IncidentComment, IncidentPoliceReport, IncidentPerson, IncidentVehicle, EscalateExternalWorkflow
 from ..common.serializers import DistrictSerializer, PoliceStationSerializer
 from ..common.models import PoliceStation
 from ..custom_auth.serializers import UserSerializer
-
+from django.db.models import Q
 
 class IncidentStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = IncidentStatus
         fields = "__all__"
-
-
-class IncidentSeveritySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = IncidentSeverity
-        fields = "__all__"
-
 
 class ReporterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -69,6 +62,8 @@ class IncidentSerializer(serializers.ModelSerializer):
 
     assignee = UserSerializer(read_only=True)
 
+    lastAssignment = serializers.SerializerMethodField(method_name="get_last_assignment")
+
     # refId = serializers.CharField(required=False)
     # election = serializers.CharField(required=False)
 
@@ -90,6 +85,18 @@ class IncidentSerializer(serializers.ModelSerializer):
                 extra_kwargs[prop] = kwargs
 
         return extra_kwargs
+
+    def get_last_assignment(self, obj):
+        if obj.linked_individuals.count() > 0:
+            last_assignment = EscalateExternalWorkflow.objects.filter(
+                Q(incident=obj) & Q(is_action_completed=False) & Q(is_internal_user=True)
+            ).order_by('-id').first()
+
+            if last_assignment is not None:
+                return {
+                    "assigned_from": last_assignment.actioned_user.profile.division.__str__(),
+                    "assigned_to": last_assignment.escalated_user.profile.division.__str__()
+                }
 
 class IncidentPersonSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(required=False, write_only=False)
@@ -115,8 +122,6 @@ class IncidentPoliceReportSerializer(serializers.ModelSerializer):
             instance_field.create(**item)
 
     def update_list(self, instance_list, validated_list, child_class, instance_field):
-        print(instance_list)
-        print(validated_list)
         remove_items = { item.id: item for item in instance_list }
 
         for item in validated_list:
@@ -148,7 +153,6 @@ class IncidentPoliceReportSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        print(validated_data)
         injured_parties_data = validated_data.pop("injured_parties")
         self.update_list(instance.injured_parties.all(), injured_parties_data, 
                             IncidentPerson, instance.injured_parties)
@@ -158,7 +162,6 @@ class IncidentPoliceReportSerializer(serializers.ModelSerializer):
                             IncidentPerson, instance.respondents)
 
         detained_vehicles_data = validated_data.pop("detained_vehicles")
-        print(detained_vehicles_data)
         self.update_list(instance.detained_vehicles.all(), detained_vehicles_data, 
                             IncidentVehicle, instance.detained_vehicles)
                     

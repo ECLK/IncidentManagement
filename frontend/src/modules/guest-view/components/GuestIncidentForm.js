@@ -30,7 +30,10 @@ import ContactSection from './GuestFormContactSection';
 import {
     fetchElections,
     fetchCategories,
-    fetchChannels
+    fetchChannels,
+
+    requestIncidentCatogories,
+
 } from '../../shared/state/Shared.actions';
 
 import {
@@ -44,6 +47,8 @@ import {
     moveStepper,
 } from '../state/guestViewActions'
 import FileUploader from '../../shared/components/FileUploader';
+
+import {useLoadingStatus} from '../../loading-spinners/loadingHook'
 
 const styles = theme => ({
     root: {
@@ -87,18 +92,17 @@ const VerticalLinearStepper = (props) => {
 
     const dispatch = useDispatch();
     const { elections, categories, channels } = useSelector((state) => (state.sharedReducer));
-    let webInfoChannelId = null;
-    if (channels.length > 0) {
-        webInfoChannelId = channels.reduce((previousValue, currValue) => {
-            previousValue = null;
-            if (currValue.name === "Web") {
-                previousValue = currValue.id;
-            }
-            return previousValue;
-        })
-    }
+    
+    let webInfoChannelId = "Web";
+    // for(var channel of channels){
+    //     if(channel.name === "Web"){
+    //         webInfoChannelId = channel.id;
+    //         break;
+    //     }
+    // }
+
     const { activeIncident, activeIncidentReporter } = useSelector((state) => (state.incident));
-    const { activeStep, isLoading } = useSelector((state) => (state.guestView));
+    const { activeStep, isLoadingIncident } = useSelector((state) => (state.guestView));
 
     const incidentId = activeIncident && activeIncident.data ? activeIncident.data.id : null
     let incidentData = incidentId ? JSON.parse(JSON.stringify(activeIncident.data)) : {};
@@ -340,6 +344,14 @@ const VerticalLinearStepper = (props) => {
     if (activeStep === Object.keys(stepDefinitions).length) {
         return <Redirect to='/report/success' />
     }
+
+        
+
+    const isLoadingMetaData = useLoadingStatus([
+        requestIncidentCatogories(),
+    ])
+
+    const isLoading = isLoadingIncident || isLoadingMetaData
 
     return (
 
