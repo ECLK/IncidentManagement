@@ -42,7 +42,6 @@ def is_valid_incident(incident_id: str) -> bool:
         return False
 
 def validateRecaptcha(response: str) -> bool:
-    print(os.environ.get('RECAPTCHA_SECRET_KEY'))
     params = {
         'secret': os.environ.get('RECAPTCHA_SECRET_KEY'),
         'response': response

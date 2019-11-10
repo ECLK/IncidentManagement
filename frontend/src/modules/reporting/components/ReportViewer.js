@@ -46,7 +46,6 @@ const ReportViewer = ({classes, ...props}) => {
 
     async function loadPDF(url) {
         const response = (await handler.get(url));
-        console.log(response.headers.title);
         const data = response.data;
         const blob = new Blob([data], {type: 'application/pdf'});
         const uri = URL.createObjectURL(blob);

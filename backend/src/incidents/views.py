@@ -265,12 +265,9 @@ class IncidentDetail(APIView):
                 incident_police_report_serializer = IncidentPoliceReportSerializer(incident_police_report, data=incident_police_report_data)
 
                 if incident_police_report_serializer.is_valid():
-                    print("dsdsds")
                     incident_police_report_serializer.save()
                     return_data.update(incident_police_report_serializer.data)
                     return_data["id"] = incident_id
-                
-                print(incident_police_report_serializer.errors)
             
             update_incident_postscript(incident, request.user, revision)
 

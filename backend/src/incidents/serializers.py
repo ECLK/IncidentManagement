@@ -114,8 +114,6 @@ class IncidentPoliceReportSerializer(serializers.ModelSerializer):
             instance_field.create(**item)
 
     def update_list(self, instance_list, validated_list, child_class, instance_field):
-        print(instance_list)
-        print(validated_list)
         remove_items = { item.id: item for item in instance_list }
 
         for item in validated_list:
@@ -147,7 +145,6 @@ class IncidentPoliceReportSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        print(validated_data)
         injured_parties_data = validated_data.pop("injured_parties")
         self.update_list(instance.injured_parties.all(), injured_parties_data, 
                             IncidentPerson, instance.injured_parties)
@@ -157,7 +154,6 @@ class IncidentPoliceReportSerializer(serializers.ModelSerializer):
                             IncidentPerson, instance.respondents)
 
         detained_vehicles_data = validated_data.pop("detained_vehicles")
-        print(detained_vehicles_data)
         self.update_list(instance.detained_vehicles.all(), detained_vehicles_data, 
                             IncidentVehicle, instance.detained_vehicles)
                     
