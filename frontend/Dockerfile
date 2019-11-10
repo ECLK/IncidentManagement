@@ -8,6 +8,7 @@ RUN npm install react-scripts@3.0.1 -g --silent
 COPY . /app
 # commenting next line will set BASE_URL = http://localhost:8000
 ENV REACT_APP_API_BASE_URL=https://api.incidents.ecdev.opensource.lk
+ENV REACT_APP_RECAPTCHA_SITEKEY=6Lfk68EUAAAAAFjPNNX0Ht6JWG-BnioxuiaTAIv
 ENV NODE_OPTIONS=--max_old_space_size=4096
 RUN npm run build
 
