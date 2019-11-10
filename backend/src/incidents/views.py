@@ -46,7 +46,8 @@ from .services import (
     get_fitlered_incidents_report,
     get_guest_user,
     get_incident_by_reporter_unique_id,
-    create_reporter
+    create_reporter,
+    validateRecaptcha
 )
 
 from ..events import services as event_service
@@ -425,11 +426,13 @@ class IncidentPublicUserView(APIView):
         serializer = IncidentSerializer(data=request.data)
 
         if serializer.is_valid():
-            incident = serializer.save()
-            create_incident_postscript(incident, None)
-            return_data = serializer.data
+            incidentReqValues = serializer.initial_data
+            if(validateRecaptcha(incidentReqValues['recaptcha'])):
+                incident = serializer.save()
+                create_incident_postscript(incident, None)
+                return_data = serializer.data
 
-            return Response(return_data, status=status.HTTP_201_CREATED)
+                return Response(return_data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
