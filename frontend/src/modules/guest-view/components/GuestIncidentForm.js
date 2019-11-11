@@ -131,6 +131,9 @@ const VerticalLinearStepper = (props) => {
         email: incidentReporterData ? incidentReporterData.email : ''
     });
     const [formErrors, setFormErrors] = useState({})
+    const isLoadingMetaData = useLoadingStatus([
+        requestIncidentCatogories(),
+    ])
 
     const getFormattedDateTime = () => {
         let dateTime = null;
@@ -345,12 +348,6 @@ const VerticalLinearStepper = (props) => {
     if (activeStep === Object.keys(stepDefinitions).length) {
         return <Redirect to='/report/success' />
     }
-
-        
-
-    const isLoadingMetaData = useLoadingStatus([
-        requestIncidentCatogories(),
-    ])
 
     const isLoading = isLoadingIncident || isLoadingMetaData
 
