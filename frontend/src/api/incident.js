@@ -39,8 +39,6 @@ export const getIncident = async (incidentId) => {
 };
 
 export const getIncidents = async (filters, page=1) => {
-    // return mockapi.getIncidents();
-    console.log(filters);
     var query = "page=" + page;
 
     if(filters.textSearch){

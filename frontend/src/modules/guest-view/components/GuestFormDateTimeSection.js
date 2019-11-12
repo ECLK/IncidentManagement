@@ -19,7 +19,8 @@ const styles = theme => ({
     },
     errorMessage: {
         marginLeft: theme.spacing.unit,
-        marginTop: -8
+        marginTop: -8,
+        marginBottom: theme.spacing.unit,
     }
 });
 
