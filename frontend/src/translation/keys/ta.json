@@ -22,6 +22,7 @@
   "eclk.incident.management.report.incidents.date": "திகதி",
   "eclk.incident.management.report.incidents.time": "நேரம்",
   "eclk.incident.management.report.incidents.datetime.error.message": "திகதி மற்றும் நேரம் தேவைப்படுகின்றது",
+  "eclk.incident.management.report.incidents.recaptcha.error.message": "இந்த சரிபார்ப்பு தேவை",
 
   "eclk.incident.management.report.incidents.section.location": "நிகழ்வு நடந்த இடத்தை விபரிக்கவும்",
   "eclk.incident.management.report.incidents.location": "இடத்தின் பெயர் அல்லது விபரம்",

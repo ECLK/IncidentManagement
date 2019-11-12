@@ -22,6 +22,7 @@
   "eclk.incident.management.report.incidents.date": "දිනය",
   "eclk.incident.management.report.incidents.time": "වේලාව",
   "eclk.incident.management.report.incidents.datetime.error.message": "දිනය සහ වේලාව අවශ්‍ය වේ",
+  "eclk.incident.management.report.incidents.recaptcha.error.message": "මෙම සත්‍යාපනය අවශ්‍ය වේ",
   
   "eclk.incident.management.report.incidents.section.location": "සිදුවූ ස්ථානය පිළිබඳ තොරතුරු",
   "eclk.incident.management.report.incidents.location": "සිදුවූ ස්ථානයේ නාමය හෝ විස්තරය",

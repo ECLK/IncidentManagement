@@ -25,8 +25,6 @@ class ReporterSerializer(serializers.ModelSerializer):
 
 
 class IncidentSerializer(serializers.ModelSerializer):
-    hasPendingStatusChange = serializers.ReadOnlyField()
-    hasPendingSeverityChange = serializers.ReadOnlyField()
 
     currentStatus = serializers.ReadOnlyField(source="current_status")
     currentSeverity = serializers.ReadOnlyField(source="current_severity")
@@ -73,6 +71,7 @@ class IncidentSerializer(serializers.ModelSerializer):
         model = Incident
         exclude = ["created_date", "ds_division", "grama_niladhari",
                    "polling_division", "polling_station", "police_division", "police_station"]
+        read_only_fields = ['recaptcha']
 
     def get_extra_kwargs(self):
         blocked_list = ["description"]

@@ -49,7 +49,8 @@ from .services import (
     user_level_has_permission,
     find_incident_assignee,
     find_escalation_candidate,
-    create_reporter
+    create_reporter,
+    validateRecaptcha
 )
 
 from ..events import services as event_service
@@ -271,12 +272,9 @@ class IncidentDetail(APIView):
                 incident_police_report_serializer = IncidentPoliceReportSerializer(incident_police_report, data=incident_police_report_data)
 
                 if incident_police_report_serializer.is_valid():
-                    print("dsdsds")
                     incident_police_report_serializer.save()
                     return_data.update(incident_police_report_serializer.data)
                     return_data["id"] = incident_id
-                
-                print(incident_police_report_serializer.errors)
             
             update_incident_postscript(incident, request.user, revision)
 
@@ -453,11 +451,13 @@ class IncidentPublicUserView(APIView):
         serializer = IncidentSerializer(data=request.data)
 
         if serializer.is_valid():
-            incident = serializer.save()
-            create_incident_postscript(incident, None)
-            return_data = serializer.data
+            incidentReqValues = serializer.initial_data
+            if(validateRecaptcha(incidentReqValues['recaptcha'])):
+                incident = serializer.save()
+                create_incident_postscript(incident, None)
+                return_data = serializer.data
 
-            return Response(return_data, status=status.HTTP_201_CREATED)
+                return Response(return_data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     

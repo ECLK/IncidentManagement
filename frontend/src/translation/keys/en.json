@@ -22,6 +22,7 @@
   "eclk.incident.management.report.incidents.date": "Date",
   "eclk.incident.management.report.incidents.time": "Time",
   "eclk.incident.management.report.incidents.datetime.error.message": "Date and time are required",
+  "eclk.incident.management.report.incidents.recaptcha.error.message": "This verification is required",
 
   "eclk.incident.management.report.incidents.section.location": "Describe the incident location",
   "eclk.incident.management.report.incidents.location": "Location name or description",
