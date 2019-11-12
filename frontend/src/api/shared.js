@@ -39,13 +39,13 @@ export const getPollingDivisions = async () => {
 }
 
 export const getPoliceStations = async () => {
-    // return (await handler.get('/policestations')).data;
-    return mockapi.getPoliceStations();
+    return (await handler.get('/policestations')).data;
+    // return mockapi.getPoliceStations();
 }
 
 export const getPoliceDivisions = async () => {
-    // return (await handler.get('/policedivisions')).data;
-    return mockapi.getPoliceDivisions();
+    return (await handler.get('/policedivisions')).data;
+    // return mockapi.getPoliceDivisions();
 }
 
 export const getWards = async () => {

@@ -56,20 +56,20 @@ class District(models.Model):
     class Meta:
         ordering = ('id',)
 
-class PoliceStation(models.Model):
+    def __str__(self):
+        return '%s | %s' % (self.code, self.name)
+
+
+class PollingDivision(models.Model):
     code = models.CharField(max_length=36, unique=True)
     name = models.CharField(max_length=200)
-    division = models.CharField(max_length=200, default=None)
     sn_name = models.CharField(max_length=200, null=True, blank=True)
-    sn_division = models.CharField(max_length=200, null=True, blank=True)
     tm_name = models.CharField(max_length=200, null=True, blank=True)
-    tm_division = models.CharField(max_length=200, null=True, blank=True)
-    district = models.ForeignKey("District", on_delete=models.DO_NOTHING, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ('id',)
-    
+
 class PollingStation(models.Model):
     code = models.CharField(max_length=36, unique=True)
     name = models.CharField(max_length=200)
@@ -127,15 +127,26 @@ class PoliceDivision(models.Model):
     class Meta:
         ordering = ('id',)
 
-class PollingDivision(models.Model):
+    def __str__(self):
+        return '%s | %s' % (self.code, self.name)
+
+
+class PoliceStation(models.Model):
     code = models.CharField(max_length=36, unique=True)
     name = models.CharField(max_length=200)
+    division = models.CharField(max_length=200, default=None)
     sn_name = models.CharField(max_length=200, null=True, blank=True)
     tm_name = models.CharField(max_length=200, null=True, blank=True)
+    division = models.ForeignKey("PoliceDivision", to_field="code", on_delete=models.DO_NOTHING, null=True, blank=True, db_column="division_code")
+    district = models.ForeignKey("District", to_field="code", on_delete=models.DO_NOTHING, null=True, blank=True, db_column="district_code")
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ('id',)
+
+    def __str__(self):
+        return '%s | %s' % (self.code, self.name)
+
 
 class PoliticalParty(models.Model):
     code = models.CharField(max_length=36, unique=True)
