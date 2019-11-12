@@ -951,23 +951,57 @@ class IncidentFormInternal extends Component {
                                             <Grid item xs={12} sm={4}>
                                                 <FormControl className={classes.formControl}>
                                                     <InputLabel htmlFor="policeStation">Police Station</InputLabel>
-                                                    <IntlSelect
+                                                    {/* <IntlSelect
                                                         value={values.policeStation}
                                                         handleChange={handleChange}
                                                         name='policeStation'
                                                         dataObj={this.props.policeStations}
-                                                    />
+                                                    /> */}
+                                                    <Select
+                                                        value={values.policeStation}
+                                                        onChange={handleChange}
+                                                        inputProps={{
+                                                            name: 'policeStation',
+                                                            id: 'policeStation',
+                                                        }}
+                                                    >
+                                                        <MenuItem value=""> <em>None</em> </MenuItem>
+                                                        {this.props.policeStations.allCodes.map((c, k) => {
+                                                            let currPoliceStation = this.props.policeStations.byCode[c]
+                                                            return currPoliceStation.name !== 'NONE' &&
+                                                                <MenuItem value={currPoliceStation.code} key={k}>
+                                                                    {currPoliceStation.name}
+                                                                </MenuItem>
+                                                        })}
+                                                    </Select>
                                                 </FormControl>
                                             </Grid>
                                             <Grid item xs={12} sm={4}>
                                                 <FormControl className={classes.formControl}>
                                                     <InputLabel htmlFor="policeDivision">Police Division</InputLabel>
-                                                    <IntlSelect
+                                                    {/* <IntlSelect
                                                         value={values.policeDivision}
                                                         handleChange={handleChange}
                                                         name='policeDivision'
                                                         dataObj={this.props.policeDivisions}
-                                                    />
+                                                    /> */}
+                                                    <Select
+                                                        value={values.policeDivision}
+                                                        onChange={handleChange}
+                                                        inputProps={{
+                                                            name: 'policeDivision',
+                                                            id: 'policeDivision',
+                                                        }}
+                                                    >
+                                                        <MenuItem value=""> <em>None</em> </MenuItem>
+                                                        {this.props.policeDivisions.allCodes.map((c, k) => {
+                                                            let currPoliceDivision = this.props.policeDivisions.byCode[c]
+                                                            return currPoliceDivision.name !== 'NONE' &&
+                                                                <MenuItem value={currPoliceDivision.code} key={k}>
+                                                                    {currPoliceDivision.name}
+                                                                </MenuItem>
+                                                        })}
+                                                    </Select>
                                                 </FormControl>
                                             </Grid>
                                         </Grid>
