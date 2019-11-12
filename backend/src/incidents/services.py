@@ -1,3 +1,5 @@
+import os
+import requests
 
 from .models import (
     Incident,
@@ -41,6 +43,17 @@ def is_valid_incident(incident_id: str) -> bool:
         return True
     except Exception as e:
         return False
+
+def validateRecaptcha(response: str) -> bool:
+    params = {
+        'secret': os.environ.get('RECAPTCHA_SECRET_KEY'),
+        'response': response
+    }
+    validationResponse = requests.post(
+        'https://www.google.com/recaptcha/api/siteverify',
+        params
+    )
+    return validationResponse.json()['success']
 
 
 def get_incident_by_id(incident_id: str) -> Incident:

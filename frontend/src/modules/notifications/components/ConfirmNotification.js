@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 
 const ConfirmNotification = (props) => {
     const confirms = useSelector(state => state.notificationReducer.confirms);
-    console.log(confirms);
     return (
         <>
             {confirms && (

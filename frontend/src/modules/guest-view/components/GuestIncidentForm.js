@@ -5,6 +5,7 @@ import moment from 'moment';
 import { Link, Redirect } from 'react-router-dom';
 import { withRouter } from "react-router";
 import { useIntl } from "react-intl";
+import ReCAPTCHA from "react-google-recaptcha";
 
 import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
@@ -18,7 +19,9 @@ import Grid from "@material-ui/core/Grid";
 import { changeLanguage } from "../../shared/state/Shared.actions";
 import Logo from "../../shared/components/Logo";
 import CircularProgress from '@material-ui/core/CircularProgress';
+
 import green from '@material-ui/core/colors/green';
+import red from '@material-ui/core/colors/red';
 
 import DescriptionSection from './GuestFormDescriptionSection';
 // import CategorySection from './GuestFormCatogorySection';
@@ -76,7 +79,7 @@ const styles = theme => ({
     wrapper: {
         margin: theme.spacing.unit,
         position: 'relative',
-    },
+    }
 });
 
 
@@ -88,7 +91,7 @@ const VerticalLinearStepper = (props) => {
         dispatch(fetchChannels());
     }, []);
 
-    const {formatMessage: f} = useIntl();
+    const { formatMessage: f } = useIntl();
 
     const dispatch = useDispatch();
     const { elections, categories, channels } = useSelector((state) => (state.sharedReducer));
@@ -111,6 +114,11 @@ const VerticalLinearStepper = (props) => {
     const [skippedSteps, setSkippedSets] = useState(new Set());
     const [incidentDescription, setIncidentDescription] = useState(incidentId ? incidentData.description : null);
     const [incidentElection, setIncidentElection] = useState(incidentId ? incidentData.election : "");
+    
+    const recaptchaRef = React.createRef();
+    const [incidentRecaptcha, setIncidentRecaptcha] = useState(null);
+
+
     // const [incidentCatogory, setIncidentCatogory] = useState(incidentId? incidentData.category:"");
     const [incidentFiles, setIncidentFiles] = useState(null);
     const [incidentDateTime, setIncidentDateTime] = useState({
@@ -151,15 +159,19 @@ const VerticalLinearStepper = (props) => {
         let valid = true;
 
         if (!incidentDescription) {
-            errorMsg = { ...errorMsg, incidentDescriptionErrorMsg: f({id:"eclk.incident.management.report.incidents.description.error.message", defaultMessage:"Description is required"}) };
+            errorMsg = { ...errorMsg, incidentDescriptionErrorMsg: f({ id: "eclk.incident.management.report.incidents.description.error.message", defaultMessage: "Description is required" }) };
             valid = false;
         }
         if (!incidentElection) {
-            errorMsg = { ...errorMsg, incidentElectionErrorMsg: f({id:"eclk.incident.management.report.incidents.election.error.message", defaultMessage:"Election is required"})  };
+            errorMsg = { ...errorMsg, incidentElectionErrorMsg: f({ id: "eclk.incident.management.report.incidents.election.error.message", defaultMessage: "Election is required" }) };
             valid = false;
         }
         if (getFormattedDateTime() == null) {
-            errorMsg = { ...errorMsg, incidentDatetimeErrorMsg: f({id:"eclk.incident.management.report.incidents.datetime.error.message", defaultMessage:"Date and time are required"}) };
+            errorMsg = { ...errorMsg, incidentDatetimeErrorMsg: f({ id: "eclk.incident.management.report.incidents.datetime.error.message", defaultMessage: "Date and time are required" }) };
+            valid = false;
+        }
+        if(!incidentRecaptcha){
+            errorMsg = { ...errorMsg, incidentRecaptchaErrorMsg: f({ id: "eclk.incident.management.report.incidents.recaptcha.error.message", defaultMessage: "This verification is required" }) };
             valid = false;
         }
         setFormErrors({ ...errorMsg });
@@ -169,7 +181,7 @@ const VerticalLinearStepper = (props) => {
     const stepDefinitions = {
 
         0: {
-            title: f({ id: "eclk.incident.management.report.incidents.section.describe", defaultMessage: "Describe the incident"}),
+            title: f({ id: "eclk.incident.management.report.incidents.section.describe", defaultMessage: "Describe the incident" }),
             content: <>
                 <DescriptionSection
                     handledDescriptionChange={setIncidentDescription}
@@ -186,6 +198,15 @@ const VerticalLinearStepper = (props) => {
                     setDateTime={setIncidentDateTime}
                     formErrors={formErrors}
                 />
+                <ReCAPTCHA
+                    ref={recaptchaRef}
+                    sitekey={process.env.REACT_APP_RECAPTCHA_SITEKEY}
+                    onChange={ (e) => {
+                        formErrors.incidentRecaptchaErrorMsg = null;
+                        setIncidentRecaptcha(recaptchaRef.current.getValue()); 
+                    }}
+                />
+                <p style={{ color:'red', marginTop:0}}>{formErrors.incidentRecaptchaErrorMsg}</p>
             </>,
             handler: () => {
                 if (!incidentId) {
@@ -195,13 +216,14 @@ const VerticalLinearStepper = (props) => {
                             election: incidentElection,
                             description: incidentDescription,
                             title: 'Guest user submit',
-                            infoChannel: webInfoChannelId //info channel is web by default.
+                            infoChannel: webInfoChannelId, //info channel is web by default.
+                            recaptcha: incidentRecaptcha
                         }
                         const dateTime = getFormattedDateTime()
                         if (dateTime) {
                             incidentData['occured_date'] = dateTime;
                         }
-                        dispatch(createGuestIncident(incidentData))
+                        dispatch(createGuestIncident(incidentData));
                     }
                 } else {
                     //updating an existing incident.
@@ -235,22 +257,22 @@ const VerticalLinearStepper = (props) => {
                     incidentData.address = incidentAddress;
                     incidentData.city = incidentCity;
                     dispatch(updateGuestIncident(incidentId, incidentData))
-                }else{
+                } else {
                     dispatch(moveStepper({ step: activeStep + 1 }));
                 }
             }
         },
 
         2: {
-            title: f({ id:"eclk.incident.management.report.incidents.section.attachment", defaultMessage:"Attach files related to incident"}),
-            content: <FileUploader 
-                        files={incidentFiles} 
-                        setFiles={setIncidentFiles} 
-                    />,
+            title: f({ id: "eclk.incident.management.report.incidents.section.attachment", defaultMessage: "Attach files related to incident" }),
+            content: <FileUploader
+                files={incidentFiles}
+                setFiles={setIncidentFiles}
+            />,
             handler: () => {
                 if (incidentFiles) {
                     const fileData = new FormData();
-                    for(var file of incidentFiles){
+                    for (var file of incidentFiles) {
                         fileData.append("files[]", file);
                     }
                     dispatch(uploadFileGuest(incidentId, fileData))
@@ -261,7 +283,7 @@ const VerticalLinearStepper = (props) => {
         },
 
         3: {
-            title: f({id:"eclk.incident.management.report.incidents.section.contact", defaultMessage:"Your contact details"}),
+            title: f({ id: "eclk.incident.management.report.incidents.section.contact", defaultMessage: "Your contact details" }),
             content: < ContactSection
                 contactDetials={incidentContact}
                 handleContactDetailsChange={setIncidentContact} />,
@@ -431,7 +453,7 @@ const VerticalLinearStepper = (props) => {
                                             onClick={handleBack}
                                             className={classes.button}
                                         >
-                                            {f({ id:"eclk.incident.management.report.incidents.forms.button.back", defaultMessage: "Back"})}
+                                            {f({ id: "eclk.incident.management.report.incidents.forms.button.back", defaultMessage: "Back" })}
                                         </Button>
                                         {isStepOptional(activeStep) && (
                                             <Button
@@ -441,7 +463,7 @@ const VerticalLinearStepper = (props) => {
                                                 className={classes.button}
                                                 disabled={isLoading}
                                             >
-                                                {f({id:"eclk.incident.management.report.incidents.forms.button.skip", defaultMessage:"Skip"})}
+                                                {f({ id: "eclk.incident.management.report.incidents.forms.button.skip", defaultMessage: "Skip" })}
                                             </Button>
                                         )}
                                         <Button
@@ -451,9 +473,9 @@ const VerticalLinearStepper = (props) => {
                                             className={classes.button}
                                             disabled={isLoading}
                                         >
-                                            {activeStep === steps.length - 1 ? 
-                                                f({id:"eclk.incident.management.report.incidents.forms.button.finish", defaultMessage:"Finish"}) : 
-                                                f({id:"eclk.incident.management.report.incidents.forms.button.next", defaultMessage:"Next"})}
+                                            {activeStep === steps.length - 1 ?
+                                                f({ id: "eclk.incident.management.report.incidents.forms.button.finish", defaultMessage: "Finish" }) :
+                                                f({ id: "eclk.incident.management.report.incidents.forms.button.next", defaultMessage: "Next" })}
                                         </Button>
                                         {isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
                                     </div>
