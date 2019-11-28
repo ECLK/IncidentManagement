@@ -226,53 +226,5 @@
             "tm_name": "மலையக மக்கள் முன்னணி",
             "created_date": "2019-06-27T00:00:00Z"
         }
-    },
-    {
-        "model": "common.politicalparty",
-        "pk": 20,
-        "fields": {
-            "code": "RPP20",
-            "party_type": "REGISTERED_PARTY",
-            "name": "Sri Lanka Podujana Peramuna",
-            "sn_name": "Sri Lanka Podujana Peramuna",
-            "tm_name": "Sri Lanka Podujana Peramuna",
-            "created_date": "2019-10-28T12:52:35.792Z"
-        }
-    },
-    {
-        "model": "common.politicalparty",
-        "pk": 21,
-        "fields": {
-            "code": "RPP21",
-            "party_type": "REGISTERED_PARTY",
-            "name": "National Peoples Party",
-            "sn_name": "National Peoples Party",
-            "tm_name": "National Peoples Party",
-            "created_date": "2019-10-28T13:26:52.431Z"
-        }
-    },
-    {
-        "model": "common.politicalparty",
-        "pk": 22,
-        "fields": {
-            "code": "RPP22",
-            "party_type": "REGISTERED_PARTY",
-            "name": "New Democratic Front",
-            "sn_name": "New Democratic Front",
-            "tm_name": "New Democratic Front",
-            "created_date": "2019-10-28T13:27:42.485Z"
-        }
-    },
-    {
-        "model": "common.politicalparty",
-        "pk": 23,
-        "fields": {
-            "code": "RPP23",
-            "party_type": "REGISTERED_PARTY",
-            "name": "National Movement for People\u2019s Power",
-            "sn_name": "National Movement for People\u2019s Power",
-            "tm_name": "National Movement for People\u2019s Power",
-            "created_date": "2019-10-28T13:28:31.318Z"
-        }
     }
 ]
