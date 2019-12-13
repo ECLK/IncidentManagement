@@ -9,8 +9,8 @@ permalink: /
 # Incident Management System Documentation
 {: .fs-9 }
 
-<!-- Just the Docs gives your documentation a jumpstart with a responsive Jekyll theme that is easily customizable and hosted on GitHub Pages.
-{: .fs-6 .fw-300 } -->
+An Incident Management System specialized for Elections.
+{: .fs-6 .fw-300 }
 
 [Get started now](#getting-started){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/ECLK/IncidentManagement){: .btn .fs-5 .mb-4 .mb-md-0 }
 
@@ -20,17 +20,39 @@ permalink: /
 
 ### Dependencies
 
-Just the Docs is built for [Jekyll](https://jekyllrb.com), a static site generator. View the [quick start guide](https://jekyllrb.com/docs/) for more information. Just the Docs requires no special plugins and can run on GitHub Pages' standard Jekyll compiler. The [Jekyll SEO Tag plugin](https://github.com/jekyll/jekyll-seo-tag) is included by default (no need to run any special installation) to inject SEO and open graph metadata on docs pages. For information on how to configure SEO and open graph metadata visit the [Jekyll SEO Tag usage guide](https://jekyll.github.io/jekyll-seo-tag/usage/).
+#### FRONTEND 
+  - Language: Javascript
+  - Framework: ReactJS
 
-### Quick start: Use as a GitHub Pages remote theme
+#### BACKEND
+  - Language: Python
+  - Framework: Django
 
-1. Add Just the Docs to your Jekyll site's `_config.yml` as a [remote theme](https://blog.github.com/2017-11-29-use-any-theme-with-github-pages/)
-```yaml
-remote_theme: pmarsceill/just-the-docs
-```
-<small>You must have GitHub Pages enabled on your repo, one or more Markdown files, and a `_config.yml` file. [See an example repository](https://github.com/pmarsceill/jtd-remote)</small>
+### Quick start: Use Docker-Compose 
 
-### Local installation: Use the gem-based theme
+#### BACKEND
+1. Make sure Docker is installed and running.
+2. Navigate to `/backend` directory
+3. Run ```$ docker-compose build```
+4. Run ```$ docker-compose up``` <small>At the very first run django will start before mysql by which will result an error for django to start. Stop and re-run.</small>
+5. Open a new terminal, navigate to `backend` folder
+6. Run ```$ docker-compose exec djangoapp python manage.py migrate```
+7. Run ```$ docker-compose exec djangoapp python manage.py createsuperuser``` and enter superuser information when prompted.
+8. Run the seeder as ```$ docker-compose exec djangoapp python manage.py loaddata category channel province district police politicalparty segment```
+9. In order to add predefined users, run users seeder as ```$ docker-compose exec djangoapp python manage.py loaddata users```
+10. Server runs at 8000
+
+As per quick start we have add users by seeders at `step-9`, where you can get and idea how the heirarchy is implemented within the system. You may skip `step-9` on production and have it your way.
+
+#### FRONTEND 
+1. Make sure backend server is running.
+2. Navigate to `/frontend` directory.
+3. Run ```$ docker-compose build```
+4. Run ```$ docker-compose up```
+
+This is production build, thus not development friendly. For development purposes try [Local Installation](#local-installation). 
+
+### Local installation: 
 
 1. Install the Ruby Gem
 ```bash
