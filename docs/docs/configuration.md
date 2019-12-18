@@ -8,7 +8,7 @@ nav_order: 2
 {: .no_toc }
 
 
-Just the Docs has some specific configuration parameters that can be defined in your Jekyll site's _config.yml file.
+Configuration parameters.
 {: .fs-6 .fw-300 }
 
 ## Table of contents
@@ -20,69 +20,53 @@ Just the Docs has some specific configuration parameters that can be defined in 
 ---
 
 
-View this site's [_config.yml](https://github.com/pmarsceill/just-the-docs/tree/master/_config.yml) file as an example.
 
-## Site logo
+## Database
+
+```python
+# backend/src/settings.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'mysql.connector.django', 
+        'NAME': env_var('DATABASE_NAME', 'incident_prod'),
+        'USER': env_var('DATABASE_USER', 'root'),
+        'PASSWORD': env_var('DATABASE_PWD', 'root'),
+        'HOST': env_var('DATABASE_HOST', 'localhost'),   # Or an IP Address that your DB is hosted on
+        'PORT': env_var('DATABASE_PORT', '3306'),
+    }
+}
+```
+Here it first looks for the particular variable value on environment by the method `env_var()`. When no value found, will use the 2nd parameter as the value.
+
+OR
 
 ```yaml
-# Set a path/url to a logo that will be displayed instead of the title
-logo: "/assets/images/just-the-docs.png"
+# backend/.env
+DATABASE_HOST=localhost
+DATABASE_PORT=3306
+DATABASE_USER=root
+DATABASE_PWD=toor
+DATABASE_NAME=incidents
 ```
 
-## Search
+## Google reCaptcha
 
+### reCaptcha secret key
+{: .no_toc }
 ```yaml
-# Enable or disable the site search
-# Supports true (default) or false
-search_enabled: true
-
-# Enable support for hyphenated search words:
-search_tokenizer_separator: /[\s/]+/
-
+# backend/.env
+RECAPTCHA_SECRET_KEY=
 ```
 
-## Aux links
-
+### reCaptcha site key
+{: .no_toc }
 ```yaml
-# Aux links for the upper right navigation
-aux_links:
-  "Just the Docs on GitHub":
-    - "//github.com/pmarsceill/just-the-docs"
+# frontend/.env
+REACT_APP_RECAPTCHA_SITEKEY=
 ```
 
-## Heading anchor links
-
+If using docker, update the particular Dockerfile, adding as a environment variable, since build process taking place.
+Therefore it should be added before `RUN npm run build`.
 ```yaml
-# Heading anchor links appear on hover over h1-h6 tags in page content
-# allowing users to deep link to a particular heading on a page.
-#
-# Supports true (default) or false/nil
-heading_anchors: true
-```
-
-## Footer content
-
-```yaml
-# Footer content appears at the bottom of every page's main content
-footer_content: "Copyright &copy; 2017-2019 Patrick Marsceill. Distributed by an <a href=\"https://github.com/pmarsceill/just-the-docs/tree/master/LICENSE.txt\">MIT license.</a>"
-```
-
-## Color scheme
-
-```yaml
-# Color scheme currently only supports "dark" or nil (default)
-color_scheme: "dark"
-```
-<button class="btn js-toggle-dark-mode">Preview dark color scheme</button>
-
-<script type="text/javascript" src="{{ "/assets/js/dark-mode-preview.js" | absolute_url }}"></script>
-
-See [Customization]({{ site.baseurl }}{% link docs/customization.md %}) for more information.
-
-## Google Analytics
-
-```yaml
-# Google Analytics Tracking (optional)
-# e.g, UA-1234567-89
-ga_tracking: UA-5555555-55
+ENV REACT_APP_RECAPTCHA_SITEKEY=
 ```
