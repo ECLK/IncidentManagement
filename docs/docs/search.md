@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Search
-nav_order: 7
+title: 404
+nav_exclude: true
 ---
 
 # Search

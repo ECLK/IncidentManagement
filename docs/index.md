@@ -20,69 +20,115 @@ An Incident Management System specialized for Elections.
 
 ### Dependencies
 
-#### FRONTEND 
-  - Language: Javascript
-  - Framework: ReactJS
-
 #### BACKEND
   - Language: Python
   - Framework: Django
+
+#### FRONTEND 
+  - Language: Javascript
+  - Framework: ReactJS
 
 ### Quick start: Use Docker-Compose 
 
 #### BACKEND
 1. Make sure Docker is installed and running.
-2. Navigate to `/backend` directory
-3. Run ```$ docker-compose build```
-4. Run ```$ docker-compose up``` <small>At the very first run django will start before mysql by which will result an error for django to start. Stop and re-run.</small>
-5. Open a new terminal, navigate to `backend` folder
-6. Run ```$ docker-compose exec djangoapp python manage.py migrate```
-7. Run ```$ docker-compose exec djangoapp python manage.py createsuperuser``` and enter superuser information when prompted.
-8. Run the seeder as ```$ docker-compose exec djangoapp python manage.py loaddata category channel province district police politicalparty segment```
-9. In order to add predefined users, run users seeder as ```$ docker-compose exec djangoapp python manage.py loaddata users```
-10. Server runs at 8000
+2. Navigate to `/backend` directory on terminal.
+3. Build the docker image
+```bash
+$ docker-compose build
+```
+4. Create and run a new docker container instance.
+```bash
+$ docker-compose up
+``` 
+<small>At the very first run django will start before mysql by which will result an error for django to start. Stop (`ctrl + c`) and re-run.</small>
+5. Open a new terminal (window/tab), navigate to `backend` folder
+6. Run the migration to populate the data tables
+```bash
+$ docker-compose exec djangoapp python manage.py migrate
+```
+7. Create superuser account and enter information when prompted.
+```bash
+$ docker-compose exec djangoapp python manage.py createsuperuser
+```
+8. Run the seeder to populate data on the DB.
+```bash
+$ docker-compose exec djangoapp python manage.py loaddata category channel province district police politicalparty segment
+```
+9. In order to add predefined users, run users seeder.
+```bash 
+$ docker-compose exec djangoapp python manage.py loaddata users
+```
+<small>You may skip this step to implement you own user hierarchy.</small>
+10. Server now runs at [http://localhost:8000/](http://localhost:8000/).
 
-As per quick start we have add users by seeders at `step-9`, where you can get and idea how the heirarchy is implemented within the system. You may skip `step-9` on production and have it your way.
 
 #### FRONTEND 
 1. Make sure backend server is running.
-2. Navigate to `/frontend` directory.
-3. Run ```$ docker-compose build```
-4. Run ```$ docker-compose up```
-
-This is production build, thus not development friendly. For development purposes try [Local Installation](#local-installation). 
-
-### Local installation: 
-
-1. Install the Ruby Gem
+2. Navigate to `/frontend` directory on terminal.
+3. Build the docker image
 ```bash
-$ gem install just-the-docs
+$ docker-compose build
 ```
-```yaml
-# .. or add it to your your Jekyll site’s Gemfile
-gem "just-the-docs"
-```
-2. Add Just the Docs to your Jekyll site’s `_config.yml`
-```yaml
-theme: "just-the-docs"
-```
-3. _Optional:_ Initialize search data (creates `search-data.json`)
+4. Create and run a new docker container instance.
 ```bash
-$ bundle exec just-the-docs rake search:init
+$ docker-compose up
 ```
-3. Run you local Jekyll server
-```bash
-$ jekyll serve
-```
-```bash
-# .. or if you're using a Gemfile (bundler)
-$ bundle exec jekyll serve
-```
-4. Point your web browser to [http://localhost:4000](http://localhost:4000)
+6. Server now runs at [http://localhost:3000/](http://localhost:3000/). 
 
-If you're hosting your site on GitHub Pages, [set up GitHub Pages and Jekyll locally](https://help.github.com/en/articles/setting-up-your-github-pages-site-locally-with-jekyll) so that you can more easily work in your development environment.
+This is production build, runs locally, therefore not development friendly. For development purposes try [Local Installation](#local-installation). 
 
-### Configure Just the Docs
+
+### Local installation: for Development 
+
+#### BACKEND
+1. Make sure you have Python 3 and Mysql 8 installed. (for multiple versions you can use multiple environments with [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/install.html)).
+2. Navigate to `/backend` directory on terminal.
+3. Create new database and update database connection data on `/backend/src/settings.py` or `/backend/.env/` file.
+4. Install all necessary python packages along with Django.
+```bash
+$ pip install -r requirements.txt
+```
+5. Run migrations for populate tables to DB.
+```bash
+$ python manage.py migate
+```
+6. Create superuser account and enter information when prompted.
+```bash
+$ docker-compose exec djangoapp python manage.py createsuperuser
+```
+7. Run the seeder to populate data on the DB.
+```bash
+$ docker-compose exec djangoapp python manage.py loaddata category channel province district police politicalparty segment
+```
+8. In order to add predefined users, run users seeder. <small>You may skip this step to implement you own user hierarchy.</small>
+```bash 
+$ docker-compose exec djangoapp python manage.py loaddata users
+```
+9. Run the server locally on port 8000 and point your web browser to [http://localhost:8000](http://localhost:8000) to view swagger view for API implementation.
+```bash
+$ python manage.py runserver 0.0.0.0:8000
+```
+<small>Here you will now see only the public API list. You need to login on admin panel and visit back to baseurl (locally its: http://localhost:8000/) to see all API Endpoints</small>
+10. Visit [http://localhost:8000/admin](http://localhost:8000/admin) and login using credentials of the superuser you created.
+
+You may also use the [Docker-Compose implementation](#backend-1) for development, instead of these steps.
+
+#### FRONTEND
+1. Make sure Node is installed and then backend API server is running.
+2. Set required configurations [Check configuration options]({{ site.baseurl }}{% link docs/configuration.md %}).
+3. Navigate to `/frontend` directory on terminal. 
+4. Install required packages
+```bash
+npm install
+```
+5. Run the frontend server.
+```bash
+npm start
+```
+6. Server now runs at [http://localhost:3000/](http://localhost:3000/). 
+
+### Configure 
 
 - [See configuration options]({{ site.baseurl }}{% link docs/configuration.md %})
 
@@ -90,18 +136,17 @@ If you're hosting your site on GitHub Pages, [set up GitHub Pages and Jekyll loc
 
 ## About the project
 
-Just the Docs is &copy; 2017-2019 by [Patrick Marsceill](http://patrickmarsceill.com).
+An Incident Management System specialized for Elections specifically designed for and managed by Election Commission of Sri Lanka.
 
 ### License
 
-Just the Docs is distributed by an [MIT license](https://github.com/pmarsceill/just-the-docs/tree/master/LICENSE.txt).
+Incident Management System is distributed by an [MIT license](https://github.com/ECLK/IncidentManagement/blob/master/LICENSE.md).
 
 ### Contributing
 
-When contributing to this repository, please first discuss the change you wish to make via issue,
-email, or any other method with the owners of this repository before making a change. Read more about becoming a contributor in [our GitHub repo](https://github.com/pmarsceill/just-the-docs#contributing).
+When contributing to this repository, please first discuss the change you wish to make, by commenting on a particular issue, by email or by joining our mailling list via [https://groups.google.com/forum/#!forum/lsf-elections](https://groups.google.com/forum/#!forum/lsf-elections) before making a change.
 
-#### Thank you to the contributors of Just the Docs!
+#### Thank you to the contributors of Incident Management!
 
 <ul class="list-style-none">
 {% for contributor in site.github.contributors %}
@@ -113,6 +158,6 @@ email, or any other method with the owners of this repository before making a ch
 
 ### Code of Conduct
 
-Just the Docs is committed to fostering a welcoming community.
+Incident Management System is committed to fostering a welcoming community for betterment and growth.
 
-[View our Code of Conduct](https://github.com/pmarsceill/just-the-docs/tree/master/CODE_OF_CONDUCT.md) on our GitHub repository.
+[View our Code of Conduct](https://github.com/ECLK/IncidentManagement/blob/master/CODE_OF_CONDUCT.md) on our GitHub repository.
