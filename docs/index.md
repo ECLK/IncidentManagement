@@ -60,7 +60,7 @@ $ docker-compose exec djangoapp python manage.py loaddata category channel provi
 $ docker-compose exec djangoapp python manage.py loaddata users
 ```
 <small>You may skip this step to implement you own user hierarchy.</small>
-10. Server now runs at localhost on port 8000.
+10. Server now runs at [http://localhost:8000/](http://localhost:8000/).
 
 
 #### FRONTEND 
@@ -74,47 +74,61 @@ $ docker-compose build
 ```bash
 $ docker-compose up
 ```
+6. Server now runs at [http://localhost:3000/](http://localhost:3000/). 
 
-This is production build, thus not development friendly. For development purposes try [Local Installation](#local-installation). 
+This is production build, runs locally, therefore not development friendly. For development purposes try [Local Installation](#local-installation). 
 
 
-### Local installation: 
+### Local installation: for Development 
 
 #### BACKEND
 1. Make sure you have Python 3 and Mysql 8 installed. (for multiple versions you can use multiple environments with [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/install.html)).
 2. Navigate to `/backend` directory on terminal.
 3. Create new database and update database connection data on `/backend/src/settings.py` or `/backend/.env/` file.
-3. Install all necessary python packages along with Django.
+4. Install all necessary python packages along with Django.
 ```bash
 $ pip install -r requirements.txt
 ```
-4. Run migrations for populate tables to DB.
+5. Run migrations for populate tables to DB.
 ```bash
 $ python manage.py migate
 ```
-5. Create superuser account and enter information when prompted.
+6. Create superuser account and enter information when prompted.
 ```bash
 $ docker-compose exec djangoapp python manage.py createsuperuser
 ```
-6. Run the seeder to populate data on the DB.
+7. Run the seeder to populate data on the DB.
 ```bash
 $ docker-compose exec djangoapp python manage.py loaddata category channel province district police politicalparty segment
 ```
-7. In order to add predefined users, run users seeder.
+8. In order to add predefined users, run users seeder. <small>You may skip this step to implement you own user hierarchy.</small>
 ```bash 
 $ docker-compose exec djangoapp python manage.py loaddata users
 ```
-<small>You may skip this step to implement you own user hierarchy.</small>
-8. Run the server locally on port 8000 and point your web browser to [http://localhost:8000](http://localhost:8000) to view swagger view for API implementation.
+9. Run the server locally on port 8000 and point your web browser to [http://localhost:8000](http://localhost:8000) to view swagger view for API implementation.
 ```bash
 $ python manage.py runserver 0.0.0.0:8000
 ```
 <small>Here you will now see only the public API list. You need to login on admin panel and visit back to baseurl (locally its: http://localhost:8000/) to see all API Endpoints</small>
+10. Visit [http://localhost:8000/admin](http://localhost:8000/admin) and login using credentials of the superuser you created.
 
-Visit [http://localhost:8000/admin](http://localhost:8000/admin) and login using credentials of the superuser you created. 
+You may also use the [Docker-Compose implementation](#backend-1) for development, instead of these steps.
 
+#### FRONTEND
+1. Make sure Node is installed and then backend API server is running.
+2. Set required configurations [Check configuration options]({{ site.baseurl }}{% link docs/configuration.md %}).
+3. Navigate to `/frontend` directory on terminal. 
+4. Install required packages
+```bash
+npm install
+```
+5. Run the frontend server.
+```bash
+npm start
+```
+6. Server now runs at [http://localhost:3000/](http://localhost:3000/). 
 
-### Configure Just the Docs
+### Configure 
 
 - [See configuration options]({{ site.baseurl }}{% link docs/configuration.md %})
 
@@ -130,10 +144,9 @@ Incident Management System is distributed by an [MIT license](https://github.com
 
 ### Contributing
 
-When contributing to this repository, please first discuss the change you wish to make via issue,
-email, or any other method with the owners of this repository before making a change. Read more about becoming a contributor in [our GitHub repo](https://github.com/pmarsceill/just-the-docs#contributing).
+When contributing to this repository, please first discuss the change you wish to make, by commenting on a particular issue, by email or by joining our mailling list via [https://groups.google.com/forum/#!forum/lsf-elections](https://groups.google.com/forum/#!forum/lsf-elections) before making a change.
 
-#### Thank you to the contributors of Just the Docs!
+#### Thank you to the contributors of Incident Management!
 
 <ul class="list-style-none">
 {% for contributor in site.github.contributors %}
