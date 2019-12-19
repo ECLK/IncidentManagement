@@ -209,6 +209,294 @@
         "model": "auth.user",
         "pk": 8,
         "fields": {
+            "password": "pbkdf2_sha256$150000$vkya4v6QRNol$FknDOvEVusBJ2vA9GS6Unitph9Xv3ENB0j/USCmGJos=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "pleadership",
+            "first_name": "Police",
+            "last_name": "Leadership",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2019-11-07T13:22:01Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 9,
+        "fields": {
+            "password": "pbkdf2_sha256$150000$PXqJG3mZZ8wc$PO7sk1lqg33tJeVaYGJBACC/W31eQ+OFjny0N9d0q+k=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "pmanager",
+            "first_name": "Police",
+            "last_name": "Manager",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2019-11-07T13:22:35Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 10,
+        "fields": {
+            "password": "pbkdf2_sha256$150000$ml2FRTND8d2S$X6Y0xG1i+6julzq9hcr+OkUPbLid9K7Hnb3ZL/0pous=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "pdataentry",
+            "first_name": "Police",
+            "last_name": "Dataentry",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2019-11-07T13:23:06Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "custom_auth.organization",
+        "pk": 1,
+        "fields": {
+            "code": "eclk",
+            "displayName": "Election Commission",
+            "created_date": "2019-11-07T11:21:56.468Z"
+        }
+    },
+    {
+        "model": "custom_auth.organization",
+        "pk": 2,
+        "fields": {
+            "code": "police",
+            "displayName": "Police",
+            "created_date": "2019-11-07T11:22:08.958Z"
+        }
+    },
+    {
+        "model": "custom_auth.division",
+        "pk": 1,
+        "fields": {
+            "code": "ec-hq",
+            "organization": 1,
+            "division_type": "District-Branch",
+            "name": "EC HQ",
+            "is_default_division": true,
+            "is_hq": true,
+            "created_date": "2019-11-07T11:22:58.174Z"
+        }
+    },
+    {
+        "model": "custom_auth.division",
+        "pk": 2,
+        "fields": {
+            "code": "ec-cmb-city",
+            "organization": 1,
+            "division_type": "District-Branch",
+            "name": "EC Colombo City",
+            "is_default_division": false,
+            "is_hq": false,
+            "created_date": "2019-11-07T11:23:26.959Z"
+        }
+    },
+    {
+        "model": "custom_auth.division",
+        "pk": 3,
+        "fields": {
+            "code": "ec-kegalle",
+            "organization": 1,
+            "division_type": "District-Branch",
+            "name": "EC Kegalle",
+            "is_default_division": false,
+            "is_hq": false,
+            "created_date": "2019-11-07T11:23:46.879Z"
+        }
+    },
+    {
+        "model": "custom_auth.division",
+        "pk": 4,
+        "fields": {
+            "code": "police-hq",
+            "organization": 2,
+            "division_type": "police-station",
+            "name": "Police HQ",
+            "is_default_division": false,
+            "is_hq": true,
+            "created_date": "2019-11-07T12:23:37.223Z"
+        }
+    },
+    {
+        "model": "custom_auth.division",
+        "pk": 5,
+        "fields": {
+            "code": "police-colombo",
+            "organization": 2,
+            "division_type": "police-station",
+            "name": "Colombo Police Station",
+            "is_default_division": false,
+            "is_hq": false,
+            "created_date": "2019-11-07T12:25:20.474Z"
+        }
+    },
+    {
+        "model": "custom_auth.division",
+        "pk": 6,
+        "fields": {
+            "code": "police-kegalle",
+            "organization": 2,
+            "division_type": "police-station",
+            "name": "Kegalle Police Station",
+            "is_default_division": false,
+            "is_hq": false,
+            "created_date": "2019-11-07T12:26:39.557Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 1,
+        "fields": {
+            "code": "leadership",
+            "displayName": "Leadership",
+            "organization": 1,
+            "parent": null,
+            "role": 1,
+            "created_date": "2019-11-07T11:25:55.250Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 2,
+        "fields": {
+            "code": "chief-manager",
+            "displayName": "Chief Manager",
+            "organization": 1,
+            "parent": 1,
+            "role": 2,
+            "created_date": "2019-11-07T11:26:37.838Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 3,
+        "fields": {
+            "code": "manager",
+            "displayName": "Manager",
+            "organization": 1,
+            "parent": 2,
+            "role": 2,
+            "created_date": "2019-11-07T11:27:18.895Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 4,
+        "fields": {
+            "code": "coordinator",
+            "displayName": "Coordinator",
+            "organization": 1,
+            "parent": 3,
+            "role": 3,
+            "created_date": "2019-11-07T11:28:39.330Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 5,
+        "fields": {
+            "code": "ec-dataentry",
+            "displayName": "EC Dataentry",
+            "organization": 1,
+            "parent": 4,
+            "role": 4,
+            "created_date": "2019-11-07T11:31:53.161Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 6,
+        "fields": {
+            "code": "guest",
+            "displayName": "Guest",
+            "organization": 1,
+            "parent": 4,
+            "role": 4,
+            "created_date": "2019-11-07T11:32:33.188Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 7,
+        "fields": {
+            "code": "police-leadership",
+            "displayName": "Leadership",
+            "organization": 2,
+            "parent": null,
+            "role": 5,
+            "created_date": "2019-11-07T12:43:22.793Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 8,
+        "fields": {
+            "code": "police-manager",
+            "displayName": "Manager",
+            "organization": 2,
+            "parent": 7,
+            "role": 5,
+            "created_date": "2019-11-07T12:44:53.044Z"
+        }
+    },
+    {
+        "model": "custom_auth.userlevel",
+        "pk": 9,
+        "fields": {
+            "code": "police-dataentry",
+            "displayName": "Dataentry",
+            "organization": 2,
+            "parent": 8,
+            "role": 4,
+            "created_date": "2019-11-07T12:45:33.538Z"
+        }
+    },
+    {
+        "model": "custom_auth.profile",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "organization": null,
+            "division": null,
+            "level": null
+        }
+    },
+    {
+        "model": "custom_auth.profile",
+        "pk": 2,
+        "fields": {
+            "user": 2,
+            "organization": 1,
+            "division": 1,
+            "level": 1
+        }
+    },
+    {
+        "model": "custom_auth.profile",
+        "pk": 3,
+        "fields": {
+            "user": 3,
+            "organization": 1,
+            "division": 1,
+            "level": 2
+        }
+    },
+    {
+        "model": "custom_auth.profile",
+        "pk": 4,
+        "fields": {
             "user": 4,
             "organization": 1,
             "division": 1,
@@ -222,7 +510,7 @@
             "user": 5,
             "organization": 1,
             "division": 1,
-            "level": 1
+            "level": 4
         }
     },
     {
@@ -232,7 +520,7 @@
             "user": 6,
             "organization": 1,
             "division": 1,
-            "level": 2
+            "level": 5
         }
     },
     {
@@ -240,9 +528,9 @@
         "pk": 7,
         "fields": {
             "user": 7,
-            "organization": 2,
-            "division": 4,
-            "level": 8
+            "organization": 1,
+            "division": 1,
+            "level": 6
         }
     },
     {
@@ -252,7 +540,7 @@
             "user": 8,
             "organization": 2,
             "division": 4,
-            "level": 6
+            "level": 7
         }
     },
     {
@@ -262,7 +550,7 @@
             "user": 9,
             "organization": 2,
             "division": 4,
-            "level": 7
+            "level": 8
         }
     },
     {
@@ -270,135 +558,9 @@
         "pk": 10,
         "fields": {
             "user": 10,
-            "organization": 1,
-            "division": 2,
-            "level": 4
-        }
-    },
-    {
-        "model": "custom_auth.profile",
-        "pk": 11,
-        "fields": {
-            "user": 11,
-            "organization": 1,
-            "division": 2,
-            "level": 3
-        }
-    },
-    {
-        "model": "custom_auth.profile",
-        "pk": 12,
-        "fields": {
-            "user": 12,
             "organization": 2,
-            "division": 5,
-            "level": 8
-        }
-    },
-    {
-        "model": "custom_auth.profile",
-        "pk": 13,
-        "fields": {
-            "user": 13,
-            "organization": 2,
-            "division": 5,
-            "level": 6
-        }
-    },
-    {
-        "model": "custom_auth.userlevel",
-        "pk": 1,
-        "fields": {
-            "code": "ec-cheif",
-            "displayName": "EC Chief Manager",
-            "organization": 1,
-            "parent": null,
-            "role": 1,
-            "created_date": "2019-11-15T07:19:26.453Z"
-        }
-    },
-    {
-        "model": "custom_auth.userlevel",
-        "pk": 2,
-        "fields": {
-            "code": "ec-manager",
-            "displayName": "EC Manager",
-            "organization": 1,
-            "parent": 1,
-            "role": 1,
-            "created_date": "2019-11-15T07:20:34.171Z"
-        }
-    },
-    {
-        "model": "custom_auth.userlevel",
-        "pk": 3,
-        "fields": {
-            "code": "ec-coordinator",
-            "displayName": "EC Coordinator",
-            "organization": 1,
-            "parent": 2,
-            "role": 2,
-            "created_date": "2019-11-15T07:23:57.861Z"
-        }
-    },
-    {
-        "model": "custom_auth.userlevel",
-        "pk": 4,
-        "fields": {
-            "code": "ec-dataentry",
-            "displayName": "EC Data Entry",
-            "organization": 1,
-            "parent": 3,
-            "role": 3,
-            "created_date": "2019-11-15T07:25:32.719Z"
-        }
-    },
-    {
-        "model": "custom_auth.userlevel",
-        "pk": 5,
-        "fields": {
-            "code": "guest",
-            "displayName": "Guest",
-            "organization": 1,
-            "parent": 3,
-            "role": 3,
-            "created_date": "2019-11-15T07:26:59.298Z"
-        }
-    },
-    {
-        "model": "custom_auth.userlevel",
-        "pk": 6,
-        "fields": {
-            "code": "police-manager",
-            "displayName": "Police Manager",
-            "organization": 2,
-            "parent": null,
-            "role": 4,
-            "created_date": "2019-11-15T07:30:40.049Z"
-        }
-    },
-    {
-        "model": "custom_auth.userlevel",
-        "pk": 7,
-        "fields": {
-            "code": "police-coordinator",
-            "displayName": "Police Coordinator",
-            "organization": 2,
-            "parent": 6,
-            "role": 4,
-            "created_date": "2019-11-15T07:31:39.733Z"
-        }
-    },
-    {
-        "model": "custom_auth.userlevel",
-        "pk": 8,
-        "fields": {
-            "code": "police-dataentry",
-            "displayName": "Police Data Entry",
-            "organization": 2,
-            "parent": 7,
-            "role": 3,
-            "created_date": "2019-11-15T07:32:04.928Z"
+            "division": 1,
+            "level": 9
         }
     }
 ]
