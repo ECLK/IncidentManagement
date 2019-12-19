@@ -1,402 +1,98 @@
 [
     {
-        "model": "custom_auth.organization",
+        "model": "auth.group",
         "pk": 1,
         "fields": {
-            "code": "ec",
-            "displayName": "Election Commision",
-            "created_date": "2019-11-15T07:01:35.427Z"
+            "name": "manager-view",
+            "permissions": [
+                102,
+                101,
+                95,
+                93,
+                94,
+                97,
+                104
+            ]
         }
     },
     {
-        "model": "custom_auth.organization",
+        "model": "auth.group",
         "pk": 2,
         "fields": {
-            "code": "police",
-            "displayName": "Police",
-            "created_date": "2019-11-15T07:01:43.786Z"
+            "name": "manager-action",
+            "permissions": [
+                98,
+                100,
+                102,
+                101,
+                103,
+                96,
+                181,
+                95,
+                93,
+                94,
+                97,
+                99,
+                104
+            ]
         }
     },
     {
-        "model": "custom_auth.division",
-        "pk": 1,
-        "fields": {
-            "code": "ec-hq",
-            "organization": 1,
-            "division_type": "district-branch",
-            "name": "EC HQ",
-            "is_default_division": true,
-            "is_hq": true,
-            "created_date": "2019-11-15T07:02:35.623Z"
-        }
-    },
-    {
-        "model": "custom_auth.division",
-        "pk": 2,
-        "fields": {
-            "code": "ec-galle",
-            "organization": 1,
-            "division_type": "district-branch",
-            "name": "EC Galle",
-            "is_default_division": false,
-            "is_hq": false,
-            "created_date": "2019-11-15T07:03:44.776Z"
-        }
-    },
-    {
-        "model": "custom_auth.division",
+        "model": "auth.group",
         "pk": 3,
         "fields": {
-            "code": "ec-kandy",
-            "organization": 1,
-            "division_type": "district-branch",
-            "name": "EC Kandy",
-            "is_default_division": false,
-            "is_hq": false,
-            "created_date": "2019-11-15T07:04:00.940Z"
+            "name": "coordinator-action",
+            "permissions": [
+                102,
+                101,
+                103,
+                96,
+                95,
+                93,
+                94,
+                97,
+                99,
+                104
+            ]
         }
     },
     {
-        "model": "custom_auth.division",
+        "model": "auth.group",
         "pk": 4,
-        "fields": {
-            "code": "police-hq",
-            "organization": 2,
-            "division_type": "police-station",
-            "name": "Police HQ",
-            "is_default_division": false,
-            "is_hq": true,
-            "created_date": "2019-11-15T07:04:47.826Z"
-        }
-    },
-    {
-        "model": "custom_auth.division",
-        "pk": 5,
-        "fields": {
-            "code": "police-Galle",
-            "organization": 2,
-            "division_type": "police-station",
-            "name": "Galle Police Station",
-            "is_default_division": false,
-            "is_hq": false,
-            "created_date": "2019-11-15T07:05:26.183Z"
-        }
-    },
-    {
-        "model": "custom_auth.division",
-        "pk": 6,
-        "fields": {
-            "code": "police-kandy",
-            "organization": 2,
-            "division_type": "police-station",
-            "name": "Kandy Police Station",
-            "is_default_division": false,
-            "is_hq": false,
-            "created_date": "2019-11-15T07:05:54.334Z"
-        }
-    },
-    {
-        "model": "auth.group",
-        "pk": 1,
-        "fields": {
-            "name": "manager-actions",
-            "permissions": [
-                189,
-                191,
-                193,
-                192,
-                194,
-                187,
-                195,
-                186,
-                184,
-                185,
-                188,
-                190,
-                196
-            ]
-        }
-    },
-    {
-        "model": "auth.group",
-        "pk": 2,
-        "fields": {
-            "name": "coordinator-actions",
-            "permissions": [
-                193,
-                192,
-                194,
-                187,
-                186,
-                184,
-                185,
-                188,
-                190,
-                196
-            ]
-        }
-    },
-    {
-        "model": "auth.group",
-        "pk": 3,
         "fields": {
             "name": "create-incident",
             "permissions": [
-                185
+                101
             ]
         }
     },
     {
         "model": "auth.group",
-        "pk": 4,
+        "pk": 5,
         "fields": {
-            "name": "police-actions",
+            "name": "police-manager-view",
             "permissions": [
-                193,
-                184,
-                185,
-                188
+                102,
+                93,
+                94,
+                97
             ]
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 25,
-        "fields": {
-            "group": 1,
-            "permission": 192
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 26,
-        "fields": {
-            "group": 1,
-            "permission": 193
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 27,
-        "fields": {
-            "group": 1,
-            "permission": 194
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 28,
-        "fields": {
-            "group": 1,
-            "permission": 195
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 29,
-        "fields": {
-            "group": 1,
-            "permission": 196
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 30,
-        "fields": {
-            "group": 1,
-            "permission": 184
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 31,
-        "fields": {
-            "group": 1,
-            "permission": 185
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 32,
-        "fields": {
-            "group": 1,
-            "permission": 186
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 33,
-        "fields": {
-            "group": 1,
-            "permission": 187
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 34,
-        "fields": {
-            "group": 1,
-            "permission": 188
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 35,
-        "fields": {
-            "group": 1,
-            "permission": 189
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 36,
-        "fields": {
-            "group": 1,
-            "permission": 190
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 37,
-        "fields": {
-            "group": 1,
-            "permission": 191
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 38,
-        "fields": {
-            "group": 2,
-            "permission": 192
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 39,
-        "fields": {
-            "group": 2,
-            "permission": 193
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 40,
-        "fields": {
-            "group": 2,
-            "permission": 194
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 41,
-        "fields": {
-            "group": 2,
-            "permission": 196
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 42,
-        "fields": {
-            "group": 2,
-            "permission": 184
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 43,
-        "fields": {
-            "group": 2,
-            "permission": 185
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 44,
-        "fields": {
-            "group": 2,
-            "permission": 186
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 45,
-        "fields": {
-            "group": 2,
-            "permission": 187
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 46,
-        "fields": {
-            "group": 2,
-            "permission": 188
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 47,
-        "fields": {
-            "group": 2,
-            "permission": 190
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 48,
-        "fields": {
-            "group": 3,
-            "permission": 185
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 49,
-        "fields": {
-            "group": 4,
-            "permission": 184
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 50,
-        "fields": {
-            "group": 4,
-            "permission": 193
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 51,
-        "fields": {
-            "group": 4,
-            "permission": 185
-        }
-    },
-    {
-        "model": "auth.group_permissions",
-        "pk": 52,
-        "fields": {
-            "group": 4,
-            "permission": 188
         }
     },
     {
         "model": "auth.user",
         "pk": 1,
         "fields": {
-            "password": "pbkdf2_sha256$150000$uFR73lee3zy1$jIp9YVA1W1gZVhFTh5JYzs3yGfAgrbyCRqZ3FV1UqQE=",
-            "last_login": "2019-11-27T13:25:57.160Z",
+            "password": "pbkdf2_sha256$150000$jknnn5Zmx8xG$1NbBKXYfCIq9XVTjJuK6Bh7jsap1/2D5CA7aIJD4Y4E=",
+            "last_login": "2019-11-07T19:16:05.560Z",
             "is_superuser": true,
             "username": "admin",
             "first_name": "",
             "last_name": "",
-            "email": "admin@email.com",
+            "email": "admin@email.co",
             "is_staff": true,
             "is_active": true,
-            "date_joined": "2019-11-14T19:24:24.954Z",
+            "date_joined": "2019-11-07T11:20:52.979Z",
             "groups": [],
             "user_permissions": []
         }
@@ -405,16 +101,16 @@
         "model": "auth.user",
         "pk": 2,
         "fields": {
-            "password": "pbkdf2_sha256$150000$bcCtYwHQi31d$yHif3mlzytQ0tDpMbf1ASFiHrPZK+yIJVZ91rwjsbjw=",
+            "password": "pbkdf2_sha256$150000$jiWyPzFEFL51$wK/MdHyX7FGII6RDuYGEtnbxK4Nqg3eoTrkehDWrf+0=",
             "last_login": null,
             "is_superuser": false,
-            "username": "guest",
-            "first_name": "",
-            "last_name": "",
+            "username": "leadership",
+            "first_name": "Leadership",
+            "last_name": "eclk",
             "email": "",
             "is_staff": false,
             "is_active": true,
-            "date_joined": "2019-11-15T07:42:54Z",
+            "date_joined": "2019-11-07T11:33:07Z",
             "groups": [],
             "user_permissions": []
         }
@@ -423,16 +119,16 @@
         "model": "auth.user",
         "pk": 3,
         "fields": {
-            "password": "pbkdf2_sha256$150000$8E8TANrF0WAD$9wo/u7i8y1+Ny0fECj8Rk3wPx6qxPoNl271GTkCBu90=",
+            "password": "pbkdf2_sha256$150000$EJFIhcurJ5fu$eENv1fH+DeRmTl6tbI3CT1yoZee9xXEckSF3qjPAN+8=",
             "last_login": null,
             "is_superuser": false,
-            "username": "dataentry@echq",
-            "first_name": "Dataentry",
-            "last_name": "ECHQ",
+            "username": "chief",
+            "first_name": "chief",
+            "last_name": "eclk",
             "email": "",
             "is_staff": false,
             "is_active": true,
-            "date_joined": "2019-11-15T07:47:30Z",
+            "date_joined": "2019-11-07T11:33:30Z",
             "groups": [],
             "user_permissions": []
         }
@@ -441,16 +137,16 @@
         "model": "auth.user",
         "pk": 4,
         "fields": {
-            "password": "pbkdf2_sha256$150000$ykVXrNGTFNxd$N8mSXAr+G2HnZqM1dX5Ya3btKJmMFXQbuwKGkBZp38U=",
+            "password": "pbkdf2_sha256$150000$8h1yy8wcvoju$iLXM3v1LvPV4QppiyhNPfY0d0/GShYO+8zHulgjVm5Y=",
             "last_login": null,
             "is_superuser": false,
-            "username": "coordinator@echq",
-            "first_name": "Coordinator",
-            "last_name": "ECHQ",
+            "username": "manager",
+            "first_name": "manager",
+            "last_name": "eclk",
             "email": "",
             "is_staff": false,
             "is_active": true,
-            "date_joined": "2019-11-15T07:48:23Z",
+            "date_joined": "2019-11-07T11:33:53Z",
             "groups": [],
             "user_permissions": []
         }
@@ -459,16 +155,16 @@
         "model": "auth.user",
         "pk": 5,
         "fields": {
-            "password": "pbkdf2_sha256$150000$HwZBDU04YE7c$lYFzyXIhlfRAgEzmBeCKo2cBVwpv3UfxFcQBlEGqcFU=",
+            "password": "pbkdf2_sha256$150000$5uJVokDyViZ8$IxjSVZtiZdC00WlyZV/l5K9ms13C5Zgvkc1J08aXbZI=",
             "last_login": null,
             "is_superuser": false,
-            "username": "cheif@echq",
-            "first_name": "Chief",
-            "last_name": "ECHQ",
+            "username": "coordinator",
+            "first_name": "coordinator",
+            "last_name": "eclk",
             "email": "",
             "is_staff": false,
             "is_active": true,
-            "date_joined": "2019-11-15T07:49:03Z",
+            "date_joined": "2019-11-07T11:34:15Z",
             "groups": [],
             "user_permissions": []
         }
@@ -477,16 +173,16 @@
         "model": "auth.user",
         "pk": 6,
         "fields": {
-            "password": "pbkdf2_sha256$150000$dmTk87WFucQ2$bmXxTP0CpX1wt+zYww548AR3onERtS7nLLfFcHnvj5k=",
+            "password": "pbkdf2_sha256$150000$wPdiF7Dmikz7$2ptl73Bd0RBvdMJm/ky/ssfDZZYASTYkRl+YpCNJP2c=",
             "last_login": null,
             "is_superuser": false,
-            "username": "manager@echq",
-            "first_name": "Manager",
-            "last_name": "ECHQ",
+            "username": "dataentry",
+            "first_name": "dataentry",
+            "last_name": "eclk",
             "email": "",
             "is_staff": false,
             "is_active": true,
-            "date_joined": "2019-11-15T07:49:49Z",
+            "date_joined": "2019-11-07T11:34:45Z",
             "groups": [],
             "user_permissions": []
         }
@@ -495,16 +191,16 @@
         "model": "auth.user",
         "pk": 7,
         "fields": {
-            "password": "pbkdf2_sha256$150000$SyIA8rRxgp2c$jfb2+TZ0Jfc1xcZSxpXiZgSVX79rk9wMdxonXrxRxzI=",
+            "password": "pbkdf2_sha256$150000$SsomDd3SAMuL$uBXWHhsye4QSbXHbq1GbClomu8Tj7Sx52Js+3TvSAJI=",
             "last_login": null,
             "is_superuser": false,
-            "username": "dataentry@policehq",
-            "first_name": "Dataentry",
-            "last_name": "PoliceHQ",
+            "username": "guest",
+            "first_name": "",
+            "last_name": "",
             "email": "",
             "is_staff": false,
             "is_active": true,
-            "date_joined": "2019-11-15T07:52:39Z",
+            "date_joined": "2019-11-07T11:36:18Z",
             "groups": [],
             "user_permissions": []
         }
@@ -512,144 +208,6 @@
     {
         "model": "auth.user",
         "pk": 8,
-        "fields": {
-            "password": "pbkdf2_sha256$150000$mERq9xauu2FE$5NcqPiacZVkwHEG6KVsoPbaXLLmlu0K1kXBRR9idVp8=",
-            "last_login": null,
-            "is_superuser": false,
-            "username": "manager@policehq",
-            "first_name": "Manager",
-            "last_name": "PoliceHQ",
-            "email": "",
-            "is_staff": false,
-            "is_active": true,
-            "date_joined": "2019-11-15T07:53:44Z",
-            "groups": [],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 9,
-        "fields": {
-            "password": "pbkdf2_sha256$150000$q5PNY0lauTQK$s7o8EosLG147wPPbbLDcIspCWeGccRpQ+ly43Mdapu0=",
-            "last_login": null,
-            "is_superuser": false,
-            "username": "coordinator@policehq",
-            "first_name": "Coordinator",
-            "last_name": "PoliceHQ",
-            "email": "",
-            "is_staff": false,
-            "is_active": true,
-            "date_joined": "2019-11-15T07:54:29Z",
-            "groups": [],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 10,
-        "fields": {
-            "password": "pbkdf2_sha256$150000$R4t7kBinCSTW$2CQV3wNcfqAJsSj6GKfW5ZIfS+F+iUXoPvT0EwoRCZc=",
-            "last_login": null,
-            "is_superuser": false,
-            "username": "dataentry@ecgalle",
-            "first_name": "Dataentry",
-            "last_name": "EC Galle",
-            "email": "",
-            "is_staff": false,
-            "is_active": true,
-            "date_joined": "2019-11-15T08:00:08Z",
-            "groups": [],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 11,
-        "fields": {
-            "password": "pbkdf2_sha256$150000$gjF57Z5fLS8L$gXM/yVBtXFqTb0buHg0FxYaUeHEiZVSqLj2wlJIXwCs=",
-            "last_login": null,
-            "is_superuser": false,
-            "username": "coordinator@ecgalle",
-            "first_name": "Coordinator",
-            "last_name": "EC Galle",
-            "email": "",
-            "is_staff": false,
-            "is_active": true,
-            "date_joined": "2019-11-15T08:01:33Z",
-            "groups": [],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 12,
-        "fields": {
-            "password": "pbkdf2_sha256$150000$2i9by8BhJHoh$G1wByASz/3kN2iGQe1RjDAzJyOJmcNLInsE3Ow5YZYE=",
-            "last_login": null,
-            "is_superuser": false,
-            "username": "dataentry@policegalle",
-            "first_name": "Dataentry",
-            "last_name": "PoliceGalle",
-            "email": "",
-            "is_staff": false,
-            "is_active": true,
-            "date_joined": "2019-11-15T08:03:06Z",
-            "groups": [],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 13,
-        "fields": {
-            "password": "pbkdf2_sha256$150000$mNPXptVKz68y$uNyTi2Zbh/XesfTqEM4raozjpvTadEZAbj4VoOnWzfs=",
-            "last_login": null,
-            "is_superuser": false,
-            "username": "manager@policegalle",
-            "first_name": "Manager",
-            "last_name": "PoliceGalle",
-            "email": "",
-            "is_staff": false,
-            "is_active": true,
-            "date_joined": "2019-11-15T08:04:01Z",
-            "groups": [],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "custom_auth.profile",
-        "pk": 1,
-        "fields": {
-            "user": 1,
-            "organization": null,
-            "division": null,
-            "level": null
-        }
-    },
-    {
-        "model": "custom_auth.profile",
-        "pk": 2,
-        "fields": {
-            "user": 2,
-            "organization": 1,
-            "division": 1,
-            "level": 5
-        }
-    },
-    {
-        "model": "custom_auth.profile",
-        "pk": 3,
-        "fields": {
-            "user": 3,
-            "organization": 1,
-            "division": 1,
-            "level": 4
-        }
-    },
-    {
-        "model": "custom_auth.profile",
-        "pk": 4,
         "fields": {
             "user": 4,
             "organization": 1,
