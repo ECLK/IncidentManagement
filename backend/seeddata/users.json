@@ -559,7 +559,7 @@
         "fields": {
             "user": 10,
             "organization": 2,
-            "division": 1,
+            "division": 4,
             "level": 9
         }
     }

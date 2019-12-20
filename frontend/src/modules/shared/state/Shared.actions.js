@@ -674,13 +674,13 @@ export function fetchSignIn(userName, password) {
             if(!signInData){
                 signInData = (await signIn(userName, password)).data;
                 
-                if(signInData.status === "success"){
+                if(signInData.data.token != ""){
                     if(getState().sharedReducer.signedInUser.rememberMe){
                         localStorage.write('ECIncidentManagementUser', signInData.data);
                         token = signInData.data.token;
                     }
                 }else{
-                    dispatch(requestSignInError(signInData.message));
+                    dispatch(requestSignInError({message:"Invalid username or password"}));
                 }
             }else{
                 token = signInData.token;
@@ -688,7 +688,7 @@ export function fetchSignIn(userName, password) {
             axios.defaults.headers.common['Authorization'] = "JWT " + token;
             dispatch(requestSignInSuccess(signInData.data));
         }catch(error){
-            dispatch(requestSignInError(error));
+            dispatch(requestSignInError({message:"Invalid username or password"}));
         }
     }
 }
