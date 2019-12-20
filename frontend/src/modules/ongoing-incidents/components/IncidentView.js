@@ -265,7 +265,7 @@ class NavTabs extends Component {
                             <div className={classes.editButtonWrapper}>
                                 {activeIncident.currentStatus !== 'CLOSED' && activeIncident.currentStatus !== 'INVALIDATED' && 
                                     <>
-                                        {activeIncident.currentStatus === 'VERIFIED' &&
+                                        { (activeIncident.currentStatus != 'NEW' && activeIncident.currentStatus != 'REOPENED') &&
                                             <ButtonBase disabled variant="outlined"  size="large" color="secondary" className={classes.verifiedButton} >
                                                 <DoneOutlineIcon className={classes.verifiedIcon}/>
                                                 VERIFIED
