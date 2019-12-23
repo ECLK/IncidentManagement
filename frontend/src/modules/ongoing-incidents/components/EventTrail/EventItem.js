@@ -153,8 +153,9 @@ function getSecondaryItem(event){
 
         if(workflowType === "Verify"){
             return (
-                <div><b>Has Proof?</b> <br /> 
-                    {workflowData.hasProof ? "Yes" : "No"}
+                <div>
+                    <div><b>Comment:</b> <br/> {workflowData.comment}</div>
+                    <b>Has Proof?</b> <br/> {workflowData.hasProof ? "Yes" : "No"}
                 </div>
             )
         }else if(workflowType === "Escalate External"){
