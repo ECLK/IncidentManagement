@@ -100,6 +100,9 @@ const EscallateOutsideModal = (props) => {
                     onChange = {(e)=>{handleValueChange(escallationInfo, 'entity_type', e.target.value, setEscallationInfo)}}
                     // onChange = {(e) => handleEntityTypeChange(e.target.value)}
                     margin="dense"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
                     >
                     {organizations.allIds.map(id => (   
                         <MenuItem key={id} value={id}>
@@ -119,6 +122,9 @@ const EscallateOutsideModal = (props) => {
                             value={escallationInfo.entity_user}
                             fullWidth
                             onChange = {(e)=>{handleValueChange(escallationInfo, 'entity_user', e.target.value, setEscallationInfo)}}
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
                         />
                     </>
                 ) }
@@ -144,6 +150,9 @@ const EscallateOutsideModal = (props) => {
                         onChange = {(e)=>{setDivision(e.target.value)}}
                         // onChange = {(e) => handleEntityTypeChange(e.target.value)}
                         margin="dense"
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
                         >
                         {divisions.idsByOrganization[escallationInfo.entity_type].map(did => (   
                             <MenuItem key={did} value={did}>
@@ -171,6 +180,9 @@ const EscallateOutsideModal = (props) => {
                             onChange = {(e)=>{handleValueChange(escallationInfo, 'entity_user', e.target.value, setEscallationInfo)}}
                             // onChange = {(e) => handleEntityTypeChange(e.target.value)}
                             margin="dense"
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
                             >
                             {users.idsByDivision[division].map(option => (   
                                 <MenuItem key={option} value={option}>
