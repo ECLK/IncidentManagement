@@ -528,6 +528,7 @@ class IncidentFormInternal extends Component {
                                                     type="datetime-local"
                                                     value={values.occured_date}
                                                     InputLabelProps={{ shrink: true }}
+                                                    defaultValue={moment().format("YYYY-MM-DDTHH:mm")}
                                                     onChange={handleChange}
                                                     inputProps={{
                                                         max: values.occurrence === "OCCURRED" ? moment().format("YYYY-MM-DDTHH:mm") : null,
