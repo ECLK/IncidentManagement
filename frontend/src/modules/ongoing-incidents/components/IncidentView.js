@@ -1,7 +1,6 @@
-import React, { Component, cloneElement } from 'react';
+import React, { Component, cloneElement, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -19,28 +18,16 @@ import SummaryTabView from './IncidentSummaryView';
 
 import {
     fetchIncidentEventTrail,
-    submitIncidentComment,
-    setIncidentStatus,
-    setIncidentSeverity,
     resolveEvent,
     fetchAllUsers,
-    setIncidentAssignee,
-    fetchEscallateIncident,
     attachFile,
     attachFileRequest
 } from '../state/OngoingIncidents.actions';
-import { 
-    fetchActiveIncidentData,
-    fetchChannels,
-    fetchElections,
-    fetchCategories,
-    fetchDistricts,
-    fetchProvinces
-} from '../../shared/state/Shared.actions';
 import { EventActions } from './EventTrail'
 import {showModal} from '../../modals/state/modal.actions'
 import { userCan, USER_ACTIONS } from '../../utils/userUtils';
 import FileUploader from '../../shared/components/FileUploader';
+import { loadIncident, updateIncidentStatus } from '../../incident/state/incidentActions';
 
 const styles = theme => ({
     label: {
@@ -105,308 +92,193 @@ const styles = theme => ({
 /**
  * Tabular componenet
  */
-class NavTabs extends Component {
+function NavTabs({ classes, match }) {
+    const [election, setElection] = useState({
+        id: 1,
+        name: "Provincial Election 2019",
+    });
 
+    const [category, setCategory] = useState({
+        id: 11,
+        top_category: "Violence",
+        sub_category: "Interrupting propaganda"
+    });
 
-    scrollToTop = () => {
+    const [files, setFiles] = useState([]);
+    const [activeIncident, setActiveIncident] = useState(null);
+    const [activeReporter, setActiveReporter] = useState(null);
+
+    const sharedState = useSelector(state => state.sharedReducer);
+    const {
+        provinces, districts,
+        divisionalSecretariats,
+        gramaNiladharis,
+        pollingDivisions,
+        pollingStations,
+        policeStations,
+        policeDivisions,
+        elections,
+        channels,
+        categories,
+        organizations,
+        divisions
+    } = sharedState;
+
+    const incidents = useSelector(state => state.incident.incidents);  
+    const reporters = useSelector(state => state.incident.reporters);   
+    const events = useSelector(state => state.ongoingIncidentReducer.events); 
+    const users = useSelector(state => state.user.users);
+    const activeUser = useSelector(state => state.sharedReducer.signedInUser.data);
+
+    const dispatch = useDispatch();
+    const changeStatus = (incidentId, status) => dispatch(updateIncidentStatus(incidentId, status));
+    const onEscalateClick = () => dispatch(showModal('ESCALATE_MODAL', { incidentId: activeIncident.id }));
+    const onVerifyClick = () => dispatch(showModal('VERIFY_MODAL', { incidentId: activeIncident.id }));
+    const attachFiles = (incidentId, formData) => dispatch(attachFile(incidentId, formData));
+    const onResolveEvent = (eventId, decision) => dispatch(resolveEvent(activeIncident.id, eventId, decision));
+
+    const scrollToTop = () => {
         window.scrollTo(0, 0);
     }
     
-    state = {
-        value: 0,
-        incident: null,
-        election: {
-            id: 1,
-            name: "Provincial Election 2019",
-        },
-        category: {
-            id: 11,
-            top_category: "Violence",
-            sub_category: "Interrupting propaganda"
-        },
-        isCommentVisible: false,
-        files: []
-    };
-
-    handleChange = (event, value) => {
-        this.setState({ value });
-    };
-
-    componentDidMount() {
-        const incidentId = this.props.match.params.paramIncidentId;
-        if (incidentId) {
-            this.props.getIncident(incidentId);
-            this.props.getEvents(incidentId);
-            this.props.getChannels();
-            this.props.getElections();
-            this.props.getCategories();
-            this.props.getProvinces();
-            this.props.getDistricts();
+    useEffect(() => {
+        const incidentId = match.params.paramIncidentId;
+        if(!incidents.byIds[incidentId] || !reporters.byIds[incidents.byIds[incidentId].reporter]){
+            dispatch(loadIncident(incidentId));
+        }else{
+            const incident = incidents.byIds[incidentId];
+            setActiveIncident(incident);
+            setActiveReporter(reporters.byIds[incident.reporter]);
+            dispatch(fetchIncidentEventTrail(incidentId));
         }
-        this.scrollToTop()
-        this.props.getUsers();
-    }
+    }, [incidents]);
 
-    showCommentInput = () => {
-        this.setState({ isCommentVisible: true })
-    }
+    useEffect(() => {
+        dispatch(fetchAllUsers());
+        scrollToTop();
+    }, []);
 
-    hideCommentInput = () => {
-        this.setState({ isCommentVisible: false })
-    }
-
-    onResolveEvent = (eventId, decision) => {
-        const { activeIncident } = this.props;
-
-        this.props.resolveEventApproval(activeIncident.id, eventId, decision);
-    }
-
-    onVerifyClick = () => {
-        this.props.showVerifyConfirmation(this.props.activeIncident.id)
-    }
-
-    onEscalateClick = () => {
-        this.props.showEscalateModal(this.props.activeIncident.id);
-    }
-
-    onRequestAdviceClick = () => {
-        this.props.showRequestAdviceModal(this.props.activeIncident.id, this.props.users);
-    }
-
-    onSelectFiles = (files) => {
-        this.setState({
-            files: files
-        })
-    }
-
-    onUploadClick = () => {
+    const onUploadClick = () => {
         const formData = new FormData();
-        for(var file of this.state.files){
+        for(var file of files){
             formData.append("files[]", file);
         }
-        this.props.attachFiles(this.props.activeIncident.id, formData);
-        this.setState({
-            files: []
-        })
+        attachFiles(activeIncident.id, formData);
+        setFiles([]);
     }
 
-    render() {
-        const { classes, postComment, activeIncident,
-            reporter, changeStatus, changeSeverity,
-            activeUser, users, getUsers,
-            setIncidentAssignee, events,
-            provinces, districts,
-            divisionalSecretariats,
-            gramaNiladharis,
-            pollingDivisions,
-            pollingStations,
-            policeStations,
-            policeDivisions,
-            elections,
-            channels,
-            categories,
-            organizations,
-            divisions
-        } = this.props;
+    const EditIncidentLink = props => <Link to={`/app/review/${activeIncident.id}/edit`} {...props} />
 
-        const EditIncidentLink = props => <Link to={`/app/review/${activeIncident.id}/edit`} {...props} />
-        
-        return (
-            <NoSsr>
-                <Grid container spacing={24} >
-                    <Grid item xs={9}>
-                        <div className={classes.mainArea}>
-                            <SummaryTabView 
-                                incident={activeIncident}
-                                category={this.state.category}
-                                election={this.state.election}
-                                reporter={reporter}
+    if(!activeIncident){
+        return <></>;
+    }
 
-                                provinces={provinces}
-                                districts={districts}
-                                divisionalSecretariats = {divisionalSecretariats}
-                                gramaNiladharis = {gramaNiladharis}
-                                pollingDivisions = {pollingDivisions}
-                                pollingStations = {pollingStations}
-                                policeStations = {policeStations}
-                                policeDivisions = {policeDivisions}
-                                elections ={elections}
-                                channels = {channels}
-                                categories = {categories}
+    return(
+        <NoSsr>
+            <Grid container spacing={24} >
+                <Grid item xs={9}>
+                    <div className={classes.mainArea}>
+                        <SummaryTabView 
+                            incident={activeIncident}
+                            category={category}
+                            election={election}
+                            reporter={activeReporter}
+
+                            provinces={provinces}
+                            districts={districts}
+                            divisionalSecretariats = {divisionalSecretariats}
+                            gramaNiladharis = {gramaNiladharis}
+                            pollingDivisions = {pollingDivisions}
+                            pollingStations = {pollingStations}
+                            policeStations = {policeStations}
+                            policeDivisions = {policeDivisions}
+                            elections ={elections}
+                            channels = {channels}
+                            categories = {categories}
+                        />
+                        <div>
+                            <EventList
+                                events={events}
+                                resolveEvent={onResolveEvent}
                             />
-                            <div>
-                                <EventList
-                                    events={this.props.events}
-                                    resolveEvent={this.onResolveEvent}
-                                />
-                                {activeIncident.currentStatus !== 'CLOSED'  &&
-                                    activeIncident.currentStatus !== 'INVALIDATED'  && 
-                                    <div className={classes.textEditorWrapper}>
-                                        <Editor/>
-                                        <FileUploader 
-                                            files={this.state.files}
-                                            setFiles={this.onSelectFiles}
-                                            watchedActions={[
-                                                attachFileRequest()
-                                            ]}
-                                        />
-                                        <div className={classes.uploadButtonWrapper}>
-                                        <Button disabled={!this.state.files.length} onClick={this.onUploadClick}>
-                                            Upload
-                                        </Button>
-                                        </div>
+                            {activeIncident.currentStatus !== 'CLOSED'  &&
+                                activeIncident.currentStatus !== 'INVALIDATED'  && 
+                                <div className={classes.textEditorWrapper}>
+                                    <Editor/>
+                                    <FileUploader 
+                                        files={files}
+                                        setFiles={setFiles}
+                                        watchedActions={[
+                                            attachFileRequest()
+                                        ]}
+                                    />
+                                    <div className={classes.uploadButtonWrapper}>
+                                    <Button disabled={!files.length} onClick={onUploadClick}>
+                                        Upload
+                                    </Button>
                                     </div>
-                                }
-                            </div>
+                                </div>
+                            }
                         </div>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <div className={classes.sidePane}>
-                            <div className={classes.editButtonWrapper}>
-                                {activeIncident.currentStatus !== 'CLOSED' && activeIncident.currentStatus !== 'INVALIDATED' && 
-                                    <>
-                                        { (activeIncident.currentStatus != 'NEW' && activeIncident.currentStatus != 'REOPENED') &&
-                                            <ButtonBase disabled variant="outlined"  size="large" color="secondary" className={classes.verifiedButton} >
-                                                <DoneOutlineIcon className={classes.verifiedIcon}/>
-                                                VERIFIED
-                                            </ButtonBase>
-                                        }
-                                        {userCan(activeUser, activeIncident, USER_ACTIONS.CAN_RUN_WORKFLOW) &&
-                                            <>
-                                            { (activeIncident.currentStatus === 'NEW' || activeIncident.currentStatus === 'REOPENED') &&
-                                                <Button variant="outlined" size="large" color="secondary" onClick={this.onVerifyClick} className={classes.editButton} >
-                                                    Verify
-                                                </Button>
-                                            }
-                                            </>
-                                        }
-                                        <Button component={EditIncidentLink} variant="outlined" size="large" color="primary" className={classes.editButton} >
-                                            <EditIcon className={classes.editIcon} />
-                                            Edit
-                                        </Button>
-                                    </>
-                                }
-                                {activeIncident.currentStatus === 'CLOSED' && 
-                                    <ButtonBase disabled variant="outlined"  size="large" color="primary" className={classes.verifiedButton} >
-                                        CLOSED
-                                    </ButtonBase>
-                                }
-                                {activeIncident.currentStatus === 'INVALIDATED' && 
-                                    <ButtonBase disabled variant="outlined"  size="large" color="primary"  >
-                                        INVALIDATED
-                                    </ButtonBase>
-                                }
-                            </div>
-                            <EventActions
-                                activeIncident={activeIncident}
-                                onStatusChange={changeStatus}
-                                onSeverityChange={changeSeverity}
-                                activeUser={activeUser}
-                                users={users}
-                                organizations={organizations}
-                                divisions={divisions}
-                                getUsers={getUsers}
-                                setIncidentAssignee={setIncidentAssignee}
-                                events={this.props.events}
-                                escallateIncident={this.onEscalateClick}
-                            />
-                        </div>
-
-                    </Grid>
+                    </div>
                 </Grid>
-            </NoSsr>
-        );
-    }
+                <Grid item xs={3}>
+                    <div className={classes.sidePane}>
+                        <div className={classes.editButtonWrapper}>
+                            {activeIncident.currentStatus !== 'CLOSED' && activeIncident.currentStatus !== 'INVALIDATED' && 
+                                <>
+                                    { (activeIncident.currentStatus != 'NEW' && activeIncident.currentStatus != 'REOPENED') &&
+                                        <ButtonBase disabled variant="outlined"  size="large" color="secondary" className={classes.verifiedButton} >
+                                            <DoneOutlineIcon className={classes.verifiedIcon}/>
+                                            VERIFIED
+                                        </ButtonBase>
+                                    }
+                                    {userCan(activeUser, activeIncident, USER_ACTIONS.CAN_RUN_WORKFLOW) &&
+                                        <>
+                                        { (activeIncident.currentStatus === 'NEW' || activeIncident.currentStatus === 'REOPENED') &&
+                                            <Button variant="outlined" size="large" color="secondary" onClick={onVerifyClick} className={classes.editButton} >
+                                                Verify
+                                            </Button>
+                                        }
+                                        </>
+                                    }
+                                    <Button component={EditIncidentLink} variant="outlined" size="large" color="primary" className={classes.editButton} >
+                                        <EditIcon className={classes.editIcon} />
+                                        Edit
+                                    </Button>
+                                </>
+                            }
+                            {activeIncident.currentStatus === 'CLOSED' && 
+                                <ButtonBase disabled variant="outlined"  size="large" color="primary" className={classes.verifiedButton} >
+                                    CLOSED
+                                </ButtonBase>
+                            }
+                            {activeIncident.currentStatus === 'INVALIDATED' && 
+                                <ButtonBase disabled variant="outlined"  size="large" color="primary"  >
+                                    INVALIDATED
+                                </ButtonBase>
+                            }
+                        </div>
+                        <EventActions
+                            activeIncident={activeIncident}
+                            onStatusChange={changeStatus}
+                            activeUser={activeUser}
+                            users={users}
+                            organizations={organizations}
+                            divisions={divisions}
+                            events={events}
+                            escallateIncident={onEscalateClick}
+                        />
+                    </div>
+
+                </Grid>
+            </Grid>
+        </NoSsr>
+    )
 }
 
 NavTabs.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state, ownProps) => {
-    return {
-        events: state.ongoingIncidentReducer.events,
-        activeIncident: state.sharedReducer.activeIncident.data,
-        reporter: state.sharedReducer.activeIncidentReporter,
-        provinces: state.sharedReducer.provinces,
-        districts: state.sharedReducer.districts,
-        divisionalSecretariats: state.sharedReducer.divisionalSecretariats ,
-        gramaNiladharis: state.sharedReducer.gramaNiladharis ,
-        pollingDivisions: state.sharedReducer.pollingDivisions ,
-        pollingStations: state.sharedReducer.pollingStations ,
-        policeStations: state.sharedReducer.policeStations ,
-        policeDivisions: state.sharedReducer.policeDivisions ,
-        channels: state.sharedReducer.channels ,
-        elections: state.sharedReducer.elections ,
-        categories: state.sharedReducer.categories,
-
-        activeUser: state.sharedReducer.signedInUser.data,
-        users: state.user.users,
-        divisions: state.user.divisions,
-        organizations: state.user.organizations,
-        ...ownProps
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getIncident: (incidentId) => {
-            dispatch(fetchActiveIncidentData(incidentId));
-        },
-        getEvents: (incidentId) => {
-            dispatch(fetchIncidentEventTrail(incidentId));
-        },
-        postComment: (incidentId, commentData) => {
-            dispatch(submitIncidentComment(incidentId, commentData));
-        },
-        changeStatus: (incidentId, status) => {
-            dispatch(setIncidentStatus(incidentId, status))
-        },
-        changeSeverity: (incidentId, severity) => {
-            dispatch(setIncidentSeverity(incidentId, severity))
-        },
-        resolveEventApproval: (incidentId, eventId, decision) => {
-            dispatch(resolveEvent(incidentId, eventId, decision));
-        },
-        getUsers: () => {
-            dispatch(fetchAllUsers());
-        },
-        setIncidentAssignee: (incidentId, uid, actionType) => {
-            dispatch(setIncidentAssignee(incidentId, uid, actionType));
-        },
-        escallateIncident: (incidentId, assigneeId) => {
-            dispatch(fetchEscallateIncident(incidentId, assigneeId))
-        },
-        showVerifyConfirmation: (incidentId) => {
-            dispatch(showModal('VERIFY_CONFIRM_MODAL',{incidentId}))
-        },
-        showEscalateModal: (incidentId) => {
-            dispatch(showModal('ESCALATE_MODAL', { incidentId }))
-        },
-        showRequestAdviceModal: (incidentId, users) => {
-            dispatch(showModal('REQUEST_ADVICE_MODAL', { incidentId, users }))
-        },
-        getChannels: () => {
-            dispatch(fetchChannels());
-        },
-        getElections: () => {
-            dispatch(fetchElections());
-        },
-        getCategories: () => {
-            dispatch(fetchCategories());
-        },
-        getProvinces: () => {
-            dispatch(fetchProvinces());
-        },
-        getDistricts: () => {
-            dispatch(fetchDistricts());
-        },
-        attachFiles: (incidentId, formData) => {
-            dispatch(attachFile(incidentId, formData));
-        }
-    }
-}
-
-export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    withStyles(styles))(NavTabs);
+export default withStyles(styles)(NavTabs);

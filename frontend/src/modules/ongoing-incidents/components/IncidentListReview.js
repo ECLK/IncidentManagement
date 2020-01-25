@@ -110,80 +110,85 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
             </TableRow>
           </TableHead>
           <TableBody>
-            {incidents.map(row => (
-              <TableRow
-                onClick={() => handleRowClick(row.id)}
-                hover
-                className={classes.row}
-                key={row.id}
-              >
-                <CustomTableCell scope="center">
-                  <p>{row.refId}</p>
-                </CustomTableCell>
-                <CustomTableCell align="center">
-                  <p>{moment(row.createdDate).format('YYYY-MM-DD  h:mm a')}</p>
-                </CustomTableCell>
-                <CustomTableCell scope="center">
-                  <p>{row.title}</p>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <p className="description">{row.description}</p>
-                </CustomTableCell>
-                <CustomTableCell align="center">
-                  <p>{row.currentStatus}</p>
-                </CustomTableCell>
-                <CustomTableCell align="center">
-                  <p>{row.incidentType}</p>
-                </CustomTableCell>
-                <CustomTableCell align="left">
-                  <p>{ categories.map((value, index)=>(value.id==row.category? value.code+" | "+value.sub_category:null)) }</p>
-                </CustomTableCell>
+            {incidents.allIds.map(id => {
+              const row = incidents.byIds[id];
 
-                {row.lastAssignment !== null && (
-                  <>
-                    <CustomTableCell align="center">
-                      <p>{row.lastAssignment.assigned_from}</p>
-                    </CustomTableCell>
-                    <CustomTableCell align="center">
-                      <p>{row.lastAssignment.assigned_to}</p>
-                    </CustomTableCell>
-                  </>
-                )}
+              return (
+                <TableRow
+                  onClick={() => handleRowClick(row.id)}
+                  hover
+                  className={classes.row}
+                  key={row.id}
+                >
+                  <CustomTableCell scope="center">
+                    <p>{row.refId}</p>
+                  </CustomTableCell>
+                  <CustomTableCell align="center">
+                    <p>{moment(row.createdDate).format('YYYY-MM-DD  h:mm a')}</p>
+                  </CustomTableCell>
+                  <CustomTableCell scope="center">
+                    <p>{row.title}</p>
+                  </CustomTableCell>
+                  <CustomTableCell>
+                    <p className="description">{row.description}</p>
+                  </CustomTableCell>
+                  <CustomTableCell align="center">
+                    <p>{row.currentStatus}</p>
+                  </CustomTableCell>
+                  <CustomTableCell align="center">
+                    <p>{row.incidentType}</p>
+                  </CustomTableCell>
+                  <CustomTableCell align="left">
+                    <p>{ categories.map((value, index)=>(value.id==row.category? value.code+" | "+value.sub_category:null)) }</p>
+                  </CustomTableCell>
 
-                {row.lastAssignment === null && (
-                  <>
-                    <CustomTableCell align="center">
-                      <p>N/A</p>
-                    </CustomTableCell>
-                    <CustomTableCell align="center">
-                      <p>N/A</p>
-                    </CustomTableCell>
-                  </>
-                )}
+                  {row.lastAssignment !== null && (
+                    <>
+                      <CustomTableCell align="center">
+                        <p>{row.lastAssignment.assigned_from}</p>
+                      </CustomTableCell>
+                      <CustomTableCell align="center">
+                        <p>{row.lastAssignment.assigned_to}</p>
+                      </CustomTableCell>
+                    </>
+                  )}
 
-                {/* <CustomTableCell align="center">
-                  <div style={{display:"flex"}}>
-                    {row.currentStatus === "NEW" && (
-                      <IconButton aria-label="delete" className={classes.margin} size="small" color="primary">
-                        <CheckIcon fontSize="inherit" />
+                  {row.lastAssignment === null && (
+                    <>
+                      <CustomTableCell align="center">
+                        <p>N/A</p>
+                      </CustomTableCell>
+                      <CustomTableCell align="center">
+                        <p>N/A</p>
+                      </CustomTableCell>
+                    </>
+                  )}
+
+                  {/* <CustomTableCell align="center">
+                    <div style={{display:"flex"}}>
+                      {row.currentStatus === "NEW" && (
+                        <IconButton aria-label="delete" className={classes.margin} size="small" color="primary">
+                          <CheckIcon fontSize="inherit" />
+                        </IconButton>
+                      )}
+                      <IconButton aria-label="delete" className={classes.margin} size="small">
+                        <AssignIcon fontSize="inherit" />
                       </IconButton>
-                    )}
-                    <IconButton aria-label="delete" className={classes.margin} size="small">
-                      <AssignIcon fontSize="inherit" />
-                    </IconButton>
-                    <IconButton aria-label="delete" className={classes.margin} 
-                        size="small"
-                        title="Manage Incident"
-                        onClick={() => {
-                          this.props.history.push(`/app/review/${row.id}`);
-                        }} >
-                      <EditIcon fontSize="inherit" />
-                    </IconButton>
-                  </div>
-                </CustomTableCell> */}
+                      <IconButton aria-label="delete" className={classes.margin} 
+                          size="small"
+                          title="Manage Incident"
+                          onClick={() => {
+                            this.props.history.push(`/app/review/${row.id}`);
+                          }} >
+                        <EditIcon fontSize="inherit" />
+                      </IconButton>
+                    </div>
+                  </CustomTableCell> */}
 
-              </TableRow>
-            ))}
+                </TableRow>
+                )
+              }
+            )}
           </TableBody>
           <TableFooter>
             {/* {pagination && ( */}

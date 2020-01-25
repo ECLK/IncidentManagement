@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux'
+import React, { Component, useState, useEffect } from 'react';
+import { connect, useSelector, useDispatch } from 'react-redux'
 import { withRouter } from "react-router";
 import { withStyles } from '@material-ui/core/styles';
 import { Formik } from 'formik';
@@ -68,7 +68,8 @@ import moment from 'moment';
 import FileUploader from '../../shared/components/FileUploader';
 import { showNotification } from '../../notifications/state/notifications.actions';
 import TelephoneInput from './TelephoneInput';
-import {useLoadingStatus} from '../../loading-spinners/loadingHook'
+import { useLoadingStatus } from '../../loading-spinners/loadingHook'
+import { createInternalIncident } from '../../incident/state/incidentActions';
 
 const styles = theme => ({
     root: {
@@ -126,9 +127,29 @@ const styles = theme => ({
     }
 })
 
-class IncidentFormInternal extends Component {
+function IncidentFormInternal(props) {
 
-    state = {
+
+    const dispatch = useDispatch();
+    const {
+        incident,
+        reporter,
+        channels,
+        categories,
+        districts,
+        provinces,
+        divisionalSecretariats,
+        gramaNiladharis,
+        pollingDivisions,
+        pollingStations,
+        policeStations,
+        policeDivisions,
+        wards,
+        elections,
+        politicalParties,
+    } = useSelector(state=>state.sharedReducer)
+
+    const [state, setState] = useState({
         incidentType: "COMPLAINT",
         infoChannel: "",
         title: "",
@@ -179,90 +200,81 @@ class IncidentFormInternal extends Component {
         showConfirmationModal: false,
         handleConfirmSubmit: false,
 
-    }
+    })
 
 
+    useEffect(() => {
 
-    componentDidMount() {
-        this.props.getChannels();
-        this.props.getElections();
-        this.props.getCategories();
-        this.props.getProvinces();
-        this.props.getDistricts();
-        this.props.getDivisionalSecretariats();
-        this.props.getGramaNiladharis();
-        this.props.getPollingDivisions();
-        this.props.getPollingStations();
-        this.props.getPoliceStations();
-        this.props.getPoliceDivisions();
-        this.props.getWards();
-        this.props.getPoliticalParties();
+        dispatch(fetchChannels())
+        dispatch(fetchElections());
+        dispatch(fetchCategories())
+        dispatch(fetchProvinces())
+        dispatch(fetchDistricts())
+        dispatch(fetchDivisionalSecretariats())
+        dispatch(fetchGramaNiladharis())
+        dispatch(fetchPollingDivisions())
+        dispatch(fetchPollingStations())
+        dispatch(fetchPoliceStations())
+        dispatch(fetchPoliceDivisions())
+        dispatch(fetchWards())
+        dispatch(fetchPoliticalParties())
 
-        this.props.resetIncidentForm();
+        dispatch(resetIncidentForm())
 
-        const { paramIncidentId } = this.props.match.params
+        const { paramIncidentId } = props.match.params
 
         if (paramIncidentId) {
-            this.props.getIncident(paramIncidentId);
+            dispatch(fetchActiveIncidentData(paramIncidentId))
         } else {
-            this.props.resetActiveIncident();
+            dispatch(resetActiveIncident())
         }
-    }
+    }, [])
 
-    handleSubmit = (values, actions) => {
-
-
-        const { paramIncidentId } = this.props.match.params
-
+    const handleSubmit = (values, actions) => {
+        const { paramIncidentId } = props.match.params
         // for(var v in values["detainedVehicles"]){
         //     if(values["detainedVehicles"][v]["is_private"] === "null"){
         //         values["detainedVehicles"][v]["is_private"] = false;
         //     }
         // }
-
-
         if (values.occured_date) {
             values.occured_date = moment(values.occured_date).format()
-        }else{
+        } else {
             // to avoid sending an empty string to backend.
             values.occured_date = null
         }
-
         if (paramIncidentId) {
-            this.props.updateInternalIncident(paramIncidentId, values);
-            this.props.history.push(`/app/review/${paramIncidentId}`);
+            dispatch(fetchUpdateInternalIncidentData(paramIncidentId, values));
+            props.history.push(`/app/review/${paramIncidentId}`);
         } else {
             const fileData = new FormData();
-            for (var file of this.state.files) {
+            for (var file of state.files) {
                 fileData.append("files[]", file);
             }
-            this.props.submitInternalIncident(values, fileData);
-            // this.props.history.push('/app/review');
+            dispatch(createInternalIncident(values, fileData))
+            // props.history.push('/app/review');
         }
     }
 
-    confirmDateAndSubmit = (values, actions) => {
+    const confirmDateAndSubmit = (values, actions) => {
         if (values.occured_date) {
-            this.handleSubmit(values, actions)
+            handleSubmit(values, actions)
         } else {
-            this.setState({ 
+            setState({
                 showConfirmationModal: true,
-                handleConfirmSubmit: ()=>{this.handleSubmit(values, actions)}
+                handleConfirmSubmit: () => { handleSubmit(values, actions) }
             });
         }
     }
 
-    getInitialValues = () => {
-        const { paramIncidentId } = this.props.match.params
-
+    const getInitialValues = () => {
+        const { paramIncidentId } = props.match.params
         if (!paramIncidentId) {
             // new incident form
-            return this.state;
+            return state;
         }
-
-        var initData = { ...this.state, ...this.props.incident };
-        const reporter = this.props.reporter;
-
+        var initData = { ...state, ...incident };
+        const reporter = reporter;
         if (reporter) {
             Object.assign(initData, {
                 "reporterName": reporter.name,
@@ -272,21 +284,19 @@ class IncidentFormInternal extends Component {
                 "reporterAddress": reporter.address
             });
         }
-
         if (initData.occured_date) {
             initData.occured_date = moment(initData.occured_date).format("YYYY-MM-DDTHH:mm")
         }
-
         return initData;
     }
 
-    handleFileSelect = (selectedFiles) => {
-        this.setState({
+    const handleFileSelect = (selectedFiles) => {
+        setState({
             files: selectedFiles
         })
     }
 
-    tableRowAdd = (setFieldValue, fieldName, tableData, record) => {
+    const tableRowAdd = (setFieldValue, fieldName, tableData, record) => {
         return new Promise((resolve, reject) => {
             tableData.push(record);
             setFieldValue(fieldName, tableData);
@@ -294,7 +304,7 @@ class IncidentFormInternal extends Component {
         })
     }
 
-    tableRowDelete = (setFieldValue, fieldName, tableData, record) => {
+    const tableRowDelete = (setFieldValue, fieldName, tableData, record) => {
         return new Promise((resolve, reject) => {
             const idx = record.tableData.id;
             tableData.splice(idx, 1);
@@ -303,7 +313,7 @@ class IncidentFormInternal extends Component {
         })
     }
 
-    tableRowUpdate = (setFieldValue, fieldName, tableData, oldRecord, newRecord) => {
+    const tableRowUpdate = (setFieldValue, fieldName, tableData, oldRecord, newRecord) => {
         return new Promise((resolve, reject) => {
             tableData[oldRecord.tableData.id] = newRecord;
             setFieldValue(fieldName, tableData);
@@ -312,7 +322,7 @@ class IncidentFormInternal extends Component {
     }
 
 
-    customValidations = (values) => {
+    const customValidations = (values) => {
         //date time is validated here since it has to be compared with the occurrence. 
         //cannot do this with yup.
         let errors = {}
@@ -342,987 +352,889 @@ class IncidentFormInternal extends Component {
         return errors;
     }
 
-    hideConfirmModal = (confirmed) => {
-        if(confirmed){
-            this.state.handleConfirmSubmit()
+    const hideConfirmModal = (confirmed) => {
+        if (confirmed) {
+            state.handleConfirmSubmit()
         }
-        this.setState({showConfirmationModal:false})
+        setState({ showConfirmationModal: false })
     }
 
-    render() {
-        const { classes, isIncidentSubmitting, isIncidentUpdating } = this.props;
-        const { paramIncidentId } = this.props.match.params
+    const { classes, isIncidentSubmitting, isIncidentUpdating } = props;
+    const { paramIncidentId } = props.match.params
 
-        //TODO: convert this component to a fuctional component and get isProcessing status from useLoadingStauts hook.
-        
-        const isProcessing = isIncidentSubmitting || isIncidentUpdating
-        const reinit = paramIncidentId ? true : false;
+    //TODO: convert this component to a fuctional component and get isProcessing status from useLoadingStauts hook.
 
-        const politicalPartyLookup = Object.assign({},
-            ...this.props.politicalParties.allCodes.map((c, k) => {
-                const curParty = this.props.politicalParties.byCode[c];
-                return { [curParty.code]: this.props.politicalParties.byCode[c].name }
-            })
-        );
+    const isProcessing = useLoadingStatus([]);
+    const reinit = paramIncidentId ? true : false;
 
-        //validation schema
-        const IncidentSchema = Yup.object().shape({
-            incidentType: Yup.mixed().required('Required'),
-            infoChannel: Yup.mixed().required('Required'),
-            title: Yup.string().required('Required'),
-            description: Yup.string().required('Required'),
-            occurrence: Yup.mixed().required('Required'),
-            category: Yup.mixed().required('Required'),
-            election: Yup.mixed().required('Required'),
-            severity: Yup.mixed().required('Required'),
-            reporterMobile: Yup.number(),
-            reporterEmail: Yup.string().email('Invalid email'),
-        });
+    const politicalPartyLookup = Object.assign({},
+        ...politicalParties.allCodes.map((c, k) => {
+            const curParty = politicalParties.byCode[c];
+            return { [curParty.code]: politicalParties.byCode[c].name }
+        })
+    );
 
-        return (
-            <div className={classes.root}>
-                <Formik
-                    enableReinitialize={reinit}
-                    initialValues={this.getInitialValues()}
-                    onSubmit={(values, actions) => {
-                        this.confirmDateAndSubmit(values, actions)
-                    }}
-                    validationSchema={IncidentSchema}
-                    validate={this.customValidations}
-                    render={
-                        ({
-                            handleSubmit,
-                            handleChange,
-                            handleBlur,
-                            values,
-                            errors,
-                            touched,
-                            setFieldValue,
-                            isValid }) => {
-                            return (
-                                <form
-                                    className={classes.container}
-                                    noValidate autoComplete="off"
-                                    onSubmit={(e) => {
-                                        e.preventDefault()
-                                        if (!isValid) {
-                                            this.props.showNotification("Missing required values")
-                                            window.scroll(0, 0)
-                                        }
-                                        handleSubmit(e)
-                                    }}
-                                >
-                                    <div style={{ display: "none" }}>{this.props.incident.id}</div>
-                                    {/* basic incident detail information */}
-                                    <Paper className={classes.paper}>
-                                        <Typography variant="h5" gutterBottom>
-                                            Basic Information
+    //validation schema
+    const IncidentSchema = Yup.object().shape({
+        incidentType: Yup.mixed().required('Required'),
+        infoChannel: Yup.mixed().required('Required'),
+        title: Yup.string().required('Required'),
+        description: Yup.string().required('Required'),
+        occurrence: Yup.mixed().required('Required'),
+        category: Yup.mixed().required('Required'),
+        election: Yup.mixed().required('Required'),
+        severity: Yup.mixed().required('Required'),
+        reporterMobile: Yup.number(),
+        reporterEmail: Yup.string().email('Invalid email'),
+    });
+
+    return (
+        <div className={classes.root}>
+            <Formik
+                enableReinitialize={reinit}
+                initialValues={getInitialValues()}
+                onSubmit={(values, actions) => {
+                    confirmDateAndSubmit(values, actions)
+                }}
+                validationSchema={IncidentSchema}
+                validate={customValidations}
+                render={
+                    ({
+                        handleSubmit,
+                        handleChange,
+                        handleBlur,
+                        values,
+                        errors,
+                        touched,
+                        setFieldValue,
+                        isValid }) => {
+                        return (
+                            <form
+                                className={classes.container}
+                                noValidate autoComplete="off"
+                                onSubmit={(e) => {
+                                    e.preventDefault()
+                                    if (!isValid) {
+                                        dispatch(showNotification({ message:"Missing required values" }, null))
+                                        window.scroll(0, 0)
+                                    }
+                                    handleSubmit(e)
+                                }}
+                            >
+                                <div style={{ display: "none" }}>{incident?incident.id:null}</div>
+                                {/* basic incident detail information */}
+                                <Paper className={classes.paper}>
+                                    <Typography variant="h5" gutterBottom>
+                                        Basic Information
                                     </Typography>
-                                        <Grid container spacing={24}>
-                                            <Grid item xs={12}>
-                                                <FormControl component="fieldset" className={classes.formControl}>
-                                                    <FormLabel component="legend">Type*</FormLabel>
-                                                    <RadioGroup
-                                                        id="incidentType"
-                                                        name="incidentType"
-                                                        className={classes.group}
-                                                        value={values.incidentType}
-                                                        onChange={handleChange}
-                                                        row
-                                                    >
-                                                        <FormControlLabel value="COMPLAINT" control={<Radio color="primary" />} label="Complaint" />
-                                                        <FormControlLabel value="INQUIRY" control={<Radio color="primary" />} label="Inquiry" />
-                                                    </RadioGroup>
-                                                    {errors.incidentType ? (<FormHelperText>{errors.incidentType}</FormHelperText>) : null}
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                <FormLabel component="legend">
-                                                    <div style={{ color: (errors.infoChannel && touched.infoChannel) ? 'red' : null }}>Incident receipt mode* </div>
-                                                </FormLabel>
-
-                                                {this.props.channels.map((c, k) => (
-                                                    <Button
-                                                        key={k}
-                                                        variant="contained"
-                                                        color={(values.infoChannel == c.id) ? "primary" : ""}
-                                                        className={classes.button}
-                                                        onClick={() => { setFieldValue("infoChannel", c.id, true) }}
-                                                    >
-                                                        {c.name}
-                                                    </Button>
-                                                ))}
-
-                                                <FormHelperText>
-                                                    {
-                                                        (errors.infoChannel && touched.infoChannel) ?
-                                                            <div style={{ color: 'red' }}>Required</div>
-                                                            :
-                                                            ''
-                                                    }
-                                                </FormHelperText>
-
-                                                {/* testbox to keep value of channel selected */}
-                                                <TextField
-                                                    id="infoChannel"
-                                                    name="infoChannel"
-                                                    className={classes.hide}
-                                                    value={values.infoChannel}
+                                    <Grid container spacing={24}>
+                                        <Grid item xs={12}>
+                                            <FormControl component="fieldset" className={classes.formControl}>
+                                                <FormLabel component="legend">Type*</FormLabel>
+                                                <RadioGroup
+                                                    id="incidentType"
+                                                    name="incidentType"
+                                                    className={classes.group}
+                                                    value={values.incidentType}
                                                     onChange={handleChange}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                <TextField
-                                                    type="text"
-                                                    name="title"
-                                                    label="Title*"
-                                                    placeholder="Title"
-                                                    className={classes.textField}
-                                                    value={values.title}
+                                                    row
+                                                >
+                                                    <FormControlLabel value="COMPLAINT" control={<Radio color="primary" />} label="Complaint" />
+                                                    <FormControlLabel value="INQUIRY" control={<Radio color="primary" />} label="Inquiry" />
+                                                </RadioGroup>
+                                                {errors.incidentType ? (<FormHelperText>{errors.incidentType}</FormHelperText>) : null}
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <FormLabel component="legend">
+                                                <div style={{ color: (errors.infoChannel && touched.infoChannel) ? 'red' : null }}>Incident receipt mode* </div>
+                                            </FormLabel>
+
+                                            {channels.map((c, k) => (
+                                                <Button
+                                                    key={k}
+                                                    variant="contained"
+                                                    color={(values.infoChannel == c.id) ? "primary" : ""}
+                                                    className={classes.button}
+                                                    onClick={() => { setFieldValue("infoChannel", c.id, true) }}
+                                                >
+                                                    {c.name}
+                                                </Button>
+                                            ))}
+
+                                            <FormHelperText>
+                                                {
+                                                    (errors.infoChannel && touched.infoChannel) ?
+                                                        <div style={{ color: 'red' }}>Required</div>
+                                                        :
+                                                        ''
+                                                }
+                                            </FormHelperText>
+
+                                            {/* testbox to keep value of channel selected */}
+                                            <TextField
+                                                id="infoChannel"
+                                                name="infoChannel"
+                                                className={classes.hide}
+                                                value={values.infoChannel}
+                                                onChange={handleChange}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                type="text"
+                                                name="title"
+                                                label="Title*"
+                                                placeholder="Title"
+                                                className={classes.textField}
+                                                value={values.title}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                error={touched.title && errors.title}
+                                                helperText={touched.title ? errors.title : null}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                type="text"
+                                                name="description"
+                                                label="Description*"
+                                                placeholder="Press enter for new lines."
+                                                className={classes.textField}
+                                                multiline
+                                                value={values.description}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                error={touched.description && errors.description}
+                                                helperText={touched.description ? errors.description : null}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <FormControl
+                                                error={touched.occurrence && errors.occurrence}
+                                                component="fieldset"
+                                                className={classes.formControl}>
+                                                <FormLabel component="legend">Occurrence*</FormLabel>
+                                                <RadioGroup
+                                                    name="occurrence"
+                                                    id="occurrence"
+                                                    className={classes.group}
+                                                    value={values.occurrence}
                                                     onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    error={touched.title && errors.title}
-                                                    helperText={touched.title ? errors.title : null}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                <TextField
-                                                    type="text"
-                                                    name="description"
-                                                    label="Description*"
-                                                    placeholder="Press enter for new lines."
-                                                    className={classes.textField}
-                                                    multiline
-                                                    value={values.description}
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    error={touched.description && errors.description}
-                                                    helperText={touched.description ? errors.description : null}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <FormControl
-                                                    error={touched.occurrence && errors.occurrence}
-                                                    component="fieldset"
-                                                    className={classes.formControl}>
-                                                    <FormLabel component="legend">Occurrence*</FormLabel>
-                                                    <RadioGroup
-                                                        name="occurrence"
-                                                        id="occurrence"
-                                                        className={classes.group}
-                                                        value={values.occurrence}
-                                                        onChange={handleChange}
-                                                        row={true}
-                                                    >
-                                                        <FormControlLabel value="OCCURRED" control={<Radio color="primary" />} label="Occurred" />
-                                                        <FormControlLabel value="OCCURRING" control={<Radio color="primary" />} label="Occurring" />
-                                                        <FormControlLabel value="WILL_OCCUR" control={<Radio color="primary" />} label="Will Occur" />
-                                                    </RadioGroup>
-                                                    {errors.occurrence ? (<FormHelperText>{errors.occurrence}</FormHelperText>) : null}
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={6} sm={3}>
-                                                <TextField
-                                                    id="occured_date"
-                                                    label="Incident date and time"
-                                                    type="datetime-local"
-                                                    value={values.occured_date}
-                                                    InputLabelProps={{ shrink: true }}
+                                                    row={true}
+                                                >
+                                                    <FormControlLabel value="OCCURRED" control={<Radio color="primary" />} label="Occurred" />
+                                                    <FormControlLabel value="OCCURRING" control={<Radio color="primary" />} label="Occurring" />
+                                                    <FormControlLabel value="WILL_OCCUR" control={<Radio color="primary" />} label="Will Occur" />
+                                                </RadioGroup>
+                                                {errors.occurrence ? (<FormHelperText>{errors.occurrence}</FormHelperText>) : null}
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={6} sm={3}>
+                                            <TextField
+                                                id="occured_date"
+                                                label="Incident date and time"
+                                                type="datetime-local"
+                                                value={values.occured_date}
+                                                InputLabelProps={{ shrink: true }}
+                                                onChange={handleChange}
+                                                inputProps={{
+                                                    max: values.occurrence === "OCCURRED" ? moment().format("YYYY-MM-DDTHH:mm") : null,
+                                                    min: values.occurrence === "WILL_OCCUR" ? moment().format("YYYY-MM-DDTHH:mm") : null
+                                                }}
+                                                error={errors.occured_date}
+                                                helperText={errors.occured_date}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <FormControl
+                                                className={classes.formControl}
+                                                error={touched.category && errors.category}
+                                            >
+                                                <InputLabel htmlFor="category">Category*</InputLabel>
+                                                <Select
+                                                    value={values.category}
                                                     onChange={handleChange}
                                                     inputProps={{
-                                                        max: values.occurrence === "OCCURRED" ? moment().format("YYYY-MM-DDTHH:mm") : null,
-                                                        min: values.occurrence === "WILL_OCCUR" ? moment().format("YYYY-MM-DDTHH:mm") : null
+                                                        name: 'category',
+                                                        id: 'category',
                                                     }}
-                                                    error={errors.occured_date}
-                                                    helperText={errors.occured_date}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <FormControl
-                                                    className={classes.formControl}
-                                                    error={touched.category && errors.category}
                                                 >
-                                                    <InputLabel htmlFor="category">Category*</InputLabel>
-                                                    <Select
-                                                        value={values.category}
-                                                        onChange={handleChange}
-                                                        inputProps={{
-                                                            name: 'category',
-                                                            id: 'category',
-                                                        }}
-                                                    >
-                                                        {this.props.categories.map((c, k) => (
-                                                            <MenuItem value={c.id} key={k}>
-                                                                <div className={classes.langCats}>
-                                                                    <div>{c.code}</div>
-                                                                    <div>|</div>
-                                                                    <div>{c.sub_category}</div>
-                                                                    <div>|</div>
-                                                                    <div> {c.sn_sub_category}</div>
-                                                                    <div>|</div>
-                                                                    <div> {c.tm_sub_category}</div>
-                                                                </div>
-                                                            </MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                    <FormHelperText>{(touched.category && errors.category) ? errors.category : ""}</FormHelperText>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <TextField
-                                                    type="text"
-                                                    name="otherCat"
-                                                    label="If Other Category, please describe here"
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    value={values.otherCat}
-                                                    className={classes.textField}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <FormControl error={touched.election && errors.election} className={classes.formControl}>
-                                                    <InputLabel htmlFor="election">Election*</InputLabel>
-                                                    <Select
-                                                        value={values.election}
-                                                        onChange={handleChange}
-                                                        inputProps={{
-                                                            name: 'election',
-                                                            id: 'election',
-                                                        }}
-                                                    >
-                                                        <MenuItem value=""> <em>None</em> </MenuItem>
-                                                        {this.props.elections.map((c, k) => (
-                                                            <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                    <FormHelperText>{(touched.election && errors.election) ? errors.election : ""}</FormHelperText>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <FormControl className={classes.formControl}>
-                                                    <InputLabel htmlFor="politicalParty">Reponsible Political Party</InputLabel>
-                                                    <Select
-                                                        value={values.politicalParty}
-                                                        onChange={handleChange}
-                                                        inputProps={{
-                                                            name: 'politicalParty',
-                                                            id: 'politicalParty',
-                                                        }}
-                                                    >
-                                                        <MenuItem value=""> <em>None</em> </MenuItem>
-                                                        {this.props.politicalParties.allCodes.map((c, k) => {
-                                                            let currParty = this.props.politicalParties.byCode[c]
-                                                            return (
-                                                                <MenuItem value={currParty.code} key={k}>
-                                                                    {currParty.name}
-                                                                </MenuItem>
-                                                            )
-                                                        })}
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <FormControl error={touched.severity && errors.severity} component="fieldset" className={classes.formControl}>
-                                                    <FormLabel component="legend">Severity</FormLabel>
-                                                    <RadioGroup
-                                                        name="severity"
-                                                        id="severity"
-                                                        value={values.severity}
-                                                        onChange={handleChange}
-                                                        row
-                                                    >
-                                                        <FormControlLabel
-                                                            value="1"
-                                                            control={
-                                                                <Radio
-                                                                    classes={{
-                                                                        root: classes.severityLow,
-                                                                        checked: classes.checked,
-                                                                    }}
-                                                                    checked={(values.severity == "1") ? true : false}
-                                                                />
-                                                            }
-                                                            label="1"
-                                                            labelPlacement="bottom"
-                                                            className={classes.radioItem}
-                                                            classes={{
-                                                                label: classes.severityLow,
-                                                            }}
-                                                        />
-                                                        <FormControlLabel
-                                                            value="2"
-                                                            control={
-                                                                <Radio
-                                                                    classes={{
-                                                                        root: classes.severityLow,
-                                                                        checked: classes.checked,
-                                                                    }}
-                                                                    checked={(values.severity == "2") ? true : false}
-                                                                />
-                                                            }
-                                                            label="2"
-                                                            labelPlacement="bottom"
-                                                            className={classes.radioItem}
-                                                            classes={{
-                                                                label: classes.severityLow,
-                                                            }}
-                                                        />
-                                                        <FormControlLabel
-                                                            value="3"
-                                                            control={
-                                                                <Radio
-                                                                    classes={{
-                                                                        root: classes.severityLow,
-                                                                        checked: classes.checked,
-                                                                    }}
-                                                                    checked={(values.severity == "3") ? true : false}
-                                                                />
-                                                            }
-                                                            label="3"
-                                                            labelPlacement="bottom"
-                                                            className={classes.radioItem}
-                                                            classes={{
-                                                                label: classes.severityLow,
-                                                            }}
-                                                        />
-                                                        <FormControlLabel
-                                                            value="4"
-                                                            control={
-                                                                <Radio
-                                                                    classes={{
-                                                                        root: classes.severityMedium,
-                                                                        checked: classes.checked,
-                                                                    }}
-                                                                    checked={(values.severity == "4") ? true : false}
-                                                                />
-                                                            }
-                                                            label="4"
-                                                            labelPlacement="bottom"
-                                                            className={classes.radioItem}
-                                                            classes={{
-                                                                label: classes.severityMedium,
-                                                            }}
-                                                        />
-                                                        <FormControlLabel
-                                                            value="5"
-                                                            control={
-                                                                <Radio
-                                                                    classes={{
-                                                                        root: classes.severityMedium,
-                                                                        checked: classes.checked,
-                                                                    }}
-                                                                    checked={(values.severity == "5") ? true : false}
-                                                                />
-                                                            }
-                                                            label="5"
-                                                            labelPlacement="bottom"
-                                                            className={classes.radioItem}
-                                                            classes={{
-                                                                label: classes.severityMedium,
-                                                            }}
-                                                        />
-                                                        <FormControlLabel
-                                                            value="6"
-                                                            control={
-                                                                <Radio
-                                                                    classes={{
-                                                                        root: classes.severityMedium,
-                                                                        checked: classes.checked,
-                                                                    }}
-                                                                    checked={(values.severity == "6") ? true : false}
-                                                                />
-                                                            }
-                                                            label="6"
-                                                            labelPlacement="bottom"
-                                                            className={classes.radioItem}
-                                                            classes={{
-                                                                label: classes.severityMedium,
-                                                            }}
-                                                        />
-                                                        <FormControlLabel
-                                                            value="7"
-                                                            control={
-                                                                <Radio
-                                                                    classes={{
-                                                                        root: classes.severityMedium,
-                                                                        checked: classes.checked,
-                                                                    }}
-                                                                    checked={(values.severity == "7") ? true : false}
-                                                                />
-                                                            }
-                                                            label="7"
-                                                            labelPlacement="bottom"
-                                                            className={classes.radioItem}
-                                                            classes={{
-                                                                label: classes.severityMedium,
-                                                            }}
-                                                        />
-                                                        <FormControlLabel
-                                                            value="8"
-                                                            control={<Radio
-                                                                classes={{
-                                                                    root: classes.severityHigh,
-                                                                    checked: classes.checked,
-                                                                }}
-                                                                checked={(values.severity == "8") ? true : false}
-                                                            />}
-                                                            label="8"
-                                                            labelPlacement="bottom"
-                                                            className={classes.radioItem}
-                                                            classes={{
-                                                                label: classes.severityHigh,
-                                                            }}
-                                                        />
-                                                        <FormControlLabel
-                                                            value="9"
-                                                            control={<Radio
-                                                                classes={{
-                                                                    root: classes.severityHigh,
-                                                                    checked: classes.checked,
-                                                                }}
-                                                                checked={(values.severity == "9") ? true : false}
-                                                            />}
-                                                            label="9"
-                                                            labelPlacement="bottom"
-                                                            className={classes.radioItem}
-                                                            classes={{
-                                                                label: classes.severityHigh,
-                                                            }}
-                                                        />
-                                                        <FormControlLabel
-                                                            value="10"
-                                                            control={<Radio
-                                                                classes={{
-                                                                    root: classes.severityHigh,
-                                                                    checked: classes.checked,
-                                                                }}
-                                                                checked={(values.severity == "10") ? true : false}
-                                                            />}
-                                                            label="10"
-                                                            labelPlacement="bottom"
-                                                            className={classes.radioItem}
-                                                            classes={{
-                                                                label: classes.severityHigh,
-                                                            }}
-                                                        />
-                                                    </RadioGroup>
-                                                    <FormHelperText>{(touched.severity && errors.severity) ? errors.severity : ""}</FormHelperText>
-                                                </FormControl>
-                                            </Grid>
-
-                                            {!paramIncidentId &&
-                                                <Grid item xs={12} sm={6}>
-                                                    <InputLabel htmlFor="election" >Upload File</InputLabel>
-                                                    <FileUploader
-                                                        files={this.state.files}
-                                                        setFiles={this.handleFileSelect}
-                                                    />
-                                                    {/* <DropZoneBase setSelectedFiles={this.handleFileSelect} /> */}
-                                                </Grid>
-                                            }
-
-
+                                                    {categories.map((c, k) => (
+                                                        <MenuItem value={c.id} key={k}>
+                                                            <div className={classes.langCats}>
+                                                                <div>{c.code}</div>
+                                                                <div>|</div>
+                                                                <div>{c.sub_category}</div>
+                                                                <div>|</div>
+                                                                <div> {c.sn_sub_category}</div>
+                                                                <div>|</div>
+                                                                <div> {c.tm_sub_category}</div>
+                                                            </div>
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                                <FormHelperText>{(touched.category && errors.category) ? errors.category : ""}</FormHelperText>
+                                            </FormControl>
                                         </Grid>
-                                    </Paper>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                type="text"
+                                                name="otherCat"
+                                                label="If Other Category, please describe here"
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                value={values.otherCat}
+                                                className={classes.textField}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <FormControl error={touched.election && errors.election} className={classes.formControl}>
+                                                <InputLabel htmlFor="election">Election*</InputLabel>
+                                                <Select
+                                                    value={values.election}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'election',
+                                                        id: 'election',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {elections.map((c, k) => (
+                                                        <MenuItem value={c.code} key={k}>{c.name}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                                <FormHelperText>{(touched.election && errors.election) ? errors.election : ""}</FormHelperText>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="politicalParty">Reponsible Political Party</InputLabel>
+                                                <Select
+                                                    value={values.politicalParty}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'politicalParty',
+                                                        id: 'politicalParty',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {politicalParties.allCodes.map((c, k) => {
+                                                        let currParty = politicalParties.byCode[c]
+                                                        return (
+                                                            <MenuItem value={currParty.code} key={k}>
+                                                                {currParty.name}
+                                                            </MenuItem>
+                                                        )
+                                                    })}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <FormControl error={touched.severity && errors.severity} component="fieldset" className={classes.formControl}>
+                                                <FormLabel component="legend">Severity</FormLabel>
+                                                <RadioGroup
+                                                    name="severity"
+                                                    id="severity"
+                                                    value={values.severity}
+                                                    onChange={handleChange}
+                                                    row
+                                                >
+                                                    <FormControlLabel
+                                                        value="1"
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityLow,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                                checked={(values.severity == "1") ? true : false}
+                                                            />
+                                                        }
+                                                        label="1"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityLow,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="2"
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityLow,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                                checked={(values.severity == "2") ? true : false}
+                                                            />
+                                                        }
+                                                        label="2"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityLow,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="3"
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityLow,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                                checked={(values.severity == "3") ? true : false}
+                                                            />
+                                                        }
+                                                        label="3"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityLow,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="4"
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityMedium,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                                checked={(values.severity == "4") ? true : false}
+                                                            />
+                                                        }
+                                                        label="4"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityMedium,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="5"
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityMedium,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                                checked={(values.severity == "5") ? true : false}
+                                                            />
+                                                        }
+                                                        label="5"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityMedium,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="6"
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityMedium,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                                checked={(values.severity == "6") ? true : false}
+                                                            />
+                                                        }
+                                                        label="6"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityMedium,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="7"
+                                                        control={
+                                                            <Radio
+                                                                classes={{
+                                                                    root: classes.severityMedium,
+                                                                    checked: classes.checked,
+                                                                }}
+                                                                checked={(values.severity == "7") ? true : false}
+                                                            />
+                                                        }
+                                                        label="7"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityMedium,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="8"
+                                                        control={<Radio
+                                                            classes={{
+                                                                root: classes.severityHigh,
+                                                                checked: classes.checked,
+                                                            }}
+                                                            checked={(values.severity == "8") ? true : false}
+                                                        />}
+                                                        label="8"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityHigh,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="9"
+                                                        control={<Radio
+                                                            classes={{
+                                                                root: classes.severityHigh,
+                                                                checked: classes.checked,
+                                                            }}
+                                                            checked={(values.severity == "9") ? true : false}
+                                                        />}
+                                                        label="9"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityHigh,
+                                                        }}
+                                                    />
+                                                    <FormControlLabel
+                                                        value="10"
+                                                        control={<Radio
+                                                            classes={{
+                                                                root: classes.severityHigh,
+                                                                checked: classes.checked,
+                                                            }}
+                                                            checked={(values.severity == "10") ? true : false}
+                                                        />}
+                                                        label="10"
+                                                        labelPlacement="bottom"
+                                                        className={classes.radioItem}
+                                                        classes={{
+                                                            label: classes.severityHigh,
+                                                        }}
+                                                    />
+                                                </RadioGroup>
+                                                <FormHelperText>{(touched.severity && errors.severity) ? errors.severity : ""}</FormHelperText>
+                                            </FormControl>
+                                        </Grid>
 
-                                    {/* Incident location information */}
-                                    <Paper className={classes.paper}>
-                                        <Typography variant="h5" gutterBottom>
-                                            Location Information
+                                        {!paramIncidentId &&
+                                            <Grid item xs={12} sm={6}>
+                                                <InputLabel htmlFor="election" >Upload File</InputLabel>
+                                                <FileUploader
+                                                    files={state.files}
+                                                    setFiles={handleFileSelect}
+                                                />
+                                                {/* <DropZoneBase setSelectedFiles={handleFileSelect} /> */}
+                                            </Grid>
+                                        }
+
+
+                                    </Grid>
+                                </Paper>
+
+                                {/* Incident location information */}
+                                <Paper className={classes.paper}>
+                                    <Typography variant="h5" gutterBottom>
+                                        Location Information
                                     </Typography>
-                                        <Grid container spacing={24}>
-                                            <Grid item xs={12}>
-                                                <TextField
-                                                    id="location"
-                                                    label="Location / Description"
-                                                    className={classes.textField}
-                                                    value={values.location}
+                                    <Grid container spacing={24}>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                id="location"
+                                                label="Location / Description"
+                                                className={classes.textField}
+                                                value={values.location}
+                                                onChange={handleChange}
+                                                multiline
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={8}>
+                                            <TextField
+                                                id="address"
+                                                label="Address"
+                                                className={classes.textField}
+                                                value={values.address}
+                                                onChange={handleChange}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <TextField
+                                                id="city"
+                                                label="City"
+                                                className={classes.textField}
+                                                value={values.city}
+                                                onChange={handleChange}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="province">Province</InputLabel>
+                                                <Select
+                                                    value={values.province}
                                                     onChange={handleChange}
-                                                    multiline
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} sm={8}>
-                                                <TextField
-                                                    id="address"
-                                                    label="Address"
-                                                    className={classes.textField}
-                                                    value={values.address}
+                                                    inputProps={{
+                                                        name: 'province',
+                                                        id: 'province',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {provinces.allCodes.map((c, k) => {
+                                                        let currProvince = provinces.byCode[c]
+                                                        return (
+                                                            <MenuItem value={currProvince.code} key={k}>
+                                                                {currProvince.name}
+                                                            </MenuItem>
+                                                        )
+                                                    })}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="district">District</InputLabel>
+                                                <Select
+                                                    value={values.district}
                                                     onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'district',
+                                                        id: 'district',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {districts.allCodes.map((c, k) => {
+                                                        let currDistrict = districts.byCode[c]
+                                                        return currDistrict.name !== 'NONE' &&
+                                                            <MenuItem value={currDistrict.code} key={k}>
+                                                                {currDistrict.name}
+                                                            </MenuItem>
+                                                    })}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="divisionalSecretariat">Divisional Secretariat</InputLabel>
+                                                <IntlSelect
+                                                    value={values.divisionalSecretariat}
+                                                    handleChange={handleChange}
+                                                    name='divisionalSecretariat'
+                                                    dataObj={divisionalSecretariats}
                                                 />
-                                            </Grid>
-                                            <Grid item xs={12} sm={4}>
-                                                <TextField
-                                                    id="city"
-                                                    label="City"
-                                                    className={classes.textField}
-                                                    value={values.city}
-                                                    onChange={handleChange}
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="pollingDivision">Polling Division</InputLabel>
+                                                <IntlSelect
+                                                    value={values.pollingDivision}
+                                                    handleChange={handleChange}
+                                                    name='pollingDivision'
+                                                    dataObj={pollingDivisions}
                                                 />
-                                            </Grid>
-                                            <Grid item xs={12} sm={4}>
-                                                <FormControl className={classes.formControl}>
-                                                    <InputLabel htmlFor="province">Province</InputLabel>
-                                                    <Select
-                                                        value={values.province}
-                                                        onChange={handleChange}
-                                                        inputProps={{
-                                                            name: 'province',
-                                                            id: 'province',
-                                                        }}
-                                                    >
-                                                        <MenuItem value=""> <em>None</em> </MenuItem>
-                                                        {this.props.provinces.allCodes.map((c, k) => {
-                                                            let currProvince = this.props.provinces.byCode[c]
-                                                            return (
-                                                                <MenuItem value={currProvince.code} key={k}>
-                                                                    {currProvince.name}
-                                                                </MenuItem>
-                                                            )
-                                                        })}
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={12} sm={4}>
-                                                <FormControl className={classes.formControl}>
-                                                    <InputLabel htmlFor="district">District</InputLabel>
-                                                    <Select
-                                                        value={values.district}
-                                                        onChange={handleChange}
-                                                        inputProps={{
-                                                            name: 'district',
-                                                            id: 'district',
-                                                        }}
-                                                    >
-                                                        <MenuItem value=""> <em>None</em> </MenuItem>
-                                                        {this.props.districts.allCodes.map((c, k) => {
-                                                            let currDistrict = this.props.districts.byCode[c]
-                                                            return currDistrict.name !== 'NONE' &&
-                                                                <MenuItem value={currDistrict.code} key={k}>
-                                                                    {currDistrict.name}
-                                                                </MenuItem>
-                                                        })}
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={12} sm={4}>
-                                                <FormControl className={classes.formControl}>
-                                                    <InputLabel htmlFor="divisionalSecretariat">Divisional Secretariat</InputLabel>
-                                                    <IntlSelect
-                                                        value={values.divisionalSecretariat}
-                                                        handleChange={handleChange}
-                                                        name='divisionalSecretariat'
-                                                        dataObj={this.props.divisionalSecretariats}
-                                                    />
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={12} sm={4}>
-                                                <FormControl className={classes.formControl}>
-                                                    <InputLabel htmlFor="pollingDivision">Polling Division</InputLabel>
-                                                    <IntlSelect
-                                                        value={values.pollingDivision}
-                                                        handleChange={handleChange}
-                                                        name='pollingDivision'
-                                                        dataObj={this.props.pollingDivisions}
-                                                    />
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={12} sm={4}>
-                                                <FormControl className={classes.formControl}>
-                                                    <InputLabel htmlFor="pollingStation">Polling Station</InputLabel>
-                                                    <IntlSelect
-                                                        value={values.pollingStation}
-                                                        handleChange={handleChange}
-                                                        name='pollingStation'
-                                                        dataObj={this.props.pollingStations}
-                                                    />
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={12} sm={4}>
-                                                <FormControl className={classes.formControl}>
-                                                    <InputLabel htmlFor="gramaNiladhari">Grama Niladhari Division</InputLabel>
-                                                    <IntlSelect
-                                                        value={values.gramaNiladhari}
-                                                        handleChange={handleChange}
-                                                        name='gramaNiladhari'
-                                                        dataObj={this.props.gramaNiladharis}
-                                                    />
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={12} sm={4}>
-                                                <FormControl className={classes.formControl}>
-                                                    <InputLabel htmlFor="policeStation">Police Station</InputLabel>
-                                                    {/* <IntlSelect
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="pollingStation">Polling Station</InputLabel>
+                                                <IntlSelect
+                                                    value={values.pollingStation}
+                                                    handleChange={handleChange}
+                                                    name='pollingStation'
+                                                    dataObj={pollingStations}
+                                                />
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="gramaNiladhari">Grama Niladhari Division</InputLabel>
+                                                <IntlSelect
+                                                    value={values.gramaNiladhari}
+                                                    handleChange={handleChange}
+                                                    name='gramaNiladhari'
+                                                    dataObj={gramaNiladharis}
+                                                />
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="policeStation">Police Station</InputLabel>
+                                                {/* <IntlSelect
                                                         value={values.policeStation}
                                                         handleChange={handleChange}
                                                         name='policeStation'
-                                                        dataObj={this.props.policeStations}
+                                                        dataObj={policeStations}
                                                     /> */}
-                                                    <Select
-                                                        value={values.policeStation}
-                                                        onChange={handleChange}
-                                                        inputProps={{
-                                                            name: 'policeStation',
-                                                            id: 'policeStation',
-                                                        }}
-                                                    >
-                                                        <MenuItem value=""> <em>None</em> </MenuItem>
-                                                        {this.props.policeStations.allCodes.map((c, k) => {
-                                                            let currPoliceStation = this.props.policeStations.byCode[c]
-                                                            return currPoliceStation.name !== 'NONE' &&
-                                                                <MenuItem value={currPoliceStation.code} key={k}>
-                                                                    {currPoliceStation.name}
-                                                                </MenuItem>
-                                                        })}
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={12} sm={4}>
-                                                <FormControl className={classes.formControl}>
-                                                    <InputLabel htmlFor="policeDivision">Police Division</InputLabel>
-                                                    {/* <IntlSelect
+                                                <Select
+                                                    value={values.policeStation}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'policeStation',
+                                                        id: 'policeStation',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {policeStations.allCodes.map((c, k) => {
+                                                        let currPoliceStation = policeStations.byCode[c]
+                                                        return currPoliceStation.name !== 'NONE' &&
+                                                            <MenuItem value={currPoliceStation.code} key={k}>
+                                                                {currPoliceStation.name}
+                                                            </MenuItem>
+                                                    })}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="policeDivision">Police Division</InputLabel>
+                                                {/* <IntlSelect
                                                         value={values.policeDivision}
                                                         handleChange={handleChange}
                                                         name='policeDivision'
-                                                        dataObj={this.props.policeDivisions}
+                                                        dataObj={policeDivisions}
                                                     /> */}
-                                                    <Select
-                                                        value={values.policeDivision}
-                                                        onChange={handleChange}
-                                                        inputProps={{
-                                                            name: 'policeDivision',
-                                                            id: 'policeDivision',
-                                                        }}
-                                                    >
-                                                        <MenuItem value=""> <em>None</em> </MenuItem>
-                                                        {this.props.policeDivisions.allCodes.map((c, k) => {
-                                                            let currPoliceDivision = this.props.policeDivisions.byCode[c]
-                                                            return currPoliceDivision.name !== 'NONE' &&
-                                                                <MenuItem value={currPoliceDivision.code} key={k}>
-                                                                    {currPoliceDivision.name}
-                                                                </MenuItem>
-                                                        })}
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                        </Grid>
-                                    </Paper>
-
-                                    {/* contact information of the complianer */}
-                                    <Paper className={classes.paper}>
-                                        <Typography variant="h5" gutterBottom>
-                                            Complainer Information
-                                    </Typography>
-                                        <Grid container spacing={24}>
-                                            <Grid item xs={12} sm={6}>
-                                                <TextField
-                                                    id="reporterName"
-                                                    name="reporterName"
-                                                    label="Complainer Name"
-                                                    className={classes.textField}
-                                                    value={values.reporterName}
+                                                <Select
+                                                    value={values.policeDivision}
                                                     onChange={handleChange}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} sm={4}>
-                                                <FormControl className={classes.formControl} >
-                                                    <InputLabel htmlFor="reporterType">Complainer Type</InputLabel>
-                                                    <Select
-                                                        value={values.reporterType}
-                                                        onChange={handleChange}
-                                                        inputProps={{
-                                                            name: 'reporterType',
-                                                            id: 'reporterType',
-                                                        }}
-                                                    >
-                                                        <MenuItem value=""> <em>None</em> </MenuItem>
-                                                        <MenuItem value={"Individual"}>Individual</MenuItem>
-                                                        <MenuItem value={"Organization"}>Organization</MenuItem>
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                <TextField
-                                                    id="reporterAddress"
-                                                    name="reporterAddress"
-                                                    label="Complainer Address"
-                                                    className={classes.textField}
-                                                    value={values.reporterAddress}
-                                                    onChange={handleChange}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <TelephoneInput
-                                                    className={classes.textField}
-                                                    name="reporterMobile"
-                                                    label="Complainer Mobile"
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <TextField
-                                                    id="reporterEmail"
-                                                    name="reporterEmail"
-                                                    label="Complainer Email"
-                                                    className={classes.textField}
-                                                    value={values.reporterEmail}
-                                                    onChange={handleChange}
-                                                    error={touched.reporterEmail && errors.reporterEmail}
-                                                    helperText={touched.reporterEmail ? errors.reporterEmail : null}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} >
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                            id="reporterConsent"
-                                                            name="reporterConsent"
-                                                            checked={values.reporterConsent}
-                                                            onChange={handleChange}
-                                                            color="primary"
-                                                        />
-                                                    }
-                                                    label="Complainer details can be shared with external parties."
-                                                />
-                                            </Grid>
-                                        </Grid>
-                                    </Paper>
-
-                                    {/* police details */}
-                                    <div>
-                                        <ExpansionPanel>
-                                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                                                <Typography variant="h5" gutterBottom> Police Related Information </Typography>
-                                            </ExpansionPanelSummary>
-                                            <ExpansionPanelDetails>
-                                                <Grid container spacing={24}>
-
-                                                    <Grid item xs={12}>
-                                                        <MaterialTable
-                                                            columns={[
-                                                                { title: "Name", field: "name" },
-                                                                { title: "Address", field: "address" },
-                                                                {
-                                                                    title: "Political Affliation",
-                                                                    field: "political_affliation",
-                                                                    lookup: politicalPartyLookup
-                                                                }
-                                                            ]}
-                                                            data={values.injuredParties}
-                                                            title="Injured Parties"
-                                                            editable={{
-                                                                onRowAdd: newData => this.tableRowAdd(setFieldValue, "injuredParties", values.injuredParties, newData),
-                                                                onRowUpdate: (newData, oldData) => this.tableRowUpdate(setFieldValue, "injuredParties", values.injuredParties, oldData, newData),
-                                                                onRowDelete: oldData => this.tableRowDelete(setFieldValue, "injuredParties", values.injuredParties, oldData)
-                                                            }}
-                                                            options={{
-                                                                search: false,
-                                                                paging: false
-                                                            }}
-                                                        />
-
-                                                    </Grid>
-
-                                                    <Grid item xs={12}>
-                                                        <MaterialTable
-                                                            columns={[
-                                                                { title: "Name", field: "name" },
-                                                                { title: "Address", field: "address" },
-                                                                {
-                                                                    title: "Political Affliation",
-                                                                    field: "political_affliation",
-                                                                    lookup: politicalPartyLookup
-                                                                }
-                                                            ]}
-                                                            data={values.respondents}
-                                                            title="Respondents"
-                                                            editable={{
-                                                                onRowAdd: newData => this.tableRowAdd(setFieldValue, "respondents", values.respondents, newData),
-                                                                onRowUpdate: (newData, oldData) => this.tableRowUpdate(setFieldValue, "respondents", values.respondents, oldData, newData),
-                                                                onRowDelete: oldData => this.tableRowDelete(setFieldValue, "respondents", values.respondents, oldData)
-                                                            }}
-                                                            options={{
-                                                                search: false,
-                                                                paging: false
-                                                            }}
-                                                        />
-                                                    </Grid>
-
-                                                    <Grid item xs={12}>
-                                                        <MaterialTable
-                                                            columns={[
-                                                                { title: "Vehicle License Plate", field: "vehicle_no" },
-                                                                {
-                                                                    title: "Vehicle Ownership",
-                                                                    field: "ownership",
-                                                                    lookup: {
-                                                                        "government": "Government Vehicle",
-                                                                        "private": "Private Vehicle"
-                                                                    }
-                                                                }
-                                                            ]}
-                                                            data={values.detainedVehicles}
-                                                            title="Detained Vehicles"
-                                                            editable={{
-                                                                onRowAdd: newData => this.tableRowAdd(setFieldValue, "detainedVehicles", values.detainedVehicles, newData),
-                                                                onRowUpdate: (newData, oldData) => this.tableRowUpdate(setFieldValue, "detainedVehicles", values.detainedVehicles, oldData, newData),
-                                                                onRowDelete: oldData => this.tableRowDelete(setFieldValue, "detainedVehicles", values.detainedVehicles, oldData)
-                                                            }}
-                                                            options={{
-                                                                search: false,
-                                                                paging: false
-                                                            }}
-                                                        />
-                                                    </Grid>
-
-                                                </Grid>
-                                            </ExpansionPanelDetails>
-                                        </ExpansionPanel>
-                                    </div>
-
-                                    {/* action panel */}
-                                    <Grid container spacing={24}>
-                                        <Grid item xs={12} style={{ textAlign: "center" }}>
-                                            <Button variant="contained" className={classes.button}> Cancel</Button>
-                                            <Button type="submit" variant="contained" color="primary" className={classes.button}> Submit</Button>
+                                                    inputProps={{
+                                                        name: 'policeDivision',
+                                                        id: 'policeDivision',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    {policeDivisions.allCodes.map((c, k) => {
+                                                        let currPoliceDivision = policeDivisions.byCode[c]
+                                                        return currPoliceDivision.name !== 'NONE' &&
+                                                            <MenuItem value={currPoliceDivision.code} key={k}>
+                                                                {currPoliceDivision.name}
+                                                            </MenuItem>
+                                                    })}
+                                                </Select>
+                                            </FormControl>
                                         </Grid>
                                     </Grid>
-                                </form>
-                            )
-                        }}
-                />
+                                </Paper>
 
-                <Snackbar
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    open={this.state.submitSuccessMessage}
-                    onClose={this.handleSuccessMessageClose}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
+                                {/* contact information of the complianer */}
+                                <Paper className={classes.paper}>
+                                    <Typography variant="h5" gutterBottom>
+                                        Complainer Information
+                                    </Typography>
+                                    <Grid container spacing={24}>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                id="reporterName"
+                                                name="reporterName"
+                                                label="Complainer Name"
+                                                className={classes.textField}
+                                                value={values.reporterName}
+                                                onChange={handleChange}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl className={classes.formControl} >
+                                                <InputLabel htmlFor="reporterType">Complainer Type</InputLabel>
+                                                <Select
+                                                    value={values.reporterType}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: 'reporterType',
+                                                        id: 'reporterType',
+                                                    }}
+                                                >
+                                                    <MenuItem value=""> <em>None</em> </MenuItem>
+                                                    <MenuItem value={"Individual"}>Individual</MenuItem>
+                                                    <MenuItem value={"Organization"}>Organization</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                id="reporterAddress"
+                                                name="reporterAddress"
+                                                label="Complainer Address"
+                                                className={classes.textField}
+                                                value={values.reporterAddress}
+                                                onChange={handleChange}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <TelephoneInput
+                                                className={classes.textField}
+                                                name="reporterMobile"
+                                                label="Complainer Mobile"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                id="reporterEmail"
+                                                name="reporterEmail"
+                                                label="Complainer Email"
+                                                className={classes.textField}
+                                                value={values.reporterEmail}
+                                                onChange={handleChange}
+                                                error={touched.reporterEmail && errors.reporterEmail}
+                                                helperText={touched.reporterEmail ? errors.reporterEmail : null}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} >
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        id="reporterConsent"
+                                                        name="reporterConsent"
+                                                        checked={values.reporterConsent}
+                                                        onChange={handleChange}
+                                                        color="primary"
+                                                    />
+                                                }
+                                                label="Complainer details can be shared with external parties."
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                </Paper>
+
+                                {/* police details */}
+                                <div>
+                                    <ExpansionPanel>
+                                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                            <Typography variant="h5" gutterBottom> Police Related Information </Typography>
+                                        </ExpansionPanelSummary>
+                                        <ExpansionPanelDetails>
+                                            <Grid container spacing={24}>
+
+                                                <Grid item xs={12}>
+                                                    <MaterialTable
+                                                        columns={[
+                                                            { title: "Name", field: "name" },
+                                                            { title: "Address", field: "address" },
+                                                            {
+                                                                title: "Political Affliation",
+                                                                field: "political_affliation",
+                                                                lookup: politicalPartyLookup
+                                                            }
+                                                        ]}
+                                                        data={values.injuredParties}
+                                                        title="Injured Parties"
+                                                        editable={{
+                                                            onRowAdd: newData => tableRowAdd(setFieldValue, "injuredParties", values.injuredParties, newData),
+                                                            onRowUpdate: (newData, oldData) => tableRowUpdate(setFieldValue, "injuredParties", values.injuredParties, oldData, newData),
+                                                            onRowDelete: oldData => tableRowDelete(setFieldValue, "injuredParties", values.injuredParties, oldData)
+                                                        }}
+                                                        options={{
+                                                            search: false,
+                                                            paging: false
+                                                        }}
+                                                    />
+
+                                                </Grid>
+
+                                                <Grid item xs={12}>
+                                                    <MaterialTable
+                                                        columns={[
+                                                            { title: "Name", field: "name" },
+                                                            { title: "Address", field: "address" },
+                                                            {
+                                                                title: "Political Affliation",
+                                                                field: "political_affliation",
+                                                                lookup: politicalPartyLookup
+                                                            }
+                                                        ]}
+                                                        data={values.respondents}
+                                                        title="Respondents"
+                                                        editable={{
+                                                            onRowAdd: newData => tableRowAdd(setFieldValue, "respondents", values.respondents, newData),
+                                                            onRowUpdate: (newData, oldData) => tableRowUpdate(setFieldValue, "respondents", values.respondents, oldData, newData),
+                                                            onRowDelete: oldData => tableRowDelete(setFieldValue, "respondents", values.respondents, oldData)
+                                                        }}
+                                                        options={{
+                                                            search: false,
+                                                            paging: false
+                                                        }}
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12}>
+                                                    <MaterialTable
+                                                        columns={[
+                                                            { title: "Vehicle License Plate", field: "vehicle_no" },
+                                                            {
+                                                                title: "Vehicle Ownership",
+                                                                field: "ownership",
+                                                                lookup: {
+                                                                    "government": "Government Vehicle",
+                                                                    "private": "Private Vehicle"
+                                                                }
+                                                            }
+                                                        ]}
+                                                        data={values.detainedVehicles}
+                                                        title="Detained Vehicles"
+                                                        editable={{
+                                                            onRowAdd: newData => tableRowAdd(setFieldValue, "detainedVehicles", values.detainedVehicles, newData),
+                                                            onRowUpdate: (newData, oldData) => tableRowUpdate(setFieldValue, "detainedVehicles", values.detainedVehicles, oldData, newData),
+                                                            onRowDelete: oldData => tableRowDelete(setFieldValue, "detainedVehicles", values.detainedVehicles, oldData)
+                                                        }}
+                                                        options={{
+                                                            search: false,
+                                                            paging: false
+                                                        }}
+                                                    />
+                                                </Grid>
+
+                                            </Grid>
+                                        </ExpansionPanelDetails>
+                                    </ExpansionPanel>
+                                </div>
+
+                                {/* action panel */}
+                                <Grid container spacing={24}>
+                                    <Grid item xs={12} style={{ textAlign: "center" }}>
+                                        <Button variant="contained" className={classes.button}> Cancel</Button>
+                                        <Button type="submit" variant="contained" color="primary" className={classes.button}> Submit</Button>
+                                    </Grid>
+                                </Grid>
+                            </form>
+                        )
                     }}
-                    message={<span id="message-id">Incident submitted sucessfully!</span>}
-                />
+            />
 
-                {/* confirmation dialog */}
-                <Dialog
-                    open={this.state.showConfirmationModal}
-                    onClose={()=>this.hideConfirmModal(false)}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogTitle id="alert-dialog-title">{"Submit without occured date?"}</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                            You are trying to submit an incident without an occured date.
+            <Snackbar
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                open={state.submitSuccessMessage}
+                ContentProps={{
+                    'aria-describedby': 'message-id',
+                }}
+                message={<span id="message-id">Incident submitted sucessfully!</span>}
+            />
+
+            {/* confirmation dialog */}
+            <Dialog
+                open={state.showConfirmationModal}
+                onClose={() => hideConfirmModal(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Submit without occured date?"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        You are trying to submit an incident without an occured date.
                         </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={()=>this.hideConfirmModal(false)} color="primary">
-                            Back
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => hideConfirmModal(false)} color="primary">
+                        Back
                         </Button>
-                        <Button disabled={isProcessing} onClick={()=>this.hideConfirmModal(true)} color="primary" autoFocus>
-                            Submit
+                    <Button disabled={isProcessing} onClick={() => hideConfirmModal(true)} color="primary" autoFocus>
+                        Submit
                         </Button>
-                    </DialogActions>
-                </Dialog>
-            </div>
-        );
-    }
+                </DialogActions>
+            </Dialog>
+        </div>
+    );
 }
 
-const mapStateToProps = (state, ownProps) => {
-    return {
-
-        incident: state.sharedReducer.activeIncident.data,
-        reporter: state.sharedReducer.activeIncidentReporter,
-
-        channels: state.sharedReducer.channels,
-        categories: state.sharedReducer.categories,
-        districts: state.sharedReducer.districts,
-        provinces: state.sharedReducer.provinces,
-        divisionalSecretariats: state.sharedReducer.divisionalSecretariats,
-        gramaNiladharis: state.sharedReducer.gramaNiladharis,
-        pollingDivisions: state.sharedReducer.pollingDivisions,
-        pollingStations: state.sharedReducer.pollingStations,
-        policeStations: state.sharedReducer.policeStations,
-        policeDivisions: state.sharedReducer.policeDivisions,
-        wards: state.sharedReducer.wards,
-        elections: state.sharedReducer.elections,
-        politicalParties: state.sharedReducer.politicalParties,
-
-        // isIncidentSubmitting: state.loading.SUBMIT_INTERNAL_INCIDENT,
-        // isIncidentUpdating: state.loading.UPDATE_INTERNAL_INCIDENT,
-
-        ...ownProps
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        submitInternalIncident: (values, fileData) => {
-            dispatch(submitInternalIncidentData(values, fileData))
-        },
-        updateInternalIncident: (incidentId, incidentData) => {
-            dispatch(fetchUpdateInternalIncidentData(incidentId, incidentData));
-        },
-
-        getChannels: () => {
-            dispatch(fetchChannels())
-        },
-        getElections: () => {
-            dispatch(fetchElections());
-        },
-        getCategories: () => {
-            dispatch(fetchCategories())
-        },
-        getProvinces: () => {
-            dispatch(fetchProvinces())
-        },
-        getDistricts: () => {
-            dispatch(fetchDistricts())
-        },
-        getDivisionalSecretariats: () => {
-            dispatch(fetchDivisionalSecretariats())
-        },
-        getGramaNiladharis: () => {
-            dispatch(fetchGramaNiladharis())
-        },
-        getPollingDivisions: () => {
-            dispatch(fetchPollingDivisions())
-        },
-        getPollingStations: () => {
-            dispatch(fetchPollingStations())
-        },
-        getPoliceStations: () => {
-            dispatch(fetchPoliceStations())
-        },
-        getPoliceDivisions: () => {
-            dispatch(fetchPoliceDivisions())
-        },
-        getWards: () => {
-            dispatch(fetchWards())
-        },
-        getPoliticalParties: () => {
-            dispatch(fetchPoliticalParties())
-        },
-
-        getIncident: (incidentId) => {
-            dispatch(fetchActiveIncidentData(incidentId))
-        },
-
-        resetActiveIncident: () => {
-            dispatch(resetActiveIncident())
-        },
-
-        resetIncidentForm: () => {
-            dispatch(resetIncidentForm())
-        },
-
-        showNotification: (message) => {
-            dispatch(showNotification({ message }, null))
-        }
-    }
-}
 
 export default withRouter(
-    connect(mapStateToProps, mapDispatchToProps)(
-        withStyles(styles)(IncidentFormInternal)
-    )
+    withStyles(styles)(IncidentFormInternal)
 );

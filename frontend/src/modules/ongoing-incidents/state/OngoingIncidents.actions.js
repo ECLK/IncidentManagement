@@ -270,26 +270,6 @@ export function requestAllIncidentsError(errorResponse) {
   };
 }
 
-export function updateIncidentFilters(filters) {
-  return {
-    type: INCIDENT_SEARCH_FILTERS_UPDATE,
-    data: filters
-  };
-}
-
-export function fetchIncidents(filters = {}, page) {
-  return async function(dispatch) {
-    dispatch(requestAllIncidents());
-    try {
-      const response = await getIncidents(filters, page);
-      dispatch(requestAllIncidentsSuccess(response.data));
-    } catch (error) {
-      console.error(error);
-      dispatch(requestAllIncidentsError(error));
-    }
-  };
-}
-
 export function requestAllUsers() {
   return {
     type: REQUEST_ALL_USERS,
@@ -324,96 +304,6 @@ export function fetchAllUsers() {
       dispatch(requestAllUsersSuccess(response.data));
     } catch (error) {
       dispatch(requestAllUsersError(error));
-    }
-  };
-}
-
-export function updateIncidentAssignee() {
-  return {
-    type: UPDATE_INCIDENT_ASSIGNEE,
-    isLoading: true
-  };
-}
-
-export function updateIncidentAssigneeSuccess(response) {
-  return {
-    type: UPDATE_INCIDENT_ASSIGNEE_SUCCESS,
-    data: response,
-    error: null,
-    isLoading: false
-  };
-}
-
-export function updateIncidentAssigneeError(errorResponse) {
-  return {
-    type: UPDATE_INCIDENT_ASSIGNEE_ERROR,
-    data: null,
-    error: errorResponse,
-    isLoading: false
-  };
-}
-
-export function setIncidentAssignee(incidentId, uid, actionType) {
-  return async function(dispatch) {
-    dispatch(updateIncidentAssignee());
-    try {
-      let response;
-      if (actionType === "ADD") {
-        response = await assignToIncident(incidentId, uid);
-      } else if (actionType === "REMOVE") {
-        response = await removeFromIncident(incidentId, uid);
-      } else {
-        throw "Invalid action";
-      }
-      dispatch(updateIncidentAssigneeSuccess(response.data));
-      dispatch(fetchActiveIncidentData(incidentId));
-      dispatch(fetchIncidentEventTrail(incidentId));
-    } catch (error) {
-      dispatch(updateIncidentAssigneeError(error));
-    }
-  };
-}
-
-export function escallateIncident() {
-  return {
-    type: REQUEST_INCIDENT_ESCALATE,
-    data: null,
-    error: null,
-    isLoading: true
-  };
-}
-
-export function escallateIncidentSuccess(response) {
-  return {
-    type: REQUEST_INCIDENT_ESCALATE_SUCCESS,
-    data: response,
-    error: null,
-    isLoading: false
-  };
-}
-
-export function escallateIncidentError(error) {
-  return {
-    type: REQUEST_INCIDENT_ESCALATE_ERROR,
-    data: null,
-    error: error,
-    isLoading: false
-  };
-}
-
-export function fetchEscallateIncident(incidentId, assigneeId) {
-  return async function(dispatch) {
-    dispatch(escallateIncident);
-    try {
-      let response = await incidentAPI.escallateIncident(
-        incidentId,
-        assigneeId
-      );
-      dispatch(escallateIncidentSuccess(response.data));
-      dispatch(fetchActiveIncidentData(incidentId));
-      dispatch(fetchIncidentEventTrail(incidentId));
-    } catch (error) {
-      dispatch(escallateIncidentError(error));
     }
   };
 }

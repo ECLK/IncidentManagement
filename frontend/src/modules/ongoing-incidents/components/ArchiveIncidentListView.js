@@ -1,19 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
-import { compose } from "redux";
-import { connect } from "react-redux";
-import {
-  fetchIncidents,
-  updateIncidentFilters
-} from "../state/OngoingIncidents.actions";
-
-import { fetchCategories } from "../../shared/state/Shared.actions";
+import { useSelector, useDispatch } from "react-redux";
+import { loadAllIncidents } from "../../incident/state/incidentActions";
+import * as incidentsApi from '../../../api/incident';
 
 import SearchForm from "./SearchForm";
 import { Grid, Button } from "@material-ui/core";
-import { getIncidents } from "../../../api/incident";
-import IncidentList from "../../home/components/IncidentList";
+import IncidentListReview from "./IncidentListReview";
 
 const styles = theme => ({
   root: {
@@ -33,123 +27,78 @@ const styles = theme => ({
   }
 });
 
-class ArchiveIncidentListView extends React.Component {
-  constructor(props){
-    super(props);
+function ArchiveIncidentListView({ classes, ...props }) {
+  const [filters, setFilters] = useState({});
 
-    this.state = {
-      filters: {
-        show_closed: true
-      }
-    }
-  }
+  const categories = useSelector(state => state.sharedReducer.categories);
+  const incidentSearchFilter = useSelector(state => state.ongoingIncidentReducer.incidentSearchFilter);
+  const incidents = useSelector(state => state.incident.incidents);
 
-  componentDidMount() {
-    this.props.getCategories();
-  }
+  const dispatch = useDispatch();
+  const handlePageChange = (event, newPage) => dispatch(loadAllIncidents(incidentSearchFilter, newPage+1));
 
-  handlePageChange = (event, newPage) => {
-    this.props.getIncidents(this.props.incidentSearchFilter, newPage+1);
-  }
-
-  handleSearchClick = (filters, page) => {
+  const handleSearchClick = (filters, page) => {
     if(!filters){
-      filters = {
-      };
+      filters = {};
     }
     filters["show_closed"] = true;
-    this.setState({
-      filters: filters
-    });
-    
-    this.props.getIncidents(filters, page);
+    setFilters(filters);
+    dispatch(loadAllIncidents(filters, page))
   }
 
-  handleExportClick = async (exportType) => {
-    const filters = this.state.filters;
+  const handleExportClick = async (exportType) => {
     filters["export"] = exportType;
 
     try{
-      const response = await getIncidents(filters);
-      const url = window.URL.createObjectURL(new Blob([response]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'incidents.' + exportType);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      const response = await incidentsApi.getIncidents(filters);
+      if (exportType === "csv") {
+          const url = window.URL.createObjectURL(new Blob([response]));
+          const link = document.createElement('a');
+          link.href = url;     
+          link.setAttribute('download', 'incidents.' + exportType);
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+
+      } else {
+          var w = window.open('about:blank');
+          w.document.open();
+          w.document.write(response);
+          w.document.close();
+      }
     }catch{
 
     }
+  }
     
-  }
-  
-
-  render() {
-    const { classes, pagedIncidents, categories } = this.props;
-
-    return (
-      <Paper className={classes.root}>
-        <SearchForm 
-          categories={categories} 
-          handleSearchClick={this.handleSearchClick} 
-          showClosed={true}
-          {...this.props} 
-        />
-        <Grid container direction={"row"} className={classes.exportContainer}>
-          <Grid item>
-            <Button variant={"contained"} onClick={() => this.handleExportClick("csv")} className={classes.exportButton}>
-              Export as CSV
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button variant={"contained"} onClick={() => this.handleExportClick("pdf")} className={classes.exportButton}>
-              Export as PDF
-            </Button>
-          </Grid>
+  return (
+    <Paper className={classes.root}>
+      <SearchForm 
+        categories={categories} 
+        handleSearchClick={handleSearchClick} 
+        showClosed={false}
+        {...props} />
+      <Grid container direction={"row"} className={classes.exportContainer}>
+        <Grid item>
+          <Button variant={"contained"} onClick={() => handleExportClick("csv")} className={classes.exportButton}>
+            Export as CSV
+          </Button>
         </Grid>
-        <IncidentList
-            incidents={pagedIncidents.incidents}
-            pageNumber={pagedIncidents.pageNumber-1}
-            count={pagedIncidents.count}
-            handleRowClick={incidentId => this.props.history.push(`/app/review/${incidentId}`)}
-            handlePageChange={this.handlePageChange}
-        />
-      </Paper>
-    );
-  }
+        <Grid item>
+          <Button variant={"contained"} onClick={() => handleExportClick("html")} className={classes.exportButton}>
+            Export as PDF
+          </Button>
+        </Grid>
+      </Grid>
+      <IncidentListReview
+          incidents={incidents}
+          pageNumber={incidents.paging.pageNumber-1}
+          count={incidents.paging.count}
+          handleRowClick={incidentId => props.history.push(`/app/review/${incidentId}`)}
+          handlePageChange={handlePageChange}
+      />
+    </Paper>
+  );
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    pagedIncidents: state.ongoingIncidentReducer.pagedIncidents,
-    incidentSearchFilter: state.ongoingIncidentReducer.incidentSearchFilter,
-    categories: state.sharedReducer.categories,
-
-    ...ownProps
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    getCategories: () => {
-      dispatch(fetchCategories());
-    },
-    getIncidents: (filters, page) => {
-      dispatch(fetchIncidents(filters, page));
-      dispatch(updateIncidentFilters(filters));
-    },
-    resetFilters: filters => {
-      dispatch(fetchIncidents(filters));
-      dispatch(updateIncidentFilters(filters));
-    }
-  };
-};
-
-export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
-  withStyles(styles)
-)(ArchiveIncidentListView);
+export default withStyles(styles)(ArchiveIncidentListView);
