@@ -253,14 +253,16 @@ class IncidentFormInternal extends Component {
     }
 
     getInitialValues = () => {
-        const { paramIncidentId } = this.props.match.params
-
+        const { paramIncidentId } = this.props.match.params;
+        let initData;
         if (!paramIncidentId) {
             // new incident form
-            return this.state;
+            initData = { ...this.state };
+            initData.occured_date = moment().format("YYYY-MM-DDTHH:mm");
+            return initData;
         }
 
-        var initData = { ...this.state, ...this.props.incident };
+        initData = { ...this.state, ...this.props.incident };
         const reporter = this.props.reporter;
 
         if (reporter) {
@@ -528,7 +530,6 @@ class IncidentFormInternal extends Component {
                                                     type="datetime-local"
                                                     value={values.occured_date}
                                                     InputLabelProps={{ shrink: true }}
-                                                    defaultValue={moment().format("YYYY-MM-DDTHH:mm")}
                                                     onChange={handleChange}
                                                     inputProps={{
                                                         max: values.occurrence === "OCCURRED" ? moment().format("YYYY-MM-DDTHH:mm") : null,
