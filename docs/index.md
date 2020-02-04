@@ -18,6 +18,8 @@ An Incident Management System specialized for Elections.
 
 ## Getting started
 
+[Quick Start](#quick-start-use-docker-compose){: .btn .btn-green .fs-3 .mb-4 .mb-md-0 .mr-2 } [Local Setup For Developers](#local-installation-for-development){: .btn .btn-green .fs-3 .mb-4 .mb-md-0 }
+
 ### Dependencies
 
 #### BACKEND
