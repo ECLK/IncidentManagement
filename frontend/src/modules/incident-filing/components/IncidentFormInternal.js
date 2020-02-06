@@ -156,6 +156,8 @@ function IncidentFormInternal(props) {
         description: "",
         occurrence: null,
         occured_date: null,
+        occured_date_date: null,
+        occured_date_time: null,
         time: "",
         otherCat: "",
         category: "",
@@ -237,11 +239,17 @@ function IncidentFormInternal(props) {
         //         values["detainedVehicles"][v]["is_private"] = false;
         //     }
         // }
-        if (values.occured_date) {
-            values.occured_date = moment(values.occured_date).format()
+        if (values.occured_date_date) {
+            const time = values.occured_date_time || "12:00";
+            const date = values.occured_date_date
+            values.occured_date = moment(`${date}T${time}`).format()
+            delete values.occured_date_time;
+            delete values.occured_date_date;
         } else {
             // to avoid sending an empty string to backend.
             values.occured_date = null
+            delete values.occured_date_time;
+            delete values.occured_date_date;
         }
         if (paramIncidentId) {
             dispatch(fetchUpdateInternalIncidentData(paramIncidentId, values));
@@ -257,7 +265,7 @@ function IncidentFormInternal(props) {
     }
 
     const confirmDateAndSubmit = (values, actions) => {
-        if (values.occured_date) {
+        if (values.occured_date_date) {
             handleSubmit(values, actions)
         } else {
             setState({
@@ -284,6 +292,7 @@ function IncidentFormInternal(props) {
                 "reporterAddress": reporter.address
             });
         }
+//TODO: Need to split the date values to date and time
         if (initData.occured_date) {
             initData.occured_date = moment(initData.occured_date).format("YYYY-MM-DDTHH:mm")
         }
@@ -326,23 +335,23 @@ function IncidentFormInternal(props) {
         //date time is validated here since it has to be compared with the occurrence. 
         //cannot do this with yup.
         let errors = {}
-        const { occured_date, occurrence } = values;
-        if (occured_date && occurrence) {
+        const { occured_date_date, occurrence } = values;
+        if (occured_date_date && occurrence) {
             switch (occurrence) {
                 case "OCCURRED":
-                    if (moment(occured_date).isBefore()) {
+                    if (moment(occured_date_date).isBefore()) {
                         //selected date time is before curernt date. no error
                         break
                     } else {
-                        errors['occured_date'] =
+                        errors['occured_date_date'] =
                             "Not a valid date/time for an occured incident";
                     }
                 case "WILL_OCCUR":
-                    if (moment(occured_date).isAfter()) {
+                    if (moment(occured_date_date).isAfter()) {
                         //selected date time is after curernt date. no error
                         break
                     } else {
-                        errors['occured_date'] =
+                        errors['occured_date_date'] =
                             "Invalid date/time for an incident that will occur in future.";
                     }
                 default:
@@ -532,19 +541,30 @@ function IncidentFormInternal(props) {
                                         </Grid>
                                         <Grid item xs={6} sm={3}>
                                             <TextField
-                                                id="occured_date"
-                                                label="Incident date and time"
-                                                type="datetime-local"
-                                                value={values.occured_date}
+                                                id="occured_date_date"
+                                                label="Incident date"
+                                                type="date"
+                                                value={values.occured_date_date}
                                                 InputLabelProps={{ shrink: true }}
                                                 onChange={handleChange}
                                                 inputProps={{
-                                                    max: values.occurrence === "OCCURRED" ? moment().format("YYYY-MM-DDTHH:mm") : null,
-                                                    min: values.occurrence === "WILL_OCCUR" ? moment().format("YYYY-MM-DDTHH:mm") : null
+                                                    max: values.occurrence === "OCCURRED" ? moment().format("YYYY-MM-DD") : null,
+                                                    min: values.occurrence === "WILL_OCCUR" ? moment().format("YYYY-MM-DD") : null
                                                 }}
-                                                error={errors.occured_date}
-                                                helperText={errors.occured_date}
+                                                error={errors.occured_date_date}
+                                                helperText={errors.occured_date_date}
                                             />
+                                            <TextField
+                                                id="occured_date_time"
+                                                label="Incident time"
+                                                type="time"
+                                                value={values.occured_date_time}
+                                                InputLabelProps={{ shrink: true }}
+                                                onChange={handleChange}
+                                                error={errors.occured_date_time}
+                                                helperText={errors.occured_date_time}
+                                            />
+                                            
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <FormControl
