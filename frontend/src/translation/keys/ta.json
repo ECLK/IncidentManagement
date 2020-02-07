@@ -1,35 +1,34 @@
 {
-  "eclk.incident.management.incidents": "நிகழ்வுகள்",
-  "eclk.incident.management.incidents.reporting.system": "தேர்தல் விதிமீறல் நிகழ்வுகளை அறிக்கையிடும் முறைமை",
-  
+  "eclk.incident.management.incidents": "சம்பவங்கள்",
+  "eclk.incident.management.incidents.reporting.system": "தேர்தல் விதிமீறல் சம்பவங்களை அறிக்கையிடும் முறைமை",
+
   "eclk.incident.management.report.incidents.forms.label.optional": "விருப்பத்திற்குரிய",
   "eclk.incident.management.report.incidents.forms.label.none": "எதுவுமில்லை",
 
   "eclk.incident.management.report.incidents.forms.button.back": "பின்செல்க",
   "eclk.incident.management.report.incidents.forms.button.next": "அடுத்தது",
   "eclk.incident.management.report.incidents.forms.button.skip": "தாண்டிச்செல்க",
-  "eclk.incident.management.report.incidents.forms.button.finish": "முடிவுறுத்தல்",
-  
+  "eclk.incident.management.report.incidents.forms.button.finish": "நிறைவு செய்க ",
 
-  "eclk.incident.management.report.incidents": "நிகழ்வு தொடர்பாக முறைப்பாடு செய்ய",
+  "eclk.incident.management.report.incidents": "சம்பவம் தொடர்பாக முறைப்பாடு செய்ய",
   "eclk.incident.management.report.incidents.helper.text": "*நிரப்புதல் கட்டாயமானது",
-  
-  "eclk.incident.management.report.incidents.section.describe": "நிகழ்வினை விபரிக்குக",
+
+  "eclk.incident.management.report.incidents.section.describe": "சம்பவத்தினை விபரிக்குக",
   "eclk.incident.management.report.incidents.description": "விளக்கம்",
   "eclk.incident.management.report.incidents.description.error.message": "விளக்கம் தேவைப்படுகின்றது",
   "eclk.incident.management.report.incidents.election": "தேர்தல்",
   "eclk.incident.management.report.incidents.election.error.message": "தேர்தல் தேவைப்படுகின்றது",
   "eclk.incident.management.report.incidents.date": "திகதி",
   "eclk.incident.management.report.incidents.time": "நேரம்",
-  "eclk.incident.management.report.incidents.datetime.error.message": "திகதி மற்றும் நேரம் தேவைப்படுகின்றது",
+  "eclk.incident.management.report.incidents.datetime.error.message": "திகதி மற்றும் நேரம் தேவைப்படுகின்றன",
   "eclk.incident.management.report.incidents.recaptcha.error.message": "இந்த சரிபார்ப்பு தேவை",
 
-  "eclk.incident.management.report.incidents.section.location": "நிகழ்வு நடந்த இடத்தை விபரிக்கவும்",
+  "eclk.incident.management.report.incidents.section.location": "சம்பவம் நடந்த இடத்தை விபரிக்கவும்",
   "eclk.incident.management.report.incidents.location": "இடத்தின் பெயர் அல்லது விபரம்",
   "eclk.incident.management.report.incidents.address": "முகவரி",
   "eclk.incident.management.report.incidents.city": "நகரம்",
 
-  "eclk.incident.management.report.incidents.section.attachment": "நிகழ்வு தொடர்பான கோப்பு / ஆவணங்களை இணைக்கவும்",
+  "eclk.incident.management.report.incidents.section.attachment": "சம்பவம் தொடர்பான கோப்பு / ஆவணங்களை இணைக்கவும்",
   "eclk.incident.management.report.incidents.seleted.file": "தெரிவு செய்யப்பட்ட கோப்பு / ஆவணம்",
 
   "eclk.incident.management.report.incidents.section.contact": "உங்களின் தொடர்பு விபரங்கள்",
@@ -38,11 +37,11 @@
   "eclk.incident.management.report.incidents.contact.landline": "நிலையான தொலைபேசி",
   "eclk.incident.management.report.incidents.contact.email": "மின்னஞ்சல்",
 
-  "eclk.incident.management.check.incident.status": "நிகழ்வு நிலையை சரிபார்க்கவும்",
-  "eclk.incident.management.historic.reports": "நிகழ்வு அறிக்கைகள்",
+  "eclk.incident.management.check.incident.status": "சம்பவ அறிக்கையின் நிலையை சரிபார்க்கவும்",
+  "eclk.incident.management.historic.reports": "சம்பவ  அறிக்கைகள்",
 
-  "eclk.incident.management.filing.guest.form.steps.basic.details": "நிகழ்வு விபரங்கள்",
-  "eclk.incident.management.filing.guest.form.steps.location.details": "நிகழ்வு இடத்தின் விபரங்கள்",
+  "eclk.incident.management.filing.guest.form.steps.basic.details": "சம்பவ விபரங்கள்",
+  "eclk.incident.management.filing.guest.form.steps.location.details": "சம்பவ இடத்தின் விபரங்கள்",
   "eclk.incident.management.filing.guest.form.steps.contact.details": "தொடர்பு விபரங்கள்",
   "eclk.incident.management.filing.guest.form.steps.review.details": "மதிப்பாய்வு விபரங்கள்"
 }
