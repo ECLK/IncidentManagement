@@ -591,50 +591,6 @@ export function fetchPoliticalParties(){
     }
 }
 
-// get active incident data
-
-export function requestActiveIncidentData() {
-    return {
-        type: ACTIVE_INCIDENT_GET_DATA_REQUEST,
-        isLoading: true
-    }
-}
-
-export function getActiveIncidentDataSuccess(response) {
-    return {
-        type: ACTIVE_INCIDENT_GET_DATA_SUCCESS,
-        data: response,
-        error: null,
-        isLoading: false
-    }
-}
-
-export function getActiveIncidentDataError(errorResponse) {
-    return {
-        type: ACTIVE_INCIDENT_GET_DATA_ERROR,
-        data: null,
-        error: errorResponse,
-        isLoading: false
-    }
-}
-
-export function fetchActiveIncidentData(incidentId) {
-    return async function (dispatch) {
-        dispatch(requestActiveIncidentData(incidentId));
-        try{
-            const responseIncident = await getIncident(incidentId);
-            const responseReporter = await getReporter(responseIncident.data.reporter);
-            dispatch(getActiveIncidentDataSuccess({
-                "incident": responseIncident.data,
-                "reporter": responseReporter.data
-            }));
-        }catch(error){
-            dispatch(getActiveIncidentDataError(error));
-        }
-    }
-}
-
-
 // SIGN IN
 
 export function requestSignIn() {

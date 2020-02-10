@@ -45,7 +45,7 @@ const RootModal = (props) => {
     const { classes } = props
 
     // this retrieves props from the reducer
-    const {modalType, modalProps} = useSelector(state => state.modalReducer)
+    const {modalType, modalProps} = useSelector(state => state.modal)
     const dispatch = useDispatch()
 
     if (!modalType) {

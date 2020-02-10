@@ -28,7 +28,7 @@ import Notification from '../../../notifications/components/Notification';
 import Breadcrumbs from '../Breadcrumbs';
 import { API_BASE_URL } from '../../../../config'
 
-import { userCan, USER_ACTIONS } from '../../../utils/userUtils';
+import { userCan, USER_ACTIONS } from '../../../user/userUtils';
 
 const HomeLink = props => <Link to="/app/home" {...props} />
 const ReportLink = props => <Link to="/app/create" {...props} />

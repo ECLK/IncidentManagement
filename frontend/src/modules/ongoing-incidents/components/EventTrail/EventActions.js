@@ -37,7 +37,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import { showModal } from '../../../modals/state/modal.actions'
 
 //utils
-import { userCan, USER_ACTIONS } from '../../../utils/userUtils';
+import { userCan, USER_ACTIONS } from '../../../user/userUtils';
 
 const styles = (theme) => ({
     card: {
@@ -66,12 +66,12 @@ const styles = (theme) => ({
 });
 
 const getLastActionTime = (events) => {
-
-    if (events.length === 0) {
+    
+    if (events.allIds.length === 0) {
         return "No action taken yet";
     }
 
-    return getDateDiff(events[0].createdDate);
+    return getDateDiff(events.byIds[events.allIds[0]].createdDate);
 }
 
 
@@ -90,7 +90,7 @@ const EventActions = (props) => {
     }
 
     const dispatch = useDispatch()
-    const activeIncident = useSelector(state => state.sharedReducer.activeIncident.data);
+    const activeIncident = props.activeIncident;
     const currentUser = useSelector(state => state.sharedReducer.signedInUser.data);
     const timeLimitInfo = calculateDeadline(activeIncident);
     const timeLimitText = timeLimitInfo.text;

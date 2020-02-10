@@ -43,7 +43,7 @@ const EditorComponent = (props) => {
     const initialEditorState = EditorState.createEmpty()
     const [editorState, setEditorState] = useState(initialEditorState)
     const [isOutcome, setIsOutcome] = useState(false)
-    const activeIncidentId = useSelector((state) => (state.sharedReducer.activeIncident.data.id))
+    const activeIncidentId = props.activeIncident.id;
     const dispatch = useDispatch()
 
     const { classes } = props

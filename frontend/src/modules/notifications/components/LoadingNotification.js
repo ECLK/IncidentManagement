@@ -3,7 +3,7 @@ import Notification from './Notification';
 import { useSelector } from 'react-redux';
 
 const ErrorNotification = (props) => {
-    const isLoading = useSelector(state => state.notificationReducer.isLoading);
+    const isLoading = useSelector(state => state.notification.isLoading);
 
     return (
         <>

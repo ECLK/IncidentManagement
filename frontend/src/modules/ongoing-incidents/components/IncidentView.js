@@ -17,17 +17,15 @@ import Editor from './EventTrail/RichTextEditor'
 import SummaryTabView from './IncidentSummaryView';
 
 import {
-    fetchIncidentEventTrail,
-    resolveEvent,
-    fetchAllUsers,
     attachFile,
     attachFileRequest
 } from '../state/OngoingIncidents.actions';
 import { EventActions } from './EventTrail'
 import {showModal} from '../../modals/state/modal.actions'
-import { userCan, USER_ACTIONS } from '../../utils/userUtils';
+import { userCan, USER_ACTIONS } from '../../user/userUtils';
 import FileUploader from '../../shared/components/FileUploader';
 import { loadIncident, updateIncidentStatus } from '../../incident/state/incidentActions';
+import { getIncidentEvents } from '../../event/state/eventActions';
 
 const styles = theme => ({
     label: {
@@ -126,7 +124,7 @@ function NavTabs({ classes, match }) {
 
     const incidents = useSelector(state => state.incident.incidents);  
     const reporters = useSelector(state => state.incident.reporters);   
-    const events = useSelector(state => state.ongoingIncidentReducer.events); 
+    const events = useSelector(state => state.event.events); 
     const users = useSelector(state => state.user.users);
     const activeUser = useSelector(state => state.sharedReducer.signedInUser.data);
 
@@ -135,7 +133,7 @@ function NavTabs({ classes, match }) {
     const onEscalateClick = () => dispatch(showModal('ESCALATE_MODAL', { incidentId: activeIncident.id }));
     const onVerifyClick = () => dispatch(showModal('VERIFY_MODAL', { incidentId: activeIncident.id }));
     const attachFiles = (incidentId, formData) => dispatch(attachFile(incidentId, formData));
-    const onResolveEvent = (eventId, decision) => dispatch(resolveEvent(activeIncident.id, eventId, decision));
+    const onResolveEvent = (eventId, decision) => { /* do nothing, event resolving is depreciated */ } 
 
     const scrollToTop = () => {
         window.scrollTo(0, 0);
@@ -148,13 +146,13 @@ function NavTabs({ classes, match }) {
         }else{
             const incident = incidents.byIds[incidentId];
             setActiveIncident(incident);
-            setActiveReporter(reporters.byIds[incident.reporter]);
-            dispatch(fetchIncidentEventTrail(incidentId));
+            setActiveReporter(reporters.byIds[incident.reporter]);            
         }
+        dispatch(getIncidentEvents(incidentId));
     }, [incidents]);
 
     useEffect(() => {
-        dispatch(fetchAllUsers());
+        // dispatch(fetchAllUsers());
         scrollToTop();
     }, []);
 
@@ -204,7 +202,9 @@ function NavTabs({ classes, match }) {
                             {activeIncident.currentStatus !== 'CLOSED'  &&
                                 activeIncident.currentStatus !== 'INVALIDATED'  && 
                                 <div className={classes.textEditorWrapper}>
-                                    <Editor/>
+                                    <Editor
+                                        activeIncident={activeIncident}
+                                    />
                                     <FileUploader 
                                         files={files}
                                         setFiles={setFiles}

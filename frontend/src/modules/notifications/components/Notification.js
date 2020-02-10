@@ -34,7 +34,7 @@ const styles = theme => ({
 });
 
 const Notification = ({ classes, notificationType, message }) => {
-    const open = useSelector(state => state.notificationReducer.isOpen);
+    const open = useSelector(state => state.notification.isOpen);
     const dispatch = useDispatch();
 
     function handleClose() {

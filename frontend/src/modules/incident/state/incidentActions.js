@@ -12,7 +12,7 @@ import * as publicApi from '../../../api/public';
 // history is required to access the router and reroute on
 // completing the incident creation
 import { history } from '../../../routes/history';
-import { fetchIncidentEventTrail } from '../../ongoing-incidents/state/OngoingIncidents.actions';
+import { getIncidentEvents } from '../../event/state/eventActions';
 
 /** Internal Incident Form Actions **/
 
@@ -136,7 +136,7 @@ export function updateIncidentStatus(incidentId, status) {
       const response = await incidentsApi.changeStatus(incidentId, status);
       dispatch(updateIncidentStatusSuccess(response.data));
       dispatch(loadIncident(incidentId));
-      dispatch(fetchIncidentEventTrail(incidentId));
+      dispatch(getIncidentEvents(incidentId));
     } catch (error) {
       dispatch(updateIncidentStatusError(error));
     }

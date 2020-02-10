@@ -37,15 +37,6 @@ import orange from '@material-ui/core/colors/orange';
 import yellow from '@material-ui/core/colors/yellow';
 
 import {
-    resetIncidentForm,
-    submitInternalIncidentData,
-    requestInternalIncidentData,
-
-    fetchUpdateInternalIncidentData,
-    updateInternalIncidentData
-
-} from '../state/IncidentFiling.actions'
-import {
     fetchChannels,
     fetchElections,
     fetchCategories,
@@ -58,7 +49,6 @@ import {
     fetchPollingStations,
     fetchPoliceDivisions,
     fetchWards,
-    fetchActiveIncidentData,
     resetActiveIncident,
     fetchPoliticalParties,
 } from '../../shared/state/Shared.actions';
@@ -69,7 +59,7 @@ import FileUploader from '../../shared/components/FileUploader';
 import { showNotification } from '../../notifications/state/notifications.actions';
 import TelephoneInput from './TelephoneInput';
 import { useLoadingStatus } from '../../loading-spinners/loadingHook'
-import { createInternalIncident } from '../../incident/state/incidentActions';
+import { createInternalIncident, loadIncident, updateInternalIncident } from '../../incident/state/incidentActions';
 
 const styles = theme => ({
     root: {
@@ -221,12 +211,13 @@ function IncidentFormInternal(props) {
         dispatch(fetchWards())
         dispatch(fetchPoliticalParties())
 
-        dispatch(resetIncidentForm())
+        // depreciated
+        // dispatch(resetIncidentForm())
 
         const { paramIncidentId } = props.match.params
 
         if (paramIncidentId) {
-            dispatch(fetchActiveIncidentData(paramIncidentId))
+            dispatch(loadIncident(paramIncidentId))
         } else {
             dispatch(resetActiveIncident())
         }
@@ -252,7 +243,7 @@ function IncidentFormInternal(props) {
             delete values.occured_date_date;
         }
         if (paramIncidentId) {
-            dispatch(fetchUpdateInternalIncidentData(paramIncidentId, values));
+            dispatch(updateInternalIncident(paramIncidentId, values));
             props.history.push(`/app/review/${paramIncidentId}`);
         } else {
             const fileData = new FormData();

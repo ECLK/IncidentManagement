@@ -53,10 +53,6 @@ import {
     REQUEST_INCIDENT_WARDS_SUCCESS,
     REQUEST_INCIDENT_WARDS_FAILURE,
 
-    ACTIVE_INCIDENT_GET_DATA_REQUEST,
-    ACTIVE_INCIDENT_GET_DATA_SUCCESS,
-    ACTIVE_INCIDENT_GET_DATA_ERROR,
-
     SIGN_IN_REQUEST,
     SIGN_IN_REQUEST_SUCCESS,
     SIGN_IN_REQUEST_ERROR,
@@ -133,14 +129,6 @@ const initialState = {
         allCodes:[]
     },
 
-    activeIncident: {
-        isLoading: false,
-        data: {
-
-        },
-        error: null
-    },
-    activeIncidentReporter: null,
     signedInUser: {
         isLoading: false,
         isSignedIn: false,
@@ -269,18 +257,6 @@ export default function sharedReducer(state, action) {
             case REQUEST_INCIDENT_POLITICAL_PARTIES_FAILURE:
                 return draft
 
-            case ACTIVE_INCIDENT_GET_DATA_REQUEST:
-                draft.activeIncident.isLoading = true
-                return draft
-            case ACTIVE_INCIDENT_GET_DATA_SUCCESS:
-                draft.activeIncident.data = action.data.incident
-                draft.activeIncident.data.assignees = [draft.activeIncident.data.assignee]
-                draft.activeIncidentReporter = action.data.reporter
-                draft.activeIncident.isLoading = false
-                return draft
-            case ACTIVE_INCIDENT_GET_DATA_ERROR:
-                draft.activeIncident.error = action.error
-                return draft
             case SIGN_IN_REQUEST:
                 draft.signedInUser.isLoading = true;
                 return draft
