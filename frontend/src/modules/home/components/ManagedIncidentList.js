@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router';
-import IncidentList from './IncidentList';
+import IncidentList from '../../incident/components/IncidentList';
 import { getIncidents } from '../../../api/incident';
 
 export function ManagedIncidentList({ filters, history }){

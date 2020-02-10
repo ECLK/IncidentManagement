@@ -138,28 +138,6 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
                 <CustomTableCell align="center">
                   <p>{row.subCategory}</p>
                 </CustomTableCell>
-
-                {/* <CustomTableCell align="center">
-                  <div style={{display:"flex"}}>
-                    {row.currentStatus === "NEW" && (
-                      <IconButton aria-label="delete" className={classes.margin} size="small" color="primary">
-                        <CheckIcon fontSize="inherit" />
-                      </IconButton>
-                    )}
-                    <IconButton aria-label="delete" className={classes.margin} size="small">
-                      <AssignIcon fontSize="inherit" />
-                    </IconButton>
-                    <IconButton aria-label="delete" className={classes.margin} 
-                        size="small"
-                        title="Manage Incident"
-                        onClick={() => {
-                          this.props.history.push(`/app/review/${row.id}`);
-                        }} >
-                      <EditIcon fontSize="inherit" />
-                    </IconButton>
-                  </div>
-                </CustomTableCell> */}
-
               </TableRow>
             ))}
           </TableBody>
@@ -177,8 +155,6 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
                     native: true,
                     }}
                     onChangePage={handlePageChange}
-                    // onChangeRowsPerPage={handleChangeRowsPerPage}
-                    // ActionsComponent={TablePaginationActions}
                 />
                 </TableRow>
             {/* )} */}

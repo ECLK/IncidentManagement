@@ -4,7 +4,6 @@ import { withRouter } from "react-router";
 
 import { withStyles } from '@material-ui/core/styles';
 import { Card, Grid, CardContent, CardHeader } from '@material-ui/core';
-import IncidentList from './IncidentList';
 import ManagedIncidentList from './ManagedIncidentList';
 import { useSelector } from 'react-redux';
 import { userCan, USER_ACTIONS } from '../../user/userUtils';
