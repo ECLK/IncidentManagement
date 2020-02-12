@@ -114,7 +114,7 @@ const EventActions = (props) => {
                     <Avatar>
                         <PermIdentityIcon />
                     </Avatar>
-                    <ListItemText primary="Assigned to" secondary={activeIncident.assignees ? activeIncident.assignees[0].displayname : ""} />
+                    <ListItemText primary="Assigned to" secondary={activeIncident.assignee ? activeIncident.assignee.displayname : ""} />
                     
                     {activeIncident.currentStatus !== 'CLOSED' &&
                         activeIncident.currentStatus !== 'INVALIDATED' && 

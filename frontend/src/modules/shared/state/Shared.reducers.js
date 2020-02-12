@@ -288,8 +288,8 @@ export default function sharedReducer(state, action) {
                 draft.selectedLanguage = action.selectedLanguage;
                 return draft;
             case RESET_ACTIVE_INCIDENT:
-                draft.activeIncident.data = {};
-                draft.activeIncidentReporter = null;
+                // draft.activeIncident.data = {};
+                // draft.activeIncidentReporter = null;
                 return draft;
         }
     });

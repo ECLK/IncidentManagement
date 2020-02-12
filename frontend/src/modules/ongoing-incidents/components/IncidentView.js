@@ -118,14 +118,14 @@ function NavTabs({ classes, match }) {
         elections,
         channels,
         categories,
-        organizations,
-        divisions
     } = sharedState;
 
     const incidents = useSelector(state => state.incident.incidents);  
     const reporters = useSelector(state => state.incident.reporters);   
     const events = useSelector(state => state.event.events); 
     const users = useSelector(state => state.user.users);
+    const organizations = useSelector(state => state.user.organizations);
+    const divisions = useSelector(state => state.user.divisions);
     const activeUser = useSelector(state => state.sharedReducer.signedInUser.data);
 
     const dispatch = useDispatch();

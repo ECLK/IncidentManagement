@@ -16,9 +16,8 @@ import { fetchUpdateWorkflow } from '../../ongoing-incidents/state/OngoingIncide
 
 const ChangeAssigneeModal = (props) => {
     const defaultOrg = "eclk";
-    const { users, divisions } = props;
+    const { users, divisions, activeIncident } = props;
     const dispatch = useDispatch();
-    const {activeIncident} = useSelector(state => state.modalReducer.modalProps);
     
     //maintains selected value in local state until change is confirmed
     const [division, setDivision] = useState(null);

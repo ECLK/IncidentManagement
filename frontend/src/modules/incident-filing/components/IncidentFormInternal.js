@@ -60,6 +60,7 @@ import { showNotification } from '../../notifications/state/notifications.action
 import TelephoneInput from './TelephoneInput';
 import { useLoadingStatus } from '../../loading-spinners/loadingHook'
 import { createInternalIncident, loadIncident, updateInternalIncident } from '../../incident/state/incidentActions';
+import * as incidentUtils from '../../incident/incidentUtils';
 
 const styles = theme => ({
     root: {
@@ -272,6 +273,7 @@ function IncidentFormInternal(props) {
             // new incident form
             return state;
         }
+        const incident = incidentUtils.getIncident(paramIncidentId);
         var initData = { ...state, ...incident };
         const reporter = reporter;
         if (reporter) {
@@ -421,7 +423,7 @@ function IncidentFormInternal(props) {
                                     handleSubmit(e)
                                 }}
                             >
-                                <div style={{ display: "none" }}>{incident?incident.id:null}</div>
+                                {/* <div style={{ display: "none" }}>{incident?incident.id:null}</div> */}
                                 {/* basic incident detail information */}
                                 <Paper className={classes.paper}>
                                     <Typography variant="h5" gutterBottom>
