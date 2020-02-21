@@ -235,14 +235,12 @@ function IncidentFormInternal(props) {
             const time = values.occured_date_time || "12:00";
             const date = values.occured_date_date
             values.occured_date = moment(`${date}T${time}`).format()
-            delete values.occured_date_time;
-            delete values.occured_date_date;
         } else {
             // to avoid sending an empty string to backend.
             values.occured_date = null
-            delete values.occured_date_time;
-            delete values.occured_date_date;
         }
+        delete values.occured_date_time;
+        delete values.occured_date_date;
         if (paramIncidentId) {
             dispatch(updateInternalIncident(paramIncidentId, values));
             props.history.push(`/app/review/${paramIncidentId}`);
@@ -287,7 +285,11 @@ function IncidentFormInternal(props) {
         }
 //TODO: Need to split the date values to date and time
         if (initData.occured_date) {
+
             initData.occured_date = moment(initData.occured_date).format("YYYY-MM-DDTHH:mm")
+            initData.occured_date_date = moment(initData.occured_date).format("YYYY-MM-DD")
+            initData.occured_date_time = moment(initData.occured_date).format("HH:mm")
+            debugger
         }
         return initData;
     }
