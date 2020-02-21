@@ -1,6 +1,6 @@
 import React from 'react';
 
-import FileUploader from '../../shared/components/FilePicker';
+import FileUploader from '../../files/components/FilePicker';
 import {
     uploadFileGuestRequest
 } from '../../incident/state/incidentActions'

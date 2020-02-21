@@ -11,7 +11,7 @@ import PlaylistAddCheck from '@material-ui/icons/PlaylistAddCheck';
 
 import { showModal } from '../../../modals/state/modal.actions'
 import { API_BASE_URL } from '../../../config';
-import FilePreviewer from '../../../shared/components/FilePreviewer/FilePreviewer';
+import FilePreviewer from '../../../files/components/FilePreviewer/FilePreviewer';
 
 
 const styles = {

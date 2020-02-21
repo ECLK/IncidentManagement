@@ -49,7 +49,7 @@ import {
 import {
     moveStepper,
 } from '../state/guestViewActions'
-import FileUploader from '../../shared/components/FilePicker';
+import FileUploader from '../../files/components/FilePicker';
 
 import {useLoadingStatus} from '../../loading-spinners/loadingHook'
 

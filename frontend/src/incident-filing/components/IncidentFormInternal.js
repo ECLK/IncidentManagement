@@ -54,7 +54,7 @@ import {
 } from '../../shared/state/Shared.actions';
 import IntlSelect from './IntlSelect';
 import moment from 'moment';
-import FileUploader from '../../shared/components/FilePicker';
+import FileUploader from '../../files/components/FilePicker';
 import { showNotification } from '../../notifications/state/notifications.actions';
 import TelephoneInput from './TelephoneInput';
 import { useLoadingStatus } from '../../loading-spinners/loadingHook'
