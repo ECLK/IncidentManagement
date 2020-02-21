@@ -131,7 +131,7 @@ function NavTabs({ classes, match }) {
     const dispatch = useDispatch();
     const changeStatus = (incidentId, status) => dispatch(updateIncidentStatus(incidentId, status));
     const onEscalateClick = () => dispatch(showModal('ESCALATE_MODAL', { incidentId: activeIncident.id }));
-    const onVerifyClick = () => dispatch(showModal('VERIFY_MODAL', { incidentId: activeIncident.id }));
+    const onVerifyClick = () => dispatch(showModal('VERIFY_CONFIRM_MODAL', { incidentId: activeIncident.id }));
     const attachFiles = (incidentId, formData) => dispatch(attachFile(incidentId, formData));
     const onResolveEvent = (eventId, decision) => { /* do nothing, event resolving is depreciated */ } 
 
