@@ -6,7 +6,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
 
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -18,17 +17,29 @@ import Menu from '@material-ui/core/Menu';
 
 import { Link, withRouter } from 'react-router-dom';
 
-import { initiateSignOut, fetchChannels, fetchElections, fetchCategories, fetchProvinces, fetchDistricts, fetchDivisionalSecretariats, fetchGramaNiladharis, fetchPollingDivisions, fetchPollingStations, fetchPoliceStations, fetchPoliceDivisions, fetchWards } from '../../state/Shared.actions'
-import { changeLanguage } from '../../state/Shared.actions';
-import { loadUsers } from '../../../user/state/userActions'
+import { 
+    initiateSignOut, 
+    fetchChannels, 
+    fetchElections, 
+    fetchCategories, 
+    fetchProvinces, 
+    fetchDistricts, 
+    fetchDivisionalSecretariats, 
+    fetchGramaNiladharis, 
+    fetchPollingDivisions, 
+    fetchPollingStations, 
+    fetchPoliceStations, 
+    fetchPoliceDivisions, 
+    fetchWards } from '../shared/state/Shared.actions'
+import { changeLanguage } from '../shared/state/Shared.actions';
+import { loadUsers } from '../user/state/userActions'
 
-import RootModal from '../../../modals/components/RootModal'
-import Notification from '../../../notifications/components/Notification';
+import RootModal from '../modals/components/RootModal'
 
-import Breadcrumbs from '../Breadcrumbs';
-import { API_BASE_URL } from '../../../config'
+import Breadcrumbs from '../shared/components/Breadcrumbs';
+import { API_BASE_URL } from '../config'
 
-import { userCan, USER_ACTIONS } from '../../../user/userUtils';
+import { userCan, USER_ACTIONS } from '../user/userUtils';
 
 const HomeLink = props => <Link to="/app/home" {...props} />
 const ReportLink = props => <Link to="/app/create" {...props} />

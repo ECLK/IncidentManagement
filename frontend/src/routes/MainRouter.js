@@ -14,7 +14,7 @@ import {SignInPage} from "../shared";
 import PrivateRoute from "./PrivateRoute";
 
 import {ReviewIncidentListView} from '../ongoing-incidents';
-import DomainContainer from '../shared/components/DomainContainer';
+import AppLayout from '../app/AppLayout';
 
 import { LandingPage } from '../guest-view';
 
@@ -37,7 +37,7 @@ class MainRouter extends Component {
       > 
         <Router history={history}>
           <div>
-            <PrivateRoute path="/app" component={DomainContainer}>
+            <PrivateRoute path="/app" component={AppLayout}>
               <Switch>
                 <PrivateRoute exact path="/app/home" component={Home} /> 
                 <PrivateRoute exact path="/app/reports" component={ReportList} /> 
