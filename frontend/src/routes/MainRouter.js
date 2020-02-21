@@ -6,23 +6,23 @@ import { history } from './history';
 import { IntlProvider } from "react-intl";
 import i18n from "../translation/i18n.js";
 
-import IncidentFormInternal from "../modules/incident-filing/components/IncidentFormInternal";
+import IncidentFormInternal from "../incident-filing/components/IncidentFormInternal";
 
-import { ReportList, ReportViewer } from "../modules/reporting";
+import { ReportList, ReportViewer } from "../reporting";
 
-import {SignInPage} from "../modules/shared";
+import {SignInPage} from "../shared";
 import PrivateRoute from "./PrivateRoute";
 
-import {ReviewIncidentListView} from '../modules/ongoing-incidents';
-import DomainContainer from '../modules/shared/components/DomainContainer';
+import {ReviewIncidentListView} from '../ongoing-incidents';
+import DomainContainer from '../shared/components/DomainContainer';
 
-import { LandingPage } from '../modules/guest-view';
+import { LandingPage } from '../guest-view';
 
-import { Home } from "../modules/home";
-import GuestIncidentForm from '../modules/guest-view/components/GuestIncidentForm'
-import IncidentView from "../modules/ongoing-incidents/components/IncidentView";
-import ArchiveIncidentListView from "../modules/ongoing-incidents/components/ArchiveIncidentListView";
-import GuestIncidentFormSuccessPage from "../modules/guest-view/components/GuestFormSuccessPage"
+import { Home } from "../home";
+import GuestIncidentForm from '../guest-view/components/GuestIncidentForm'
+import IncidentView from "../ongoing-incidents/components/IncidentView";
+import ArchiveIncidentListView from "../ongoing-incidents/components/ArchiveIncidentListView";
+import GuestIncidentFormSuccessPage from "../guest-view/components/GuestFormSuccessPage"
 
 
 class MainRouter extends Component {

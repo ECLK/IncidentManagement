@@ -3,18 +3,18 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 
-import sharedReducer from '../modules/shared/state/Shared.reducers';
-import modalReducer from '../modules/modals/state/modal.reducers';
+import sharedReducer from '../shared/state/Shared.reducers';
+import modalReducer from '../modals/state/modal.reducers';
 import { notificationReducer } 
-        from '../modules/notifications/state/notifications.reducers';
+        from '../notifications/state/notifications.reducers';
 
 //new incidents reducer
-import incidentReducer from '../modules/incident/state/incidentReducer';
-import guestViewReducer from '../modules/guest-view/state/guestViewReducer';
+import incidentReducer from '../incident/state/incidentReducer';
+import guestViewReducer from '../guest-view/state/guestViewReducer';
 
-import userReducer from '../modules/user/state/userReducer';
-import loadingReducer from '../modules/loading-spinners/state/loadingSpinnerReducer'
-import eventReducer from '../modules/event/state/eventReducer';
+import userReducer from '../user/state/userReducer';
+import loadingReducer from '../loading-spinners/state/loadingSpinnerReducer'
+import eventReducer from '../event/state/eventReducer';
 
 
 const reducer = combineReducers({
