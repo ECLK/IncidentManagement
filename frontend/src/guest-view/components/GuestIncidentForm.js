@@ -16,7 +16,7 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
-import { changeLanguage } from "../../shared/state/Shared.actions";
+import { changeLanguage } from "../../shared/state/sharedActions";
 import Logo from "../../app/Logo";
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -37,7 +37,7 @@ import {
 
     requestIncidentCatogories,
 
-} from '../../shared/state/Shared.actions';
+} from '../../shared/state/sharedActions';
 
 import {
     createGuestIncident,
@@ -94,7 +94,7 @@ const VerticalLinearStepper = (props) => {
     const { formatMessage: f } = useIntl();
 
     const dispatch = useDispatch();
-    const { elections, categories, channels } = useSelector((state) => (state.sharedReducer));
+    const { elections, categories, channels } = useSelector((state) => (state.shared));
     
     let webInfoChannelId = "Web";
     // for(var channel of channels){

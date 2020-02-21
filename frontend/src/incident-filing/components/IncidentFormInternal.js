@@ -51,7 +51,7 @@ import {
     fetchWards,
     resetActiveIncident,
     fetchPoliticalParties,
-} from '../../shared/state/Shared.actions';
+} from '../../shared/state/sharedActions';
 import IntlSelect from './IntlSelect';
 import moment from 'moment';
 import FileUploader from '../../files/components/FilePicker';
@@ -137,7 +137,7 @@ function IncidentFormInternal(props) {
         wards,
         elections,
         politicalParties,
-    } = useSelector(state=>state.sharedReducer)
+    } = useSelector(state=>state.shared)
 
     const [state, setState] = useState({
         incidentType: "COMPLAINT",

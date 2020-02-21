@@ -83,7 +83,7 @@ const styles = theme => ({
 
 function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, handlePageChange }){
 
-  const { elections, categories } = useSelector((state) => (state.sharedReducer));
+  const { elections, categories } = useSelector((state) => (state.shared));
     
     return (
         <Table className={classes.table}>

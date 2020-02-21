@@ -31,7 +31,7 @@ const styles = theme => ({
 function ReviewIncidentListView({ classes, ...props }) {
   const [filters, setFilters] = useState({});
 
-  const categories = useSelector(state => state.sharedReducer.categories);
+  const categories = useSelector(state => state.shared.categories);
   const incidentSearchFilter = useSelector(state => state.incident.incidents.searchFilter);
   const incidents = useSelector(state => state.incident.incidents);
 

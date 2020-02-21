@@ -11,10 +11,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function FilePreviewer({ url, filename, ext, classes }){
+function FilePreviewer({ url, filename, ext }){
     const [previewComponent, setPreviewComponent] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
-    const [uri, setUri] = useState(null);
 
     useEffect(() => {
         let _previewComponent = null;

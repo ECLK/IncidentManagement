@@ -63,7 +63,7 @@ class MainRouter extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    selectedLanguage: state.sharedReducer.selectedLanguage,
+    selectedLanguage: state.shared.selectedLanguage,
     ...ownProps
   };
 };

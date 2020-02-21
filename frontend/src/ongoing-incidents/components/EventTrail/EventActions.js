@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Assignees from '../Assignees';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import { getDateDiff, calculateDeadline } from './utils';
@@ -18,7 +16,6 @@ import { useDispatch, useSelector } from 'react-redux'
 
 //icons
 import RestoreIcon from '@material-ui/icons/Restore';
-import TimerIcon from '@material-ui/icons/Timer';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft'
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
@@ -28,7 +25,6 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import WhereToVoteIcon from '@material-ui/icons/WhereToVote';
-import SpeackerNotesIcon from '@material-ui/icons/SpeakerNotes';
 
 import IconButton from '@material-ui/core/IconButton';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -80,8 +76,7 @@ const EventActions = (props) => {
     const { 
         classes,
         users,
-        divisions,
-        organizations 
+        divisions
     } = props;
 
     var hourlyResponseTimes = []
@@ -91,10 +86,9 @@ const EventActions = (props) => {
 
     const dispatch = useDispatch()
     const activeIncident = props.activeIncident;
-    const currentUser = useSelector(state => state.sharedReducer.signedInUser.data);
+    const currentUser = useSelector(state => state.shared.signedInUser.data);
     const timeLimitInfo = calculateDeadline(activeIncident);
     const timeLimitText = timeLimitInfo.text;
-    const timeLimitStatus = timeLimitInfo.status;
 
     if (!activeIncident) {
         return null

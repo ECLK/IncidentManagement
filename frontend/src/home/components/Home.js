@@ -15,7 +15,7 @@ const styles = theme => ({
     }
 });
 const Home = ({classes, ...props}) =>{
-    const user = useSelector(state => state.sharedReducer.signedInUser.data);
+    const user = useSelector(state => state.shared.signedInUser.data);
 
     return (
         <Grid container>

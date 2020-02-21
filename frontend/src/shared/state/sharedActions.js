@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { createAction } from 'redux-starter-kit';
 
 import {
 
@@ -631,7 +632,7 @@ export function fetchSignIn(userName, password) {
                 signInData = (await signIn(userName, password)).data;
                 
                 if(signInData.data.token != ""){
-                    if(getState().sharedReducer.signedInUser.rememberMe){
+                    if(getState().shared.signedInUser.rememberMe){
                         localStorage.write('ECIncidentManagementUser', signInData.data);
                         token = signInData.data.token;
                     }

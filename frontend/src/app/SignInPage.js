@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import {  Redirect, withRouter } from "react-router-dom";
 
-import { fetchSignIn, toggleRememberUser } from '../shared/state/Shared.actions'
+import { fetchSignIn, toggleRememberUser } from '../shared/state/sharedActions'
 
 const styles = theme => ({
     main: {
@@ -133,8 +133,8 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        isSignedIn: state.sharedReducer.signedInUser.isSignedIn,
-        rememberMe: state.sharedReducer.signedInUser.rememberMe,
+        isSignedIn: state.shared.signedInUser.isSignedIn,
+        rememberMe: state.shared.signedInUser.rememberMe,
         ...ownProps
     }
 }

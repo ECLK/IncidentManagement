@@ -15,7 +15,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import NoteAddIcon from "@material-ui/icons/NoteAdd";
 import CheckStatusIcon from "@material-ui/icons/Announcement";
 import { Link } from "react-router-dom";
-import { changeLanguage } from "../../shared/state/Shared.actions";
+import { changeLanguage } from "../../shared/state/sharedActions";
 
 const styles = theme => ({
   root: {

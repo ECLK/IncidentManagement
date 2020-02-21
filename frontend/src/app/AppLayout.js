@@ -30,8 +30,8 @@ import {
     fetchPollingStations, 
     fetchPoliceStations, 
     fetchPoliceDivisions, 
-    fetchWards } from '../shared/state/Shared.actions'
-import { changeLanguage } from '../shared/state/Shared.actions';
+    fetchWards } from '../shared/state/sharedActions'
+import { changeLanguage } from '../shared/state/sharedActions';
 import { loadUsers } from '../user/state/userActions'
 
 import RootModal from '../modals/components/RootModal'
@@ -302,9 +302,9 @@ DomainContainer.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        isSignedIn: state.sharedReducer.signedInUser.isSignedIn,
-        selectedLanguage: state.sharedReducer.selectedLanguage,
-        signedInUser: state.sharedReducer.signedInUser.data
+        isSignedIn: state.shared.signedInUser.isSignedIn,
+        selectedLanguage: state.shared.selectedLanguage,
+        signedInUser: state.shared.signedInUser.data
     }
 }
 

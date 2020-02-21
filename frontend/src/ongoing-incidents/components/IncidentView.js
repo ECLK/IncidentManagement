@@ -106,7 +106,7 @@ function NavTabs({ classes, match }) {
     const [activeIncident, setActiveIncident] = useState(null);
     const [activeReporter, setActiveReporter] = useState(null);
 
-    const sharedState = useSelector(state => state.sharedReducer);
+    const sharedState = useSelector(state => state.shared);
     const {
         provinces, districts,
         divisionalSecretariats,
@@ -126,7 +126,7 @@ function NavTabs({ classes, match }) {
     const users = useSelector(state => state.user.users);
     const organizations = useSelector(state => state.user.organizations);
     const divisions = useSelector(state => state.user.divisions);
-    const activeUser = useSelector(state => state.sharedReducer.signedInUser.data);
+    const activeUser = useSelector(state => state.shared.signedInUser.data);
 
     const dispatch = useDispatch();
     const changeStatus = (incidentId, status) => dispatch(updateIncidentStatus(incidentId, status));

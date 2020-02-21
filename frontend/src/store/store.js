@@ -18,7 +18,7 @@ import eventReducer from '../event/state/eventReducer';
 
 
 const reducer = combineReducers({
-    sharedReducer,
+    shared: sharedReducer,
     modal: modalReducer,
     notification: notificationReducer,
     incident: incidentReducer,
