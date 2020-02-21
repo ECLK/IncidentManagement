@@ -18,33 +18,12 @@ import DomainContainer from '../modules/shared/components/DomainContainer';
 
 import { LandingPage } from '../modules/guest-view';
 
-import { Typography } from '@material-ui/core';
-import { FormattedMessage } from 'react-intl';
 import { Home } from "../modules/home";
 import GuestIncidentForm from '../modules/guest-view/components/GuestIncidentForm'
 import IncidentView from "../modules/ongoing-incidents/components/IncidentView";
 import ArchiveIncidentListView from "../modules/ongoing-incidents/components/ArchiveIncidentListView";
 import GuestIncidentFormSuccessPage from "../modules/guest-view/components/GuestFormSuccessPage"
 
-class Layout extends React.Component{
-  
-  render () {    
-    return (
-      <DomainContainer
-          header={() =>
-              <Typography variant="h5" color='inherit' noWrap className='line-height-fix'>
-                  <FormattedMessage
-                      id='eclk.incident.management.report.incidents'
-                      description='Report an Incident'
-                      defaultMessage='Report an Incident'
-                  />
-              </Typography>
-          }
-          content={this.props.children}
-      />
-    )
-  }
-}
 
 class MainRouter extends Component {
   render() {
@@ -58,7 +37,7 @@ class MainRouter extends Component {
       > 
         <Router history={history}>
           <div>
-            <PrivateRoute path="/app" component={Layout}>
+            <PrivateRoute path="/app" component={DomainContainer}>
               <Switch>
                 <PrivateRoute exact path="/app/home" component={Home} /> 
                 <PrivateRoute exact path="/app/reports" component={ReportList} /> 

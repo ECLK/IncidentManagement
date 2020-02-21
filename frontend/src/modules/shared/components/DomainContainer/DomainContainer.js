@@ -276,7 +276,7 @@ class DomainContainer extends React.Component {
 
                     <div className={classes.breadCrumbWrapper}><Breadcrumbs pathname={location.pathname} /></div>
 
-                    {this.props.content}
+                    {this.props.children}
 
                 </main>
             </div>
