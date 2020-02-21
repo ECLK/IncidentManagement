@@ -17,7 +17,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
 import { changeLanguage } from "../../shared/state/Shared.actions";
-import Logo from "../../shared/components/Logo";
+import Logo from "../../app/Logo";
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import green from '@material-ui/core/colors/green';
@@ -49,7 +49,7 @@ import {
 import {
     moveStepper,
 } from '../state/guestViewActions'
-import FileUploader from '../../shared/components/FileUploader';
+import FileUploader from '../../shared/components/FilePicker';
 
 import {useLoadingStatus} from '../../loading-spinners/loadingHook'
 

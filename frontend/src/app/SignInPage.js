@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import {  Redirect, withRouter } from "react-router-dom";
 
-import { fetchSignIn, toggleRememberUser } from '../state/Shared.actions'
+import { fetchSignIn, toggleRememberUser } from '../shared/state/Shared.actions'
 
 const styles = theme => ({
     main: {

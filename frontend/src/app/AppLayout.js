@@ -36,7 +36,7 @@ import { loadUsers } from '../user/state/userActions'
 
 import RootModal from '../modals/components/RootModal'
 
-import Breadcrumbs from '../shared/components/Breadcrumbs';
+import Breadcrumbs from './Breadcrumbs';
 import { API_BASE_URL } from '../config'
 
 import { userCan, USER_ACTIONS } from '../user/userUtils';

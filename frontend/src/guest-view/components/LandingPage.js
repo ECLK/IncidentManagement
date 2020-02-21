@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import Logo from "../../shared/components/Logo";
+import Logo from "../../app/Logo";
 import Grid from "@material-ui/core/Grid";
 import { useDispatch } from "react-redux";
 import { FormattedMessage } from "react-intl";

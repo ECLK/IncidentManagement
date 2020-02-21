@@ -23,7 +23,7 @@ import {
 import { EventActions } from './EventTrail'
 import {showModal} from '../../modals/state/modal.actions'
 import { userCan, USER_ACTIONS } from '../../user/userUtils';
-import FileUploader from '../../shared/components/FileUploader';
+import FileUploader from '../../shared/components/FilePicker';
 import { loadIncident, updateIncidentStatus } from '../../incident/state/incidentActions';
 import { getIncidentEvents } from '../../event/state/eventActions';
 

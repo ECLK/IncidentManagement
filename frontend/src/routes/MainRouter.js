@@ -10,7 +10,7 @@ import IncidentFormInternal from "../incident-filing/components/IncidentFormInte
 
 import { ReportList, ReportViewer } from "../reporting";
 
-import {SignInPage} from "../shared";
+import SignInPage from "../app/SignInPage";
 import PrivateRoute from "./PrivateRoute";
 
 import {ReviewIncidentListView} from '../ongoing-incidents';
