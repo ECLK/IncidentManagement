@@ -52,7 +52,6 @@ import {
     resetActiveIncident,
     fetchPoliticalParties,
 } from '../../shared/state/Shared.actions';
-import DropZoneBase from '../../shared/components/DropZoneBase';
 import IntlSelect from './IntlSelect';
 import moment from 'moment';
 import FileUploader from '../../shared/components/FileUploader';
@@ -841,7 +840,6 @@ function IncidentFormInternal(props) {
                                                     files={state.files}
                                                     setFiles={handleFileSelect}
                                                 />
-                                                {/* <DropZoneBase setSelectedFiles={handleFileSelect} /> */}
                                             </Grid>
                                         }
 
