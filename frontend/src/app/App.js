@@ -7,9 +7,9 @@ import './App.css';
 import store from '../store';
 import MainRouter from '../routes/MainRouter';
 
-import ErrorNotification from '../modules/notifications/components/ErrorNotification';
-import ConfirmNotification from '../modules/notifications/components/ConfirmNotification';
-import LoadingNotification from '../modules/notifications/components/LoadingNotification';
+import ErrorNotification from '../notifications/components/ErrorNotification';
+import ConfirmNotification from '../notifications/components/ConfirmNotification';
+import LoadingNotification from '../notifications/components/LoadingNotification';
 
 class App extends Component {
   render() {
