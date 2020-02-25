@@ -622,29 +622,6 @@ function IncidentFormInternal(props) {
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
-                                            <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="politicalParty">Against who</InputLabel>
-                                                <Select
-                                                    value={values.politicalParty}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: 'politicalParty',
-                                                        id: 'politicalParty',
-                                                    }}
-                                                >
-                                                    <MenuItem value=""> <em>None</em> </MenuItem>
-                                                    {politicalParties.allCodes.map((c, k) => {
-                                                        let currParty = politicalParties.byCode[c]
-                                                        return (
-                                                            <MenuItem value={currParty.code} key={k}>
-                                                                {currParty.name}
-                                                            </MenuItem>
-                                                        )
-                                                    })}
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
                                             <FormControl error={touched.severity && errors.severity} component="fieldset" className={classes.formControl}>
                                                 <FormLabel component="legend">Severity</FormLabel>
                                                 <RadioGroup
