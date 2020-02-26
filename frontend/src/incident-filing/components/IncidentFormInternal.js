@@ -947,8 +947,13 @@ function IncidentFormInternal(props) {
 
                                         {!paramIncidentId && (
                                             <Grid item xs={12} sm={6}>
-                                                <InputLabel htmlFor="election">Upload File</InputLabel>
-                                                <FileUploader files={state.files} setFiles={handleFileSelect} />
+                                                <InputLabel htmlFor="election" >
+                                                    Upload File (You can upload multiple files)
+                                                </InputLabel>
+                                                <FileUploader
+                                                    files={state.files}
+                                                    setFiles={handleFileSelect}
+                                                />
                                             </Grid>
                                         )}
                                     </Grid>
