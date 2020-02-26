@@ -191,6 +191,25 @@ function IncidentFormInternal(props) {
         handleConfirmSubmit: false
     });
 
+    const [complaintCategories, setComplaintCategories] = useState();
+    const [inquiryCategories, setInquiryCategories] = useState();
+
+    useEffect(() => {
+        const complaint = [];
+        const inquiry = [];
+        if (categories) {
+            categories.map((category) => {
+                if (category.top_category === "Inquiry") {
+                    inquiry.push(category);
+                } else {
+                    complaint.push(category);
+                }
+            });
+            setComplaintCategories(complaint);
+            setInquiryCategories(inquiry);
+        }
+    }, [categories]);
+
     useEffect(() => {
         dispatch(fetchChannels());
         dispatch(fetchElections());
@@ -535,11 +554,13 @@ function IncidentFormInternal(props) {
                                                     {" "}
                                                     <em>None</em>{" "}
                                                 </MenuItem>
-                                                {elections.map((c, k) => (
-                                                    <MenuItem value={c.code} key={k}>
-                                                        {c.name}
-                                                    </MenuItem>
-                                                ))}
+                                                {elections
+                                                    ? elections.map((c, k) => (
+                                                          <MenuItem value={c.code} key={k}>
+                                                              {c.name}
+                                                          </MenuItem>
+                                                      ))
+                                                    : null}
                                             </Select>
                                             <FormHelperText>
                                                 {touched.election && errors.election ? errors.election : ""}
@@ -558,19 +579,21 @@ function IncidentFormInternal(props) {
                                                     name: "category",
                                                     id: "category"
                                                 }}>
-                                                {categories.map((c, k) => (
-                                                    <MenuItem value={c.id} key={k}>
-                                                        <div className={classes.langCats}>
-                                                            <div>{c.code}</div>
-                                                            <div>|</div>
-                                                            <div>{c.sub_category}</div>
-                                                            <div>|</div>
-                                                            <div> {c.sn_sub_category}</div>
-                                                            <div>|</div>
-                                                            <div> {c.tm_sub_category}</div>
-                                                        </div>
-                                                    </MenuItem>
-                                                ))}
+                                                {complaintCategories
+                                                    ? complaintCategories.map((c, k) => (
+                                                          <MenuItem value={c.id} key={k}>
+                                                              <div className={classes.langCats}>
+                                                                  <div>{c.code}</div>
+                                                                  <div>|</div>
+                                                                  <div>{c.sub_category}</div>
+                                                                  <div>|</div>
+                                                                  <div> {c.sn_sub_category}</div>
+                                                                  <div>|</div>
+                                                                  <div> {c.tm_sub_category}</div>
+                                                              </div>
+                                                          </MenuItem>
+                                                      ))
+                                                    : null}
                                             </Select>
                                             <FormHelperText>
                                                 {touched.category && errors.category ? errors.category : ""}
@@ -645,19 +668,21 @@ function IncidentFormInternal(props) {
                                                         {" "}
                                                         <em>None</em>{" "}
                                                     </MenuItem>
-                                                    {categories.map((c, k) => (
-                                                        <MenuItem value={c.id} key={k}>
-                                                            <div className={classes.langCats}>
-                                                                <div>{c.code}</div>
-                                                                <div>|</div>
-                                                                <div>{c.sub_category}</div>
-                                                                <div>|</div>
-                                                                <div> {c.sn_sub_category}</div>
-                                                                <div>|</div>
-                                                                <div> {c.tm_sub_category}</div>
-                                                            </div>
-                                                        </MenuItem>
-                                                    ))}
+                                                    {inquiryCategories
+                                                        ? inquiryCategories.map((c, k) => (
+                                                              <MenuItem value={c.id} key={k}>
+                                                                  <div className={classes.langCats}>
+                                                                      <div>{c.code}</div>
+                                                                      <div>|</div>
+                                                                      <div>{c.sub_category}</div>
+                                                                      <div>|</div>
+                                                                      <div> {c.sn_sub_category}</div>
+                                                                      <div>|</div>
+                                                                      <div> {c.tm_sub_category}</div>
+                                                                  </div>
+                                                              </MenuItem>
+                                                          ))
+                                                        : null}
                                                 </Select>
                                             </FormControl>
                                         </Grid>
@@ -947,13 +972,10 @@ function IncidentFormInternal(props) {
 
                                         {!paramIncidentId && (
                                             <Grid item xs={12} sm={6}>
-                                                <InputLabel htmlFor="election" >
+                                                <InputLabel htmlFor="election">
                                                     Upload File (You can upload multiple files)
                                                 </InputLabel>
-                                                <FileUploader
-                                                    files={state.files}
-                                                    setFiles={handleFileSelect}
-                                                />
+                                                <FileUploader files={state.files} setFiles={handleFileSelect} />
                                             </Grid>
                                         )}
                                     </Grid>
@@ -961,134 +983,132 @@ function IncidentFormInternal(props) {
                             ) : null}
 
                             {/* contact information of the complianer */}
-                            {values.incidentType === "COMPLAINT" ? (
-                                <Paper className={classes.paper}>
-                                    <Typography variant="h5" gutterBottom>
-                                        Reporter Information
-                                    </Typography>
-                                    <Grid container spacing={24}>
-                                        <Grid item xs={12} sm={5}>
-                                            <TextField
-                                                id="reporterName"
-                                                name="reporterName"
-                                                label="Reporter Name"
-                                                className={classes.textField}
-                                                value={values.reporterName}
+                            <Paper className={classes.paper}>
+                                <Typography variant="h5" gutterBottom>
+                                    Reporter Information
+                                </Typography>
+                                <Grid container spacing={24}>
+                                    <Grid item xs={12} sm={5}>
+                                        <TextField
+                                            id="reporterName"
+                                            name="reporterName"
+                                            label="Reporter Name"
+                                            className={classes.textField}
+                                            value={values.reporterName}
+                                            onChange={handleChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={3}>
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel htmlFor="reporterType">Reporter Type</InputLabel>
+                                            <Select
+                                                value={values.reporterType}
                                                 onChange={handleChange}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={12} sm={3}>
-                                            <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="reporterType">Reporter Type</InputLabel>
-                                                <Select
-                                                    value={values.reporterType}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: "reporterType",
-                                                        id: "reporterType"
-                                                    }}>
-                                                    <MenuItem value="">
-                                                        {" "}
-                                                        <em>None</em>{" "}
-                                                    </MenuItem>
-                                                    <MenuItem value={"Individual"}>Individual</MenuItem>
-                                                    <MenuItem value={"Organization"}>Organization</MenuItem>
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
-                                        <Grid item xs={12} sm={3}>
-                                            <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="reporterAffiliation">
-                                                    Political Affiliation
-                                                </InputLabel>
-                                                <Select
-                                                    value={values.reporterAffiliation}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: "reporterAffiliation",
-                                                        id: "reporterAffiliation"
-                                                    }}>
-                                                    <MenuItem value="">
-                                                        {" "}
-                                                        <em>None</em>{" "}
-                                                    </MenuItem>
-                                                    {Object.entries(politicalPartyLookup).map(([key, value]) => {
-                                                        return (
-                                                            <MenuItem key={key} value={key}>
-                                                                {value}
-                                                            </MenuItem>
-                                                        );
-                                                    })}
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <TextField
-                                                id="reporterAddress"
-                                                name="reporterAddress"
-                                                label="Reporter Address"
-                                                className={classes.textField}
-                                                value={values.reporterAddress}
+                                                inputProps={{
+                                                    name: "reporterType",
+                                                    id: "reporterType"
+                                                }}>
+                                                <MenuItem value="">
+                                                    {" "}
+                                                    <em>None</em>{" "}
+                                                </MenuItem>
+                                                <MenuItem value={"Individual"}>Individual</MenuItem>
+                                                <MenuItem value={"Organization"}>Organization</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} sm={3}>
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel htmlFor="reporterAffiliation">Political Affiliation</InputLabel>
+                                            <Select
+                                                value={values.reporterAffiliation}
                                                 onChange={handleChange}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-                                            <TelephoneInput
-                                                className={classes.textField}
-                                                name="reporterMobile"
-                                                label="Reporter Mobile"
-                                            />
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                id="reporterEmail"
-                                                name="reporterEmail"
-                                                label="Reporter Email"
-                                                className={classes.textField}
-                                                value={values.reporterEmail}
+                                                inputProps={{
+                                                    name: "reporterAffiliation",
+                                                    id: "reporterAffiliation"
+                                                }}>
+                                                <MenuItem value="">
+                                                    {" "}
+                                                    <em>None</em>{" "}
+                                                </MenuItem>
+                                                {Object.entries(politicalPartyLookup).map(([key, value]) => {
+                                                    return (
+                                                        <MenuItem key={key} value={key}>
+                                                            {value}
+                                                        </MenuItem>
+                                                    );
+                                                })}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            id="reporterAddress"
+                                            name="reporterAddress"
+                                            label="Reporter Address"
+                                            className={classes.textField}
+                                            value={values.reporterAddress}
+                                            onChange={handleChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TelephoneInput
+                                            className={classes.textField}
+                                            name="reporterMobile"
+                                            label="Reporter Mobile"
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            id="reporterEmail"
+                                            name="reporterEmail"
+                                            label="Reporter Email"
+                                            className={classes.textField}
+                                            value={values.reporterEmail}
+                                            onChange={handleChange}
+                                            error={touched.reporterEmail && errors.reporterEmail}
+                                            helperText={touched.reporterEmail ? errors.reporterEmail : null}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            id="accusedName"
+                                            name="accusedName"
+                                            label="Accused Name"
+                                            className={classes.textField}
+                                            value={values.accusedName}
+                                            onChange={handleChange}
+                                            error={touched.accusedName && errors.accusedName}
+                                            helperText={touched.accusedName ? errors.accusedName : null}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel htmlFor="accusedAffiliation">
+                                                Political Affiliation of the accused
+                                            </InputLabel>
+                                            <Select
+                                                value={values.accusedAffiliation}
                                                 onChange={handleChange}
-                                                error={touched.reporterEmail && errors.reporterEmail}
-                                                helperText={touched.reporterEmail ? errors.reporterEmail : null}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                id="accusedName"
-                                                name="accusedName"
-                                                label="Accused Name"
-                                                className={classes.textField}
-                                                value={values.accusedName}
-                                                onChange={handleChange}
-                                                error={touched.accusedName && errors.accusedName}
-                                                helperText={touched.accusedName ? errors.accusedName : null}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-                                            <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="accusedAffiliation">
-                                                    Political Affiliation of the accused
-                                                </InputLabel>
-                                                <Select
-                                                    value={values.accusedAffiliation}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: "accusedAffiliation",
-                                                        id: "accusedAffiliation"
-                                                    }}>
-                                                    <MenuItem value="">
-                                                        {" "}
-                                                        <em>None</em>{" "}
-                                                    </MenuItem>
-                                                    {Object.entries(politicalPartyLookup).map(([key, value]) => {
-                                                        return (
-                                                            <MenuItem key={key} value={key}>
-                                                                {value}
-                                                            </MenuItem>
-                                                        );
-                                                    })}
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
+                                                inputProps={{
+                                                    name: "accusedAffiliation",
+                                                    id: "accusedAffiliation"
+                                                }}>
+                                                <MenuItem value="">
+                                                    {" "}
+                                                    <em>None</em>{" "}
+                                                </MenuItem>
+                                                {Object.entries(politicalPartyLookup).map(([key, value]) => {
+                                                    return (
+                                                        <MenuItem key={key} value={key}>
+                                                            {value}
+                                                        </MenuItem>
+                                                    );
+                                                })}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    {values.incidentType === "COMPLAINT" ? (
                                         <Grid item xs={12}>
                                             <FormControlLabel
                                                 control={
@@ -1103,9 +1123,9 @@ function IncidentFormInternal(props) {
                                                 label="Reporter details can be shared with external parties."
                                             />
                                         </Grid>
-                                    </Grid>
-                                </Paper>
-                            ) : null}
+                                    ) : null}
+                                </Grid>
+                            </Paper>
 
                             {/* Incident location information */}
                             <Paper className={classes.paper}>
