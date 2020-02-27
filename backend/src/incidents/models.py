@@ -8,6 +8,7 @@ import uuid
 import enum
 from datetime import datetime
 from .permissions import *
+from ..common.models import Category
 
 class Occurrence(enum.Enum):
     OCCURRED = "Occurred"
@@ -108,16 +109,20 @@ class IncidentComment(models.Model):
         ordering = ("id",)
 
 
-def generate_ref_id():
+'''
+Generates Reference id for incidents
+'''
+def generate_ref_id(category, institution):
     current_count = Incident.objects.count()
-    refID = "%s/%0.4d" % (datetime.now().strftime("%Y/%m/%d"), current_count+1)
+    refID = "%s/%0.4d/%s/%s" % (datetime.now().strftime("%Y%m%d"), current_count+1, category, institution)
     return refID
+
 
 class Incident(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    refId = models.CharField(max_length=200, default=generate_ref_id)
+    refId = models.CharField(max_length=200, null=True)
 
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -157,6 +162,9 @@ class Incident(models.Model):
     # All the relavant parties such as police,lawyer,NGO etc.
     linked_individuals =  models.ManyToManyField(User, related_name='incident_linked_individuals', blank=True)
 
+    #institution Id where the complaint is made : Generated through a service
+    institution = models.CharField(max_length=200, null=True, blank=True)
+    
     # location related details
     location = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
@@ -195,6 +203,11 @@ class Incident(models.Model):
     # new severity mapping
     # alternative of issue #180
     severity = models.IntegerField(default=None, null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    REQUIRED_FIELDS = ['category', 'institution']
+
+    def save(self, *args, **kwargs):
+        self.refId = generate_ref_id(category=self.category, institution=self.institution)
+        super(Incident, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ("created_date",)
