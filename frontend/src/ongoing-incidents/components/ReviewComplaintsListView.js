@@ -28,12 +28,12 @@ const styles = theme => ({
   }
 });
 
-function ReviewIncidentListView({ classes, ...props }) {
+function ReviewComplaintsListView({ classes, ...props }) {
   const [filters, setFilters] = useState({});
 
   const categories = useSelector(state => state.shared.categories);
   const incidentSearchFilter = useSelector(state => state.incident.incidents.searchFilter);
-  const incidents = useSelector(state => state.incident.incidents);
+  let incidents = useSelector(state => state.incident.incidents);
 
   const dispatch = useDispatch();
   const handlePageChange = (event, newPage) => dispatch(loadAllIncidents(incidentSearchFilter, newPage+1));
@@ -102,4 +102,4 @@ function ReviewIncidentListView({ classes, ...props }) {
   );
 }
 
-export default withStyles(styles)(ReviewIncidentListView);
+export default withStyles(styles)(ReviewComplaintsListView);

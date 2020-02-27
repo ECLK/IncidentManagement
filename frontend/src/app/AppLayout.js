@@ -43,7 +43,8 @@ import { userCan, USER_ACTIONS } from '../user/userUtils';
 
 const HomeLink = props => <Link to="/app/home" {...props} />
 const ReportLink = props => <Link to="/app/create" {...props} />
-const ReviewLink = props => <Link to="/app/review" {...props} />
+const ReviewComplaintsLink = props => <Link to="/app/review-complaints" {...props} />
+const ReviewInquiriesLink = props => <Link to="/app/review-inquiries" {...props} />
 const StaticReportLink = props => <Link to="/app/reports" {...props} />
 const ArchiveLink = props => <Link to="/app/archive" {...props} />
 
@@ -206,8 +207,8 @@ class DomainContainer extends React.Component {
                         color="inherit" component={ReportLink}>Create</Button>
                     
                     {userCan(signedInUser, null, USER_ACTIONS.CAN_REVIEW_INCIDENTS) && (
-                        <Button variant={selectedMainSection==='review'?'outlined': 'flat'} 
-                            color="inherit" component={ReviewLink}>Review</Button>
+                        <Button variant={selectedMainSection==='review-complaints'?'outlined': 'flat'}
+                            color="inherit" component={ReviewComplaintsLink}>Review</Button>
                     )}
                     
                     {userCan(signedInUser, null, USER_ACTIONS.CAN_VIEW_REPORTS) && (
