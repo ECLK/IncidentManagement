@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { Button } from '@material-ui/core';
 
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
@@ -94,6 +95,13 @@ const styles = theme => ({
         ...theme.mixins.toolbar,
         justifyContent: 'flex-end',
     },
+    reviewMenu: {
+        li: {
+            paddingTop: 8,
+            paddingBottom: 8
+        },
+        boxShadow: 'none'
+    },
     content: {
         flexGrow: 1,
         paddingTop: theme.spacing.unit * 3,
@@ -124,7 +132,8 @@ class DomainContainer extends React.Component {
   state = {
     open: true,
     anchorEl: null,
-    anchorLang: null
+    anchorLang: null,
+    menuAnchorEl: null
   };
 
   componentDidMount() {
@@ -181,6 +190,18 @@ class DomainContainer extends React.Component {
     window.open(API_BASE_URL+'/admin/password_change/', '_blank');
   }
 
+  onClickReviewMenuOpenButton = (e) => {
+    this.setState({ menuAnchorEl: e.currentTarget });
+  }
+
+  handleReviewMenuClose = () => {
+      this.setState({ menuAnchorEl: null });
+  }
+
+  onClickReviewMenuItem = (e) => {
+      this.setState({ menuAnchorEl: null });
+  }
+
   render() {
     const { classes, selectedLanguage, signedInUser, location } = this.props;
     const { open, anchorEl, anchorLang } = this.state;
@@ -207,8 +228,28 @@ class DomainContainer extends React.Component {
                         color="inherit" component={ReportLink}>Create</Button>
                     
                     {userCan(signedInUser, null, USER_ACTIONS.CAN_REVIEW_INCIDENTS) && (
-                        <Button variant={selectedMainSection==='review-complaints'?'outlined': 'flat'}
-                            color="inherit" component={ReviewComplaintsLink}>Review</Button>
+                        <spanner>
+                            <Button variant={selectedMainSection==='review-complaints' || selectedMainSection === 'review-inquiries'?'outlined': 'flat'}
+                                color="inherit" onClick={this.onClickReviewMenuOpenButton} aria-owns="review-menu">Review <ArrowDropDown/></Button>
+                            <Menu id="review-menu" open={Boolean(this.state.menuAnchorEl)}
+                                  onClose={this.handleReviewMenuClose} anchorEl={this.state.menuAnchorEl} className={classes.reviewMenu}
+                                  anchorOrigin={{
+                                      vertical: 'bottom',
+                                      horizontal: 'center',
+                                  }}
+                                  transformOrigin={{
+                                      vertical: 'top',
+                                      horizontal: 'center',
+                                  }}>
+                                <MenuItem component={ReviewComplaintsLink} onClick={this.onClickReviewMenuItem}>
+                                    Complaints
+                                </MenuItem>
+                                <MenuItem component={ReviewInquiriesLink} onClick={this.onClickReviewMenuItem}>
+                                    Inquiries
+                                </MenuItem>
+
+                            </Menu>
+                        </spanner>
                     )}
                     
                     {userCan(signedInUser, null, USER_ACTIONS.CAN_VIEW_REPORTS) && (
