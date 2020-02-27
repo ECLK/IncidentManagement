@@ -601,118 +601,14 @@ function IncidentFormInternal(props) {
                                         </FormControl>
                                     </Grid>
                                     {!paramIncidentId && (
-                                        <Grid item xs={12} sm={12}>
+                                        <Grid item xs={12} sm={6}>
                                             <InputLabel htmlFor="election">
                                                 Upload File (You can upload multiple files)
                                             </InputLabel>
                                             <FileUploader files={state.files} setFiles={handleFileSelect} />
                                         </Grid>
                                     )}
-                                </Grid>
-                            </Paper>
-                            {values.incidentType === "INQUIRY" ? (
-                                <Paper className={classes.paper}>
-                                    <Typography variant="h5" gutterBottom>
-                                        Inquiry Details
-                                    </Typography>
-                                    <Grid container spacing={24}>
-                                        {/* <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                id="referenceNumber"
-                                                name="referenceNumber"
-                                                label="Reference Name"
-                                                className={classes.textField}
-                                                value={values.referenceNumber}
-                                                onChange={handleChange}
-                                            />
-                                        </Grid> */}
-                                        <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                id="receivedDate"
-                                                label="Received date"
-                                                type="date"
-                                                value={values.receivedDate}
-                                                InputLabelProps={{ shrink: true }}
-                                                onChange={handleChange}
-                                                error={errors.receivedDate}
-                                                helperText={errors.receivedDate}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                id="letterDate"
-                                                label="Letter date"
-                                                type="date"
-                                                value={values.letterDate}
-                                                InputLabelProps={{ shrink: true }}
-                                                onChange={handleChange}
-                                                error={errors.letterDate}
-                                                helperText={errors.letterDate}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                id="stampDate"
-                                                label="Stamp date"
-                                                type="date"
-                                                value={values.stampDate}
-                                                InputLabelProps={{ shrink: true }}
-                                                onChange={handleChange}
-                                                error={errors.stampDate}
-                                                helperText={errors.stampDate}
-                                            />
-                                        </Grid>
-                                        {/* <Grid item xs={12} sm={6}>
-                                            <FormControl className={classes.formControl}>
-                                                <InputLabel htmlFor="inquiryCategory">Category</InputLabel>
-                                                <Select
-                                                    value={values.inquiryCategory}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: "inquiryCategory",
-                                                        id: "inquiryCategory"
-                                                    }}>
-                                                    <MenuItem value="">
-                                                        {" "}
-                                                        <em>None</em>{" "}
-                                                    </MenuItem>
-                                                    {inquiryCategories
-                                                        ? inquiryCategories.map((c, k) => (
-                                                              <MenuItem value={c.id} key={k}>
-                                                                  <div className={classes.langCats}>
-                                                                      <div>{c.code}</div>
-                                                                      <div>|</div>
-                                                                      <div>{c.sub_category}</div>
-                                                                      <div>|</div>
-                                                                      <div> {c.sn_sub_category}</div>
-                                                                      <div>|</div>
-                                                                      <div> {c.tm_sub_category}</div>
-                                                                  </div>
-                                                              </MenuItem>
-                                                          ))
-                                                        : null}
-                                                </Select>
-                                            </FormControl>
-                                        </Grid> */}
-                                        <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                id="institution"
-                                                name="institution"
-                                                label="Institution"
-                                                className={classes.textField}
-                                                value={values.institution}
-                                                onChange={handleChange}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                </Paper>
-                            ) : null}
-                            {values.incidentType === "COMPLAINT" ? (
-                                <Paper className={classes.paper}>
-                                    <Typography variant="h5" gutterBottom>
-                                        Complaint Details
-                                    </Typography>
-                                    <Grid container spacing={24}>
+                                    {values.incidentType === "COMPLAINT" ? (
                                         <Grid item xs={12} sm={6}>
                                             <FormControl
                                                 error={touched.occurrence && errors.occurrence}
@@ -747,38 +643,8 @@ function IncidentFormInternal(props) {
                                                 ) : null}
                                             </FormControl>
                                         </Grid>
-                                        <Grid item xs={6} sm={3}>
-                                            <TextField
-                                                id="occured_date_date"
-                                                label="Incident date"
-                                                type="date"
-                                                value={values.occured_date_date}
-                                                InputLabelProps={{ shrink: true }}
-                                                onChange={handleChange}
-                                                inputProps={{
-                                                    max:
-                                                        values.occurrence === "OCCURRED"
-                                                            ? moment().format("YYYY-MM-DD")
-                                                            : null,
-                                                    min:
-                                                        values.occurrence === "WILL_OCCUR"
-                                                            ? moment().format("YYYY-MM-DD")
-                                                            : null
-                                                }}
-                                                error={errors.occured_date_date}
-                                                helperText={errors.occured_date_date}
-                                            />
-                                            <TextField
-                                                id="occured_date_time"
-                                                label="Incident time"
-                                                type="time"
-                                                value={values.occured_date_time}
-                                                InputLabelProps={{ shrink: true }}
-                                                onChange={handleChange}
-                                                error={errors.occured_date_time}
-                                                helperText={errors.occured_date_time}
-                                            />
-                                        </Grid>
+                                    ) : null}
+                                    {values.incidentType === "COMPLAINT" ? (
                                         <Grid item xs={12} sm={6}>
                                             <FormControl
                                                 error={touched.severity && errors.severity}
@@ -977,10 +843,139 @@ function IncidentFormInternal(props) {
                                                 </FormHelperText>
                                             </FormControl>
                                         </Grid>
-                                    </Grid>
-                                </Paper>
-                            ) : null}
-
+                                    ) : null}
+                                    {values.incidentType === "COMPLAINT" ? (
+                                        <Grid item xs={6} sm={3}>
+                                            <TextField
+                                                id="occured_date_date"
+                                                label="Incident date"
+                                                type="date"
+                                                value={values.occured_date_date}
+                                                InputLabelProps={{ shrink: true }}
+                                                onChange={handleChange}
+                                                inputProps={{
+                                                    max:
+                                                        values.occurrence === "OCCURRED"
+                                                            ? moment().format("YYYY-MM-DD")
+                                                            : null,
+                                                    min:
+                                                        values.occurrence === "WILL_OCCUR"
+                                                            ? moment().format("YYYY-MM-DD")
+                                                            : null
+                                                }}
+                                                error={errors.occured_date_date}
+                                                helperText={errors.occured_date_date}
+                                            />
+                                            <TextField
+                                                id="occured_date_time"
+                                                label="Incident time"
+                                                type="time"
+                                                value={values.occured_date_time}
+                                                InputLabelProps={{ shrink: true }}
+                                                onChange={handleChange}
+                                                error={errors.occured_date_time}
+                                                helperText={errors.occured_date_time}
+                                            />
+                                        </Grid>
+                                    ) : null}
+                                    {/* <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                id="referenceNumber"
+                                                name="referenceNumber"
+                                                label="Reference Name"
+                                                className={classes.textField}
+                                                value={values.referenceNumber}
+                                                onChange={handleChange}
+                                            />
+                                        </Grid> */}
+                                    {values.incidentType === "INQUIRY" ? (
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                id="receivedDate"
+                                                label="Received date"
+                                                type="date"
+                                                value={values.receivedDate}
+                                                InputLabelProps={{ shrink: true }}
+                                                onChange={handleChange}
+                                                error={errors.receivedDate}
+                                                helperText={errors.receivedDate}
+                                            />
+                                        </Grid>
+                                    ) : null}
+                                    {values.incidentType === "INQUIRY" ? (
+                                        <Grid item xs={12} sm={3}>
+                                            <TextField
+                                                id="letterDate"
+                                                label="Letter date"
+                                                type="date"
+                                                value={values.letterDate}
+                                                InputLabelProps={{ shrink: true }}
+                                                onChange={handleChange}
+                                                error={errors.letterDate}
+                                                helperText={errors.letterDate}
+                                            />
+                                        </Grid>
+                                    ) : null}
+                                    {values.incidentType === "INQUIRY" ? (
+                                        <Grid item xs={12} sm={3}>
+                                            <TextField
+                                                id="stampDate"
+                                                label="Stamp date"
+                                                type="date"
+                                                value={values.stampDate}
+                                                InputLabelProps={{ shrink: true }}
+                                                onChange={handleChange}
+                                                error={errors.stampDate}
+                                                helperText={errors.stampDate}
+                                            />
+                                        </Grid>
+                                    ) : null}
+                                    {/* <Grid item xs={12} sm={6}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="inquiryCategory">Category</InputLabel>
+                                                <Select
+                                                    value={values.inquiryCategory}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: "inquiryCategory",
+                                                        id: "inquiryCategory"
+                                                    }}>
+                                                    <MenuItem value="">
+                                                        {" "}
+                                                        <em>None</em>{" "}
+                                                    </MenuItem>
+                                                    {inquiryCategories
+                                                        ? inquiryCategories.map((c, k) => (
+                                                              <MenuItem value={c.id} key={k}>
+                                                                  <div className={classes.langCats}>
+                                                                      <div>{c.code}</div>
+                                                                      <div>|</div>
+                                                                      <div>{c.sub_category}</div>
+                                                                      <div>|</div>
+                                                                      <div> {c.sn_sub_category}</div>
+                                                                      <div>|</div>
+                                                                      <div> {c.tm_sub_category}</div>
+                                                                  </div>
+                                                              </MenuItem>
+                                                          ))
+                                                        : null}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid> */}
+                                    {values.incidentType === "INQUIRY" ? (
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                id="institution"
+                                                name="institution"
+                                                label="Institution"
+                                                className={classes.textField}
+                                                value={values.institution}
+                                                onChange={handleChange}
+                                            />
+                                        </Grid>
+                                    ) : null}
+                                </Grid>
+                            </Paper>
                             {/* contact information of the complianer */}
                             <Paper className={classes.paper}>
                                 <Typography variant="h5" gutterBottom>
