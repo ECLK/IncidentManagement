@@ -600,6 +600,14 @@ function IncidentFormInternal(props) {
                                             </FormHelperText>
                                         </FormControl>
                                     </Grid>
+                                    {!paramIncidentId && (
+                                        <Grid item xs={12} sm={12}>
+                                            <InputLabel htmlFor="election">
+                                                Upload File (You can upload multiple files)
+                                            </InputLabel>
+                                            <FileUploader files={state.files} setFiles={handleFileSelect} />
+                                        </Grid>
+                                    )}
                                 </Grid>
                             </Paper>
                             {values.incidentType === "INQUIRY" ? (
@@ -608,7 +616,7 @@ function IncidentFormInternal(props) {
                                         Inquiry Details
                                     </Typography>
                                     <Grid container spacing={24}>
-                                        <Grid item xs={12} sm={6}>
+                                        {/* <Grid item xs={12} sm={6}>
                                             <TextField
                                                 id="referenceNumber"
                                                 name="referenceNumber"
@@ -617,7 +625,7 @@ function IncidentFormInternal(props) {
                                                 value={values.referenceNumber}
                                                 onChange={handleChange}
                                             />
-                                        </Grid>
+                                        </Grid> */}
                                         <Grid item xs={12} sm={6}>
                                             <TextField
                                                 id="receivedDate"
@@ -654,7 +662,7 @@ function IncidentFormInternal(props) {
                                                 helperText={errors.stampDate}
                                             />
                                         </Grid>
-                                        <Grid item xs={12} sm={6}>
+                                        {/* <Grid item xs={12} sm={6}>
                                             <FormControl className={classes.formControl}>
                                                 <InputLabel htmlFor="inquiryCategory">Category</InputLabel>
                                                 <Select
@@ -685,7 +693,7 @@ function IncidentFormInternal(props) {
                                                         : null}
                                                 </Select>
                                             </FormControl>
-                                        </Grid>
+                                        </Grid> */}
                                         <Grid item xs={12} sm={6}>
                                             <TextField
                                                 id="institution"
@@ -969,18 +977,6 @@ function IncidentFormInternal(props) {
                                                 </FormHelperText>
                                             </FormControl>
                                         </Grid>
-
-                                        {!paramIncidentId && (
-                                            <Grid item xs={12} sm={6}>
-                                                <InputLabel htmlFor="election" >
-                                                    Upload File (You can upload multiple files)
-                                                </InputLabel>
-                                                <FileUploader
-                                                    files={state.files}
-                                                    setFiles={handleFileSelect}
-                                                />
-                                            </Grid>
-                                        )}
                                     </Grid>
                                 </Paper>
                             ) : null}
