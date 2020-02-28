@@ -600,14 +600,6 @@ function IncidentFormInternal(props) {
                                             </FormHelperText>
                                         </FormControl>
                                     </Grid>
-                                    {!paramIncidentId && (
-                                        <Grid item xs={12} sm={6}>
-                                            <InputLabel htmlFor="election">
-                                                Upload File (You can upload multiple files)
-                                            </InputLabel>
-                                            <FileUploader files={state.files} setFiles={handleFileSelect} />
-                                        </Grid>
-                                    )}
                                     {values.incidentType === "COMPLAINT" ? (
                                         <Grid item xs={12} sm={6}>
                                             <FormControl
@@ -845,7 +837,7 @@ function IncidentFormInternal(props) {
                                         </Grid>
                                     ) : null}
                                     {values.incidentType === "COMPLAINT" ? (
-                                        <Grid item xs={6} sm={3}>
+                                        <Grid item xs={12} sm={6}>
                                             <TextField
                                                 id="occured_date_date"
                                                 label="Incident date"
@@ -889,7 +881,7 @@ function IncidentFormInternal(props) {
                                             />
                                         </Grid> */}
                                     {values.incidentType === "INQUIRY" ? (
-                                        <Grid item xs={12} sm={6}>
+                                        <Grid item xs={12} sm={3}>
                                             <TextField
                                                 id="receivedDate"
                                                 label="Received date"
@@ -913,20 +905,6 @@ function IncidentFormInternal(props) {
                                                 onChange={handleChange}
                                                 error={errors.letterDate}
                                                 helperText={errors.letterDate}
-                                            />
-                                        </Grid>
-                                    ) : null}
-                                    {values.incidentType === "INQUIRY" ? (
-                                        <Grid item xs={12} sm={3}>
-                                            <TextField
-                                                id="stampDate"
-                                                label="Stamp date"
-                                                type="date"
-                                                value={values.stampDate}
-                                                InputLabelProps={{ shrink: true }}
-                                                onChange={handleChange}
-                                                error={errors.stampDate}
-                                                helperText={errors.stampDate}
                                             />
                                         </Grid>
                                     ) : null}
@@ -974,6 +952,14 @@ function IncidentFormInternal(props) {
                                             />
                                         </Grid>
                                     ) : null}
+                                    {!paramIncidentId && (
+                                        <Grid item xs={12} sm={12}>
+                                            <InputLabel htmlFor="election">
+                                                Upload File (You can upload multiple files)
+                                            </InputLabel>
+                                            <FileUploader files={state.files} setFiles={handleFileSelect} />
+                                        </Grid>
+                                    )}
                                 </Grid>
                             </Paper>
                             {/* contact information of the complianer */}
