@@ -29,7 +29,13 @@ const styles = theme => ({
 });
 
 function ReviewInquiriesListView({ classes, ...props }) {
-    const [filters, setFilters] = useState({});
+    const [filters, setFilters] = useState({
+        incident: {
+            incidents: {
+                searchFilter: { incidentType: 'INQUIRY' }
+            }
+        }
+    });
 
     const categories = useSelector(state => state.shared.categories);
     const incidentSearchFilter = useSelector(state => state.incident.incidents.searchFilter);
@@ -45,7 +51,7 @@ function ReviewInquiriesListView({ classes, ...props }) {
             setFilters({});
         }
         dispatch(loadAllIncidents(filters, page))
-    }
+    };
 
     const handleExportClick = async (exportType) => {
         filters["export"] = exportType;

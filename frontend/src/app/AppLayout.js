@@ -234,7 +234,6 @@ class DomainContainer extends React.Component {
                             <Menu id="review-menu" open={Boolean(this.state.menuAnchorEl)}
                                   onClose={this.handleReviewMenuClose} anchorEl={this.state.menuAnchorEl} className={classes.reviewMenu}
                                   anchorOrigin={{
-                                      vertical: 'bottom',
                                       horizontal: 'center',
                                   }}
                                   transformOrigin={{
