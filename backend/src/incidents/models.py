@@ -71,6 +71,9 @@ class Reporter(models.Model):
     address = models.CharField(max_length=200, null=True, blank=True)
     unique_id = models.UUIDField(default=uuid.uuid4, editable=False)
     created_date = models.DateTimeField(auto_now_add=True)
+    political_affiliation = models.CharField(max_length=50, null=True, blank=True)
+    accused_name = models.CharField(max_length=200, null=True, blank=True)
+    accused_political_affiliation = models.CharField(max_length=50, null=True, blank=True)
 
     class Meta:
         ordering = ("id",)
@@ -174,7 +177,7 @@ class Incident(models.Model):
 
     police_division = models.CharField(max_length=200, blank=True, null=True)
     police_station = models.CharField(max_length=200, blank=True, null=True)
-    
+
     ward = models.CharField(max_length=200, blank=True, null=True)
     di_division = models.CharField(max_length=200, blank=True, null=True)
 
@@ -196,6 +199,11 @@ class Incident(models.Model):
     # alternative of issue #180
     severity = models.IntegerField(default=None, null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(10)])
 
+    # inquiry related fields
+    received_date = models.DateField(null=True, blank=True)
+    letter_date = models.DateField(null=True, blank=True)
+    institution = models.CharField(max_length=200, blank=True, null=True) # this will save `code` of institute pulled from location-service API endpoint
+
     class Meta:
         ordering = ("created_date",)
 
@@ -203,9 +211,9 @@ class Incident(models.Model):
             (CAN_REVIEW_INCIDENTS, "Can review created incidents"),
             (CAN_REVIEW_OWN_INCIDENTS, "Can review own incidents"),
             (CAN_REVIEW_ALL_INCIDENTS, "Can review all incidents"),
-            
+
             (CAN_MANAGE_INCIDENT, "Can manage incident"),
-            
+
             (CAN_RUN_WORKFLOW, "Can run incident workflows"),
             (CAN_CHANGE_ASSIGNEE, "Can change incident assignee"),
             (CAN_VERIFY_INCIDENT, "Can verify incident"),
@@ -230,9 +238,9 @@ class IncidentPerson(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
-    
+
     # this is essentially a one-to-one mapping to common.PolicalParty
-    # for future compatibiliy, it is set to char field 
+    # for future compatibiliy, it is set to char field
     political_affliation = models.CharField(max_length=200, blank=True, null=True)
 
 class IncidentVehicle(models.Model):
@@ -268,12 +276,12 @@ class IncidentPoliceReport(models.Model):
         ordering = ("created_date",)
 
 class IncidentWorkflow(models.Model):
-    incident = models.ForeignKey(Incident, 
-                    on_delete=models.DO_NOTHING, 
+    incident = models.ForeignKey(Incident,
+                    on_delete=models.DO_NOTHING,
                     related_name="%(app_label)s_%(class)s_related",
                     related_query_name="%(app_label)s_%(class)ss")
-    actioned_user = models.ForeignKey(User, 
-                    on_delete=models.DO_NOTHING, 
+    actioned_user = models.ForeignKey(User,
+                    on_delete=models.DO_NOTHING,
                     related_name="%(app_label)s_%(class)s_related",
                     related_query_name="%(app_label)s_%(class)ss")
     created_date = models.DateTimeField(auto_now_add=True)
@@ -288,9 +296,9 @@ class VerifyWorkflow(IncidentWorkflow):
 class EscalateExternalWorkflow(IncidentWorkflow):
     is_internal_user = models.BooleanField(default=False, null=False)
     comment = models.TextField()
-    escalated_user = models.ForeignKey(User, 
-                    on_delete=models.DO_NOTHING, 
-                    null=True, 
+    escalated_user = models.ForeignKey(User,
+                    on_delete=models.DO_NOTHING,
+                    null=True,
                     blank=True,
                     related_name="escalation_related",
                     related_query_name="escalated_users")
@@ -303,8 +311,8 @@ class CompleteActionWorkflow(IncidentWorkflow):
     comment = models.TextField()
 
 class RequestAdviceWorkflow(IncidentWorkflow):
-    assigned_user = models.ForeignKey(User, 
-                    on_delete=models.DO_NOTHING, 
+    assigned_user = models.ForeignKey(User,
+                    on_delete=models.DO_NOTHING,
                     related_name="advice_request_related",
                     related_query_name="advice_requested_users")
     comment = models.TextField()
@@ -315,14 +323,14 @@ class ProvideAdviceWorkflow(IncidentWorkflow):
     comment = models.TextField()
 
 class AssignUserWorkflow(IncidentWorkflow):
-    assignee = models.ForeignKey(User, 
-                    on_delete=models.DO_NOTHING, 
+    assignee = models.ForeignKey(User,
+                    on_delete=models.DO_NOTHING,
                     related_name="assignee_related",
                     related_query_name="assigned_users")
 
 class EscalateWorkflow(IncidentWorkflow):
-    assignee = models.ForeignKey(User, 
-                    on_delete=models.DO_NOTHING, 
+    assignee = models.ForeignKey(User,
+                    on_delete=models.DO_NOTHING,
                     related_name="escalation_assignee_related",
                     related_query_name="escalation_assigned_users")
     comment = models.TextField()
@@ -344,11 +352,11 @@ class ReopenWorkflow(IncidentWorkflow):
 
 class IncidentFilter(filters.FilterSet):
     current_status = filters.ChoiceFilter(choices=StatusType, method='my_custom_filter')
-    
+
     class Meta:
         model = Incident
         fields = ["current_status"]
-    
+
     def my_custom_filter(self, queryset, name, value):
         print(queryset, name, value)
 

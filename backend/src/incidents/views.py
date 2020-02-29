@@ -105,7 +105,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         param_query = self.request.query_params.get('q', None)
         if param_query is not None and param_query != "":
             incidents = incidents.filter(
-                Q(refId__icontains=param_query) | Q(title__icontains=param_query) | 
+                Q(refId__icontains=param_query) | Q(title__icontains=param_query) |
                 Q(description__icontains=param_query))
 
         param_category = self.request.query_params.get('category', None)
@@ -160,7 +160,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
             incidents = incidents.filter(current_status=StatusType.CLOSED.name)
         else:
             incidents = incidents.exclude(current_status=StatusType.CLOSED.name)
-        
+
         param_export = self.request.query_params.get('export', None)
         if param_export is not None:
             # export path will send a different response
@@ -186,7 +186,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
                 return_data = incident_police_report_serializer.data
                 return_data.update(incident_police_report_serializer.data)
                 # return_data["id"] = serializer.data["id"]
-            
+
             incident_data = IncidentSerializer(create_incident_postscript(incident, request.user)).data
             return_data.update(incident_data)
 
@@ -214,7 +214,7 @@ class SMSIncident(APIView):
             reporter.save()
             incident.reporter = reporter
             return_data = serializer.data
-            
+
             incident_data = IncidentSerializer(create_incident_postscript(incident, request.user)).data
             return_data = incident_data
 
@@ -239,7 +239,7 @@ class IncidentDetail(APIView):
 
         serializer = IncidentSerializer(incident)
         incident_data = serializer.data
-        
+
         police_report = get_police_report_by_incident(incident)
         if police_report is not None:
             police_report_data = IncidentPoliceReportSerializer(police_report).data
@@ -256,7 +256,7 @@ class IncidentDetail(APIView):
         incident = get_incident_by_id(incident_id)
         serializer = IncidentSerializer(incident, data=request.data)
         incident_police_report = get_police_report_by_incident(incident)
-        
+
         if serializer.is_valid():
             # store the revision
             revision_serializer = IncidentSerializer(incident)
@@ -275,7 +275,7 @@ class IncidentDetail(APIView):
                     incident_police_report_serializer.save()
                     return_data.update(incident_police_report_serializer.data)
                     return_data["id"] = incident_id
-            
+
             update_incident_postscript(incident, request.user, revision)
 
             return Response(return_data, status=status.HTTP_200_OK)
@@ -460,14 +460,14 @@ class IncidentPublicUserView(APIView):
                 return Response(return_data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     def put(self, request, incident_id, format=None):
         """
             Update existing incident
         """
         incident = get_incident_by_id(incident_id)
         serializer = IncidentSerializer(incident, data=request.data)
-        
+
         if serializer.is_valid():
             serializer.save()
             return_data = serializer.data

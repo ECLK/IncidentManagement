@@ -19,6 +19,14 @@ class IncidentStatusSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class ReporterSerializer(serializers.ModelSerializer):
+
+    politicalAffiliation = serializers.CharField(
+        source="political_affiliation", required=False, allow_null=True, allow_blank=True)
+    accusedName = serializers.CharField(
+        source="accused_name", required=False, allow_null=True, allow_blank=True)
+    accusedPoliticalAffiliation = serializers.CharField(
+        source="accused_political_affiliation", required=False, allow_null=True, allow_blank=True)
+        
     class Meta:
         model = Reporter
         fields = "__all__"
@@ -64,8 +72,12 @@ class IncidentSerializer(serializers.ModelSerializer):
 
     # refId = serializers.CharField(required=False)
     # election = serializers.CharField(required=False)
-
     # reporter = ReporterSerializer()
+
+    # inquiry specifics
+    receivedDate = serializers.DateField( source="received_date", required=False )
+
+    letterDate = serializers.DateField( source="letter_date", required=False )
 
     class Meta:
         model = Incident
