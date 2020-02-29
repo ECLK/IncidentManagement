@@ -76,6 +76,7 @@ function ReviewInquiriesListView({ classes, ...props }) {
 
     return (
         <Paper className={classes.root}>
+            <h3>Review Inquiries</h3>
             <SearchForm
                 categories={categories}
                 handleSearchClick={handleSearchClick}

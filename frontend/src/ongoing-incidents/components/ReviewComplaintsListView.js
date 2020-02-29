@@ -77,6 +77,7 @@ function ReviewComplaintsListView({ classes, ...props }) {
     
   return (
     <Paper className={classes.root}>
+      <h3>Review Complaints</h3>
       <SearchForm 
         categories={categories} 
         handleSearchClick={handleSearchClick} 
