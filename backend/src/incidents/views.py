@@ -173,6 +173,9 @@ class IncidentList(APIView, IncidentResultsSetPagination):
     def post(self, request, format=None):
         serializer = IncidentSerializer(data=request.data)
 
+        if serializer.is_valid() == False:
+            print("errors: ", serializer.errors)
+
         if serializer.is_valid():
             incident = serializer.save()
 

@@ -150,7 +150,15 @@ function IncidentFormInternal(props) {
         otherCat: "",
         category: "",
         election: "",
-        severity: "",
+        severity: 0,
+        reporterConsent: false,
+
+        // inquiry
+        receivedDate: null,
+        letterDate: null,
+        institution: "",
+
+        // location
         location: "",
         address: "",
         city: "",
@@ -162,13 +170,15 @@ function IncidentFormInternal(props) {
         pollingStation: "",
         policeStation: "",
         policeDivision: "",
-        reporterConsent: false,
+
+        // reporter
         reporterName: "",
         reporterType: "",
         reporterAddress: "",
         reporterMobile: "",
         reporterLandline: "",
         reporterEmail: "",
+
         files: [],
         politicalParty: "",
         injuredParties: [],
@@ -395,12 +405,15 @@ function IncidentFormInternal(props) {
         infoChannel: Yup.mixed().required("Required"),
         title: Yup.string().required("Required"),
         description: Yup.string().required("Required"),
-        occurrence: Yup.mixed().required("Required"),
+        occurrence: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'COMPLAINT' ? IncidentSchema.required("Required") : IncidentSchema)),
         category: Yup.mixed().required("Required"),
         election: Yup.mixed().required("Required"),
-        severity: Yup.mixed().required("Required"),
+        severity: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'COMPLAINT' ? IncidentSchema.required("Required") : IncidentSchema)),
         reporterMobile: Yup.number(),
-        reporterEmail: Yup.string().email("Invalid email")
+        reporterEmail: Yup.string().email("Invalid email"),
+        institution: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'INQUIRY' ? IncidentSchema.required("Required") : IncidentSchema)),
+        receivedDate: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'INQUIRY' ? IncidentSchema.required("Required") : IncidentSchema)),
+        letterDate: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'INQUIRY' ? IncidentSchema.required("Required") : IncidentSchema)),
     });
 
     return (
@@ -642,7 +655,7 @@ function IncidentFormInternal(props) {
                                                 error={touched.severity && errors.severity}
                                                 component="fieldset"
                                                 className={classes.formControl}>
-                                                <FormLabel component="legend">Severity</FormLabel>
+                                                <FormLabel component="legend">Severity*</FormLabel>
                                                 <RadioGroup
                                                     name="severity"
                                                     id="severity"
@@ -889,8 +902,9 @@ function IncidentFormInternal(props) {
                                                 value={values.receivedDate}
                                                 InputLabelProps={{ shrink: true }}
                                                 onChange={handleChange}
-                                                error={errors.receivedDate}
-                                                helperText={errors.receivedDate}
+                                                onBlur={handleBlur}
+                                                error={touched.receivedDate && errors.receivedDate}
+                                                helperText={touched.receivedDate ? errors.receivedDate : null}
                                             />
                                         </Grid>
                                     ) : null}
@@ -903,8 +917,9 @@ function IncidentFormInternal(props) {
                                                 value={values.letterDate}
                                                 InputLabelProps={{ shrink: true }}
                                                 onChange={handleChange}
-                                                error={errors.letterDate}
-                                                helperText={errors.letterDate}
+                                                onBlur={handleBlur}
+                                                error={touched.letterDate && errors.letterDate}
+                                                helperText={touched.letterDate ? errors.letterDate : null}
                                             />
                                         </Grid>
                                     ) : null}
@@ -949,6 +964,9 @@ function IncidentFormInternal(props) {
                                                 className={classes.textField}
                                                 value={values.institution}
                                                 onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                error={touched.institution && errors.institution}
+                                                helperText={touched.institution ? errors.institution : null}
                                             />
                                         </Grid>
                                     ) : null}
@@ -1050,6 +1068,8 @@ function IncidentFormInternal(props) {
                                             helperText={touched.reporterEmail ? errors.reporterEmail : null}
                                         />
                                     </Grid>
+                                {values.incidentType === "COMPLAINT" ? (
+                                    <>
                                     <Grid item xs={12} sm={6}>
                                         <TextField
                                             id="accusedName"
@@ -1088,22 +1108,22 @@ function IncidentFormInternal(props) {
                                             </Select>
                                         </FormControl>
                                     </Grid>
-                                    {values.incidentType === "COMPLAINT" ? (
-                                        <Grid item xs={12}>
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        id="reporterConsent"
-                                                        name="reporterConsent"
-                                                        checked={values.reporterConsent}
-                                                        onChange={handleChange}
-                                                        color="primary"
-                                                    />
-                                                }
-                                                label="Reporter details can be shared with external parties."
-                                            />
-                                        </Grid>
-                                    ) : null}
+                                    <Grid item xs={12}>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    id="reporterConsent"
+                                                    name="reporterConsent"
+                                                    checked={values.reporterConsent}
+                                                    onChange={handleChange}
+                                                    color="primary"
+                                                />
+                                            }
+                                            label="Reporter details can be shared with external parties."
+                                        />
+                                    </Grid>
+                                    </>
+                                ) : null}
                                 </Grid>
                             </Paper>
 

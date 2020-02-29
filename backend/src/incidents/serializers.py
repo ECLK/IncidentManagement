@@ -70,14 +70,16 @@ class IncidentSerializer(serializers.ModelSerializer):
 
     lastAssignment = serializers.SerializerMethodField(method_name="get_last_assignment")
 
+    severity = serializers.IntegerField(initial=0, allow_null=True)
+
     # refId = serializers.CharField(required=False)
     # election = serializers.CharField(required=False)
     # reporter = ReporterSerializer()
 
     # inquiry specifics
-    receivedDate = serializers.DateField( source="received_date", required=False )
+    receivedDate = serializers.DateField(source="received_date", allow_null=True)
 
-    letterDate = serializers.DateField( source="letter_date", required=False )
+    letterDate = serializers.DateField(source="letter_date", allow_null=True)
 
     class Meta:
         model = Incident
