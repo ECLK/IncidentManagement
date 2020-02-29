@@ -190,7 +190,7 @@ class DomainContainer extends React.Component {
     window.open(API_BASE_URL+'/admin/password_change/', '_blank');
   }
 
-  onClickReviewMenuOpenButton = (e) => {
+  handleOnClickReviewMenuOpenButton = (e) => {
     this.setState({ menuAnchorEl: e.currentTarget });
   }
 
@@ -198,7 +198,7 @@ class DomainContainer extends React.Component {
       this.setState({ menuAnchorEl: null });
   }
 
-  onClickReviewMenuItem = (e) => {
+  handleOnClickReviewMenuItem = (e) => {
       this.setState({ menuAnchorEl: null });
   }
 
@@ -230,7 +230,7 @@ class DomainContainer extends React.Component {
                     {userCan(signedInUser, null, USER_ACTIONS.CAN_REVIEW_INCIDENTS) && (
                         <spanner>
                             <Button variant={selectedMainSection==='review-complaints' || selectedMainSection === 'review-inquiries'?'outlined': 'flat'}
-                                color="inherit" onClick={this.onClickReviewMenuOpenButton} aria-owns="review-menu">Review <ArrowDropDown/></Button>
+                                    color="inherit" onClick={this.handleOnClickReviewMenuOpenButton} aria-owns="review-menu">Review <ArrowDropDown/></Button>
                             <Menu id="review-menu" open={Boolean(this.state.menuAnchorEl)}
                                   onClose={this.handleReviewMenuClose} anchorEl={this.state.menuAnchorEl} className={classes.reviewMenu}
                                   anchorOrigin={{
@@ -240,10 +240,10 @@ class DomainContainer extends React.Component {
                                       vertical: 'top',
                                       horizontal: 'center',
                                   }}>
-                                <MenuItem component={ReviewComplaintsLink} onClick={this.onClickReviewMenuItem}>
+                                <MenuItem component={ReviewComplaintsLink} onClick={this.handleOnClickReviewMenuItem}>
                                     Complaints
                                 </MenuItem>
-                                <MenuItem component={ReviewInquiriesLink} onClick={this.onClickReviewMenuItem}>
+                                <MenuItem component={ReviewInquiriesLink} onClick={this.handleOnClickReviewMenuItem}>
                                     Inquiries
                                 </MenuItem>
 
