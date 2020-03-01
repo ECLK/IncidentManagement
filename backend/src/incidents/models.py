@@ -8,6 +8,8 @@ import uuid
 import enum
 from datetime import datetime
 from .permissions import *
+from ..common.models import Category
+from datetime import datetime
 
 class Occurrence(enum.Enum):
     OCCURRED = "Occurred"
@@ -111,8 +113,19 @@ class IncidentComment(models.Model):
         ordering = ("id",)
 
 
-def generate_ref_id():
-    current_count = Incident.objects.count()
+'''
+Generates refId for inquiries
+'''
+def generate_inquiry_refId(category, institution):
+    current_count = Incident.objects.filter(created_date=datetime.date(datetime.now())).count()
+    refID = "%s/%0.4d/%s/%s" % (datetime.now().strftime("%Y%m%d"), current_count+1, category, institution)
+    return refID
+
+'''
+Generate refId for complaints
+'''
+def generate_complaint_refId():
+    current_count = Incident.objects.filter(created_date=datetime.date(datetime.now())).count()
     refID = "%s/%0.4d" % (datetime.now().strftime("%Y/%m/%d"), current_count+1)
     return refID
 
@@ -120,7 +133,7 @@ class Incident(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    refId = models.CharField(max_length=200, default=generate_ref_id)
+    refId = models.CharField(max_length=200, blank=True, null=True)
 
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -203,6 +216,13 @@ class Incident(models.Model):
     received_date = models.DateField(null=True, blank=True)
     letter_date = models.DateField(null=True, blank=True)
     institution = models.CharField(max_length=200, blank=True, null=True) # this will save `code` of institute pulled from location-service API endpoint
+
+    def save(self, *args, **kwargs):
+        if self.incidentType == "COMPLAINT" :
+            self.refId = generate_complaint_refId()
+        else:
+            self.refId = generate_inquiry_refId(category=self.category, institution=self.institution)
+        super(Incident, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ("created_date",)
