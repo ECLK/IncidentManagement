@@ -40,6 +40,7 @@ import {
     fetchChannels,
     fetchElections,
     fetchCategories,
+    fetchInstitutions,
     fetchProvinces,
     fetchDistricts,
     fetchDivisionalSecretariats,
@@ -125,6 +126,7 @@ function IncidentFormInternal(props) {
         channels,
         categories,
         districts,
+        institutions,
         provinces,
         divisionalSecretariats,
         gramaNiladharis,
@@ -224,6 +226,7 @@ function IncidentFormInternal(props) {
         dispatch(fetchChannels());
         dispatch(fetchElections());
         dispatch(fetchCategories());
+        dispatch(fetchInstitutions());
         dispatch(fetchProvinces());
         dispatch(fetchDistricts());
         dispatch(fetchDivisionalSecretariats());
@@ -956,17 +959,29 @@ function IncidentFormInternal(props) {
                                         </Grid> */}
                                     {values.incidentType === "INQUIRY" ? (
                                         <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                id="institution"
-                                                name="institution"
-                                                label="Institution"
-                                                className={classes.textField}
-                                                value={values.institution}
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                error={touched.institution && errors.institution}
-                                                helperText={touched.institution ? errors.institution : null}
-                                            />
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="institution">Institution</InputLabel>
+                                                <Select
+                                                    value={values.institution}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: "institution",
+                                                        id: "institution"
+                                                    }}>
+                                                    <MenuItem value="">
+                                                        {" "}
+                                                        <em>None</em>{" "}
+                                                    </MenuItem>
+                                                    {institutions.allCodes.map((c, k) => {
+                                                        let currInstitution = institutions.byCode[c];
+                                                        return (
+                                                            <MenuItem value={currInstitution.code} key={k}>
+                                                                {currInstitution.name}
+                                                            </MenuItem>
+                                                        );
+                                                    })}
+                                                </Select>
+                                            </FormControl>
                                         </Grid>
                                     ) : null}
                                     {!paramIncidentId && (

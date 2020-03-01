@@ -18,19 +18,20 @@ import Menu from '@material-ui/core/Menu';
 
 import { Link, withRouter } from 'react-router-dom';
 
-import { 
-    initiateSignOut, 
-    fetchChannels, 
-    fetchElections, 
-    fetchCategories, 
-    fetchProvinces, 
-    fetchDistricts, 
-    fetchDivisionalSecretariats, 
-    fetchGramaNiladharis, 
-    fetchPollingDivisions, 
-    fetchPollingStations, 
-    fetchPoliceStations, 
-    fetchPoliceDivisions, 
+import {
+    initiateSignOut,
+    fetchChannels,
+    fetchElections,
+    fetchCategories,
+    fetchInstitutions,
+    fetchProvinces,
+    fetchDistricts,
+    fetchDivisionalSecretariats,
+    fetchGramaNiladharis,
+    fetchPollingDivisions,
+    fetchPollingStations,
+    fetchPoliceStations,
+    fetchPoliceDivisions,
     fetchWards } from '../shared/state/sharedActions'
 import { changeLanguage } from '../shared/state/sharedActions';
 import { loadUsers } from '../user/state/userActions'
@@ -140,6 +141,7 @@ class DomainContainer extends React.Component {
     this.props.getChannels();
     this.props.getElections();
     this.props.getCategories();
+    this.props.getInstitutions();
     this.props.getProvinces();
     this.props.getDistricts();
     this.props.getDivisionalSecretariats();
@@ -220,13 +222,13 @@ class DomainContainer extends React.Component {
 
                 <Typography variant="h6" color="inherit" className={classes.grow}>
                     Incident Management
-                    
-                    <Button 
-                        variant={selectedMainSection==='home'?'outlined': 'flat'} 
+
+                    <Button
+                        variant={selectedMainSection==='home'?'outlined': 'flat'}
                         color="inherit" component={HomeLink} className={classes.homeButton}>Home</Button>
-                    <Button variant={selectedMainSection==='create'?'outlined': 'flat'} 
+                    <Button variant={selectedMainSection==='create'?'outlined': 'flat'}
                         color="inherit" component={ReportLink}>Create</Button>
-                    
+
                     {userCan(signedInUser, null, USER_ACTIONS.CAN_REVIEW_INCIDENTS) && (
                         <spanner>
                             <Button variant={selectedMainSection==='review-complaints' || selectedMainSection === 'review-inquiries'?'outlined': 'flat'}
@@ -250,14 +252,14 @@ class DomainContainer extends React.Component {
                             </Menu>
                         </spanner>
                     )}
-                    
+
                     {userCan(signedInUser, null, USER_ACTIONS.CAN_VIEW_REPORTS) && (
-                        <Button variant={selectedMainSection==='reports'?'outlined': 'flat'} 
+                        <Button variant={selectedMainSection==='reports'?'outlined': 'flat'}
                             color="inherit" component={StaticReportLink}>Reports</Button>
                     )}
 
                     {userCan(signedInUser, null, USER_ACTIONS.CAN_REVIEW_INCIDENTS) && (
-                        <Button variant={selectedMainSection==='archive'?'outlined': 'flat'} 
+                        <Button variant={selectedMainSection==='archive'?'outlined': 'flat'}
                             color="inherit" component={ArchiveLink}>Archive</Button>
                     )}
 
@@ -374,6 +376,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         getCategories: () => {
             dispatch(fetchCategories())
+        },
+        getInstitutions: () => {
+            dispatch(fetchInstitutions())
         },
         getProvinces: () => {
             dispatch(fetchProvinces())
