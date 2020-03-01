@@ -9,6 +9,7 @@ import enum
 from datetime import datetime
 from .permissions import *
 from ..common.models import Category
+from datetime import datetime
 
 class Occurrence(enum.Enum):
     OCCURRED = "Occurred"
@@ -113,19 +114,26 @@ class IncidentComment(models.Model):
 
 
 '''
-Generates Reference id for incidents
+Generates refId for inquiries
 '''
-def generate_ref_id(category, institution):
-    current_count = Incident.objects.count()
+def generate_inquiry_refId(category, institution):
+    current_count = Incident.objects.filter(created_date=datetime.date(datetime.now())).count()
     refID = "%s/%0.4d/%s/%s" % (datetime.now().strftime("%Y%m%d"), current_count+1, category, institution)
     return refID
 
+'''
+Generate refId for complaints
+'''
+def generate_complaint_refId():
+    current_count = Incident.objects.filter(created_date=datetime.date(datetime.now())).count()
+    refID = "%s/%0.4d" % (datetime.now().strftime("%Y/%m/%d"), current_count+1)
+    return refID
 
 class Incident(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    refId = models.CharField(max_length=200, null=True)
+    refId = models.CharField(max_length=200, blank=True, null=True)
 
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -165,9 +173,6 @@ class Incident(models.Model):
     # All the relavant parties such as police,lawyer,NGO etc.
     linked_individuals =  models.ManyToManyField(User, related_name='incident_linked_individuals', blank=True)
 
-    #institution Id where the complaint is made : Generated through a service
-    institution = models.CharField(max_length=200, null=True, blank=True)
-    
     # location related details
     location = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
@@ -206,16 +211,18 @@ class Incident(models.Model):
     # new severity mapping
     # alternative of issue #180
     severity = models.IntegerField(default=None, null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(10)])
-    REQUIRED_FIELDS = ['category', 'institution']
-
-    def save(self, *args, **kwargs):
-        self.refId = generate_ref_id(category=self.category, institution=self.institution)
-        super(Incident, self).save(*args, **kwargs)
 
     # inquiry related fields
     received_date = models.DateField(null=True, blank=True)
     letter_date = models.DateField(null=True, blank=True)
     institution = models.CharField(max_length=200, blank=True, null=True) # this will save `code` of institute pulled from location-service API endpoint
+
+    def save(self, *args, **kwargs):
+        if self.incidentType == "COMPLAINT" :
+            self.refId = generate_complaint_refId()
+        else:
+            self.refId = generate_inquiry_refId(category=self.category, institution=self.institution)
+        super(Incident, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ("created_date",)
