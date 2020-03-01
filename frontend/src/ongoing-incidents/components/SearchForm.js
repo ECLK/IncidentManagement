@@ -83,7 +83,6 @@ function SearchForm(props) {
   }, []);
   const { classes, categories } = props;
   const severityValues = Array(10).fill(0).map((e,i)=>i+1);
-  console.log(props);
   return (
     <Formik
       initialValues={props.incidentSearchFilter}
