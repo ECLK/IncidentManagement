@@ -217,6 +217,7 @@ function IncidentFormInternal(props) {
                     complaint.push(category);
                 }
             });
+            categories.map((category) => (category.top_category === "Other" ? inquiry.push(category) : null ))
             setComplaintCategories(complaint);
             setInquiryCategories(inquiry);
         }
@@ -594,8 +595,8 @@ function IncidentFormInternal(props) {
                                                     name: "category",
                                                     id: "category"
                                                 }}>
-                                                {complaintCategories
-                                                    ? complaintCategories.map((c, k) => (
+                                                {values.incidentType === "COMPLAINT" && complaintCategories &&
+                                                    complaintCategories.map((c, k) => (
                                                         <MenuItem value={c.id} key={k}>
                                                             <div className={classes.langCats}>
                                                                 <div>{c.code}</div>
@@ -608,7 +609,22 @@ function IncidentFormInternal(props) {
                                                             </div>
                                                         </MenuItem>
                                                     ))
-                                                    : null}
+                                                }
+                                                {values.incidentType === "INQUIRY" && inquiryCategories &&
+                                                    inquiryCategories.map((c, k) => (
+                                                        <MenuItem value={c.id} key={k}>
+                                                            <div className={classes.langCats}>
+                                                                <div>{c.code}</div>
+                                                                <div>|</div>
+                                                                <div>{c.sub_category}</div>
+                                                                <div>|</div>
+                                                                <div> {c.sn_sub_category}</div>
+                                                                <div>|</div>
+                                                                <div> {c.tm_sub_category}</div>
+                                                            </div>
+                                                        </MenuItem>
+                                                    ))
+                                                }
                                             </Select>
                                             <FormHelperText>
                                                 {touched.category && errors.category ? errors.category : ""}
@@ -617,72 +633,72 @@ function IncidentFormInternal(props) {
                                     </Grid>
                                     {values.incidentType === "COMPLAINT" ? (
                                         <>
-                                        <Grid item xs={12} sm={6}>
-                                            <FormControl
-                                                error={touched.occurrence && errors.occurrence}
-                                                component="fieldset"
-                                                className={classes.formControl}>
-                                                <FormLabel component="legend">Occurrence*</FormLabel>
-                                                <RadioGroup
-                                                    name="occurrence"
-                                                    id="occurrence"
-                                                    className={classes.group}
-                                                    value={values.occurrence}
+                                            <Grid item xs={12} sm={6}>
+                                                <FormControl
+                                                    error={touched.occurrence && errors.occurrence}
+                                                    component="fieldset"
+                                                    className={classes.formControl}>
+                                                    <FormLabel component="legend">Occurrence*</FormLabel>
+                                                    <RadioGroup
+                                                        name="occurrence"
+                                                        id="occurrence"
+                                                        className={classes.group}
+                                                        value={values.occurrence}
+                                                        onChange={handleChange}
+                                                        row={true}>
+                                                        <FormControlLabel
+                                                            value="OCCURRED"
+                                                            control={<Radio color="primary" />}
+                                                            label="Occurred"
+                                                        />
+                                                        <FormControlLabel
+                                                            value="OCCURRING"
+                                                            control={<Radio color="primary" />}
+                                                            label="Occurring"
+                                                        />
+                                                        <FormControlLabel
+                                                            value="WILL_OCCUR"
+                                                            control={<Radio color="primary" />}
+                                                            label="Will Occur"
+                                                        />
+                                                    </RadioGroup>
+                                                    {errors.occurrence ? (
+                                                        <FormHelperText>{errors.occurrence}</FormHelperText>
+                                                    ) : null}
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid item xs={12} sm={6}>
+                                                <TextField
+                                                    id="occured_date_date"
+                                                    label="Incident date"
+                                                    type="date"
+                                                    value={values.occured_date_date}
+                                                    InputLabelProps={{ shrink: true }}
                                                     onChange={handleChange}
-                                                    row={true}>
-                                                    <FormControlLabel
-                                                        value="OCCURRED"
-                                                        control={<Radio color="primary" />}
-                                                        label="Occurred"
-                                                    />
-                                                    <FormControlLabel
-                                                        value="OCCURRING"
-                                                        control={<Radio color="primary" />}
-                                                        label="Occurring"
-                                                    />
-                                                    <FormControlLabel
-                                                        value="WILL_OCCUR"
-                                                        control={<Radio color="primary" />}
-                                                        label="Will Occur"
-                                                    />
-                                                </RadioGroup>
-                                                {errors.occurrence ? (
-                                                    <FormHelperText>{errors.occurrence}</FormHelperText>
-                                                ) : null}
-                                            </FormControl>
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                id="occured_date_date"
-                                                label="Incident date"
-                                                type="date"
-                                                value={values.occured_date_date}
-                                                InputLabelProps={{ shrink: true }}
-                                                onChange={handleChange}
-                                                inputProps={{
-                                                    max:
-                                                        values.occurrence === "OCCURRED"
-                                                            ? moment().format("YYYY-MM-DD")
-                                                            : null,
-                                                    min:
-                                                        values.occurrence === "WILL_OCCUR"
-                                                            ? moment().format("YYYY-MM-DD")
-                                                            : null
-                                                }}
-                                                error={errors.occured_date_date}
-                                                helperText={errors.occured_date_date}
-                                            />
-                                            <TextField
-                                                id="occured_date_time"
-                                                label="Incident time"
-                                                type="time"
-                                                value={values.occured_date_time}
-                                                InputLabelProps={{ shrink: true }}
-                                                onChange={handleChange}
-                                                error={errors.occured_date_time}
-                                                helperText={errors.occured_date_time}
-                                            />
-                                        </Grid>
+                                                    inputProps={{
+                                                        max:
+                                                            values.occurrence === "OCCURRED"
+                                                                ? moment().format("YYYY-MM-DD")
+                                                                : null,
+                                                        min:
+                                                            values.occurrence === "WILL_OCCUR"
+                                                                ? moment().format("YYYY-MM-DD")
+                                                                : null
+                                                    }}
+                                                    error={errors.occured_date_date}
+                                                    helperText={errors.occured_date_date}
+                                                />
+                                                <TextField
+                                                    id="occured_date_time"
+                                                    label="Incident time"
+                                                    type="time"
+                                                    value={values.occured_date_time}
+                                                    InputLabelProps={{ shrink: true }}
+                                                    onChange={handleChange}
+                                                    error={errors.occured_date_time}
+                                                    helperText={errors.occured_date_time}
+                                                />
+                                            </Grid>
                                         </>
                                     ) : null}
                                     {values.incidentType === "COMPLAINT" ? (
