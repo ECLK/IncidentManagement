@@ -1,4 +1,4 @@
-import ReviewIncidentListView from './components/ReviewIncidentListView'
+import ReviewIncidentListView from './components/ReviewComplaintsListView'
 
 export {
     ReviewIncidentListView

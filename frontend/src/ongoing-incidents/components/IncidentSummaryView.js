@@ -49,7 +49,7 @@ const occurrence = {
  * Basic Information TabView - (1)
  */
 function BasicDetailTab(props) {
-    const { classes, incident, elections, categories, channels } = props;
+    const { classes, incident, elections, categories, channels, institutions } = props;
 
     return (
         <div>
@@ -59,7 +59,7 @@ function BasicDetailTab(props) {
 
                         <Grid container spacing={24}>
                             <Grid item xs>
-                                <Typography className={classes.label}> Incident Ref ID </Typography>
+                                <Typography className={classes.label}> {(incident.incidentType === 'COMPLAINT') ? 'Complaint' : 'Inquiry'} Ref ID </Typography>
                                 <Typography variant="h4" gutterBottom> {incident.refId} </Typography>
                             </Grid>
                         </Grid>
@@ -78,27 +78,58 @@ function BasicDetailTab(props) {
                             </Grid>
                         </Grid>
 
-                        <Grid container spacing={24}>
-                            <Grid item xs>
-                                <Typography variant="caption" className={classes.label}> Occurrence </Typography>
-                                <Typography gutterBottom> {occurrence[incident.occurrence]} </Typography>
-                            </Grid>
-                        </Grid>
+                        {incident.incidentType === 'COMPLAINT' &&
+                            <>
+                                <Grid container spacing={24}>
+                                    <Grid item xs>
+                                        <Typography variant="caption" className={classes.label}> Occurrence </Typography>
+                                        <Typography gutterBottom> {occurrence[incident.occurrence]} </Typography>
+                                    </Grid>
+                                </Grid>
 
-                        <Grid container spacing={24}>
-                            <Grid item xs>
-                                <Typography variant="caption" className={classes.label}>Incident Date </Typography>
-                                <Typography gutterBottom>
-                                    {(incident.occured_date) ? <Moment format="YYYY/MM/DD">{incident.occured_date}</Moment> : "No date set"}
-                                </Typography>
-                            </Grid>
-                            <Grid item xs>
-                                <Typography variant="caption" className={classes.label}> Incident Time </Typography>
-                                <Typography gutterBottom>
-                                    {(incident.occured_date) ? <Moment format="HH:mm">{incident.occured_date}</Moment> : "No time set"}
-                                </Typography>
-                            </Grid>
-                        </Grid>
+                                <Grid container spacing={24}>
+                                    <Grid item xs>
+                                        <Typography variant="caption" className={classes.label}>Incident Date </Typography>
+                                        <Typography gutterBottom>
+                                            {(incident.occured_date) ? <Moment format="YYYY/MM/DD">{incident.occured_date}</Moment> : "No date set"}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs>
+                                        <Typography variant="caption" className={classes.label}> Incident Time </Typography>
+                                        <Typography gutterBottom>
+                                            {(incident.occured_date) ? <Moment format="HH:mm">{incident.occured_date}</Moment> : "No time set"}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            </>
+                        }
+
+                        {incident.incidentType === 'INQUIRY' &&
+                            <>
+                                <Grid container spacing={24}>
+                                    <Grid item xs>
+                                        <Typography variant="caption" className={classes.label}>Received date</Typography>
+                                        <Typography gutterBottom> {incident.receivedDate} </Typography>
+                                    </Grid>
+                                    <Grid item xs>
+                                        <Typography variant="caption" className={classes.label}>Letter date</Typography>
+                                        <Typography gutterBottom> {incident.letterDate} </Typography>
+                                    </Grid>
+                                </Grid>
+
+                                <Grid container spacing={24}>
+                                    <Grid item xs>
+                                        <Typography variant="caption" className={classes.label}> Institute </Typography>
+                                        <Typography gutterBottom>
+                                            {
+                                                incident.institution && institutions.byCode[incident.institution] ?
+                                                    institutions.byCode[incident.institution].name : ""
+                                            }
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            </>
+                        }
 
                         <Grid container spacing={24}>
                             <Grid item xs>
@@ -168,7 +199,7 @@ const resolveLocationName = (locationId, locatoinData) => {
 }
 
 /**
- * Location Information TabView - (2)
+ * Location Information TabView - (3)
  */
 function LocationTab(props) {
 
@@ -241,7 +272,7 @@ function LocationTab(props) {
                                 </Typography>
                             </Grid>
                         </Grid> */}
-                        {/* 
+                        {/*
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Ward </Typography>
@@ -252,7 +283,7 @@ function LocationTab(props) {
                         {/* <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Police Station </Typography>
-                                <Typography gutterBottom> 
+                                <Typography gutterBottom>
                                 {   resolveLocationName(incident.policeStation, policeStations)}
                                 </Typography>
                             </Grid>
@@ -266,7 +297,7 @@ function LocationTab(props) {
 }
 
 /**
- * Contact Information TabView - (3)
+ * Contact Information TabView - (2)
  */
 function ContactTab(props) {
 
@@ -426,6 +457,7 @@ function SummaryTabView(props) {
 
     const {
         classes, incident, reporter, elections, category,
+        institutions,
         provinces, districts,
         divisionalSecretariats,
         gramaNiladharis,
@@ -443,8 +475,8 @@ function SummaryTabView(props) {
         <div className={classes.root}>
             <Tabs variant="fullWidth" value={currentTab} onChange={(e, val) => setCurrentTab(val)} indicatorColor="primary" >
                 <LinkTab label="Basic Information" href="page1" />
-                <LinkTab label="Location Information" href="page2" />
-                <LinkTab label="Contact Information" href="page3" />
+                <LinkTab label="Contact Information" href="page2" />
+                <LinkTab label="Location Information" href="page3" />
                 <LinkTab label="Police Information" href="page4" />
             </Tabs>
 
@@ -452,6 +484,7 @@ function SummaryTabView(props) {
                 <BasicDetailTab classes={classes} incident={incident} elections={elections} category={category}
                     categories={categories}
                     channels={channels}
+                    institutions={institutions}
 
                 /> </TabContainer>}
             {currentTab === 1 && <TabContainer>

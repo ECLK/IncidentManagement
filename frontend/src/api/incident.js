@@ -36,6 +36,13 @@ export const getIncidents = async (filters, page = 1) => {
   if (filters.maxResponseTime) {
     query += "&response_time=" + filters.maxResponseTime;
   }
+  if (filters.incidentType) {
+    query += "&incident_type=" + filters.incidentType;
+  }
+
+  if (filters.severity) {
+    query += "&severity=" + filters.severity;
+  }
 
   if (filters.assignee) {
     query += "&assignee=" + filters.assignee;
@@ -52,6 +59,7 @@ export const getIncidents = async (filters, page = 1) => {
   if (filters.organization) {
     query += "&organization=" + filters.organization;
   }
+
 
   if (filters.startTime && filters.endTime) {
     const startDate = moment(filters.startTime).format("YYYY-MM-DD HH:mm");
