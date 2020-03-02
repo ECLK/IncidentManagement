@@ -6,12 +6,51 @@ from xhtml2pdf import pisa
 import datetime
 from django.db import connection
 import pandas as pd
+import requests
+import json
+from django.conf import settings
 
 from .services import get_police_division_summary, get_category_summary, \
     get_mode_summary, get_severity_summary, get_status_summary, get_subcategory_summary, get_district_summary, \
     get_incident_date_summary
 from .functions import apply_style, decode_column_names, incident_type_title, incident_type_query
 
+'''
+middleware to access PDF-service
+'''
+class ReportingAccessView(APIView):
+    '''
+    Based on https://github.com/ECLK/pdf-service
+    Generates Reporting 
+
+    -request format
+    {
+        template_type: 'sample_template_type_enum',
+        data: {
+
+        }
+    }
+    '''
+    def post(self, request): 
+        endpoint_uri = settings.PDF_SERVICE_ENDPOINT 
+        json_dict = {}
+        template_type = request.data['template_type']
+        if template_type == 'url':
+            json_dict['url'] = request.data['data']['url']
+        elif template_type == 'html':
+            json_dict['html'] = request.data['data']['file']
+        elif template_type == 'file':
+            file_dict = {}
+            data = request.data['data']
+            file_dict['template'] = data['template']
+            file_dict['title'] = data['title']
+            json_dict['file'] = file_dict
+        else:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+
+        request_data = json.dumps(json_dict)
+        res = requests.post(url=endpoint_uri, data = request_data, headers={'content-type': 'application/json'})
+        return HttpResponse(status=res.status_code, content=res.text, content_type='application/json')
 
 class ReportingView(APIView):
     """
