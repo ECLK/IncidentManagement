@@ -217,6 +217,8 @@ class Incident(models.Model):
     letter_date = models.DateField(null=True, blank=True)
     institution = models.CharField(max_length=200, blank=True, null=True) # this will save `code` of institute pulled from location-service API endpoint
 
+    current_decision = models.CharField(max_length=50, default=None, null=True, blank=True)
+
     def save(self, *args, **kwargs):
         if self.incidentType == "COMPLAINT" :
             self.refId = generate_complaint_refId()

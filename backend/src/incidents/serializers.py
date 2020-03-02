@@ -78,8 +78,8 @@ class IncidentSerializer(serializers.ModelSerializer):
 
     # inquiry specifics
     receivedDate = serializers.DateField(source="received_date", allow_null=True)
-
     letterDate = serializers.DateField(source="letter_date", allow_null=True)
+    currentDecision = serializers.ReadOnlyField(source="current_decision")
 
     class Meta:
         model = Incident
