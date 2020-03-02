@@ -217,7 +217,7 @@ function IncidentFormInternal(props) {
                     complaint.push(category);
                 }
             });
-            categories.map((category) => (category.top_category === "Other" ? inquiry.push(category) : null ))
+            categories.map((category) => (category.top_category === "Other" ? inquiry.push(category) : null))
             setComplaintCategories(complaint);
             setInquiryCategories(inquiry);
         }
@@ -1016,7 +1016,7 @@ function IncidentFormInternal(props) {
                                     Reporter Information
                                 </Typography>
                                 <Grid container spacing={24}>
-                                    <Grid item xs={12} sm={5}>
+                                    <Grid item xs={12} sm={6}>
                                         <TextField
                                             id="reporterName"
                                             name="reporterName"
@@ -1045,30 +1045,32 @@ function IncidentFormInternal(props) {
                                             </Select>
                                         </FormControl>
                                     </Grid>
-                                    <Grid item xs={12} sm={3}>
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel htmlFor="reporterAffiliation">Political Affiliation</InputLabel>
-                                            <Select
-                                                value={values.reporterAffiliation}
-                                                onChange={handleChange}
-                                                inputProps={{
-                                                    name: "reporterAffiliation",
-                                                    id: "reporterAffiliation"
-                                                }}>
-                                                <MenuItem value="">
-                                                    {" "}
-                                                    <em>None</em>{" "}
-                                                </MenuItem>
-                                                {Object.entries(politicalPartyLookup).map(([key, value]) => {
-                                                    return (
-                                                        <MenuItem key={key} value={key}>
-                                                            {value}
-                                                        </MenuItem>
-                                                    );
-                                                })}
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
+                                    {values.incidentType === "COMPLAINT" && (
+                                        <Grid item xs={12} sm={3}>
+                                            <FormControl className={classes.formControl}>
+                                                <InputLabel htmlFor="reporterAffiliation">Political Affiliation</InputLabel>
+                                                <Select
+                                                    value={values.reporterAffiliation}
+                                                    onChange={handleChange}
+                                                    inputProps={{
+                                                        name: "reporterAffiliation",
+                                                        id: "reporterAffiliation"
+                                                    }}>
+                                                    <MenuItem value="">
+                                                        {" "}
+                                                        <em>None</em>{" "}
+                                                    </MenuItem>
+                                                    {Object.entries(politicalPartyLookup).map(([key, value]) => {
+                                                        return (
+                                                            <MenuItem key={key} value={key}>
+                                                                {value}
+                                                            </MenuItem>
+                                                        );
+                                                    })}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                    )}
                                     <Grid item xs={12}>
                                         <TextField
                                             id="reporterAddress"
