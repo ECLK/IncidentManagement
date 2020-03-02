@@ -1,52 +1,18 @@
-import React, { Component, useState, useEffect } from "react";
-import { connect, useSelector, useDispatch } from "react-redux";
-import { withRouter } from "react-router";
-import { withStyles } from "@material-ui/core/styles";
-import { Formik } from "formik";
 import * as Yup from "yup";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import * as incidentUtils from "../../incident/incidentUtils";
 
-import InputLabel from "@material-ui/core/InputLabel";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import Button from "@material-ui/core/Button";
-import Snackbar from "@material-ui/core/Snackbar";
-import Typography from "@material-ui/core/Typography";
-import Checkbox from "@material-ui/core/Checkbox";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MaterialTable from "material-table";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContentText from "@material-ui/core/DialogContentText";
-
-import red from "@material-ui/core/colors/red";
-import orange from "@material-ui/core/colors/orange";
-import yellow from "@material-ui/core/colors/yellow";
-
+import { Card, CardContent } from "@material-ui/core";
 import React, { Component, useEffect, useState } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux'
-import { createInternalIncident, loadIncident, updateInternalIncident } from '../../incident/state/incidentActions';
+import { createInternalIncident, loadIncident, updateInternalIncident } from "../../incident/state/incidentActions";
 import {
     fetchCategories,
-    fetchInstitutions,
-    fetchProvinces,
+    fetchChannels,
     fetchDistricts,
     fetchDivisionalSecretariats,
     fetchElections,
     fetchGramaNiladharis,
+    fetchInstitutions,
     fetchPoliceDivisions,
     fetchPoliceStations,
     fetchPoliticalParties,
@@ -55,16 +21,47 @@ import {
     fetchProvinces,
     fetchWards,
     resetActiveIncident,
-    fetchPoliticalParties
 } from "../../shared/state/sharedActions";
-import IntlSelect from "./IntlSelect";
-import moment from "moment";
+
+import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import FileUploader from "../../files/components/FilePicker";
-import { showNotification } from "../../notifications/state/notifications.actions";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormLabel from "@material-ui/core/FormLabel";
+import { Formik } from "formik";
+import Grid from "@material-ui/core/Grid";
+import InputLabel from "@material-ui/core/InputLabel";
+import IntlSelect from "./IntlSelect";
+import MaterialTable from "material-table";
+import MenuItem from "@material-ui/core/MenuItem";
+import Paper from "@material-ui/core/Paper";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import Select from "@material-ui/core/Select";
+import Snackbar from "@material-ui/core/Snackbar";
 import TelephoneInput from "./TelephoneInput";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import { getIncidents } from '../../api/incident';
+import moment from "moment";
+import orange from "@material-ui/core/colors/orange";
+import red from "@material-ui/core/colors/red";
+import { showNotification } from "../../notifications/state/notifications.actions";
 import { useLoadingStatus } from "../../loading-spinners/loadingHook";
-import { createInternalIncident, loadIncident, updateInternalIncident } from "../../incident/state/incidentActions";
-import * as incidentUtils from "../../incident/incidentUtils";
+import { withRouter } from "react-router";
+import { withStyles } from "@material-ui/core/styles";
+import yellow from "@material-ui/core/colors/yellow";
 
 const styles = (theme) => ({
     root: {
