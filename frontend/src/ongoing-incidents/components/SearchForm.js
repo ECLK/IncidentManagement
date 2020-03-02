@@ -1,23 +1,23 @@
+import { Formik, withFormik } from "formik";
 import React, { useEffect } from "react";
 
-import { Formik, withFormik } from "formik";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
+import Button from "@material-ui/core/Button";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import FormControl from "@material-ui/core/FormControl";
+import Grid from "@material-ui/core/Grid";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import moment from "moment";
-import { withStyles } from "@material-ui/core/styles";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import MenuItem from "@material-ui/core/MenuItem";
 import SearchIcon from "@material-ui/icons/Search";
-
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Select from "@material-ui/core/Select";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import moment from "moment";
+import { useSelector } from 'react-redux'
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
   root: {
@@ -82,7 +82,8 @@ function SearchForm(props) {
     filterIncidents();
   }, []);
   const { classes, categories } = props;
-  const severityValues = Array(10).fill(0).map((e,i)=>i+1);
+  const organizations = useSelector(state => state.user.organizations);
+  const severityValues = Array(10).fill(0).map((e, i) => i + 1);
   console.log(props);
   return (
     <Formik
@@ -229,7 +230,7 @@ function SearchForm(props) {
                         </MenuItem>
                         {severityValues.map((val) => (
                           <MenuItem value={val} key={val}>{val}</MenuItem>
-                        ))}                        
+                        ))}
                       </Select>
                     </FormControl>
                     <FormControl className={classes.formControl}>
@@ -288,6 +289,60 @@ function SearchForm(props) {
                         }}
                         onChange={handleChange}
                       />
+                    </FormControl>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel shrink htmlFor="status-label-placeholder">
+                        Ministry
+                      </InputLabel>
+                      <Select
+                        input={
+                          <Input
+                            name="ministry"
+                            id="ministry-label-placeholder"
+                          />
+                        }
+                        displayEmpty
+                        name="ministry"
+                        value={values.ministry}
+                        onChange={handleChange}
+                        className={classes.selectEmpty}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        {categories.map(({ sub_category }) => (
+                          <MenuItem value={sub_category}>
+                            {sub_category}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel shrink htmlFor="status-label-placeholder">
+                        Organization
+                      </InputLabel>
+                      <Select
+                        input={
+                          <Input
+                            name="organization"
+                            id="Organization-label-placeholder"
+                          />
+                        }
+                        displayEmpty
+                        name="organization"
+                        value={values.organization}
+                        onChange={handleChange}
+                        className={classes.selectEmpty}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        {organizations.allIds.map(id => (
+                          <MenuItem key={id} value={id}>
+                            {organizations.byIds[id].name}
+                          </MenuItem>
+                        ))}
+                      </Select>
                     </FormControl>
                     <FormControl className={classes.buttonContainer}>
                       {/* Reset workflow is pending

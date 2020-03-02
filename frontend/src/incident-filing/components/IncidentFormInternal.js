@@ -1,65 +1,69 @@
-import React, { Component, useState, useEffect } from 'react';
-import { connect, useSelector, useDispatch } from 'react-redux'
-import { withRouter } from "react-router";
-import { withStyles } from '@material-ui/core/styles';
-import { Formik } from 'formik';
 import * as Yup from 'yup';
-import FormHelperText from '@material-ui/core/FormHelperText';
+import * as incidentUtils from '../../incident/incidentUtils';
 
-import InputLabel from '@material-ui/core/InputLabel';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
-import Typography from '@material-ui/core/Typography';
-import Checkbox from '@material-ui/core/Checkbox';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MaterialTable from "material-table";
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContentText from '@material-ui/core/DialogContentText';
-
-import red from '@material-ui/core/colors/red';
-import orange from '@material-ui/core/colors/orange';
-import yellow from '@material-ui/core/colors/yellow';
-
+import React, { Component, useEffect, useState } from 'react';
+import { connect, useDispatch, useSelector } from 'react-redux'
+import { createInternalIncident, loadIncident, updateInternalIncident } from '../../incident/state/incidentActions';
 import {
-    fetchChannels,
-    fetchElections,
     fetchCategories,
-    fetchProvinces,
+    fetchChannels,
     fetchDistricts,
     fetchDivisionalSecretariats,
+    fetchElections,
     fetchGramaNiladharis,
-    fetchPollingDivisions,
-    fetchPoliceStations,
-    fetchPollingStations,
     fetchPoliceDivisions,
+    fetchPoliceStations,
+    fetchPoliticalParties,
+    fetchPollingDivisions,
+    fetchPollingStations,
+    fetchProvinces,
     fetchWards,
     resetActiveIncident,
-    fetchPoliticalParties,
 } from '../../shared/state/sharedActions';
-import IntlSelect from './IntlSelect';
-import moment from 'moment';
+
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import Checkbox from '@material-ui/core/Checkbox';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import FileUploader from '../../files/components/FilePicker';
-import { showNotification } from '../../notifications/state/notifications.actions';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormLabel from '@material-ui/core/FormLabel';
+import { Formik } from 'formik';
+import Grid from '@material-ui/core/Grid';
+import InputLabel from '@material-ui/core/InputLabel';
+import IntlSelect from './IntlSelect';
+import MaterialTable from "material-table";
+import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import Select from '@material-ui/core/Select';
+import Snackbar from '@material-ui/core/Snackbar';
 import TelephoneInput from './TelephoneInput';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import { getIncidents } from '../../api/incident';
+import moment from 'moment';
+import orange from '@material-ui/core/colors/orange';
+import red from '@material-ui/core/colors/red';
+import { showNotification } from '../../notifications/state/notifications.actions';
 import { useLoadingStatus } from '../../loading-spinners/loadingHook'
-import { createInternalIncident, loadIncident, updateInternalIncident } from '../../incident/state/incidentActions';
-import * as incidentUtils from '../../incident/incidentUtils';
+import { withRouter } from "react-router";
+import { withStyles } from '@material-ui/core/styles';
+import yellow from '@material-ui/core/colors/yellow';
 
 const styles = theme => ({
     root: {
@@ -114,6 +118,23 @@ const styles = theme => ({
         "& div": {
             padding: "0 3px"
         }
+    },
+    cardRoot: {
+        cursor: 'grab',
+        background: '#e0e0e0',
+        marginBottom: '10px',
+        marginTop: '10px',
+        '&:hover': {
+            background: "#3f51b5",
+        },
+    },
+    cardText: {
+        fontSize: 18,
+        fontWeight: '400',
+        color: 'black'
+    },
+    cardContent: {
+        padding: '10px !important',
     }
 })
 
@@ -121,6 +142,7 @@ function IncidentFormInternal(props) {
 
 
     const dispatch = useDispatch();
+    const [similarIncidents, setSimilarIncidents] = useState([]);
     const {
         incident,
         reporter,
@@ -137,7 +159,7 @@ function IncidentFormInternal(props) {
         wards,
         elections,
         politicalParties,
-    } = useSelector(state=>state.shared)
+    } = useSelector(state => state.shared)
 
     const [state, setState] = useState({
         incidentType: "COMPLAINT",
@@ -176,6 +198,7 @@ function IncidentFormInternal(props) {
         injuredParties: [],
         respondents: [],
         detainedVehicles: [],
+        similarInquiry: [],
 
         // police info
         nature_of_incident: "",
@@ -194,6 +217,14 @@ function IncidentFormInternal(props) {
 
     })
 
+    const getSimilarInquiries = async (title) => {
+        if (title.length > 2) {
+            const response = await getIncidents({ title: title }, 1);
+            setSimilarIncidents(response.data.incidents);
+        } else {
+            setSimilarIncidents([]);
+        }
+    }
 
     useEffect(() => {
 
@@ -282,7 +313,7 @@ function IncidentFormInternal(props) {
                 "reporterAddress": reporter.address
             });
         }
-//TODO: Need to split the date values to date and time
+        //TODO: Need to split the date values to date and time
         if (initData.occured_date) {
 
             initData.occured_date = moment(initData.occured_date).format("YYYY-MM-DDTHH:mm")
@@ -326,6 +357,7 @@ function IncidentFormInternal(props) {
 
 
     const customValidations = (values) => {
+        console.log(values)
         //date time is validated here since it has to be compared with the occurrence. 
         //cannot do this with yup.
         let errors = {}
@@ -418,7 +450,7 @@ function IncidentFormInternal(props) {
                                 onSubmit={(e) => {
                                     e.preventDefault()
                                     if (!isValid) {
-                                        dispatch(showNotification({ message:"Missing required values" }, null))
+                                        dispatch(showNotification({ message: "Missing required values" }, null))
                                         window.scroll(0, 0)
                                     }
                                     handleSubmit(e)
@@ -491,12 +523,35 @@ function IncidentFormInternal(props) {
                                                 placeholder="Title"
                                                 className={classes.textField}
                                                 value={values.title}
-                                                onChange={handleChange}
+                                                onChange={(event) => { handleChange(event); getSimilarInquiries(event.target.value); }}
                                                 onBlur={handleBlur}
                                                 error={touched.title && errors.title}
                                                 helperText={touched.title ? errors.title : null}
                                             />
                                         </Grid>
+                                        {similarIncidents && similarIncidents.length > 0 && <Grid item xs={12}>
+                                            Similar Inquiries
+                                            {similarIncidents.map((incident, index) => {
+                                                return (
+                                                    <Card key={index} className={classes.cardRoot} onClick={() => { window.open(`https://incidents.ecdev.opensource.lk/app/review/${incident.id}`) }}>
+                                                        <CardContent className={classes.cardContent}>
+                                                            <Typography className={classes.cardText} color="textSecondary" gutterBottom>
+                                                                <Grid container
+                                                                    direction="row"
+                                                                    justify="flex-start"
+                                                                    alignItems="center">
+                                                                    <Grid item xs={4}>Title: {incident.title}</Grid>
+                                                                    <Grid item xs={4}>Date: {moment(incident.occured_date).format('MMMM Do YYYY, h:mm:ss a')}</Grid>
+                                                                    <Grid item xs={4}>Location: {incident.location}</Grid>
+                                                                </Grid>
+                                                                <Grid item xs={12}>Description: {incident.description}</Grid>
+                                                                {/* <Grid>Title: {incident.title}</Grid> &nbsp;&nbsp;&nbsp;&nbsp;  Date: {incident.occured_date} &nbsp;&nbsp;&nbsp;&nbsp;Location: {incident.location} */}
+                                                            </Typography>
+                                                        </CardContent>
+                                                    </Card>
+                                                )
+                                            })}
+                                        </Grid>}
                                         <Grid item xs={12}>
                                             <TextField
                                                 type="text"
@@ -558,7 +613,7 @@ function IncidentFormInternal(props) {
                                                 error={errors.occured_date_time}
                                                 helperText={errors.occured_date_time}
                                             />
-                                            
+
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <FormControl
