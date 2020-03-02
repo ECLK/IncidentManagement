@@ -25,6 +25,9 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import WhereToVoteIcon from '@material-ui/icons/WhereToVote';
+import PrintIcon from '@material-ui/icons/Print'
+import CancelIcon from '@material-ui/icons/Cancel'
+import ErrorIcon from '@material-ui/icons/Error'
 
 import IconButton from '@material-ui/core/IconButton';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -62,7 +65,7 @@ const styles = (theme) => ({
 });
 
 const getLastActionTime = (events) => {
-    
+
     if (events.allIds.length === 0) {
         return "No action taken yet";
     }
@@ -73,7 +76,7 @@ const getLastActionTime = (events) => {
 
 const EventActions = (props) => {
 
-    const { 
+    const {
         classes,
         users,
         divisions
@@ -109,9 +112,9 @@ const EventActions = (props) => {
                         <PermIdentityIcon />
                     </Avatar>
                     <ListItemText primary="Assigned to" secondary={activeIncident.assignee ? activeIncident.assignee.displayname : ""} />
-                    
+
                     {activeIncident.currentStatus !== 'CLOSED' &&
-                        activeIncident.currentStatus !== 'INVALIDATED' && 
+                        activeIncident.currentStatus !== 'INVALIDATED' &&
                         userCan(currentUser, activeIncident, USER_ACTIONS.CAN_CHANGE_ASSIGNEE) &&
                         <ListItemSecondaryAction>
                             <IconButton aria-label="Edit" onClick={showChangeAssigneeModal}>
@@ -133,7 +136,7 @@ const EventActions = (props) => {
                         <AccessTimeIcon />
                     </Avatar>
                     <ListItemText primary="Close within" secondary={activeIncident.response_time + " hours."} />
-                    {activeIncident.currentStatus !== 'CLOSED'  && 
+                    {activeIncident.currentStatus !== 'CLOSED'  &&
                         <ListItemSecondaryAction>
                             <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('RESPOSE_TIME_EDIT', { activeIncident })) }}>
                                 <EditIcon />
@@ -146,8 +149,8 @@ const EventActions = (props) => {
                     <Avatar>
                         <HourglassEmptyIcon />
                     </Avatar>
-                    <ListItemText 
-                        primary="Close this before" 
+                    <ListItemText
+                        primary="Close this before"
                         secondary={timeLimitText}
                         classes = {{
                             // inset:true,
@@ -168,47 +171,47 @@ const EventActions = (props) => {
 
             <Divider variant="middle" className={classes.divider} />
 
-            {activeIncident.currentStatus !== 'CLOSED'  && 
-            activeIncident.currentStatus !== 'INVALIDATED'  && 
-              userCan(currentUser, activeIncident, USER_ACTIONS.CAN_RUN_WORKFLOW) && 
+            {activeIncident.currentStatus !== 'CLOSED'  &&
+            activeIncident.currentStatus !== 'INVALIDATED'  &&
+              userCan(currentUser, activeIncident, USER_ACTIONS.CAN_RUN_WORKFLOW) &&
                 <>
-                {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_ESCALATE_INCIDENT) && 
+                {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_ESCALATE_INCIDENT) &&
                     <Button color="primary" size="large" variant='text' className={classes.button} onClick={props.escallateIncident}>
                         <ArrowUpwardIcon className={classes.actionButtonIcon} />
                         Escalate
                     </Button>
                 }
-                
-            
-                {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_ESCALATE_EXTERNAL) && 
+
+
+                {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_ESCALATE_EXTERNAL) &&
                     <Button color="primary" size="large" variant='text' className={classes.button} onClick={()=>{dispatch(showModal('ESCALLATE_OUTSIDE', { incidentId: activeIncident.id }))}}>
                         <SubdirectoryArrowLeftIcon className={classes.actionButtonIcon} />
-                        Refer to organization 
+                        Refer to organization
                     </Button>
                 }
-                
+
                 <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REQUEST_ADVICE_MODAL', { activeIncident, users, divisions })) }}>
                     <HelpIcon className={classes.actionButtonIcon} />
                     Request for advice
                 </Button>
 
                 {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_CLOSE_INCIDENT) &&
-                    
+
                     <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('CLOSE_MODAL', { activeIncident })) }}>
-                        <WhereToVoteIcon className={classes.actionButtonIcon} />
+                        <CancelIcon className={classes.actionButtonIcon} />
                         Close Incident
                     </Button>
                 }
-                
-                { (activeIncident.currentStatus === "NEW" || activeIncident.currentStatus === "REOPENED") && 
+
+                { (activeIncident.currentStatus === "NEW" || activeIncident.currentStatus === "REOPENED") &&
                     userCan(currentUser, activeIncident, USER_ACTIONS.CAN_INVALIDATE_INCIDENT) &&
                 (
                         <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('INVALIDATE_MODAL', { activeIncident })) }}>
-                            <WhereToVoteIcon className={classes.actionButtonIcon} />
+                            <ErrorIcon className={classes.actionButtonIcon} />
                             Invalidate Incident
                         </Button>
                 )}
-                 
+
                 </>
             }
 
@@ -219,6 +222,16 @@ const EventActions = (props) => {
                     <WhereToVoteIcon className={classes.actionButtonIcon} />
                     Reopen Incident
                 </Button>
+                )
+            }
+
+            {
+                activeIncident.currentStatus != 'CLOSED' && activeIncident.incidentType === "INQUIRY" &&
+                (
+                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { window.open("https://google.com")}}>
+                        <PrintIcon className={classes.actionButtonIcon} />
+                        Print Slip
+                    </Button>
                 )
             }
         </div>
