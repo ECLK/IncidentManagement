@@ -12,8 +12,13 @@ import { withStyles } from '@material-ui/core/styles';
 import { submitIncidentComment } from '../../state/OngoingIncidents.actions'
 
 import '../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import * as incidentUtils from "../../../incident/incidentUtils";
+import { updateInternalIncident } from "../../../incident/state/incidentActions";
 
 const styles = theme => ({
+    button: {
+        margin: theme.spacing.unit,
+    },
     editorWrapper: {
         minHeight: 250,
         border: 'solid #e0e0e0',
@@ -38,6 +43,18 @@ const postComment = (incidentId, editorState, isOutcome, dispatch) => {
     return dispatch(submitIncidentComment(incidentId, commentObj))
 }
 
+const postResolutionStatusAsComment = (incidentId, activeIncident, editorState, isOutcome, dispatch, resolutionStatus) => {
+    let commentObj = {
+        incident: incidentId,
+        comment: resolutionStatus,
+        isOutcome: isOutcome
+    }
+    let incident = activeIncident;
+    incident['current_decision'] = resolutionStatus;
+    dispatch(submitIncidentComment(incidentId, commentObj))
+    return dispatch(updateInternalIncident(incidentId, incident));
+}
+
 const EditorComponent = (props) => {
 
     const initialEditorState = EditorState.createEmpty()
@@ -46,7 +63,7 @@ const EditorComponent = (props) => {
     const activeIncidentId = props.activeIncident.id;
     const dispatch = useDispatch()
 
-    const { classes } = props
+    const { classes, activeIncident } = props
 
 
 
@@ -68,7 +85,39 @@ const EditorComponent = (props) => {
         }
 
     }
+    let toolbarCustomButtonsArray = [
+        <MarkAsOutComeSelect isOutcome={isOutcome} setIsOutcome={setIsOutcome}/>
+    ];
 
+    if (isOutcome) {
+        toolbarCustomButtonsArray = [
+            <MarkAsOutComeSelect isOutcome={isOutcome} setIsOutcome={setIsOutcome}/>,
+            <Button variant="contained" color="primary" className={classes.button} onClick={() => {
+                postResolutionStatusAsComment(activeIncidentId, activeIncident, editorState, isOutcome, dispatch, 'Approved')
+                setEditorState(initialEditorState)
+            }}>
+                Approved
+            </Button>,
+            <Button variant="contained" color="primary" className={classes.button} onClick={() => {
+                postResolutionStatusAsComment(activeIncidentId, activeIncident, editorState, isOutcome, dispatch, 'Approved w/ condition')
+                setEditorState(initialEditorState)
+            }}>
+                Approved w/ condition
+            </Button>,
+            <Button variant="contained" color="primary" className={classes.button} onClick={() => {
+                postResolutionStatusAsComment(activeIncidentId, activeIncident, editorState, isOutcome, dispatch, 'Not Approved')
+                setEditorState(initialEditorState)
+            }}>
+                Not Approved
+            </Button>,
+            <Button variant="contained" color="primary" className={classes.button} onClick={() => {
+                postResolutionStatusAsComment(activeIncidentId, activeIncident, editorState, isOutcome, dispatch, 'Requested further information')
+                setEditorState(initialEditorState)
+            }}>
+                Requested further information
+            </Button>,
+        ]
+    }
     return (
         <>
             <div className={classes.editorWrapper}>
@@ -77,7 +126,7 @@ const EditorComponent = (props) => {
                     editorState={editorState}
                     onEditorStateChange={(newState, callback) => { setEditorState(newState) }}
                     placeholder="Type your comment here."
-                    toolbarCustomButtons={[<MarkAsOutComeSelect isOutcome={isOutcome} setIsOutcome={setIsOutcome}/>]}
+                    toolbarCustomButtons={toolbarCustomButtonsArray}
                 />
             </div>
 
