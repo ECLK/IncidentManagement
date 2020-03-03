@@ -412,6 +412,7 @@ function IncidentFormInternal(props) {
         category: Yup.mixed().required("Required"),
         election: Yup.mixed().required("Required"),
         severity: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'COMPLAINT' ? IncidentSchema.required("Required") : IncidentSchema)),
+        district: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'COMPLAINT' ? IncidentSchema.required("Required") : IncidentSchema)),
         reporterMobile: Yup.number(),
         reporterEmail: Yup.string().email("Invalid email"),
         institution: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'INQUIRY' ? IncidentSchema.required("Required") : IncidentSchema)),
@@ -975,7 +976,9 @@ function IncidentFormInternal(props) {
                                         </Grid> */}
                                     {values.incidentType === "INQUIRY" ? (
                                         <Grid item xs={12} sm={6}>
-                                            <FormControl className={classes.formControl}>
+                                            <FormControl
+                                                error={touched.election && errors.election}
+                                                className={classes.formControl}>
                                                 <InputLabel htmlFor="institution">Institution</InputLabel>
                                                 <Select
                                                     value={values.institution}
@@ -997,6 +1000,9 @@ function IncidentFormInternal(props) {
                                                         );
                                                     })}
                                                 </Select>
+                                                <FormHelperText>
+                                                    {touched.election && errors.election ? errors.election : ""}
+                                                </FormHelperText>
                                             </FormControl>
                                         </Grid>
                                     ) : null}
@@ -1219,7 +1225,10 @@ function IncidentFormInternal(props) {
                                         </FormControl>
                                     </Grid>
                                     <Grid item xs={12} sm={4}>
-                                        <FormControl className={classes.formControl}>
+                                        <FormControl
+                                            error={touched.district && errors.district}
+                                            className={classes.formControl}
+                                            >
                                             <InputLabel htmlFor="district">District</InputLabel>
                                             <Select
                                                 value={values.district}
@@ -1243,6 +1252,9 @@ function IncidentFormInternal(props) {
                                                     );
                                                 })}
                                             </Select>
+                                            <FormHelperText>
+                                                {touched.district && errors.district ? errors.district : ""}
+                                            </FormHelperText>
                                         </FormControl>
                                     </Grid>
                                     <Grid item xs={12} sm={4}>
