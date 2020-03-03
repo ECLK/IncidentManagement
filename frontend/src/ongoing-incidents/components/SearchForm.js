@@ -89,8 +89,8 @@ function SearchForm(props) {
       onSubmit={(values, { setSubmitting }) => {
         let preparedValues = {
           ...values,
-          startTime: values.startTime !== null ? moment(values.startTime).format("YYYY-MM-DD HH:mm") : null,
-          endTime: values.endTime !== null ? moment(values.endTime).format("YYYY-MM-DD HH:mm") : null
+          startTime: values.startTime ? moment(values.startTime).format("YYYY-MM-DD HH:mm") : null,
+          endTime: values.endTime ? moment(values.endTime).format("YYYY-MM-DD HH:mm") : null
         };
         // alert(JSON.stringify(preparedValues));
         filterIncidents(preparedValues);
