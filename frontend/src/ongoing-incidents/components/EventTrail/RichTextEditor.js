@@ -64,10 +64,6 @@ const EditorComponent = (props) => {
 
     const { classes, activeIncident } = props
 
-
-
-
-
     const toolBar = {
         options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign'],
         inline: {
@@ -88,7 +84,7 @@ const EditorComponent = (props) => {
         <MarkAsOutComeSelect isOutcome={isOutcome} setIsOutcome={setIsOutcome}/>
     ];
 
-    if (isOutcome) {
+    if (isOutcome && activeIncident.incidentType === "INQUIRY") {
         toolbarCustomButtonsArray = [
             <MarkAsOutComeSelect isOutcome={isOutcome} setIsOutcome={setIsOutcome}/>,
             <Button variant="contained" color="primary" className={classes.button} onClick={() => {
