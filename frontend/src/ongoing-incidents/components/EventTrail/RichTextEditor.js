@@ -12,7 +12,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { submitIncidentComment } from '../../state/OngoingIncidents.actions'
 
 import '../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import * as incidentUtils from "../../../incident/incidentUtils";
 import { updateInternalIncident } from "../../../incident/state/incidentActions";
 
 const styles = theme => ({
