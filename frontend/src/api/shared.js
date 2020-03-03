@@ -10,6 +10,10 @@ export const getCategories = async () => {
     return (await handler.get('/categories')).data;
 }
 
+export const getInstitutions = async () => {
+    return mockapi.getInstitutions()
+}
+
 export const getProvinces = async () => {
     return (await handler.get('/provinces')).data;
 }

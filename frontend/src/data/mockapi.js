@@ -6,8 +6,8 @@ import { provinces, districts, divisionalSecretariats, gramaNiladharis } from ".
 import { polling_divisions, polling_stations } from "./polling";
 import { police_stations, police_divisions } from "./police";
 import { elections } from "./elections";
+import { institutions } from "./institutions"
 import * as storage from "../utils/localStorage";
-import * as auth from "../utils/authorization";
 import moment from "moment";
 const uuidv4 = require("uuid/v4");
 
@@ -17,6 +17,13 @@ export function getElections() {
         status: 200,
         data: elections.filter( (election) => {return election.status == true; }) // send only the active elections
     };
+}
+
+export function getInstitutions() {
+    return {
+        status: 200,
+        data: institutions
+    }
 }
 
 export function getProvinces() {
@@ -116,116 +123,6 @@ export function addComment(incidentId, commentObj) {
     return {
         status: "SUCCESS",
         message: "Commented",
-        data: {}
-    };
-}
-
-export function changeStatus(incidentId, status) {
-    const incidentIndex = incidents.findIndex(inc => inc.id === incidentId);
-    const oldStatus = incidents[incidentIndex].status;
-
-    const user = getCurrentUser();
-
-    if (oldStatus === status) {
-        return {
-            status: "SUCCESS",
-            message: "Status updated",
-            data: {}
-        };
-    }
-
-    if (auth.canChangeStatus(user) === "CAN_WITH_APPROVAL") {
-        incidents[incidentIndex].hasPendingStatusChange = true;
-
-        events.push({
-            id: uuidv4(),
-            initiator: {
-                isAnonymous: false,
-                avatar: "",
-                userId: user.uid,
-                displayname: user.displayName
-            },
-            action: "ATTRIBUTE_CHANGE_REQUESTED",
-            affected_attribute: "STATUS",
-            incidentId: incidentId,
-            data: {
-                status: {
-                    from_status_type: oldStatus,
-                    to_status_type: status
-                }
-            },
-            createdDate: Date()
-        });
-    } else if (auth.canChangeStatus(user) === "CAN") {
-        incidents[incidentIndex].status = status;
-
-        events.push({
-            id: uuidv4(),
-            initiator: {
-                isAnonymous: false,
-                avatar: "",
-                userId: user.uid,
-                displayname: user.displayName
-            },
-            action: "ATTRIBUTE_CHANGED",
-            affected_attribute: "STATUS",
-            incidentId: incidentId,
-            data: {
-                status: {
-                    from_status_type: oldStatus,
-                    to_status_type: status
-                }
-            },
-            createdDate: Date()
-        });
-    }
-
-    return {
-        status: "SUCCESS",
-        message: "Status updated",
-        data: {}
-    };
-}
-
-export function changeSeverity(incidentId, severity) {
-    const incidentIndex = incidents.findIndex(inc => inc.id === incidentId);
-    const oldSeverity = incidents[incidentIndex].severity;
-
-    const user = getCurrentUser();
-
-    if (oldSeverity === severity) {
-        return {
-            status: "SUCCESS",
-            message: "Severity updated",
-            data: {}
-        };
-    }
-
-    incidents[incidentIndex].severity = severity;
-
-    events.push({
-        id: uuidv4(),
-        initiator: {
-            isAnonymous: false,
-            avatar: "",
-            userId: user.uid,
-            displayname: user.displayName
-        },
-        action: "ATTRIBUTE_CHANGED",
-        affected_attribute: "SEVERITY",
-        incidentId: incidentId,
-        data: {
-            severity: {
-                from_severity_type: oldSeverity,
-                to_severity_type: severity
-            }
-        },
-        createdDate: Date()
-    });
-
-    return {
-        status: "SUCCESS",
-        message: "Severity updated",
         data: {}
     };
 }

@@ -373,7 +373,7 @@ def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP", 
         or incident.current_status == StatusType.ACTION_PENDING.name
         or incident.current_status == StatusType.ADVICE_REQESTED.name
     ) :
-        raise WorkflowException("Incident cannot be escalated")
+        raise WorkflowException("Incident cannot be escalated at this Status")
     
     # find the rank of the current incident assignee
     # assignee_groups = incident.assignee.groups.all()

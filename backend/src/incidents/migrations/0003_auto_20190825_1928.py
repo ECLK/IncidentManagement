@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='incident',
             name='refId',
-            field=models.CharField(default=src.incidents.models.generate_ref_id, max_length=200),
+            field=models.CharField(default="REFID", max_length=200),
         ),
     ]
