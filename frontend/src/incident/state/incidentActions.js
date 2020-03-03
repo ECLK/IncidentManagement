@@ -1,5 +1,5 @@
 // incidentActions.js
-// implemented using redux starter kit. 
+// implemented using redux starter kit.
 // For now only used for the guest incident form
 // Move all the incident actions here later and use this app wide.
 // Adapt the sampe pattern in other redux actions as well.
@@ -33,6 +33,9 @@ export function createInternalIncident(incidentData, fileData) {
                 "email": incidentData["reporterEmail"],
                 "telephone": incidentData["reporterMobile"],
                 "address": incidentData["reporterAddress"],
+                "politicalAffiliation": incidentData["reporterAffiliation"],
+                "accusedName": incidentData["accusedName"],
+                "accusedPoliticalAffiliation": incidentData["accusedAffiliation"],
             }
             await incidentsApi.updateReporter(reporterId, reporterUpdate);
 
@@ -71,9 +74,12 @@ export function updateInternalIncident(incidentId, incidentData) {
                 "email": incidentData["reporterEmail"],
                 "telephone": incidentData["reporterMobile"],
                 "address": incidentData["reporterAddress"],
+                "politicalAffiliation": incidentData["reporterAffiliation"],
+                "accusedName": incidentData["accusedName"],
+                "accusedPoliticalAffiliation": incidentData["accusedAffiliation"],
             }
             await incidentsApi.updateReporter(reporterId, reporterUpdate);
-            
+
             dispatch(updateInternalIncidentSuccess(incident));
             dispatch(loadIncident(incidentId));
         }catch(error){
@@ -146,7 +152,7 @@ export function updateIncidentStatus(incidentId, status) {
 // update search filter
 export const updateIncidentSearchFilter = createAction('INCIDENT/UPDATE_INCIDENT_SEARCH_FILTER');
 
-/** ---------- */ 
+/** ---------- */
 
 
 

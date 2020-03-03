@@ -180,6 +180,9 @@ function IncidentFormInternal(props) {
         reporterMobile: "",
         reporterLandline: "",
         reporterEmail: "",
+        reporterAffiliation: "",
+        accusedName: "",
+        accusedAffiliation: "",
 
         files: [],
         politicalParty: "",
@@ -309,7 +312,10 @@ function IncidentFormInternal(props) {
                 reporterType: reporter.reporter_type,
                 reporterEmail: reporter.email,
                 reporterMobile: reporter.telephone,
-                reporterAddress: reporter.address
+                reporterAddress: reporter.address,
+                reporterAffiliation: reporter.politicalAffiliation,
+                accusedName: reporter.accusedName,
+                accusedAffiliation: reporter.accusedPoliticalAffiliation
             });
         }
         //TODO: Need to split the date values to date and time

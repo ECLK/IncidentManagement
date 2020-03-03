@@ -3,7 +3,7 @@
 # @author: manujith (manujith.nc@gmail.com)
 # If there's questions regarding serializer implementations please direct queries
 # to above email or twitter
-# 
+#
 # ===============================================================================
 
 from rest_framework import serializers
@@ -26,10 +26,10 @@ class ReporterSerializer(serializers.ModelSerializer):
         source="accused_name", required=False, allow_null=True, allow_blank=True)
     accusedPoliticalAffiliation = serializers.CharField(
         source="accused_political_affiliation", required=False, allow_null=True, allow_blank=True)
-        
+
     class Meta:
         model = Reporter
-        fields = "__all__"
+        exclude = ["political_affiliation", "accused_name", "accused_political_affiliation"]
 
 
 class IncidentSerializer(serializers.ModelSerializer):
@@ -129,7 +129,7 @@ class IncidentPoliceReportSerializer(serializers.ModelSerializer):
     injuredParties = IncidentPersonSerializer(source="injured_parties", many=True)
     respondents = IncidentPersonSerializer(many=True)
     detainedVehicles = IncidentVehicleSerializer(source="detained_vehicles", many=True)
-    
+
     def create_list(self, validated_list, instance_field):
         for item in validated_list:
             instance_field.create(**item)
@@ -150,7 +150,7 @@ class IncidentPoliceReportSerializer(serializers.ModelSerializer):
 
         for item in remove_items.values():
             item.delete()
-    
+
     def create(self, validated_data):
         injured_parties_data = validated_data.pop("injured_parties")
         respondents_data = validated_data.pop("respondents")
@@ -167,17 +167,17 @@ class IncidentPoliceReportSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         injured_parties_data = validated_data.pop("injured_parties")
-        self.update_list(instance.injured_parties.all(), injured_parties_data, 
+        self.update_list(instance.injured_parties.all(), injured_parties_data,
                             IncidentPerson, instance.injured_parties)
 
         respondents_data = validated_data.pop("respondents")
-        self.update_list(instance.respondents.all(), respondents_data, 
+        self.update_list(instance.respondents.all(), respondents_data,
                             IncidentPerson, instance.respondents)
 
         detained_vehicles_data = validated_data.pop("detained_vehicles")
-        self.update_list(instance.detained_vehicles.all(), detained_vehicles_data, 
+        self.update_list(instance.detained_vehicles.all(), detained_vehicles_data,
                             IncidentVehicle, instance.detained_vehicles)
-                    
+
 
         for field in validated_data:
             setattr(instance, field, validated_data.get(field, getattr(instance, field)))
