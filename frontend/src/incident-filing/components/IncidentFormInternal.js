@@ -273,8 +273,7 @@ function IncidentFormInternal(props) {
 
     const getSimilarInquiries = async (title) => {
         if (title.length > 2) {
-            const response = await getIncidents({ title: title }, 1);
-            setSimilarIncidents(response.data.incidents);
+            setSimilarIncidents([]);
         } else {
             setSimilarIncidents([]);
         }
