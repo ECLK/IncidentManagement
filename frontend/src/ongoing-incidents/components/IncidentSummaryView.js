@@ -487,7 +487,8 @@ function SummaryTabView(props) {
                     institutions = {institutions}
 
                 /> </TabContainer>}
-            {currentTab === 1 && <TabContainer>
+            {currentTab === 1 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
+            {currentTab === 2 && <TabContainer>
                 <LocationTab classes={classes} incident={incident}
                     provinces={provinces}
                     districts={districts}
@@ -498,7 +499,6 @@ function SummaryTabView(props) {
                     policeStations={policeStations}
                     policeDivisions={policeDivisions}
                 /> </TabContainer>}
-            {currentTab === 2 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
             {currentTab === 3 && <TabContainer> <PoliceTab classes={classes} incident={incident} /> </TabContainer>}
         </div>
     )
