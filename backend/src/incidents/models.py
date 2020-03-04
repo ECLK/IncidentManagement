@@ -9,7 +9,6 @@ import enum
 from datetime import datetime
 from .permissions import *
 from ..common.models import Category
-from datetime import datetime
 
 class Occurrence(enum.Enum):
     OCCURRED = "Occurred"
@@ -116,17 +115,17 @@ class IncidentComment(models.Model):
 '''
 Generates refId for inquiries
 '''
-def generate_inquiry_refId(category, institution):
-    current_count = Incident.objects.filter(created_date=datetime.date(datetime.now())).count()
-    refID = "%s/%0.4d/%s/%s" % (datetime.now().strftime("%Y%m%d"), current_count+1, category, institution)
+def generate_inquiry_refId(election, category, institution):
+    current_count = Incident.objects.filter(incidentType="INQUIRY").filter(election=election).count()
+    refID = "%s/%0.4d/%s/%s/%s" % (election, current_count+1, datetime.now().strftime("%m%d"), category, institution)
     return refID
 
 '''
 Generate refId for complaints
 '''
-def generate_complaint_refId():
-    current_count = Incident.objects.filter(created_date=datetime.date(datetime.now())).count()
-    refID = "%s/%0.4d" % (datetime.now().strftime("%Y/%m/%d"), current_count+1)
+def generate_complaint_refId(election, district):
+    current_count = Incident.objects.filter(incidentType="COMPLAINT").filter(election=election).count()
+    refID = "%s/%s/%s/%0.4d" % (election, district, datetime.now().strftime("%m%d"), current_count+1)
     return refID
 
 class Incident(models.Model):
@@ -217,11 +216,13 @@ class Incident(models.Model):
     letter_date = models.DateField(null=True, blank=True)
     institution = models.CharField(max_length=200, blank=True, null=True) # this will save `code` of institute pulled from location-service API endpoint
 
+    current_decision = models.CharField(max_length=50, default=None, null=True, blank=True)
+
     def save(self, *args, **kwargs):
         if self.incidentType == "COMPLAINT" :
-            self.refId = generate_complaint_refId()
+            self.refId = generate_complaint_refId(election=self.election, district=self.district)
         else:
-            self.refId = generate_inquiry_refId(category=self.category, institution=self.institution)
+            self.refId = generate_inquiry_refId(election=self.election, category=self.category, institution=self.institution)
         super(Incident, self).save(*args, **kwargs)
 
     class Meta:
