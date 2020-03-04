@@ -9,6 +9,7 @@ import pandas as pd
 import requests
 import json
 from django.conf import settings
+import urllib
 
 from .services import get_police_division_summary, get_category_summary, \
     get_mode_summary, get_severity_summary, get_status_summary, get_subcategory_summary, get_district_summary, \
@@ -30,13 +31,16 @@ class ReportingAccessView(APIView):
 
         }
     }
+
+    Response would be a pdf stream to be opened in a different tab
     '''
-    def post(self, request): 
+    def get(self, request): 
         endpoint_uri = settings.PDF_SERVICE_ENDPOINT 
         json_dict = {}
         template_type = request.data['template_type']
         if template_type == 'url':
             json_dict['url'] = request.data['data']['url']
+            urllib.urlretrieve(json_dict['url'], fullfilename)
         elif template_type == 'html':
             json_dict['html'] = request.data['data']['file']
         elif template_type == 'file':
@@ -50,7 +54,25 @@ class ReportingAccessView(APIView):
 
         request_data = json.dumps(json_dict)
         res = requests.post(url=endpoint_uri, data = request_data, headers={'content-type': 'application/json'})
-        return HttpResponse(status=res.status_code, content=res.text, content_type='application/json')
+
+        if res.status_code == 200:
+            file_dir = settings.FILE_STORAGE_DIR + 'report_' + datetime.date.today().strftime("%Y%m%d%H%M%S") + ".pdf"
+            url = json.loads(res)["url"]
+            urllib.request.urlretrieve(url, file_dir)
+
+            with open(file_dir, 'rb') as pdf:
+                response =  HttpResponse(content=pdf.read(), content_type='application/pdf')
+                return response
+            pdf.closed
+            
+            # file_dir = settings.FILE_STORAGE_DIR + 'report_' + datetime.now().strftime("%Y%m%d%H%M%S" + ".pdf")
+            # pdf_dict = {}
+            # pdf_dict["status"] = 200
+            # pdf_dict["path"] = file_dir
+            # urllib.urlretrieve(url, file_dir)
+            # return HttpResponse(status=status.HTTP_200_OK, content=json.dumps(pdf_dict), content_type='application/json')
+        else:
+            return HttpResponse(status=res.status_code, content=res.text, content_type='application/json')
 
 class ReportingView(APIView):
     """
