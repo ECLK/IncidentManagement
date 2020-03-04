@@ -52,14 +52,9 @@ export const getIncidents = async (filters, page = 1) => {
     query += "&user_linked=" + filters.user_linked;
   }
 
-  if (filters.ministry) {
-    query += "&ministry=" + filters.ministry;
+  if (filters.institution) {
+    query += "&institution=" + filters.institution;
   }
-
-  if (filters.organization) {
-    query += "&organization=" + filters.organization;
-  }
-
 
   if (filters.startTime && filters.endTime) {
     const startDate = moment(filters.startTime).format("YYYY-MM-DD HH:mm");

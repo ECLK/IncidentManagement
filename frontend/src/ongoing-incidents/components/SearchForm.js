@@ -1,5 +1,5 @@
 import { Formik, withFormik } from "formik";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import Button from "@material-ui/core/Button";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -11,6 +11,7 @@ import Grid from "@material-ui/core/Grid";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import Search from './search'
 import SearchIcon from "@material-ui/icons/Search";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
@@ -55,6 +56,11 @@ const styles = theme => ({
     margin: theme.spacing.unit * 2,
     minWidth: 300
   },
+  formControlSearch: {
+    margin: theme.spacing.unit * 2,
+    minWidth: 1200 + theme.spacing.unit * 12,
+
+  },
   buttonContainer: {
     margin: theme.spacing.unit * 2,
     minWidth: 300,
@@ -84,6 +90,9 @@ function SearchForm(props) {
   const { classes, categories } = props;
   const severityValues = Array(10).fill(0).map((e, i) => i + 1);
   const organizations = useSelector(state => state.user.organizations);
+  const institutions = useSelector(state => state.shared.institutions);
+  const [selectedInstitution, setSelectedInstitution] = useState("");
+
   return (
     <Formik
       initialValues={props.incidentSearchFilter}
@@ -93,6 +102,7 @@ function SearchForm(props) {
           startTime: values.startTime !== null ? moment(values.startTime).format("YYYY-MM-DD HH:mm") : null,
           endTime: values.endTime !== null ? moment(values.endTime).format("YYYY-MM-DD HH:mm") : null
         };
+        if (selectedInstitution) { preparedValues.institution = selectedInstitution }
         // alert(JSON.stringify(preparedValues));
         filterIncidents(preparedValues);
       }}
@@ -289,59 +299,12 @@ function SearchForm(props) {
                         onChange={handleChange}
                       />
                     </FormControl>
-                    <FormControl className={classes.formControl}>
-                      <InputLabel shrink htmlFor="status-label-placeholder">
-                        Ministry
-                      </InputLabel>
-                      <Select
-                        input={
-                          <Input
-                            name="ministry"
-                            id="ministry-label-placeholder"
-                          />
-                        }
-                        displayEmpty
-                        name="ministry"
-                        value={values.ministry}
-                        onChange={handleChange}
-                        className={classes.selectEmpty}
+                    <FormControl className={classes.formControlSearch}>
+                      <Search
+                        institutions={institutions}
+                        onChange={setSelectedInstitution}
                       >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        {categories.map(({ sub_category }) => (
-                          <MenuItem value={sub_category}>
-                            {sub_category}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                    <FormControl className={classes.formControl}>
-                      <InputLabel shrink htmlFor="status-label-placeholder">
-                        Organization
-                      </InputLabel>
-                      <Select
-                        input={
-                          <Input
-                            name="organization"
-                            id="Organization-label-placeholder"
-                          />
-                        }
-                        displayEmpty
-                        name="organization"
-                        value={values.organization}
-                        onChange={handleChange}
-                        className={classes.selectEmpty}
-                      >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        {organizations.allIds.map(id => (
-                          <MenuItem key={id} value={id}>
-                            {organizations.byIds[id].name}
-                          </MenuItem>
-                        ))}
-                      </Select>
+                      </Search>
                     </FormControl>
                     <FormControl className={classes.buttonContainer}>
                       {/* Reset workflow is pending
