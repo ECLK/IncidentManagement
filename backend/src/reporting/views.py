@@ -10,6 +10,7 @@ import requests
 import json
 from django.conf import settings
 import urllib
+import os
 
 from .services import get_police_division_summary, get_category_summary, \
     get_mode_summary, get_severity_summary, get_status_summary, get_subcategory_summary, get_district_summary, \
@@ -64,6 +65,7 @@ class ReportingAccessView(APIView):
                 response =  HttpResponse(content=pdf.read(), content_type='application/pdf')
                 return response
             pdf.closed
+            os.remove(file_dir)
             
             # file_dir = settings.FILE_STORAGE_DIR + 'report_' + datetime.now().strftime("%Y%m%d%H%M%S" + ".pdf")
             # pdf_dict = {}
