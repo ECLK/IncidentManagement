@@ -1,12 +1,12 @@
 import React, { Component, cloneElement, useState } from 'react';
-import PropTypes from 'prop-types';
+import { Table, TableBody, TableCell, TableHead, TableRow, Tabs, withStyles } from '@material-ui/core';
+
+import Grid from '@material-ui/core/Grid';
 import Moment from 'react-moment';
+import Paper from '@material-ui/core/Paper';
+import PropTypes from 'prop-types';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import { withStyles, Tabs, Table, TableHead, TableCell, TableRow, TableBody } from '@material-ui/core';
-
 
 function TabContainer(props) {
     return (
@@ -121,10 +121,10 @@ function BasicDetailTab(props) {
                                     <Grid item xs>
                                         <Typography variant="caption" className={classes.label}> Institute </Typography>
                                         <Typography gutterBottom>
-                                        {
-                                            incident.institution && institutions.byCode[incident.institution] ?
-                                                institutions.byCode[incident.institution].name : ""
-                                        }
+                                            {
+                                                incident.institution && institutions.byCode[incident.institution] ?
+                                                    institutions.byCode[incident.institution].name : ""
+                                            }
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -484,7 +484,7 @@ function SummaryTabView(props) {
                 <BasicDetailTab classes={classes} incident={incident} elections={elections} category={category}
                     categories={categories}
                     channels={channels}
-                    institutions = {institutions}
+                    institutions={institutions}
 
                 /> </TabContainer>}
             {currentTab === 1 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
