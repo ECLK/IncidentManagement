@@ -159,7 +159,7 @@ class AutosuggestInput extends React.Component {
                 {...autosuggestProps}
                 inputProps={{
                     classes,
-                    placeholder: 'Search institution',
+                    placeholder: 'type in the institution name to select..',
                     value: this.state.value,
                     onChange: this.handleChange(),
                 }}
