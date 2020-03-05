@@ -71,6 +71,21 @@ class AutosuggestInput extends React.Component {
         suggestions: [],
     };
 
+    componentDidMount() {
+        if (this.props.institutions && this.props.institutions.allCodes && this.props.institutions.allCodes.length > 0) {
+            const list = this.props.institutions.allCodes.map(code => {
+                return ({
+                    label: this.props.institutions.byCode[code].name,
+                    code: this.props.institutions.byCode[code].code,
+                    text: this.props.institutions.byCode[code].name + ', '
+                        + this.props.institutions.byCode[code].sn_name + ', '
+                        + this.props.institutions.byCode[code].tm_name,
+                })
+            })
+            this.setState({ allSuggestions: list });
+        }
+    }
+
     componentDidUpdate(prevProps) {
         if (this.props.institutions != prevProps.institutions && this.props.institutions.allCodes.length > 0) {
             const list = this.props.institutions.allCodes.map(code => {

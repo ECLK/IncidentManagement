@@ -48,6 +48,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Paper from "@material-ui/core/Paper";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
+import Search from '../../ongoing-incidents/components/search'
 import Select from "@material-ui/core/Select";
 import Snackbar from "@material-ui/core/Snackbar";
 import TelephoneInput from "./TelephoneInput";
@@ -139,6 +140,7 @@ const styles = (theme) => ({
 function IncidentFormInternal(props) {
     const dispatch = useDispatch();
     const [similarIncidents, setSimilarIncidents] = useState([]);
+    const [selectedInstitution, setSelectedInstitution] = useState("");
     const {
         incident,
         reporter,
@@ -449,7 +451,7 @@ function IncidentFormInternal(props) {
         district: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'COMPLAINT' ? IncidentSchema.required("Required") : IncidentSchema)),
         reporterMobile: Yup.number(),
         reporterEmail: Yup.string().email("Invalid email"),
-        institution: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'INQUIRY' ? IncidentSchema.required("Required") : IncidentSchema)),
+        // institution: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'INQUIRY' ? IncidentSchema.required("Required") : IncidentSchema)),
         receivedDate: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'INQUIRY' ? IncidentSchema.required("Required") : IncidentSchema)),
         letterDate: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'INQUIRY' ? IncidentSchema.required("Required") : IncidentSchema)),
     });
@@ -460,6 +462,9 @@ function IncidentFormInternal(props) {
                 enableReinitialize={reinit}
                 initialValues={getInitialValues()}
                 onSubmit={(values, actions) => {
+                    if (values.incidentType === "INQUIRY") {
+                        values.institution = selectedInstitution;
+                    }
                     confirmDateAndSubmit(values, actions)
                 }}
                 validationSchema={IncidentSchema}
@@ -1028,31 +1033,13 @@ function IncidentFormInternal(props) {
                                             <FormControl
                                                 error={touched.election && errors.election}
                                                 className={classes.formControl}>
-                                                <InputLabel htmlFor="institution">Institution</InputLabel>
-                                                <Select
-                                                    value={values.institution}
-                                                    onChange={handleChange}
-                                                    inputProps={{
-                                                        name: "institution",
-                                                        id: "institution"
-                                                    }}>
-                                                    <MenuItem value="">
-                                                        {" "}
-                                                        <em>None</em>{" "}
-                                                    </MenuItem>
-                                                    {institutions.allCodes.map((c, k) => {
-                                                        let currInstitution = institutions.byCode[c];
-                                                        return (
-                                                            <MenuItem value={currInstitution.code} key={k}>
-                                                                {currInstitution.name}
-                                                            </MenuItem>
-                                                        );
-                                                    })}
-                                                </Select>
-                                                <FormHelperText>
-                                                    {touched.election && errors.election ? errors.election : ""}
-                                                </FormHelperText>
+                                                Institution
                                             </FormControl>
+                                            <Search
+                                                institutions={institutions}
+                                                onChange={setSelectedInstitution}
+                                            >
+                                            </Search>
                                         </Grid>
                                     ) : null}
                                     {!paramIncidentId && (
@@ -1277,7 +1264,7 @@ function IncidentFormInternal(props) {
                                         <FormControl
                                             error={touched.district && errors.district}
                                             className={classes.formControl}
-                                            >
+                                        >
                                             <InputLabel htmlFor="district">District</InputLabel>
                                             <Select
                                                 value={values.district}
