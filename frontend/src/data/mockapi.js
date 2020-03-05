@@ -6,6 +6,7 @@ import { provinces, districts, divisionalSecretariats, gramaNiladharis } from ".
 import { polling_divisions, polling_stations } from "./polling";
 import { police_stations, police_divisions } from "./police";
 import { elections } from "./elections";
+import { institutions } from "./institutions"
 import * as storage from "../utils/localStorage";
 import moment from "moment";
 const uuidv4 = require("uuid/v4");
@@ -16,6 +17,13 @@ export function getElections() {
         status: 200,
         data: elections.filter( (election) => {return election.status == true; }) // send only the active elections
     };
+}
+
+export function getInstitutions() {
+    return {
+        status: 200,
+        data: institutions
+    }
 }
 
 export function getProvinces() {

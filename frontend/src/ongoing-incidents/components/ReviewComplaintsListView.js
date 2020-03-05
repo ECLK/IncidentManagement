@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import { useSelector, useDispatch } from "react-redux";
-import { loadAllIncidents } from "../../incident/state/incidentActions";
+import {loadAllIncidents, updateIncidentSearchFilter} from "../../incident/state/incidentActions";
 import * as incidentsApi from '../../api/incident';
 
 import SearchForm from "./SearchForm";
@@ -28,14 +28,17 @@ const styles = theme => ({
   }
 });
 
-function ReviewIncidentListView({ classes, ...props }) {
+function ReviewComplaintsListView({ classes, ...props }) {
   const [filters, setFilters] = useState({});
+
+  filters['incidentType'] = 'INQUIRY';
+  const dispatch = useDispatch();
+  dispatch(updateIncidentSearchFilter(filters));
 
   const categories = useSelector(state => state.shared.categories);
   const incidentSearchFilter = useSelector(state => state.incident.incidents.searchFilter);
-  const incidents = useSelector(state => state.incident.incidents);
+  let incidents = useSelector(state => state.incident.incidents);
 
-  const dispatch = useDispatch();
   const handlePageChange = (event, newPage) => dispatch(loadAllIncidents(incidentSearchFilter, newPage+1));
 
   const handleSearchClick = (filters, page) => {
@@ -45,7 +48,7 @@ function ReviewIncidentListView({ classes, ...props }) {
       setFilters({});
     }
     dispatch(loadAllIncidents(filters, page))
-  }
+  };
 
   const handleExportClick = async (exportType) => {
     filters["export"] = exportType;
@@ -74,6 +77,7 @@ function ReviewIncidentListView({ classes, ...props }) {
     
   return (
     <Paper className={classes.root}>
+      <h3>Review Complaints</h3>
       <SearchForm 
         categories={categories} 
         handleSearchClick={handleSearchClick} 
@@ -102,4 +106,4 @@ function ReviewIncidentListView({ classes, ...props }) {
   );
 }
 
-export default withStyles(styles)(ReviewIncidentListView);
+export default withStyles(styles)(ReviewComplaintsListView);

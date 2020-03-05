@@ -109,6 +109,7 @@ function NavTabs({ classes, match }) {
     const sharedState = useSelector(state => state.shared);
     const {
         provinces, districts,
+        institutions,
         divisionalSecretariats,
         gramaNiladharis,
         pollingDivisions,
@@ -120,9 +121,9 @@ function NavTabs({ classes, match }) {
         categories,
     } = sharedState;
 
-    const incidents = useSelector(state => state.incident.incidents);  
-    const reporters = useSelector(state => state.incident.reporters);   
-    const events = useSelector(state => state.event.events); 
+    const incidents = useSelector(state => state.incident.incidents);
+    const reporters = useSelector(state => state.incident.reporters);
+    const events = useSelector(state => state.event.events);
     const users = useSelector(state => state.user.users);
     const organizations = useSelector(state => state.user.organizations);
     const divisions = useSelector(state => state.user.divisions);
@@ -133,12 +134,12 @@ function NavTabs({ classes, match }) {
     const onEscalateClick = () => dispatch(showModal('ESCALATE_MODAL', { incidentId: activeIncident.id }));
     const onVerifyClick = () => dispatch(showModal('VERIFY_CONFIRM_MODAL', { incidentId: activeIncident.id }));
     const attachFiles = (incidentId, formData) => dispatch(attachFile(incidentId, formData));
-    const onResolveEvent = (eventId, decision) => { /* do nothing, event resolving is depreciated */ } 
+    const onResolveEvent = (eventId, decision) => { /* do nothing, event resolving is depreciated */ }
 
     const scrollToTop = () => {
         window.scrollTo(0, 0);
     }
-    
+
     useEffect(() => {
         const incidentId = match.params.paramIncidentId;
         if(!incidents.byIds[incidentId] || !reporters.byIds[incidents.byIds[incidentId].reporter]){
@@ -146,7 +147,7 @@ function NavTabs({ classes, match }) {
         }else{
             const incident = incidents.byIds[incidentId];
             setActiveIncident(incident);
-            setActiveReporter(reporters.byIds[incident.reporter]);            
+            setActiveReporter(reporters.byIds[incident.reporter]);
         }
         dispatch(getIncidentEvents(incidentId));
     }, [incidents]);
@@ -176,12 +177,13 @@ function NavTabs({ classes, match }) {
             <Grid container spacing={24} >
                 <Grid item xs={9}>
                     <div className={classes.mainArea}>
-                        <SummaryTabView 
+                        <SummaryTabView
                             incident={activeIncident}
                             category={category}
                             election={election}
                             reporter={activeReporter}
 
+                            institutions = {institutions}
                             provinces={provinces}
                             districts={districts}
                             divisionalSecretariats = {divisionalSecretariats}
@@ -200,12 +202,12 @@ function NavTabs({ classes, match }) {
                                 resolveEvent={onResolveEvent}
                             />
                             {activeIncident.currentStatus !== 'CLOSED'  &&
-                                activeIncident.currentStatus !== 'INVALIDATED'  && 
+                                activeIncident.currentStatus !== 'INVALIDATED'  &&
                                 <div className={classes.textEditorWrapper}>
                                     <Editor
                                         activeIncident={activeIncident}
                                     />
-                                    <FileUploader 
+                                    <FileUploader
                                         files={files}
                                         setFiles={setFiles}
                                         watchedActions={[
@@ -225,7 +227,7 @@ function NavTabs({ classes, match }) {
                 <Grid item xs={3}>
                     <div className={classes.sidePane}>
                         <div className={classes.editButtonWrapper}>
-                            {activeIncident.currentStatus !== 'CLOSED' && activeIncident.currentStatus !== 'INVALIDATED' && 
+                            {activeIncident.currentStatus !== 'CLOSED' && activeIncident.currentStatus !== 'INVALIDATED' &&
                                 <>
                                     { (activeIncident.currentStatus != 'NEW' && activeIncident.currentStatus != 'REOPENED') &&
                                         <ButtonBase disabled variant="outlined"  size="large" color="secondary" className={classes.verifiedButton} >
@@ -248,12 +250,12 @@ function NavTabs({ classes, match }) {
                                     </Button>
                                 </>
                             }
-                            {activeIncident.currentStatus === 'CLOSED' && 
+                            {activeIncident.currentStatus === 'CLOSED' &&
                                 <ButtonBase disabled variant="outlined"  size="large" color="primary" className={classes.verifiedButton} >
                                     CLOSED
                                 </ButtonBase>
                             }
-                            {activeIncident.currentStatus === 'INVALIDATED' && 
+                            {activeIncident.currentStatus === 'INVALIDATED' &&
                                 <ButtonBase disabled variant="outlined"  size="large" color="primary"  >
                                     INVALIDATED
                                 </ButtonBase>
