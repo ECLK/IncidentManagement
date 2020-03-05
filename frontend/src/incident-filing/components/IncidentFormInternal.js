@@ -451,7 +451,7 @@ function IncidentFormInternal(props) {
         district: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'COMPLAINT' ? IncidentSchema.required("Required") : IncidentSchema)),
         reporterMobile: Yup.number(),
         reporterEmail: Yup.string().email("Invalid email"),
-        // institution: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'INQUIRY' ? IncidentSchema.required("Required") : IncidentSchema)),
+        institution: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => ((incidentType == 'INQUIRY' && selectedInstitution == "") ? IncidentSchema.required("Required") : IncidentSchema)),
         receivedDate: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'INQUIRY' ? IncidentSchema.required("Required") : IncidentSchema)),
         letterDate: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'INQUIRY' ? IncidentSchema.required("Required") : IncidentSchema)),
     });
@@ -462,10 +462,12 @@ function IncidentFormInternal(props) {
                 enableReinitialize={reinit}
                 initialValues={getInitialValues()}
                 onSubmit={(values, actions) => {
-                    if (values.incidentType === "INQUIRY") {
-                        values.institution = selectedInstitution;
+                    if (values.incidentType === "INQUIRY" && selectedInstitution) {
+                        values.institution = selectedInstitution
+                        confirmDateAndSubmit(values, actions)
+                    } else if (values.incidentType === "COMPLAINT") {
+                        confirmDateAndSubmit(values, actions)
                     }
-                    confirmDateAndSubmit(values, actions)
                 }}
                 validationSchema={IncidentSchema}
                 validate={customValidations}
@@ -1029,9 +1031,9 @@ function IncidentFormInternal(props) {
                                             </FormControl>
                                         </Grid> */}
                                     {values.incidentType === "INQUIRY" ? (
-                                        <Grid item xs={12} sm={6}>
+                                        <Grid item xs={12} sm={12}>
                                             <FormControl
-                                                error={touched.election && errors.election}
+                                                error={touched.institution && errors.institution}
                                                 className={classes.formControl}>
                                                 Institution
                                             </FormControl>
@@ -1040,6 +1042,9 @@ function IncidentFormInternal(props) {
                                                 onChange={setSelectedInstitution}
                                             >
                                             </Search>
+                                            <FormHelperText style={{ color: "#f44336"}}>
+                                                {touched.institution && errors.institution ? errors.institution : ""}
+                                            </FormHelperText>
                                         </Grid>
                                     ) : null}
                                     {!paramIncidentId && (
