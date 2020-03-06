@@ -40,16 +40,16 @@ const styles = theme => ({
 
 // dictionary map for occurrence
 const occurrence = {
-    "OCCURRED" : "Occurred",
-    "OCCURRING" : "Occurring",
-    "WILL_OCCUR" : "Will Occur"
+    "OCCURRED": "Occurred",
+    "OCCURRING": "Occurring",
+    "WILL_OCCUR": "Will Occur"
 }
 
 /**
  * Basic Information TabView - (1)
  */
-function BasicDetailTab(props){
-    const { classes, incident, elections, categories, channels } = props;
+function BasicDetailTab(props) {
+    const { classes, incident, elections, categories, channels, institutions } = props;
 
     return (
         <div>
@@ -59,7 +59,7 @@ function BasicDetailTab(props){
 
                         <Grid container spacing={24}>
                             <Grid item xs>
-                                <Typography className={classes.label}> Incident Ref ID </Typography>
+                                <Typography className={classes.label}> {(incident.incidentType === 'COMPLAINT') ? 'Complaint' : 'Inquiry'} Ref ID </Typography>
                                 <Typography variant="h4" gutterBottom> {incident.refId} </Typography>
                             </Grid>
                         </Grid>
@@ -78,27 +78,58 @@ function BasicDetailTab(props){
                             </Grid>
                         </Grid>
 
-                        <Grid container spacing={24}>
-                            <Grid item xs>
-                                <Typography variant="caption" className={classes.label}> Occurrence </Typography>
-                                <Typography gutterBottom> { occurrence[incident.occurrence] } </Typography>
-                            </Grid>
-                        </Grid>
+                        {incident.incidentType === 'COMPLAINT' &&
+                            <>
+                                <Grid container spacing={24}>
+                                    <Grid item xs>
+                                        <Typography variant="caption" className={classes.label}> Occurrence </Typography>
+                                        <Typography gutterBottom> {occurrence[incident.occurrence]} </Typography>
+                                    </Grid>
+                                </Grid>
 
-                        <Grid container spacing={24}>
-                            <Grid item xs>
-                                <Typography variant="caption" className={classes.label}>Incident Date </Typography>
-                                <Typography gutterBottom> 
-                                { (incident.occured_date) ? <Moment format="YYYY/MM/DD">{incident.occured_date}</Moment> : "No date set" }
-                                 </Typography>
-                            </Grid>
-                            <Grid item xs>
-                                <Typography variant="caption" className={classes.label}> Incident Time </Typography>
-                                <Typography gutterBottom> 
-                                { (incident.occured_date) ? <Moment format="HH:mm">{incident.occured_date}</Moment>  : "No time set" }
-                                </Typography>
-                            </Grid>
-                        </Grid>
+                                <Grid container spacing={24}>
+                                    <Grid item xs>
+                                        <Typography variant="caption" className={classes.label}>Incident Date </Typography>
+                                        <Typography gutterBottom>
+                                            {(incident.occured_date) ? <Moment format="YYYY/MM/DD">{incident.occured_date}</Moment> : "No date set"}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs>
+                                        <Typography variant="caption" className={classes.label}> Incident Time </Typography>
+                                        <Typography gutterBottom>
+                                            {(incident.occured_date) ? <Moment format="HH:mm">{incident.occured_date}</Moment> : "No time set"}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            </>
+                        }
+
+                        {incident.incidentType === 'INQUIRY' &&
+                            <>
+                                <Grid container spacing={24}>
+                                    <Grid item xs>
+                                        <Typography variant="caption" className={classes.label}>Received date</Typography>
+                                        <Typography gutterBottom> {incident.receivedDate} </Typography>
+                                    </Grid>
+                                    <Grid item xs>
+                                        <Typography variant="caption" className={classes.label}>Letter date</Typography>
+                                        <Typography gutterBottom> {incident.letterDate} </Typography>
+                                    </Grid>
+                                </Grid>
+
+                                <Grid container spacing={24}>
+                                    <Grid item xs>
+                                        <Typography variant="caption" className={classes.label}> Institute </Typography>
+                                        <Typography gutterBottom>
+                                        {
+                                            incident.institution && institutions.byCode[incident.institution] ?
+                                                institutions.byCode[incident.institution].name : ""
+                                        }
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            </>
+                        }
 
                         <Grid container spacing={24}>
                             <Grid item xs>
@@ -122,8 +153,8 @@ function BasicDetailTab(props){
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography className={classes.label}> Election </Typography>
-                                <Typography variant="h6" gutterBottom> 
-                                { elections.map((value, index)=>(value.code===incident.election?value.name:null)) } 
+                                <Typography variant="h6" gutterBottom>
+                                    {elections.map((value, index) => (value.code === incident.election ? value.name : null))}
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -131,9 +162,9 @@ function BasicDetailTab(props){
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Category </Typography>
-                                <Typography gutterBottom> 
-                                { categories.map((value, index)=>(value.id==incident.category?value.sub_category:null)) }
-                                 </Typography>
+                                <Typography gutterBottom>
+                                    {categories.map((value, index) => (value.id == incident.category ? value.sub_category : null))}
+                                </Typography>
                             </Grid>
                             {/* <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Sub Category </Typography>
@@ -144,8 +175,8 @@ function BasicDetailTab(props){
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Received Mode </Typography>
-                                <Typography gutterBottom> 
-                                { channels.map((value, index)=>(value.id==incident.infoChannel?value.name:null)) }
+                                <Typography gutterBottom>
+                                    {channels.map((value, index) => (value.id == incident.infoChannel ? value.name : null))}
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -159,18 +190,18 @@ function BasicDetailTab(props){
     );
 }
 
-const resolveLocationName = (locationId, locatoinData )=> {
-    if(locationId && locatoinData.byCode[locationId]){
-        return locatoinData.byCode[locationId].name 
-    }else{
+const resolveLocationName = (locationId, locatoinData) => {
+    if (locationId && locatoinData.byCode[locationId]) {
+        return locatoinData.byCode[locationId].name
+    } else {
         return ""
     }
 }
 
 /**
- * Location Information TabView - (2)
+ * Location Information TabView - (3)
  */
-function LocationTab(props){
+function LocationTab(props) {
 
     const { classes, incident, provinces, districts, pollingDivisions, policeStations } = props;
 
@@ -212,11 +243,11 @@ function LocationTab(props){
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Province </Typography>
-                                <Typography variant="" gutterBottom> 
+                                <Typography variant="" gutterBottom>
                                     {
-                                        incident.province && provinces.byCode[incident.province] ? 
-                                        provinces.byCode[incident.province].name : ""
-                                    } 
+                                        incident.province && provinces.byCode[incident.province] ?
+                                            provinces.byCode[incident.province].name : ""
+                                    }
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -224,11 +255,11 @@ function LocationTab(props){
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> District </Typography>
-                                <Typography variant="" gutterBottom> 
+                                <Typography variant="" gutterBottom>
                                     {
-                                        incident.district && districts.byCode[incident.district] ? 
-                                        districts.byCode[incident.district].name : ""
-                                    } 
+                                        incident.district && districts.byCode[incident.district] ?
+                                            districts.byCode[incident.district].name : ""
+                                    }
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -241,7 +272,7 @@ function LocationTab(props){
                                 </Typography>
                             </Grid>
                         </Grid> */}
-                        {/* 
+                        {/*
                         <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Ward </Typography>
@@ -252,7 +283,7 @@ function LocationTab(props){
                         {/* <Grid container spacing={24}>
                             <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Police Station </Typography>
-                                <Typography gutterBottom> 
+                                <Typography gutterBottom>
                                 {   resolveLocationName(incident.policeStation, policeStations)}
                                 </Typography>
                             </Grid>
@@ -266,9 +297,9 @@ function LocationTab(props){
 }
 
 /**
- * Contact Information TabView - (3)
+ * Contact Information TabView - (2)
  */
-function ContactTab(props){
+function ContactTab(props) {
 
     const { classes, reporter } = props;
 
@@ -324,7 +355,7 @@ function ContactTab(props){
 /**
  * Review Summary TabView - (4)
  */
-function PoliceTab(props){
+function PoliceTab(props) {
     const { classes, incident } = props;
 
     return (
@@ -338,83 +369,83 @@ function PoliceTab(props){
                                 <Typography className={classes.label}><b>Injured Parties</b></Typography>
                             </Grid>
                             {incident.injuredParties &&
-                            <Grid item xs={12}>
-                                <Table className={classes.table} aria-label="simple table">
-                                    <TableHead>
-                                    <TableRow>
-                                        <TableCell>Name</TableCell>
-                                        <TableCell>Address</TableCell>
-                                        <TableCell>Political Affliation</TableCell>
-                                    </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {incident.injuredParties.map((p) => (
-                                            <TableRow key={p.id}>
-                                                <TableCell>{p.name}</TableCell>
-                                                <TableCell>{p.address}</TableCell>
-                                                <TableCell>{p.political_affliation}</TableCell>
+                                <Grid item xs={12}>
+                                    <Table className={classes.table} aria-label="simple table">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Name</TableCell>
+                                                <TableCell>Address</TableCell>
+                                                <TableCell>Political Affliation</TableCell>
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </Grid>
+                                        </TableHead>
+                                        <TableBody>
+                                            {incident.injuredParties.map((p) => (
+                                                <TableRow key={p.id}>
+                                                    <TableCell>{p.name}</TableCell>
+                                                    <TableCell>{p.address}</TableCell>
+                                                    <TableCell>{p.political_affliation}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </Grid>
                             }
                         </Grid>
 
-                        <Grid container spacing={24} style={{marginTop:"20px"}}>
+                        <Grid container spacing={24} style={{ marginTop: "20px" }}>
                             <Grid item xs={12}>
                                 <Typography className={classes.label}><b>Respondents</b></Typography>
                             </Grid>
                             {incident.respondents &&
-                            <Grid item xs={12}>
-                                <Table className={classes.table} aria-label="simple table">
-                                    <TableHead>
-                                    <TableRow>
-                                        <TableCell>Name</TableCell>
-                                        <TableCell>Address</TableCell>
-                                        <TableCell>Political Affliation</TableCell>
-                                    </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {incident.respondents.map((p) => (
-                                            <TableRow key={p.id}>
-                                                <TableCell>{p.name}</TableCell>
-                                                <TableCell>{p.address}</TableCell>
-                                                <TableCell>{p.political_affliation}</TableCell>
+                                <Grid item xs={12}>
+                                    <Table className={classes.table} aria-label="simple table">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Name</TableCell>
+                                                <TableCell>Address</TableCell>
+                                                <TableCell>Political Affliation</TableCell>
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </Grid>
+                                        </TableHead>
+                                        <TableBody>
+                                            {incident.respondents.map((p) => (
+                                                <TableRow key={p.id}>
+                                                    <TableCell>{p.name}</TableCell>
+                                                    <TableCell>{p.address}</TableCell>
+                                                    <TableCell>{p.political_affliation}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </Grid>
                             }
                         </Grid>
 
 
-                        <Grid container spacing={24} style={{marginTop:"20px"}}>
+                        <Grid container spacing={24} style={{ marginTop: "20px" }}>
                             <Grid item xs={12}>
                                 <Typography className={classes.label}><b>Detaine Vehicles</b></Typography>
                             </Grid>
                             {incident.detainedVehicles &&
-                            <Grid item xs={12}>
-                                <Table className={classes.table} aria-label="simple table">
-                                    <TableHead>
-                                    <TableRow>
-                                        <TableCell>Vehicle Number</TableCell>
-                                        <TableCell>Government / Private</TableCell>
-                                    </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {incident.detainedVehicles.map((p) => (
-                                            <TableRow key={p.id}>
-                                                <TableCell>{p.vehicle_no}</TableCell>
-                                                <TableCell>{p.ownership === "government" ? "Government" : "Private"}</TableCell>
+                                <Grid item xs={12}>
+                                    <Table className={classes.table} aria-label="simple table">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Vehicle Number</TableCell>
+                                                <TableCell>Government / Private</TableCell>
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </Grid>
+                                        </TableHead>
+                                        <TableBody>
+                                            {incident.detainedVehicles.map((p) => (
+                                                <TableRow key={p.id}>
+                                                    <TableCell>{p.vehicle_no}</TableCell>
+                                                    <TableCell>{p.ownership === "government" ? "Government" : "Private"}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </Grid>
                             }
-                        </Grid>   
+                        </Grid>
                     </Paper>
                 </Grid>
             </Grid>
@@ -422,10 +453,11 @@ function PoliceTab(props){
     );
 }
 
-function SummaryTabView(props){
+function SummaryTabView(props) {
 
     const {
-        classes, incident, reporter, elections, category, 
+        classes, incident, reporter, elections, category,
+        institutions,
         provinces, districts,
         divisionalSecretariats,
         gramaNiladharis,
@@ -433,7 +465,7 @@ function SummaryTabView(props){
         pollingStations,
         policeStations,
         policeDivisions,
-        categories, 
+        categories,
         channels
     } = props
 
@@ -443,29 +475,30 @@ function SummaryTabView(props){
         <div className={classes.root}>
             <Tabs variant="fullWidth" value={currentTab} onChange={(e, val) => setCurrentTab(val)} indicatorColor="primary" >
                 <LinkTab label="Basic Information" href="page1" />
-                <LinkTab label="Location Information" href="page2" />
-                <LinkTab label="Contact Information" href="page3" />
+                <LinkTab label="Contact Information" href="page2" />
+                <LinkTab label="Location Information" href="page3" />
                 <LinkTab label="Police Information" href="page4" />
             </Tabs>
 
-            {currentTab === 0 && <TabContainer> 
+            {currentTab === 0 && <TabContainer>
                 <BasicDetailTab classes={classes} incident={incident} elections={elections} category={category}
-                    categories={categories} 
+                    categories={categories}
                     channels={channels}
-                    
+                    institutions = {institutions}
+
                 /> </TabContainer>}
-            {currentTab === 1 && <TabContainer> 
+            {currentTab === 1 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
+            {currentTab === 2 && <TabContainer>
                 <LocationTab classes={classes} incident={incident}
-                    provinces={provinces} 
+                    provinces={provinces}
                     districts={districts}
-                    divisionalSecretariats = {divisionalSecretariats}
-                    gramaNiladharis = {gramaNiladharis}
-                    pollingDivisions = {pollingDivisions}
-                    pollingStations = {pollingStations}
-                    policeStations = {policeStations}
-                    policeDivisions = {policeDivisions}
+                    divisionalSecretariats={divisionalSecretariats}
+                    gramaNiladharis={gramaNiladharis}
+                    pollingDivisions={pollingDivisions}
+                    pollingStations={pollingStations}
+                    policeStations={policeStations}
+                    policeDivisions={policeDivisions}
                 /> </TabContainer>}
-            {currentTab === 2 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
             {currentTab === 3 && <TabContainer> <PoliceTab classes={classes} incident={incident} /> </TabContainer>}
         </div>
     )

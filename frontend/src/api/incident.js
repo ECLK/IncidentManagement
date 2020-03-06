@@ -23,6 +23,10 @@ export const getIncidents = async (filters, page=1) => {
       query += "&q=" + filters.textSearch;
     }
 
+    if(filters.incidentType) {
+        query += "&incident_type=" + filters.incidentType;
+    }
+
     if(filters.severity){
       query += "&severity=" + filters.severity;
     }
@@ -42,6 +46,7 @@ export const getIncidents = async (filters, page=1) => {
     if(filters.user_linked){
       query += "&user_linked=" + filters.user_linked;
     }
+
 
     if(filters.startTime && filters.endTime){
       const startDate = moment(filters.startTime).format("YYYY-MM-DD HH:mm");

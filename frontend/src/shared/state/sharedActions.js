@@ -11,23 +11,27 @@ import {
     REQUEST_INCIDENT_ELECTIONS_SUCCESS,
     REQUEST_INCIDENT_ELECTIONS_FAILURE,
 
-    REQUEST_INCIDENT_CATAGORIES, 
-    REQUEST_INCIDENT_CATAGORIES_SUCCESS, 
+    REQUEST_INCIDENT_CATAGORIES,
+    REQUEST_INCIDENT_CATAGORIES_SUCCESS,
     REQUEST_INCIDENT_CATAGORIES_FAILURE,
 
-    REQUEST_INCIDENT_PROVINCES, 
-    REQUEST_INCIDENT_PROVINCES_SUCCESS, 
+    REQUEST_INCIDENT_INSTITUTIONS,
+    REQUEST_INCIDENT_INSTITUTIONS_SUCCESS,
+    REQUEST_INCIDENT_INSTITUTIONS_FAILURE,
+
+    REQUEST_INCIDENT_PROVINCES,
+    REQUEST_INCIDENT_PROVINCES_SUCCESS,
     REQUEST_INCIDENT_PROVINCES_FAILURE,
 
-    REQUEST_INCIDENT_DISTRICTS, 
-    REQUEST_INCIDENT_DISTRICTS_SUCCESS, 
+    REQUEST_INCIDENT_DISTRICTS,
+    REQUEST_INCIDENT_DISTRICTS_SUCCESS,
     REQUEST_INCIDENT_DISTRICTS_FAILURE,
 
-    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS, 
-    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_SUCCESS, 
+    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS,
+    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_SUCCESS,
     REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_FAILURE,
 
-    REQUEST_INCIDENT_GRAMA_NILADHARIS, 
+    REQUEST_INCIDENT_GRAMA_NILADHARIS,
     REQUEST_INCIDENT_GRAMA_NILADHARIS_SUCCESS,
     REQUEST_INCIDENT_GRAMA_NILADHARIS_FAILURE,
 
@@ -59,7 +63,7 @@ import {
     ACTIVE_INCIDENT_GET_DATA_SUCCESS,
     ACTIVE_INCIDENT_GET_DATA_ERROR,
 
-    SIGN_IN_REQUEST, 
+    SIGN_IN_REQUEST,
     SIGN_IN_REQUEST_SUCCESS,
     SIGN_IN_REQUEST_ERROR,
 
@@ -74,18 +78,19 @@ import {
 } from './Shared.types'
 
 import { getIncident, getReporter  } from '../../api/incident';
-import { 
+import {
     getChannels,
     getElections,
-    getCategories, 
-    getProvinces, 
+    getCategories,
+    getInstitutions,
+    getProvinces,
     getDistricts,
     getDivisionalSecretariats,
     getGramaNiladharis,
-    getPollingStations, 
+    getPollingStations,
     getPollingDivisions,
-    getPoliceStations, 
-    getPoliceDivisions, 
+    getPoliceStations,
+    getPoliceDivisions,
     getWards,
     getPoliticalParties
 } from '../../api/shared';
@@ -203,7 +208,45 @@ export function fetchCategories(){
     }
 }
 
-// Provinces 
+
+// Institutions
+
+export function requestIncidentInstitutions() {
+    return {
+        type: REQUEST_INCIDENT_INSTITUTIONS,
+    };
+}
+
+export function receiveIncidentInstitutions(institutions) {
+    return {
+        type: REQUEST_INCIDENT_INSTITUTIONS_SUCCESS,
+        data: institutions,
+        error: null
+    };
+}
+
+export function receiveIncidentInstitutionsError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_INSTITUTIONS_FAILURE,
+        data: null,
+        error: errorResponse
+    };
+}
+
+export function fetchInstitutions() {
+    return async function(dispatch){
+        dispatch(requestIncidentInstitutions());
+        try {
+            const response = await getInstitutions();
+            await dispatch(receiveIncidentInstitutions(response.data));
+        } catch(error) {
+            await dispatch(receiveIncidentInstitutionsError(error));
+        }
+    };
+}
+
+
+// Provinces
 
 export function requestIncidentProvinces() {
     return {
@@ -630,7 +673,7 @@ export function fetchSignIn(userName, password) {
 
             if(!signInData){
                 signInData = (await signIn(userName, password)).data;
-                
+
                 if(signInData.data.token != ""){
                     if(getState().shared.signedInUser.rememberMe){
                         localStorage.write('ECIncidentManagementUser', signInData.data);
