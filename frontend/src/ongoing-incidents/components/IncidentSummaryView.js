@@ -105,30 +105,16 @@ function BasicDetailTab(props) {
                         }
 
                         {incident.incidentType === 'INQUIRY' &&
-                            <>
-                                <Grid container spacing={24}>
-                                    <Grid item xs>
-                                        <Typography variant="caption" className={classes.label}>Received date</Typography>
-                                        <Typography gutterBottom> {incident.receivedDate} </Typography>
-                                    </Grid>
-                                    <Grid item xs>
-                                        <Typography variant="caption" className={classes.label}>Letter date</Typography>
-                                        <Typography gutterBottom> {incident.letterDate} </Typography>
-                                    </Grid>
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}>Received date</Typography>
+                                    <Typography gutterBottom> {incident.receivedDate} </Typography>
                                 </Grid>
-
-                                <Grid container spacing={24}>
-                                    <Grid item xs>
-                                        <Typography variant="caption" className={classes.label}> Institute </Typography>
-                                        <Typography gutterBottom>
-                                            {
-                                                incident.institution && institutions.byCode[incident.institution] ?
-                                                    institutions.byCode[incident.institution].name : ""
-                                            }
-                                        </Typography>
-                                    </Grid>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}>Letter date</Typography>
+                                    <Typography gutterBottom> {incident.letterDate} </Typography>
                                 </Grid>
-                            </>
+                            </Grid>
                         }
 
                         <Grid container spacing={24}>
@@ -171,6 +157,20 @@ function BasicDetailTab(props) {
                                 <Typography gutterBottom> {this.state.category.sub_category} </Typography>
                             </Grid> */}
                         </Grid>
+
+                        {incident.incidentType === 'INQUIRY' &&
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Institute </Typography>
+                                    <Typography gutterBottom>
+                                        {
+                                            incident.institution && institutions.byCode[incident.institution] ?
+                                                institutions.byCode[incident.institution].name : ""
+                                        }
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        }
 
                         <Grid container spacing={24}>
                             <Grid item xs>
