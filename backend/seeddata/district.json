@@ -348,5 +348,19 @@
             "tm_province": "மேற்கு",
             "created_date": "2019-06-27T00:00:00Z"
         }
+    },
+    {
+        "model": "common.district",
+        "pk": 26,
+        "fields": {
+            "code": "ALL",
+            "name": "ALL",
+            "province": "ALL",
+            "sn_name": "සියලුම",
+            "sn_province": "සියලුම",
+            "tm_name": "அனைத்தும்",
+            "tm_province": "அனைத்தும்",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
     }
 ]
