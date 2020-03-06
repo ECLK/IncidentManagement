@@ -348,5 +348,19 @@
             "tm_province": "மேற்கு",
             "created_date": "2019-06-27T00:00:00Z"
         }
+    },
+    {
+        "model": "common.district",
+        "pk": 26,
+        "fields": {
+            "code": "ALL",
+            "name": "All Island",
+            "province": "All Island",
+            "sn_name": "මුළු දිවයිනම",
+            "sn_province": "මුළු දිවයිනම",
+            "tm_name": "தீவு முழுவதும்",
+            "tm_province": "தீவு முழுவதும்",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
     }
 ]

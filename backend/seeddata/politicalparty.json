@@ -274,5 +274,17 @@
             "tm_name": "National Movement for People\u2019s Power",
             "created_date": "2019-10-28T13:28:31.318Z"
         }
+    },
+    {
+        "model": "common.politicalparty",
+        "pk": 24,
+        "fields": {
+            "code": "ALL",
+            "party_type": "ALL",
+            "name": "All Parties",
+            "sn_name": "සියලුම පක්ෂ",
+            "tm_name": "அனைத்து கட்சிகளும்",
+            "created_date": "2019-10-28T13:28:31.318Z"
+        }
     }
 ]

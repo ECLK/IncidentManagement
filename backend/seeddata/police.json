@@ -529,6 +529,25 @@
     },
     {
         "model": "common.policestation",
+        "pk": "49",
+        "fields": {
+            "code": "ALL",
+            "name": "All Island",
+            "sn_name": "මුළු දිවයිනම",
+            "tm_name": "தீவு முழுவதும்",
+            "division": "ALL",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+
+
+
+
+
+
+
+    {
+        "model": "common.policestation",
         "pk": "1",
         "fields": {
             "code": "PLC001",
@@ -6380,6 +6399,18 @@
             "sn_name": "එරට්ටපෙරියාකුලම්",
             "tm_name": "Erattaperiyakulam",
             "division": "PLD48",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.policestation",
+        "pk": "503",
+        "fields": {
+            "code": "ALL",
+            "name": "All Island",
+            "sn_name": "මුළු දිවයිනම",
+            "tm_name": "தீவு முழுவதும்",
+            "division": "ALL",
             "created_date": "2019-06-27T00:00:00Z"
         }
     }

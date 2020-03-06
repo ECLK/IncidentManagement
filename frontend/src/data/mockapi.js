@@ -1,21 +1,24 @@
+import * as storage from "../utils/localStorage";
+
+import { districts, divisionalSecretariats, gramaNiladharis, provinces } from "./locations";
+import { police_divisions, police_stations } from "./police";
+import { polling_divisions, polling_stations } from "./polling";
+
+import { elections } from "./elections";
 import { events } from "./events";
 import { incidents } from "./incidents";
+import { institutions } from "./institutions"
+import moment from "moment";
 import { reporters } from "./reporters";
 import { users } from "./users";
-import { provinces, districts, divisionalSecretariats, gramaNiladharis } from "./locations";
-import { polling_divisions, polling_stations } from "./polling";
-import { police_stations, police_divisions } from "./police";
-import { elections } from "./elections";
-import { institutions } from "./institutions"
-import * as storage from "../utils/localStorage";
-import moment from "moment";
+
 const uuidv4 = require("uuid/v4");
 
 
 export function getElections() {
     return {
         status: 200,
-        data: elections.filter( (election) => {return election.status == true; }) // send only the active elections
+        data: elections.filter((election) => { return election.status == true; }) // send only the active elections
     };
 }
 
