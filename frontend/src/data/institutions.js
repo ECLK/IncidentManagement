@@ -10038,5 +10038,15 @@ export var institutions = [
         "sn_name": "\u0daf\u0dd9\u0dc4\u0dd2\u0d95\u0dc0\u0dd2\u0da7 \u0db4\u0dca\u200d\u0dbb\u0dcf\u0daf\u0dda\u0dc1\u0dd3\u0dba \u0dc3\u0db7\u0dcf\u0dc0",
         "tm_name": "\u0ba4\u0bc6\u0bb9\u0bbf\u0baf\u0bcb\u0bb5\u0bbf\u0b9f\u0bcd\u0b9f \u0baa\u0bbf\u0bb0\u0ba4\u0bc7\u0b9a \u0b9a\u0baa\u0bc8",
         "status": true
+    },
+    {
+        "code": "OTHER",
+        "id": 1005,
+        "institute_type": "OTHER",
+        "mother_org": 0,
+        "name": "OTHER",
+        "sn_name": "වෙනත්",
+        "tm_name": "மற்றவை",
+        "status": true
     }
 ]
