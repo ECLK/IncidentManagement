@@ -12,24 +12,26 @@ import { connect } from 'react-redux';
 import { Button } from '@material-ui/core';
 
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
 import { Link, withRouter } from 'react-router-dom';
 
-import { 
-    initiateSignOut, 
-    fetchChannels, 
-    fetchElections, 
-    fetchCategories, 
-    fetchProvinces, 
-    fetchDistricts, 
-    fetchDivisionalSecretariats, 
-    fetchGramaNiladharis, 
-    fetchPollingDivisions, 
-    fetchPollingStations, 
-    fetchPoliceStations, 
-    fetchPoliceDivisions, 
+import {
+    initiateSignOut,
+    fetchChannels,
+    fetchElections,
+    fetchCategories,
+    fetchInstitutions,
+    fetchProvinces,
+    fetchDistricts,
+    fetchDivisionalSecretariats,
+    fetchGramaNiladharis,
+    fetchPollingDivisions,
+    fetchPollingStations,
+    fetchPoliceStations,
+    fetchPoliceDivisions,
     fetchWards } from '../shared/state/sharedActions'
 import { changeLanguage } from '../shared/state/sharedActions';
 import { loadUsers } from '../user/state/userActions'
@@ -43,7 +45,8 @@ import { userCan, USER_ACTIONS } from '../user/userUtils';
 
 const HomeLink = props => <Link to="/app/home" {...props} />
 const ReportLink = props => <Link to="/app/create" {...props} />
-const ReviewLink = props => <Link to="/app/review" {...props} />
+const ReviewComplaintsLink = props => <Link to="/app/review-complaints" {...props} />
+const ReviewInquiriesLink = props => <Link to="/app/review-inquiries" {...props} />
 const StaticReportLink = props => <Link to="/app/reports" {...props} />
 const ArchiveLink = props => <Link to="/app/archive" {...props} />
 
@@ -93,6 +96,13 @@ const styles = theme => ({
         ...theme.mixins.toolbar,
         justifyContent: 'flex-end',
     },
+    reviewMenu: {
+        li: {
+            paddingTop: 8,
+            paddingBottom: 8
+        },
+        boxShadow: 'none'
+    },
     content: {
         flexGrow: 1,
         paddingTop: theme.spacing.unit * 3,
@@ -123,13 +133,15 @@ class DomainContainer extends React.Component {
   state = {
     open: true,
     anchorEl: null,
-    anchorLang: null
+    anchorLang: null,
+    menuAnchorEl: null
   };
 
   componentDidMount() {
     this.props.getChannels();
     this.props.getElections();
     this.props.getCategories();
+    this.props.getInstitutions();
     this.props.getProvinces();
     this.props.getDistricts();
     this.props.getDivisionalSecretariats();
@@ -180,6 +192,18 @@ class DomainContainer extends React.Component {
     window.open(API_BASE_URL+'/admin/password_change/', '_blank');
   }
 
+  handleOnClickReviewMenuOpenButton = (e) => {
+    this.setState({ menuAnchorEl: e.currentTarget });
+  }
+
+  handleReviewMenuClose = () => {
+      this.setState({ menuAnchorEl: null });
+  }
+
+  handleOnClickReviewMenuItem = (e) => {
+      this.setState({ menuAnchorEl: null });
+  }
+
   render() {
     const { classes, selectedLanguage, signedInUser, location } = this.props;
     const { open, anchorEl, anchorLang } = this.state;
@@ -198,25 +222,44 @@ class DomainContainer extends React.Component {
 
                 <Typography variant="h6" color="inherit" className={classes.grow}>
                     Incident Management
-                    
-                    <Button 
-                        variant={selectedMainSection==='home'?'outlined': 'flat'} 
+
+                    <Button
+                        variant={selectedMainSection==='home'?'outlined': 'flat'}
                         color="inherit" component={HomeLink} className={classes.homeButton}>Home</Button>
-                    <Button variant={selectedMainSection==='create'?'outlined': 'flat'} 
+                    <Button variant={selectedMainSection==='create'?'outlined': 'flat'}
                         color="inherit" component={ReportLink}>Create</Button>
-                    
+
                     {userCan(signedInUser, null, USER_ACTIONS.CAN_REVIEW_INCIDENTS) && (
-                        <Button variant={selectedMainSection==='review'?'outlined': 'flat'} 
-                            color="inherit" component={ReviewLink}>Review</Button>
+                        <spanner>
+                            <Button variant={selectedMainSection==='review-complaints' || selectedMainSection === 'review-inquiries'?'outlined': 'flat'}
+                                    color="inherit" onClick={this.handleOnClickReviewMenuOpenButton} aria-owns="review-menu">Review <ArrowDropDown/></Button>
+                            <Menu id="review-menu" open={Boolean(this.state.menuAnchorEl)}
+                                  onClose={this.handleReviewMenuClose} anchorEl={this.state.menuAnchorEl} className={classes.reviewMenu}
+                                  anchorOrigin={{
+                                      horizontal: 'center',
+                                  }}
+                                  transformOrigin={{
+                                      vertical: 'top',
+                                      horizontal: 'center',
+                                  }}>
+                                <MenuItem component={ReviewComplaintsLink} onClick={this.handleOnClickReviewMenuItem}>
+                                    Complaints
+                                </MenuItem>
+                                <MenuItem component={ReviewInquiriesLink} onClick={this.handleOnClickReviewMenuItem}>
+                                    Inquiries
+                                </MenuItem>
+
+                            </Menu>
+                        </spanner>
                     )}
-                    
+
                     {userCan(signedInUser, null, USER_ACTIONS.CAN_VIEW_REPORTS) && (
-                        <Button variant={selectedMainSection==='reports'?'outlined': 'flat'} 
+                        <Button variant={selectedMainSection==='reports'?'outlined': 'flat'}
                             color="inherit" component={StaticReportLink}>Reports</Button>
                     )}
 
                     {userCan(signedInUser, null, USER_ACTIONS.CAN_REVIEW_INCIDENTS) && (
-                        <Button variant={selectedMainSection==='archive'?'outlined': 'flat'} 
+                        <Button variant={selectedMainSection==='archive'?'outlined': 'flat'}
                             color="inherit" component={ArchiveLink}>Archive</Button>
                     )}
 
@@ -333,6 +376,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         getCategories: () => {
             dispatch(fetchCategories())
+        },
+        getInstitutions: () => {
+            dispatch(fetchInstitutions())
         },
         getProvinces: () => {
             dispatch(fetchProvinces())

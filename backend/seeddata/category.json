@@ -19,7 +19,7 @@
     "fields": {
       "code": "A-2",
       "top_category": "Violence",
-      "sub_category": "Threaten with weapons / Attempted murder by shooting",
+      "sub_category": "Threaten with weapons / attempted murder by shooting",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
       "sn_sub_category": "ආයුධ පෙන්වා බිය ගැන්වීම / වෙඩි තබා මැරීමට තැත් කිරීම ",
       "tm_top_category": "தேர்தல் வன்முறைகள்",
@@ -33,7 +33,7 @@
     "fields": {
       "code": "A-3",
       "top_category": "Violence",
-      "sub_category": "Assault / Mob attack",
+      "sub_category": "Assault / mob attack",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
       "sn_sub_category": "පහරදීම / මැර ප්‍රහාර එල්ල කිරීම",
       "tm_top_category": "தேர்தல் வன்முறைகள்",
@@ -47,7 +47,7 @@
     "fields": {
       "code": "A-4",
       "top_category": "Violence",
-      "sub_category": "Cause serious injuries / Attempted murder",
+      "sub_category": "Cause serious injuries / attempted murder",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
       "sn_sub_category": "බරපතල තුවාල සිදු කිරීම / මනුෂ්‍ය ඝාතනයට තැත්කිරීම",
       "tm_top_category": "தேர்தல் வன்முறைகள்",
@@ -117,9 +117,9 @@
     "fields": {
       "code": "A-9",
       "top_category": "Violence",
-      "sub_category": "Riots",
+      "sub_category": "Riots/ disrupting meetings",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
-      "sn_sub_category": "කෝලහාල කිරීම",
+      "sn_sub_category": "කෝලහාල කිරීම/ රැස්වීම් පැවැත්වීමට බාධා කිරීම",
       "tm_top_category": "தேர்தல் வன்முறைகள்",
       "tm_sub_category": "துப்பாக்கியால் சுட்டுக் கொலை செய்ய முயற்சித்தல்",
       "created_date": "2019-06-27T00:00:00Z"
@@ -131,7 +131,7 @@
     "fields": {
       "code": "A-10",
       "top_category": "Violence",
-      "sub_category": "Damage to property / Property theft",
+      "sub_category": "Damage to property / property theft",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
       "sn_sub_category": "දේපළවලට හානි කිරීම / දේපළ පැහැර ගෙන යාම",
       "tm_top_category": "தேர்தல் வன்முறைகள்",
@@ -145,7 +145,7 @@
     "fields": {
       "code": "A-11",
       "top_category": "Violence",
-      "sub_category": "Damage to Election Offices / Posters / Banners etc.",
+      "sub_category": "Damage to election offices / posters / banners etc.",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
       "sn_sub_category": "මැතිවරණ ප්‍රචාරක කාර්යාලවලට / පෝස්ටර් / බැනර් ආදියට හානි කිරීම",
       "tm_top_category": "தேர்தல் வன்முறைகள்",
@@ -189,9 +189,9 @@
     "fields": {
       "code": "B-14",
       "top_category": "Violation of election law",
-      "sub_category": "Appointment / promotion / transfer of officers",
+      "sub_category": "Appointment/ promotion/ transfer of officers/ extension of service period/ conducting examinations",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
-      "sn_sub_category": "නිලධාරීන් පත් කිරීම / උසස් කිරීම / මාරු කිරීම",
+      "sn_sub_category": "නිලධාරින් පත් කිරීම/ උසස් කිරීම/ මාරු කිරීම/ ස්වවා කාලය දීර්ඝ කිරීම/ විභාග පැවැත්වීම",
       "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
       "tm_sub_category": "அதிகாரிகளின் நியமனம் மற்றும் பதவி உயர்வு",
       "created_date": "2019-06-27T00:00:00Z"
@@ -203,9 +203,9 @@
     "fields": {
       "code": "B-15",
       "top_category": "Violation of election law",
-      "sub_category": "Misuse of the media",
+      "sub_category": "Misuse of the electronic media",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
-      "sn_sub_category": "මාධ්‍ය අවභාවිතය",
+      "sn_sub_category": "විද්‍යුත්ව මාධය අවභාවිතය",
       "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
       "tm_sub_category": "ஊடகங்களை தவறாகப் பயன்படுத்தல்",
       "created_date": "2019-06-27T00:00:00Z"
@@ -217,9 +217,9 @@
     "fields": {
       "code": "B-16",
       "top_category": "Violation of election law",
-      "sub_category": "False information / Forgery / Hate Speech",
+      "sub_category": "False information/ forgery/ hate speech/ insulting/ racist remarks",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
-      "sn_sub_category": "අසත්‍ය ප්‍රචාර / ව්‍යාජ පුවත් මැවීම / වෛරී ප්‍රකාශ",
+      "sn_sub_category": "අසත්‍ය ප්‍රචාර/ ව්‍යාජ පුවත් මැවීම/ වෛරී ප්‍රකාශ/ අපහාස් කිරීම/ ජාතිවාදී ප්‍රකාශ",
       "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
       "tm_sub_category": "ஊடகங்களை தவறாகப் பயன்படுத்தல்",
       "created_date": "2019-06-27T00:00:00Z"
@@ -245,9 +245,9 @@
     "fields": {
       "code": "B-18",
       "top_category": "Violation of election law",
-      "sub_category": "Illegal posters / banners / cutouts on display",
+      "sub_category": "Illegal posters/ banners/ cutouts on display/ distribution of leaflets",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
-      "sn_sub_category": "නීති විරෝධී පෝස්ටර් / බැනර් / කටවුට් ප්‍රදර්ශනය කිරීම",
+      "sn_sub_category": "නීති විරෝධී පෝස්ටර්/ බැනර්/ කටවුට් ප්‍රදර්ශනය කිරීම/ අත්පත්‍රිකා බෙදීම",
       "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
       "tm_sub_category": "சட்ட விரோத போஸ்ட்டர் / பதாகை / பெரிய உருவப்படங்களை காட்சிப்படுத்தல்",
       "created_date": "2019-06-27T00:00:00Z"
@@ -259,9 +259,9 @@
     "fields": {
       "code": "B-19",
       "top_category": "Violation of election law",
-      "sub_category": "Distribution of goods/ treatment of goods",
+      "sub_category": "Distribution of goods/ treatment of goods/ distribution of money/ distribution of land deeds/ openings",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
-      "sn_sub_category": "ද්‍රව්‍ය බෙදාහැරීම/ පරිත්‍යාග කිරීම",
+      "sn_sub_category": "ද්‍රව්‍ය බෙදාහැරීම/ පරිත්‍යාග කිරීම/ මුද්‍යල් බෙදාදීම/ ඉඩම් ඔප්පු බෙදාදීම/ විවෘත කිරීම",
       "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
       "tm_sub_category": "பொருட்களை விநியோகித்தல் / அன்பளிப்புச் செய்தல்",
       "created_date": "2019-06-27T00:00:00Z"
@@ -369,6 +369,20 @@
     "model": "common.category",
     "pk": 27,
     "fields": {
+      "code": "B-27",
+      "top_category": "Violation of election law",
+      "sub_category": "Social media advertising",
+      "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
+      "sn_sub_category": "සමාජ මාධ්‍ය මඟින් සිදුකරන ප්‍රචාරණ කටයුතු",
+      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
+      "tm_sub_category": "சமூக ஊடக விளம்பரம்",
+      "created_date": "2019-06-27T00:00:00Z"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 28,
+    "fields": {
       "code": "Other",
       "top_category": "Other",
       "sub_category": "Other",
@@ -376,6 +390,80 @@
       "sn_sub_category": "වෙනත්",
       "tm_top_category": "இதர",
       "tm_sub_category": "இதர",
+      "created_date": "2019-06-27T00:00:00Z"
+    }
+  },
+
+
+
+
+  {
+    "model": "common.category",
+    "pk": 40,
+    "fields": {
+      "code": "IN-1",
+      "top_category": "Inquiry",
+      "sub_category": "Distribution of goods, obtaining approval for various events",
+      "sn_top_category": "විමසීම්",
+      "sn_sub_category": "ද්‍රව්‍ය බෙදා හැරීම්/ උත්සව සඳහා අනුමැතිය",
+      "tm_top_category": "விசாரணை",
+      "tm_sub_category": "பொருட்கள் விநியோகம் / விழாக்களுக்கான அனுமதி",
+      "created_date": "2019-06-27T00:00:00Z"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 41,
+    "fields": {
+      "code": "IN-2",
+      "top_category": "Inquiry",
+      "sub_category": "Transfers and promotions",
+      "sn_top_category": "විමසීම්",
+      "sn_sub_category": "ස්ථාන මාරුවීම්, උසස්වීම්",
+      "tm_top_category": "விசாரணை",
+      "tm_sub_category": "இடமாற்றங்கள் பதவியுயர்வு",
+      "created_date": "2019-06-27T00:00:00Z"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 42,
+    "fields": {
+      "code": "IN-3",
+      "top_category": "Inquiry",
+      "sub_category": "Foreign tours",
+      "sn_top_category": "විමසීම්",
+      "sn_sub_category": "විදේශ ගමන්",
+      "tm_top_category": "விசாரணை",
+      "tm_sub_category": "வெளிநாட்டுப் பயணங்கள்",
+      "created_date": "2019-06-27T00:00:00Z"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 43,
+    "fields": {
+      "code": "IN-4",
+      "top_category": "Inquiry",
+      "sub_category": "Recruitment, interviews, and confirmations, extensions of services",
+      "sn_top_category": "විමසීම්",
+      "sn_sub_category": "බඳවා ගැනීම්, සම්මුඛ පරීක්ෂණ, සේවය දිර්ඝ කිරීම",
+      "tm_top_category": "விசாரணை",
+      "tm_sub_category": "ஆட்சேர்ப்பு, நேர்முகப் பரீட்சைகள், சேவை நீடிப்பு",
+      "created_date": "2019-06-27T00:00:00Z"
+    }
+  },
+  {
+    "model": "common.category",
+    "pk": 44,
+    "fields": {
+      "code": "IN-5",
+      "top_category": "Inquiry",
+      "sub_category": "Special projects/ obtaining approval for various programs",
+      "sn_top_category": "විමසීම්",
+      "sn_sub_category": "විශේෂ ව්‍යාපෘති, වැඩසටහන් සඳහා අනුමැතිය",
+      "tm_top_category": "விசாரணை",
+      "tm_sub_category": "விசேட செயற்றிட்டங்கள், நிகழ்ச்சிகளுக்கான அனுமதி",
       "created_date": "2019-06-27T00:00:00Z"
     }
   }
