@@ -97,5 +97,16 @@
             "tm_name": "மேற்கு",
             "created_date": "2019-06-27T00:00:00Z"
         }
+    },
+    {
+        "model": "common.province",
+        "pk": "10",
+        "fields": {
+            "code": "ALL",
+            "name": "All Island",
+            "sn_name": "මුළු දිවයිනම",
+            "tm_name": "தீவு முழுவதும்",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
     }
 ]

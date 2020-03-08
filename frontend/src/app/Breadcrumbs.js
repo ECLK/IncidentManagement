@@ -21,7 +21,8 @@ const breadcrumbNameMap = {
     '/app': 'Home',
     '/app/create': 'Create',
     '/app/report': 'Report',  
-    '/app/review': 'Review',
+    '/app/review-complaints': 'Review Complaints',
+    '/app/review-inquiries' : 'Review Inquiries',
     '/app/review/incident': 'Incident',
     '/app/review/incident/edit': 'Edit',
     '/app/reports':'Reports',
@@ -45,7 +46,7 @@ function SimpleBreadcrumbs(props) {
 
                         //TODO: quick hack to get this working. Improve later.
                         let virtualPathNames = pathnames.slice(0)
-                        if(pathnames[1] ==='review' && pathnames.length>2){
+                        if(pathnames[1] ==='review-complaints' && pathnames.length>2){
                             virtualPathNames[2] = 'incident'
                         }
                         const virtualTo = `/${virtualPathNames.slice(0, index + 1).join('/')}`;

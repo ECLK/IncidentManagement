@@ -47,6 +47,7 @@ const initialState = {
         },
         searchFilter: {
             textSearch: "",
+            incidentType: "",
             status: "",
             maxResponseTime: "",
             severity: "",

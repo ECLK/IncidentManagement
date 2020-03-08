@@ -3,7 +3,7 @@
         "model": "common.district",
         "pk": 1,
         "fields": {
-            "code": "DST01",
+            "code": "KAN",
             "name": "Kandy",
             "province": "Central",
             "sn_name": "මහනුවර",
@@ -17,7 +17,7 @@
         "model": "common.district",
         "pk": 2,
         "fields": {
-            "code": "DST02",
+            "code": "MTL",
             "name": "Matale",
             "province": "Central",
             "sn_name": "මාතලේ",
@@ -31,7 +31,7 @@
         "model": "common.district",
         "pk": 3,
         "fields": {
-            "code": "DST03",
+            "code": "NUW",
             "name": "Nuwara Eliya",
             "province": "Central",
             "sn_name": "නුවරඑලිය",
@@ -45,7 +45,7 @@
         "model": "common.district",
         "pk": 4,
         "fields": {
-            "code": "DST04",
+            "code": "AMP",
             "name": "Ampara",
             "province": "Eastern",
             "sn_name": "අම්පාර",
@@ -59,7 +59,7 @@
         "model": "common.district",
         "pk": 5,
         "fields": {
-            "code": "DST05",
+            "code": "BAT",
             "name": "Batticaloa",
             "province": "Eastern",
             "sn_name": "මඩකලපුව",
@@ -73,7 +73,7 @@
         "model": "common.district",
         "pk": 6,
         "fields": {
-            "code": "DST06",
+            "code": "TRI",
             "name": "Trincomalee",
             "province": "Eastern",
             "sn_name": "ත්රිකුණාමලය",
@@ -87,7 +87,7 @@
         "model": "common.district",
         "pk": 7,
         "fields": {
-            "code": "DST07",
+            "code": "ANU",
             "name": "Anuradhapura",
             "province": "North Central",
             "sn_name": "අනුරාධපුර",
@@ -101,7 +101,7 @@
         "model": "common.district",
         "pk": 8,
         "fields": {
-            "code": "DST08",
+            "code": "POL",
             "name": "Polonnaruwa",
             "province": "North Central",
             "sn_name": "පොළොන්නරුව",
@@ -115,7 +115,7 @@
         "model": "common.district",
         "pk": 9,
         "fields": {
-            "code": "DST09",
+            "code": "JAF",
             "name": "Jaffna",
             "province": "Northern",
             "sn_name": "යාපනය",
@@ -129,7 +129,7 @@
         "model": "common.district",
         "pk": 10,
         "fields": {
-            "code": "DST10",
+            "code": "KIL",
             "name": "Kilinochchi",
             "province": "Northern",
             "sn_name": "කිලිනොච්චි",
@@ -143,7 +143,7 @@
         "model": "common.district",
         "pk": 11,
         "fields": {
-            "code": "DST11",
+            "code": "MAN",
             "name": "Mannar",
             "province": "Northern",
             "sn_name": "මන්නාරම",
@@ -157,7 +157,7 @@
         "model": "common.district",
         "pk": 12,
         "fields": {
-            "code": "DST12",
+            "code": "MUL",
             "name": "Mullaitivu",
             "province": "Northern",
             "sn_name": "මුලතිව්",
@@ -171,7 +171,7 @@
         "model": "common.district",
         "pk": 13,
         "fields": {
-            "code": "DST13",
+            "code": "VAV",
             "name": "Vavuniya",
             "province": "Northern",
             "sn_name": "වවුනියාව",
@@ -185,7 +185,7 @@
         "model": "common.district",
         "pk": 14,
         "fields": {
-            "code": "DST14",
+            "code": "KUR",
             "name": "Kurunegala",
             "province": "North Western",
             "sn_name": "කුරුණෑගල",
@@ -199,7 +199,7 @@
         "model": "common.district",
         "pk": 15,
         "fields": {
-            "code": "DST15",
+            "code": "PUT",
             "name": "Puttalam",
             "province": "North Western",
             "sn_name": "පුත්තලම",
@@ -213,7 +213,7 @@
         "model": "common.district",
         "pk": 16,
         "fields": {
-            "code": "DST16",
+            "code": "KEG",
             "name": "Kegalle",
             "province": "Sabaragamuwa",
             "sn_name": "කෑගල්ල",
@@ -227,7 +227,7 @@
         "model": "common.district",
         "pk": 17,
         "fields": {
-            "code": "DST17",
+            "code": "RAT",
             "name": "Ratnapura",
             "province": "Sabaragamuwa",
             "sn_name": "රත්නපුර",
@@ -241,7 +241,7 @@
         "model": "common.district",
         "pk": 18,
         "fields": {
-            "code": "DST18",
+            "code": "GAL",
             "name": "Galle",
             "province": "Southern",
             "sn_name": "ගාල්ල",
@@ -255,7 +255,7 @@
         "model": "common.district",
         "pk": 19,
         "fields": {
-            "code": "DST19",
+            "code": "HAM",
             "name": "Hambantota",
             "province": "Southern",
             "sn_name": "හම්බන්තොට",
@@ -269,7 +269,7 @@
         "model": "common.district",
         "pk": 20,
         "fields": {
-            "code": "DST20",
+            "code": "MAT",
             "name": "Matara",
             "province": "Southern",
             "sn_name": "මාතර",
@@ -283,7 +283,7 @@
         "model": "common.district",
         "pk": 21,
         "fields": {
-            "code": "DST21",
+            "code": "BAD",
             "name": "Badulla",
             "province": "Uva",
             "sn_name": "බදුල්ල",
@@ -297,7 +297,7 @@
         "model": "common.district",
         "pk": 22,
         "fields": {
-            "code": "DST22",
+            "code": "MON",
             "name": "Moneragala",
             "province": "Uva",
             "sn_name": "මොණරාගල",
@@ -311,7 +311,7 @@
         "model": "common.district",
         "pk": 23,
         "fields": {
-            "code": "DST23",
+            "code": "COL",
             "name": "Colombo",
             "province": "Western",
             "sn_name": "කොළඹ",
@@ -325,7 +325,7 @@
         "model": "common.district",
         "pk": 24,
         "fields": {
-            "code": "DST24",
+            "code": "GAM",
             "name": "Gampaha",
             "province": "Western",
             "sn_name": "ගම්පහ",
@@ -339,13 +339,27 @@
         "model": "common.district",
         "pk": 25,
         "fields": {
-            "code": "DST25",
+            "code": "KAL",
             "name": "Kalutara",
             "province": "Western",
             "sn_name": "කළුතර",
             "sn_province": "බටහිර",
             "tm_name": "களுத்துறை",
             "tm_province": "மேற்கு",
+            "created_date": "2019-06-27T00:00:00Z"
+        }
+    },
+    {
+        "model": "common.district",
+        "pk": 26,
+        "fields": {
+            "code": "ALL",
+            "name": "All Island",
+            "province": "All Island",
+            "sn_name": "මුළු දිවයිනම",
+            "sn_province": "මුළු දිවයිනම",
+            "tm_name": "தீவு முழுவதும்",
+            "tm_province": "தீவு முழுவதும்",
             "created_date": "2019-06-27T00:00:00Z"
         }
     }
