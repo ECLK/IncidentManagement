@@ -31,7 +31,7 @@ function PrivateRouteComponent({ component: Component, isSignedIn, children, ...
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        isSignedIn: state.sharedReducer.signedInUser.isSignedIn,
+        isSignedIn: state.shared.signedInUser.isSignedIn,
         ...ownProps
     }
 }
