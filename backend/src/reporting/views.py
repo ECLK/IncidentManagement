@@ -35,7 +35,7 @@ class ReportingAccessView(APIView):
 
     Response would be a pdf stream to be opened in a different tab
     '''
-    def get(self, request): 
+    def post(self, request): 
         endpoint_uri = settings.PDF_SERVICE_ENDPOINT 
         json_dict = {}
         template_type = request.data['template_type']
