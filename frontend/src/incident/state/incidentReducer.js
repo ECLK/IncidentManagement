@@ -60,7 +60,7 @@ const initialState = {
         byIds: {},
         allIds: []
     }
-}
+};
 
 const incidentReducer = createReducer(initialState, {
 
@@ -132,6 +132,6 @@ const incidentReducer = createReducer(initialState, {
         state.incidents.searchFilter = action.payload;
     }
 
-})
+});
 
 export default incidentReducer;

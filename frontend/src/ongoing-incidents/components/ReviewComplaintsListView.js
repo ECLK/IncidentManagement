@@ -85,7 +85,8 @@ function ReviewComplaintsListView({ classes, ...props }) {
       <h3>Review Complaints</h3>
       <SearchForm 
         categories={categories} 
-        handleSearchClick={handleSearchClick} 
+        handleSearchClick={handleSearchClick}
+        filters={filters}
         showClosed={false}
         {...props} />
       <Grid container direction={"row"} className={classes.exportContainer}>
