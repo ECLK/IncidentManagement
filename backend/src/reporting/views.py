@@ -23,7 +23,7 @@ middleware to access PDF-service
 class ReportingAccessView(APIView):
     '''
     Based on https://github.com/ECLK/pdf-service
-    Generates Reporting 
+    Generates Reporting
 
     -request format
     {
@@ -35,30 +35,25 @@ class ReportingAccessView(APIView):
 
     Response would be a pdf stream to be opened in a different tab
     '''
-    def post(self, request): 
-        endpoint_uri = settings.PDF_SERVICE_ENDPOINT 
+    def get(self, request):
+        endpoint_uri = settings.PDF_SERVICE_ENDPOINT
         json_dict = {}
-        template_type = request.data['template_type']
-        if template_type == 'url':
-            json_dict['url'] = request.data['data']['url']
-            urllib.urlretrieve(json_dict['url'], fullfilename)
-        elif template_type == 'html':
-            json_dict['html'] = request.data['data']['file']
-        elif template_type == 'file':
+        template_type = request.query_params.get('template_type')
+
+        if(template_type == 'simple-template'):
             file_dict = {}
-            data = request.data['data']
-            file_dict['template'] = data['template']
-            file_dict['title'] = data['title']
+            file_dict['template'] = "exTemplateBootstrap.js"
+            file_dict['title'] = "This is my title on test"
             json_dict['file'] = file_dict
-        else:
-            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 
         request_data = json.dumps(json_dict)
+        print("request_data: ", request_data)
         res = requests.post(url=endpoint_uri, data = request_data, headers={'content-type': 'application/json'})
 
         if res.status_code == 200:
+            print("response is success")
             file_dir = settings.FILE_STORAGE_DIR + 'report_' + datetime.date.today().strftime("%Y%m%d%H%M%S") + ".pdf"
-            url = json.loads(res)["url"]
+            url = res.json()["url"]
             urllib.request.urlretrieve(url, file_dir)
 
             with open(file_dir, 'rb') as pdf:
@@ -66,13 +61,6 @@ class ReportingAccessView(APIView):
                 return response
             pdf.closed
             os.remove(file_dir)
-            
-            # file_dir = settings.FILE_STORAGE_DIR + 'report_' + datetime.now().strftime("%Y%m%d%H%M%S" + ".pdf")
-            # pdf_dict = {}
-            # pdf_dict["status"] = 200
-            # pdf_dict["path"] = file_dir
-            # urllib.urlretrieve(url, file_dir)
-            # return HttpResponse(status=status.HTTP_200_OK, content=json.dumps(pdf_dict), content_type='application/json')
         else:
             return HttpResponse(status=res.status_code, content=res.text, content_type='application/json')
 
@@ -164,7 +152,7 @@ class ReportingView(APIView):
 
         # Prepare report header
         sql3 = incident_type_query(complain, inquiry)
-        sql = """SELECT 
+        sql = """SELECT
                      Count(id) as TotalCount
                  FROM   incidents_incident WHERE %s""" % sql3
         dataframe = pd.read_sql_query(sql, connection)
