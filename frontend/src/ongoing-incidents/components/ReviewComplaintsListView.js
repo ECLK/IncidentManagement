@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import { useSelector, useDispatch } from "react-redux";
-import {loadAllIncidents, updateIncidentSearchFilter} from "../../incident/state/incidentActions";
+import {
+    loadAllIncidents,
+    loadAllIncidentsRequest,
+    updateIncidentSearchFilter
+} from "../../incident/state/incidentActions";
 import * as incidentsApi from '../../api/incident';
 
 import SearchForm from "./SearchForm";
@@ -29,17 +33,18 @@ const styles = theme => ({
 });
 
 function ReviewComplaintsListView({ classes, ...props }) {
-  const [filters, setFilters] = useState({});
-
-  filters['incidentType'] = 'INQUIRY';
+  const [filters, setFilters] = useState({ });
+  filters['incidentType'] = "COMPLAINT";
   const dispatch = useDispatch();
-  dispatch(updateIncidentSearchFilter(filters));
-
+  useEffect(() => {
+      dispatch(updateIncidentSearchFilter(filters));
+  });
   const categories = useSelector(state => state.shared.categories);
   const incidentSearchFilter = useSelector(state => state.incident.incidents.searchFilter);
   let incidents = useSelector(state => state.incident.incidents);
 
   const handlePageChange = (event, newPage) => dispatch(loadAllIncidents(incidentSearchFilter, newPage+1));
+
 
   const handleSearchClick = (filters, page) => {
     if(filters){
