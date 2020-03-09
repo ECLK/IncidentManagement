@@ -63,6 +63,7 @@ import { useLoadingStatus } from "../../loading-spinners/loadingHook";
 import { withRouter } from "react-router";
 import { withStyles } from "@material-ui/core/styles";
 import yellow from "@material-ui/core/colors/yellow";
+import TitleAutoComplete from "./TitleAutoComplete";
 
 const styles = (theme) => ({
     root: {
@@ -423,6 +424,18 @@ function IncidentFormInternal(props) {
         setState({ showConfirmationModal: false });
     };
 
+    // function used to get filtered inquiries for title text field
+    const handleSimilarInquiries = async (title) => {
+        const filters = {
+            incidentType: state.incidentType,
+            title: title
+        }
+        const response = await getIncidents(filters);
+        if (response.status === "success") {
+            setSimilarIncidents(response.data.incidents);
+        }
+    }
+
     const { classes, isIncidentSubmitting, isIncidentUpdating } = props;
     const { paramIncidentId } = props.match.params;
 
@@ -468,6 +481,8 @@ function IncidentFormInternal(props) {
                     } else if (values.incidentType === "COMPLAINT") {
                         confirmDateAndSubmit(values, actions)
                     }
+
+
                 }}
                 validationSchema={IncidentSchema}
                 validate={customValidations}
@@ -568,34 +583,16 @@ function IncidentFormInternal(props) {
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <TextField
-                                            type="text"
-                                            name="title"
-                                            label="Title*"
-                                            placeholder="Title"
+                                        <TitleAutoComplete
+                                            data={similarIncidents}
+                                            onChange={(event) => handleChange(event)}
+                                            onFetchSimilarInquiries={title => handleSimilarInquiries(title)}
                                             className={classes.textField}
-                                            value={values.title}
-                                            onChange={(event) => { handleChange(event); getSimilarInquiries(event.target.value); }}
                                             onBlur={handleBlur}
-                                            error={touched.title && errors.title}
+                                            error={(touched.title && errors.title) == 'Required' ? true : false}
                                             helperText={touched.title ? errors.title : null}
                                         />
                                     </Grid>
-                                    {similarIncidents && similarIncidents.length > 0 && <Grid item xs={12}>
-                                        Similar Inquiries
-                                            {similarIncidents.map((incident, index) => {
-                                            return (
-                                                <Card key={index} className={classes.cardRoot} onClick={() => { window.open(`https://incidents.ecdev.opensource.lk/app/review/${incident.id}`) }}>
-                                                    <CardContent className={classes.cardContent}>
-                                                        <Typography className={classes.cardText} color="textSecondary" gutterBottom>
-                                                            <Grid item xs={12}>Title: {incident.title}</Grid>
-                                                            <Grid item xs={12}>Date: {moment(incident.occured_date).format('MMMM Do YYYY, h:mm:ss a')}</Grid>
-                                                        </Typography>
-                                                    </CardContent>
-                                                </Card>
-                                            )
-                                        })}
-                                    </Grid>}
                                     <Grid item xs={12}>
                                         <TextField
                                             type="text"
@@ -1042,7 +1039,7 @@ function IncidentFormInternal(props) {
                                                 onChange={setSelectedInstitution}
                                             >
                                             </Search>
-                                            <FormHelperText style={{ color: "#f44336"}}>
+                                            <FormHelperText style={{ color: "#f44336" }}>
                                                 {touched.institution && errors.institution ? errors.institution : ""}
                                             </FormHelperText>
                                         </Grid>
