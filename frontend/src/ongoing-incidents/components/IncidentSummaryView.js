@@ -1,12 +1,12 @@
 import React, { Component, cloneElement, useState } from 'react';
-import PropTypes from 'prop-types';
+import { Table, TableBody, TableCell, TableHead, TableRow, Tabs, withStyles } from '@material-ui/core';
+
+import Grid from '@material-ui/core/Grid';
 import Moment from 'react-moment';
+import Paper from '@material-ui/core/Paper';
+import PropTypes from 'prop-types';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import { withStyles, Tabs, Table, TableHead, TableCell, TableRow, TableBody } from '@material-ui/core';
-
 
 function TabContainer(props) {
     return (
@@ -105,30 +105,16 @@ function BasicDetailTab(props) {
                         }
 
                         {incident.incidentType === 'INQUIRY' &&
-                            <>
-                                <Grid container spacing={24}>
-                                    <Grid item xs>
-                                        <Typography variant="caption" className={classes.label}>Received date</Typography>
-                                        <Typography gutterBottom> {incident.receivedDate} </Typography>
-                                    </Grid>
-                                    <Grid item xs>
-                                        <Typography variant="caption" className={classes.label}>Letter date</Typography>
-                                        <Typography gutterBottom> {incident.letterDate} </Typography>
-                                    </Grid>
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}>Received date</Typography>
+                                    <Typography gutterBottom> {incident.receivedDate} </Typography>
                                 </Grid>
-
-                                <Grid container spacing={24}>
-                                    <Grid item xs>
-                                        <Typography variant="caption" className={classes.label}> Institute </Typography>
-                                        <Typography gutterBottom>
-                                        {
-                                            incident.institution && institutions.byCode[incident.institution] ?
-                                                institutions.byCode[incident.institution].name : ""
-                                        }
-                                        </Typography>
-                                    </Grid>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}>Letter date</Typography>
+                                    <Typography gutterBottom> {incident.letterDate} </Typography>
                                 </Grid>
-                            </>
+                            </Grid>
                         }
 
                         <Grid container spacing={24}>
@@ -171,6 +157,20 @@ function BasicDetailTab(props) {
                                 <Typography gutterBottom> {this.state.category.sub_category} </Typography>
                             </Grid> */}
                         </Grid>
+
+                        {incident.incidentType === 'INQUIRY' &&
+                            <Grid container spacing={24}>
+                                <Grid item xs>
+                                    <Typography variant="caption" className={classes.label}> Institute </Typography>
+                                    <Typography gutterBottom>
+                                        {
+                                            incident.institution && institutions.byCode[incident.institution] ?
+                                                institutions.byCode[incident.institution].name : ""
+                                        }
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        }
 
                         <Grid container spacing={24}>
                             <Grid item xs>
@@ -484,10 +484,11 @@ function SummaryTabView(props) {
                 <BasicDetailTab classes={classes} incident={incident} elections={elections} category={category}
                     categories={categories}
                     channels={channels}
-                    institutions = {institutions}
+                    institutions={institutions}
 
                 /> </TabContainer>}
-            {currentTab === 1 && <TabContainer>
+            {currentTab === 1 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
+            {currentTab === 2 && <TabContainer>
                 <LocationTab classes={classes} incident={incident}
                     provinces={provinces}
                     districts={districts}
@@ -498,7 +499,6 @@ function SummaryTabView(props) {
                     policeStations={policeStations}
                     policeDivisions={policeDivisions}
                 /> </TabContainer>}
-            {currentTab === 2 && <TabContainer> <ContactTab classes={classes} reporter={reporter} /> </TabContainer>}
             {currentTab === 3 && <TabContainer> <PoliceTab classes={classes} incident={incident} /> </TabContainer>}
         </div>
     )

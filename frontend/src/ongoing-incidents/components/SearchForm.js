@@ -1,23 +1,24 @@
-import React, { useEffect } from "react";
-
 import { Formik, withFormik } from "formik";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
+import React, { useEffect, useState } from "react";
+
+import Button from "@material-ui/core/Button";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import FormControl from "@material-ui/core/FormControl";
+import Grid from "@material-ui/core/Grid";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import moment from "moment";
-import { withStyles } from "@material-ui/core/styles";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import MenuItem from "@material-ui/core/MenuItem";
+import Search from './search'
 import SearchIcon from "@material-ui/icons/Search";
-
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Select from "@material-ui/core/Select";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import moment from "moment";
+import { useSelector } from 'react-redux'
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
   root: {
@@ -55,6 +56,11 @@ const styles = theme => ({
     margin: theme.spacing.unit * 2,
     minWidth: 300
   },
+  formControlSearch: {
+    margin: theme.spacing.unit * 2,
+    minWidth: 1200 + theme.spacing.unit * 12,
+
+  },
   buttonContainer: {
     margin: theme.spacing.unit * 2,
     minWidth: 300,
@@ -82,7 +88,11 @@ function SearchForm(props) {
     filterIncidents();
   }, []);
   const { classes, categories } = props;
-  const severityValues = Array(10).fill(0).map((e,i)=>i+1);
+  const severityValues = Array(10).fill(0).map((e, i) => i + 1);
+  const organizations = useSelector(state => state.user.organizations);
+  const institutions = useSelector(state => state.shared.institutions);
+  const [selectedInstitution, setSelectedInstitution] = useState("");
+
   return (
     <Formik
       initialValues={props.incidentSearchFilter}
@@ -92,6 +102,7 @@ function SearchForm(props) {
           startTime: values.startTime ? moment(values.startTime).format("YYYY-MM-DD HH:mm") : null,
           endTime: values.endTime ? moment(values.endTime).format("YYYY-MM-DD HH:mm") : null
         };
+        if (selectedInstitution) { preparedValues.institution = selectedInstitution }
         // alert(JSON.stringify(preparedValues));
         filterIncidents(preparedValues);
       }}
@@ -228,7 +239,7 @@ function SearchForm(props) {
                         </MenuItem>
                         {severityValues.map((val) => (
                           <MenuItem value={val} key={val}>{val}</MenuItem>
-                        ))}                        
+                        ))}
                       </Select>
                     </FormControl>
                     <FormControl className={classes.formControl}>
@@ -287,6 +298,13 @@ function SearchForm(props) {
                         }}
                         onChange={handleChange}
                       />
+                    </FormControl>
+                    <FormControl className={classes.formControlSearch}>
+                      <Search
+                        institutions={institutions}
+                        onChange={setSelectedInstitution}
+                      >
+                      </Search>
                     </FormControl>
                     <FormControl className={classes.buttonContainer}>
                       {/* Reset workflow is pending
