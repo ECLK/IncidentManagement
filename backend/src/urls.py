@@ -101,7 +101,7 @@ urlpatterns = [
         "reports/",
         report_views.ReportingView.as_view(),
     ),
-    path('reports-pdf/',
+    path('pdfgen/',
         report_views.ReportingAccessView.as_view(),
     ),
     path(

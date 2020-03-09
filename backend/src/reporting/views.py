@@ -14,7 +14,7 @@ import os
 
 from .services import get_police_division_summary, get_category_summary, \
     get_mode_summary, get_severity_summary, get_status_summary, get_subcategory_summary, get_district_summary, \
-    get_incident_date_summary
+    get_incident_date_summary, get_slip_data
 from .functions import apply_style, decode_column_names, incident_type_title, incident_type_query
 
 '''
@@ -40,18 +40,23 @@ class ReportingAccessView(APIView):
         json_dict = {}
         template_type = request.query_params.get('template_type')
 
-        if(template_type == 'simple-template'):
+        if(template_type == "simple-template"):
             file_dict = {}
             file_dict['template'] = "exTemplateBootstrap.js"
             file_dict['title'] = "This is my title on test"
+
+            # prepare all data to be on json object 'file'
             json_dict['file'] = file_dict
+        elif (template_type == "slip"):
+            incident_id = request.query_params.get('id')
+            json_dict["file"] = get_slip_data(incident_id)
+
 
         request_data = json.dumps(json_dict)
-        print("request_data: ", request_data)
+        # print("request_data: ", request_data)
         res = requests.post(url=endpoint_uri, data = request_data, headers={'content-type': 'application/json'})
 
         if res.status_code == 200:
-            print("response is success")
             file_dir = settings.FILE_STORAGE_DIR + 'report_' + datetime.date.today().strftime("%Y%m%d%H%M%S") + ".pdf"
             url = res.json()["url"]
             urllib.request.urlretrieve(url, file_dir)
