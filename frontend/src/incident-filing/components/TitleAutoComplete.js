@@ -89,12 +89,13 @@ class AutosuggestInput extends React.Component {
 
         // open incident in new browser tab
         let url = '';
-        if (window.location.protocol !== 'http:') {
-            url = `http://${window.location.origin.toString()}/app/review/${suggestion.id}`.replace(/^http:/, 'https:');
-        }
-        else {
-            url = `${window.location.origin.toString()}/app/review/${suggestion.id}`;
-        }
+        // if (window.location.protocol !== 'http:') {
+        //     url = `http://${window.location.origin.toString()}/app/review/${suggestion.id}`.replace(/^http:/, 'https:');
+        // }
+        // else {
+        //     url = `${window.location.origin.toString()}/app/review/${suggestion.id}`;
+        // }
+        url = `${window.location.origin.toString()}/app/review/${suggestion.id}`;
         window.open(url);
 
         return '';
