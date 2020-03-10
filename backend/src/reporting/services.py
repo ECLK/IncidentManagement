@@ -9,6 +9,7 @@ from ..incidents.models import Incident
 from ..incidents.services import get_incident_by_id
 from .functions import get_detailed_report, get_general_report, encode_column_names, get_subcategory_report, \
     incident_type_query, incident_list_query, date_list_query, encode_value, get_subcategory_categorized_report
+from ..common.data.Institutions import institutions
 
 def get_slip_data(incident_id):
     incident = get_incident_by_id(incident_id)
@@ -19,11 +20,11 @@ def get_slip_data(incident_id):
     template_dict["referenceNumber"] = incident.refId
     template_dict["date"] = "2020/03/05"
     template_dict["categoryCode"] = incident.category
-
+    print(institutions[incident.institution]["name"])
     template_dict["categoryNameEn"] = category.sub_category
     template_dict["categoryNameSn"] = category.sn_sub_category
     template_dict["categoryNameTm"] = category.tm_sub_category
-    # template_dict["institutionName"] = "ABC institution" #TODO: need to add institution name
+    template_dict["institutionName"] = institutions[incident.institution]["name"]
     return template_dict
 
 def get_category_summary(start_date, end_date, detailed_report, complain, inquiry):
