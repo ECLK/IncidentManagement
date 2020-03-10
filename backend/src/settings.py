@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -110,6 +111,9 @@ DATABASES = {
     }
 }
 
+PDF_SERVICE_ENDPOINT = env_var('PDF_SERVICE_ENDPOINT')
+# Place to store the generated PDF files
+FILE_STORAGE_DIR = BASE_DIR + env_var("LOCAL_PDF_STORAGE", "/media/")
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
