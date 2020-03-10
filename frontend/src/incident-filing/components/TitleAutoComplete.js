@@ -90,7 +90,7 @@ class AutosuggestInput extends React.Component {
         // open incident in new browser tab
         let url = '';
         if (window.location.protocol !== 'http:') {
-            url = `http://${window.location.origin.toString()}/app/review/${suggestion.id}`.repeat(/^http:/, 'https:');
+            url = `http://${window.location.origin.toString()}/app/review/${suggestion.id}`.replace(/^http:/, 'https:');
         }
         else {
             url = `${window.location.origin.toString()}/app/review/${suggestion.id}`;
