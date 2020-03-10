@@ -38,6 +38,10 @@ import { showModal } from '../../../modals/state/modal.actions'
 //utils
 import { userCan, USER_ACTIONS } from '../../../user/userUtils';
 
+// pdf output
+import axios from 'axios'
+import { API_BASE_URL } from '../../../config'
+
 const styles = (theme) => ({
     card: {
         minWidth: 275,
@@ -99,6 +103,26 @@ const EventActions = (props) => {
 
     function showChangeAssigneeModal(){
         dispatch(showModal('CHANGE_ASSIGNEE_MODAL', { activeIncident, users, divisions }));
+    }
+
+    async function printSlip(){
+        axios(`${API_BASE_URL}/pdfgen/?template_type=slip&id=`+activeIncident.id, {
+            method: 'GET',
+            responseType: 'blob' //Force to receive data in a Blob Format
+        })
+        .then(response => {
+        //Create a Blob from the PDF Stream
+            const file = new Blob(
+              [response.data],
+              {type: 'application/pdf'});
+        //Build a URL from the file
+            const fileURL = URL.createObjectURL(file);
+        //Open the URL on new Window
+            window.open(fileURL);
+        })
+        .catch(error => {
+            console.log(error);
+        });
     }
 
     return (
@@ -228,7 +252,7 @@ const EventActions = (props) => {
             {
                 activeIncident.currentStatus != 'CLOSED' && activeIncident.incidentType === "INQUIRY" &&
                 (
-                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { window.open("https://google.com")}}>
+                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => printSlip()}>
                         <PrintIcon className={classes.actionButtonIcon} />
                         Print Slip
                     </Button>
