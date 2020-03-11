@@ -108,7 +108,10 @@ const EventActions = (props) => {
     async function printSlip(){
         axios(`${API_BASE_URL}/pdfgen/?template_type=slip&id=`+activeIncident.id, {
             method: 'GET',
-            responseType: 'blob' //Force to receive data in a Blob Format
+            responseType: 'blob', //Force to receive data in a Blob Format
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+            },
         })
         .then(response => {
         //Create a Blob from the PDF Stream
