@@ -107,20 +107,25 @@ const EventActions = (props) => {
     }
 
     async function printSlip(){
-        handler('/pdfgen/?template_type=slip&id='+activeIncident.id)
-        .then(response => {
-        //Create a Blob from the PDF Stream
-            const file = new Blob(
-              [response.data],
-              {type: 'application/pdf'});
-        //Build a URL from the file
-            const fileURL = URL.createObjectURL(file);
-        //Open the URL on new Window
-            window.open(fileURL);
-        })
-        .catch(error => {
-            console.log(error);
-        });
+        const response = (await handler.get(`${API_BASE_URL}/pdfgen/?template_type=slip&id=`+activeIncident.id))
+        const data = response.data
+        const blob = new Blob([data], { type: 'application/pdf' });
+        const uri = URL.createObjectURL(blob);
+        window.open(uri);
+
+        // .then(response => {
+        // //Create a Blob from the PDF Stream
+        //     const file = new Blob(
+        //       [response.data],
+        //       {type: 'application/pdf'});
+        // //Build a URL from the file
+        //     const fileURL = URL.createObjectURL(file);
+        // //Open the URL on new Window
+        //     window.open(fileURL);
+        // })
+        // .catch(error => {
+        //     console.log(error);
+        // });
     }
 
     return (
