@@ -30,10 +30,11 @@ const styles = theme => ({
 
 function ReviewInquiriesListView({ classes, ...props }) {
     const [filters, setFilters] = useState({});
-    filters['incidentType'] = 'INQUIRY';
+    filters['incidentType'] = "INQUIRY";
     const dispatch = useDispatch();
-    dispatch(updateIncidentSearchFilter(filters));
-
+    useEffect(() => {
+        dispatch(updateIncidentSearchFilter(filters));
+    });
     const categories = useSelector(state => state.shared.categories);
     const incidentSearchFilter = useSelector(state => state.incident.incidents.searchFilter);
     const incidents = useSelector(state => state.incident.incidents);
@@ -78,6 +79,7 @@ function ReviewInquiriesListView({ classes, ...props }) {
         <Paper className={classes.root}>
             <h3>Review Inquiries</h3>
             <SearchForm
+                filters={filters}
                 categories={categories}
                 handleSearchClick={handleSearchClick}
                 showClosed={false}

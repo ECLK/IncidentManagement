@@ -6,9 +6,26 @@ import numpy as np
 
 from ..common.models import Category, Channel
 from ..incidents.models import Incident
+from ..incidents.services import get_incident_by_id
 from .functions import get_detailed_report, get_general_report, encode_column_names, get_subcategory_report, \
     incident_type_query, incident_list_query, date_list_query, encode_value, get_subcategory_categorized_report
+from ..common.data.Institutions import institutions
 
+def get_slip_data(incident_id):
+    incident = get_incident_by_id(incident_id)
+    category = Category.objects.get(id=incident.category)
+
+    template_dict = {}
+    template_dict["template"] = "incidents/inquiry/inquiry_slip.js"
+    template_dict["referenceNumber"] = incident.refId
+    template_dict["date"] = "2020/03/05"
+    template_dict["categoryCode"] = incident.category
+    print(institutions[incident.institution]["name"])
+    template_dict["categoryNameEn"] = category.sub_category
+    template_dict["categoryNameSn"] = category.sn_sub_category
+    template_dict["categoryNameTm"] = category.tm_sub_category
+    template_dict["institutionName"] = institutions[incident.institution]["name"]
+    return template_dict
 
 def get_category_summary(start_date, end_date, detailed_report, complain, inquiry):
     sql3 = incident_type_query(complain, inquiry)
@@ -73,28 +90,28 @@ def get_incident_date_summary(start_date, end_date, detailed_report, complain, i
     sql3 = incident_type_query(complain, inquiry)
     incident_list = incident_list_query(start_date, end_date, sql3)
     sql = """
-            SELECT incident_date as 'Incident Date', 
-       Total 
-FROM   (SELECT incident_date, 
-               Sum(Total) AS Total 
-        FROM   (SELECT Date_format(occured_date + INTERVAL 8 HOUR, '%s') 
-                       AS 
-                       incident_date 
-                               , 
-                       '1' 
-                               AS Total 
-                FROM   incidents_incident 
+            SELECT incident_date as 'Incident Date',
+       Total
+FROM   (SELECT incident_date,
+               Sum(Total) AS Total
+        FROM   (SELECT Date_format(occured_date + INTERVAL 8 HOUR, '%s')
+                       AS
+                       incident_date
+                               ,
+                       '1'
+                               AS Total
+                FROM   incidents_incident
                 %s
-                UNION ALL 
-                SELECT selected_date, 
-                       '0' 
-                FROM   (%s) AS dateranges) AS result 
-        GROUP  BY result.incident_date 
-        ORDER  BY incident_date) AS result2 
-UNION 
-SELECT '(Total No. of Incidents)', 
-       Count(id) 
-FROM   incidents_incident 
+                UNION ALL
+                SELECT selected_date,
+                       '0'
+                FROM   (%s) AS dateranges) AS result
+        GROUP  BY result.incident_date
+        ORDER  BY incident_date) AS result2
+UNION
+SELECT '(Total No. of Incidents)',
+       Count(id)
+FROM   incidents_incident
 %s
             """ % (
         "%Y-%m-%d", incident_list, date_list_query(start_date, end_date), incident_list)
@@ -154,13 +171,13 @@ def get_severity_summary(start_date, end_date, detailed_report, complain, inquir
                             FROM     incidents_incident
                             %s
                             GROUP BY currentstate) AS incidents
-         ON        currentstate = d.name 
+         ON        currentstate = d.name
          UNION ALL
         SELECT '(Total No. of Incidents)',
                Count(id)
         FROM   incidents_incident
         %s
-        ORDER  BY Field(Severity, 'High', 'Medium', 'Low', '(Total No. of Incidents)') 
+        ORDER  BY Field(Severity, 'High', 'Medium', 'Low', '(Total No. of Incidents)')
     """ % (incident_list, incident_list)
     dataframe = pd.read_sql_query(sql, connection)
     dataframe = dataframe.fillna(0)
@@ -172,7 +189,7 @@ def get_status_summary(start_date, end_date, detailed_report, complain, inquiry)
     incident_list = incident_list_query(start_date, end_date, sql3)
     if detailed_report:
         sql1 = """
-        SELECT district,( 
+        SELECT district,(
                CASE WHEN Ifnull(current_status, 'Unassigned') LIKE 'CLOSED' THEN 1 ELSE 0 END )AS Resolved,
                (CASE WHEN Ifnull(current_status, 'Unassigned')  NOT LIKE 'CLOSED' THEN 1 ELSE 0 END )AS Unresolved,
                              1 AS Total
@@ -204,7 +221,7 @@ def get_status_summary(start_date, end_date, detailed_report, complain, inquiry)
                Count(id)
         FROM   incidents_incident
         %s
-        ORDER  BY Field(status, 'Resolved', 'Unresolved', '(Total No. of Incidents)') 
+        ORDER  BY Field(status, 'Resolved', 'Unresolved', '(Total No. of Incidents)')
     """ % (incident_list, incident_list)
     dataframe = pd.read_sql_query(sql, connection)
     dataframe = dataframe.fillna(0)
@@ -213,7 +230,7 @@ def get_status_summary(start_date, end_date, detailed_report, complain, inquiry)
 
 def get_police_division_summary():
     sql = """
-          SELECT 
+          SELECT
             incident.province,
             incident.di_division,
             incident.police_division,
@@ -222,16 +239,16 @@ def get_police_division_summary():
             COUNT(CASE WHEN cs.current_status <> "CLOSED" THEN 1 ELSE NULL END) AS open_total,
             COUNT(CASE WHEN cs.current_status = "CLOSED" THEN 1 ELSE NULL END) AS closed_total
           FROM incidents_incident incident,
-          ( 
+          (
             SELECT b.incident_id, b.current_status
             FROM incidents_incidentstatus b
             INNER JOIN (
               SELECT i.incident_id, max(i.created_date) cdate
               FROM incidents_incidentstatus i
               GROUP BY i.incident_id
-            ) c 
+            ) c
             ON c.incident_id = b.incident_id AND c.cdate = b.created_date
-          ) AS cs 
+          ) AS cs
           WHERE cs.incident_id = incident.id
           GROUP BY incident.province, incident.di_division, incident.police_division
         """

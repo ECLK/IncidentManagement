@@ -70,6 +70,10 @@ export const getIncidents = async (filters, page = 1) => {
     query += "&show_closed=" + filters.show_closed;
   }
 
+  if (filters.title) {
+    query += "&title=" + filters.title;
+  }
+
   return (await handler.get(`/incidents/?${query}`)).data;
 };
 

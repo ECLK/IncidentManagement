@@ -54,17 +54,13 @@ const initialState = {
             category: "",
             startTime: null,
             endTime: null
-            // startTime: moment(new Date())
-            //   .subtract(1, "year")
-            //   .format(moment.HTML5_FMT.DATETIME_LOCAL),
-            // endTime: moment(new Date()).format(moment.HTML5_FMT.DATETIME_LOCAL)
         }
     },
     reporters: {
         byIds: {},
         allIds: []
     }
-}
+};
 
 const incidentReducer = createReducer(initialState, {
 
@@ -136,6 +132,6 @@ const incidentReducer = createReducer(initialState, {
         state.incidents.searchFilter = action.payload;
     }
 
-})
+});
 
 export default incidentReducer;
