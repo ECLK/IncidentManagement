@@ -425,9 +425,9 @@ function IncidentFormInternal(props) {
     };
 
     // function used to get filtered inquiries for title text field
-    const handleSimilarInquiries = async (title) => {
+    const handleSimilarInquiries = async (title, type) => {
         const filters = {
-            incidentType: state.incidentType,
+            incidentType: type,
             title: title
         }
         const response = await getIncidents(filters);
@@ -587,7 +587,7 @@ function IncidentFormInternal(props) {
                                             incidentType={values.incidentType}
                                             data={similarIncidents}
                                             onChange={(event) => handleChange(event)}
-                                            onFetchSimilarInquiries={title => handleSimilarInquiries(title)}
+                                            onFetchSimilarInquiries={(title, type) => handleSimilarInquiries(title, type)}
                                             className={classes.textField}
                                             onBlur={handleBlur}
                                             error={(touched.title && errors.title) == 'Required' ? true : false}

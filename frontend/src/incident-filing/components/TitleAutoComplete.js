@@ -103,7 +103,7 @@ class AutosuggestInput extends React.Component {
 
     handleSuggestionsFetchRequested = ({ value, reason }) => {
         if (value.length > 2 && reason == "input-changed") {
-            this.props.onFetchSimilarInquiries(value);
+            this.props.onFetchSimilarInquiries(value, this.props.incidentType);
         } else if (reason == "input-focused") {
             this.setState({
                 suggestions: this.state.suggestions,
