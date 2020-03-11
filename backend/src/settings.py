@@ -36,7 +36,6 @@ def env_var(key, default=None):
 DEBUG = env_var('django_debug', True)
 
 ALLOWED_HOSTS = [
-    "api.incidents.ecdev.opensource.lk",
     "127.0.0.1",
     "localhost"
 ]
@@ -66,10 +65,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -103,7 +102,7 @@ WSGI_APPLICATION = 'src.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mysql.connector.django', 
-        'NAME': env_var('DATABASE_NAME', 'incident_prod'),
+        'NAME': env_var('DATABASE_NAME', 'incidents'),
         'USER': env_var('DATABASE_USER', 'root'),
         'PASSWORD': env_var('DATABASE_PWD', 'root'),
         'HOST': env_var('DATABASE_HOST', 'localhost'),   # Or an IP Address that your DB is hosted on

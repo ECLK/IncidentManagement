@@ -425,9 +425,9 @@ function IncidentFormInternal(props) {
     };
 
     // function used to get filtered inquiries for title text field
-    const handleSimilarInquiries = async (title) => {
+    const handleSimilarInquiries = async (title, type) => {
         const filters = {
-            incidentType: state.incidentType,
+            incidentType: type,
             title: title
         }
         const response = await getIncidents(filters);
@@ -584,9 +584,10 @@ function IncidentFormInternal(props) {
                                     </Grid>
                                     <Grid item xs={12}>
                                         <TitleAutoComplete
+                                            incidentType={values.incidentType}
                                             data={similarIncidents}
                                             onChange={(event) => handleChange(event)}
-                                            onFetchSimilarInquiries={title => handleSimilarInquiries(title)}
+                                            onFetchSimilarInquiries={(title, type) => handleSimilarInquiries(title, type)}
                                             className={classes.textField}
                                             onBlur={handleBlur}
                                             error={(touched.title && errors.title) == 'Required' ? true : false}
@@ -597,7 +598,7 @@ function IncidentFormInternal(props) {
                                         <TextField
                                             type="text"
                                             name="description"
-                                            label="Description*"
+                                            label={(values.incidentType === "INQUIRY") ? "Letter reference number*" : "Description*"}
                                             placeholder="Press enter for new lines."
                                             className={classes.textField}
                                             multiline
@@ -1057,7 +1058,7 @@ function IncidentFormInternal(props) {
                             {/* contact information of the complianer */}
                             <Paper className={classes.paper}>
                                 <Typography variant="h5" gutterBottom>
-                                    Reporter Information
+                                    Reporter / Complainer Information
                                 </Typography>
                                 <Grid container spacing={24}>
                                     <Grid item xs={12} sm={6}>
@@ -1203,6 +1204,8 @@ function IncidentFormInternal(props) {
                                 </Grid>
                             </Paper>
 
+                        {values.incidentType === "COMPLAINT" && (
+                            <>
                             {/* Incident location information */}
                             <Paper className={classes.paper}>
                                 <Typography variant="h5" gutterBottom>
@@ -1557,6 +1560,8 @@ function IncidentFormInternal(props) {
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
                             </div>
+                            </>
+                        )}
 
                             {/* action panel */}
                             <Grid container spacing={24}>

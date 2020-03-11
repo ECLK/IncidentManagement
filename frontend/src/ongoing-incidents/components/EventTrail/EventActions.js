@@ -40,6 +40,7 @@ import { userCan, USER_ACTIONS } from '../../../user/userUtils';
 
 // pdf output
 import axios from 'axios'
+import handler from '../../../api/apiHandler'
 import { API_BASE_URL } from '../../../config'
 
 const styles = (theme) => ({
@@ -106,23 +107,25 @@ const EventActions = (props) => {
     }
 
     async function printSlip(){
-        axios(`${API_BASE_URL}/pdfgen/?template_type=slip&id=`+activeIncident.id, {
-            method: 'GET',
-            responseType: 'blob' //Force to receive data in a Blob Format
-        })
-        .then(response => {
-        //Create a Blob from the PDF Stream
-            const file = new Blob(
-              [response.data],
-              {type: 'application/pdf'});
-        //Build a URL from the file
-            const fileURL = URL.createObjectURL(file);
-        //Open the URL on new Window
-            window.open(fileURL);
-        })
-        .catch(error => {
-            console.log(error);
-        });
+        const response = (await handler.get(`${API_BASE_URL}/pdfgen/?template_type=slip&id=`+activeIncident.id))
+        const data = response.data
+        const blob = new Blob([data], { type: 'application/pdf' });
+        const uri = URL.createObjectURL(blob);
+        window.open(uri);
+
+        // .then(response => {
+        // //Create a Blob from the PDF Stream
+        //     const file = new Blob(
+        //       [response.data],
+        //       {type: 'application/pdf'});
+        // //Build a URL from the file
+        //     const fileURL = URL.createObjectURL(file);
+        // //Open the URL on new Window
+        //     window.open(fileURL);
+        // })
+        // .catch(error => {
+        //     console.log(error);
+        // });
     }
 
     return (
@@ -214,10 +217,11 @@ const EventActions = (props) => {
                     </Button>
                 }
 
-                <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REQUEST_ADVICE_MODAL', { activeIncident, users, divisions })) }}>
+                {/* TODO: add User Action permissions here */}
+                {/* <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REQUEST_ADVICE_MODAL', { activeIncident, users, divisions })) }}>
                     <HelpIcon className={classes.actionButtonIcon} />
                     Request for advice
-                </Button>
+                </Button> */}
 
                 {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_CLOSE_INCIDENT) &&
 

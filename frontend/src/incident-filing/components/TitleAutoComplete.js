@@ -103,7 +103,7 @@ class AutosuggestInput extends React.Component {
 
     handleSuggestionsFetchRequested = ({ value, reason }) => {
         if (value.length > 2 && reason == "input-changed") {
-            this.props.onFetchSimilarInquiries(value);
+            this.props.onFetchSimilarInquiries(value, this.props.incidentType);
         } else if (reason == "input-focused") {
             this.setState({
                 suggestions: this.state.suggestions,
@@ -125,8 +125,8 @@ class AutosuggestInput extends React.Component {
     };
 
     render() {
-        const { classes } = this.props;
-
+        const { classes, incidentType } = this.props;
+        
         const autosuggestProps = {
             renderInputComponent,
             suggestions: this.state.suggestions,
@@ -143,8 +143,8 @@ class AutosuggestInput extends React.Component {
                     classes,
                     type: "text",
                     name: "title",
-                    label: "Title*",
-                    placeholder: 'Title*',
+                    label: (incidentType==="INQUIRY") ? "Topic*" : "Title*",
+                    placeholder: "Start typing in to see if there are similar ones..",
                     value: this.state.value,
                     onChange: this.handleChange(),
                     className: this.props.className,
