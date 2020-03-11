@@ -217,10 +217,11 @@ const EventActions = (props) => {
                     </Button>
                 }
 
-                <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REQUEST_ADVICE_MODAL', { activeIncident, users, divisions })) }}>
+                {/* TODO: add User Action permissions here */}
+                {/* <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REQUEST_ADVICE_MODAL', { activeIncident, users, divisions })) }}>
                     <HelpIcon className={classes.actionButtonIcon} />
                     Request for advice
-                </Button>
+                </Button> */}
 
                 {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_CLOSE_INCIDENT) &&
 
