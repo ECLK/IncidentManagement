@@ -147,7 +147,7 @@ function SearchForm(props) {
               </Button>
             </Grid>
             <ExpansionPanel>
-              <ExpansionPanelSummary
+              <ExpansionPanelSummary style={{ display: 'none'}}
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
