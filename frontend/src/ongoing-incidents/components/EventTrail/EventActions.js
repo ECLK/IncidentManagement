@@ -40,6 +40,7 @@ import { userCan, USER_ACTIONS } from '../../../user/userUtils';
 
 // pdf output
 import axios from 'axios'
+import handler from '../../../api/apiHandler'
 import { API_BASE_URL } from '../../../config'
 
 const styles = (theme) => ({
@@ -106,13 +107,7 @@ const EventActions = (props) => {
     }
 
     async function printSlip(){
-        axios(`${API_BASE_URL}/pdfgen/?template_type=slip&id=`+activeIncident.id, {
-            method: 'GET',
-            responseType: 'blob', //Force to receive data in a Blob Format
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-            },
-        })
+        handler('/pdfgen/?template_type=slip&id='+activeIncident.id)
         .then(response => {
         //Create a Blob from the PDF Stream
             const file = new Blob(
