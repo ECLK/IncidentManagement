@@ -107,12 +107,16 @@ const EventActions = (props) => {
     }
 
     async function printSlip(){
-        const response = (await handler.get(`${API_BASE_URL}/pdfgen/?template_type=slip&id=`+activeIncident.id))
+        const response = (await handler.get(`${API_BASE_URL}/pdfgen/?template_type=slip&id=`+activeIncident.id, {responseType: 'blob'}))
         const data = response.data
         const blob = new Blob([data], { type: 'application/pdf' });
         const uri = URL.createObjectURL(blob);
         window.open(uri);
 
+        // axios(`${API_BASE_URL}/pdfgen/?template_type=slip&id=`+activeIncident.id, {
+        //     method: 'GET',
+        //     responseType: 'blob'
+        // })
         // .then(response => {
         // //Create a Blob from the PDF Stream
         //     const file = new Blob(
