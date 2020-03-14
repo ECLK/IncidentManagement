@@ -23,15 +23,9 @@ middleware to access PDF-service
 class ReportingAccessView(APIView):
     '''
     Based on https://github.com/ECLK/pdf-service
-    Generates Reporting
+    Generates PDF
 
-    -request format
-    {
-        template_type: 'sample_template_type_enum',
-        data: {
-
-        }
-    }
+    GET request with required parameters
 
     Response would be a pdf stream to be opened in a different tab
     '''
@@ -47,7 +41,12 @@ class ReportingAccessView(APIView):
 
             # prepare all data to be on json object 'file'
             json_dict['file'] = file_dict
+
         elif (template_type == "slip"):
+            '''
+            Inquiry Slip
+            GET parameters => /?template_type=slip&id=<incident_id>
+            '''
             incident_id = request.query_params.get('id')
             json_dict["file"] = get_slip_data(incident_id)
 
@@ -61,7 +60,6 @@ class ReportingAccessView(APIView):
             response = HttpResponse(content=pdf_file.content, content_type='application/pdf')
             response['Access-Control-Expose-Headers'] = 'Title'
             response['Title'] = 'report_' + datetime.date.today().strftime("%Y%m%d%H%M%S") + ".pdf"
-            response['Access-Control-Allow-Origin'] = '*'
 
             return response
         else:
