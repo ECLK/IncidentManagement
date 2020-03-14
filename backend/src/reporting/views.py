@@ -61,17 +61,9 @@ class ReportingAccessView(APIView):
             response = HttpResponse(content=pdf_file.content, content_type='application/pdf')
             response['Access-Control-Expose-Headers'] = 'Title'
             response['Title'] = 'report_' + datetime.date.today().strftime("%Y%m%d%H%M%S") + ".pdf"
+            response['Access-Control-Allow-Origin'] = '*'
 
             return response
-            # file_dir = settings.FILE_STORAGE_DIR + 'report_' + datetime.date.today().strftime("%Y%m%d%H%M%S") + ".pdf"
-            # url = res.json()["url"]
-            # urllib.request.urlretrieve(url, file_dir)
-
-            # with open(file_dir, 'rb') as pdf:
-            #     response =  HttpResponse(content=pdf.read(), content_type='application/pdf')
-            #     return response
-            # pdf.closed
-            # os.remove(file_dir)
         else:
             return HttpResponse(status=res.status_code, content=res.text, content_type='application/json')
 
