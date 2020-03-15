@@ -16,25 +16,20 @@ from django.contrib.auth.models import User
 
 # To get the incident counts
 def getIncidentCount():
-    complaint_count_dict = {}
     complaint_past_24 = {}
     complaint_summary = {}
 
     date_from = datetime.datetime.now() - datetime.timedelta(days=1)
-    divisions = Division.objects.filter(code__startswith="ec-").filter(is_hq=True) #.values_list('id', flat=True)
-    # div = Incidents.objects.raw("""\
-    #     select incidents from incident_incidents where reported_id
-    # """)
-    # profile = divisions.profile
+
+    '''
+    National Complaints
+    '''
+    divisions = Division.objects.filter(code__startswith="ec-", is_hq=True) #.values_list('id', flat=True)
     user_ids = []
 
-    print(divisions)
-
     for division in divisions:
-        user_ids_profile = Profile.objects.filter(division=division).values_list('id', flat=True) 
+        user_ids_profile = Profile.objects.filter(division=division.id).values_list('id', flat=True) 
         user_ids_division = User.objects.filter(id__in=user_ids_profile).values_list("id", flat=True)
-        print(division.code)
-        print(user_ids_division)
         user_ids.extend(user_ids_division)
         user_ids_division = None
 
@@ -63,16 +58,17 @@ def getIncidentCount():
     complaint_summary["national"]["others"] = national_other_complaints_count
     complaint_summary["national"]["amount"] = national_t_amount
 
-    # elif complaintBasis == "district":
-    district = {}
-    district_24 = {}
-    division_ids = Division.objects.filter(code__startswith='ec-', is_hq=False).values_list("code", flat=True)
+    '''
+    District Complaints
+    '''
+    divisions = Division.objects.filter(code__startswith="ec-", is_hq=False) #.values_list("id", flat=True)
     user_ids = []
-    for division in division_ids:
-        user_ids_division = Profile.objects.filter(division=division) #.values_list("user_id", flat=True) 
-        # query = "select user_ from Profile where code='"+ division +"'"
+    for division in divisions:
+        user_ids_profile = Profile.objects.filter(division=division.id).values_list('id', flat=True) 
+        user_ids_division = User.objects.filter(id__in=user_ids_profile).values_list("id", flat=True)
         user_ids.extend(user_ids_division)
         user_ids_division = None
+
     district_incidents = Incident.objects.filter(created_by__in=user_ids)
     district_dispute_count = Incident.objects.filter(category__startswith="A-").count()
     district_violation_of_law_count = Incident.objects.filter(category__startswith="B-").count()
@@ -105,7 +101,6 @@ def getIncidentCount():
     complaint_past_24["totals"]["others"] = complaint_past_24["national"]["others"] + complaint_past_24["district"]["others"]
     complaint_past_24["totals"]["amount"] = complaint_past_24["national"]["amount"] + complaint_past_24["district"]["amount"]
             
-    print(complaint_past_24, complaint_summary)
     return complaint_past_24, complaint_summary
 
 

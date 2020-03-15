@@ -35,8 +35,8 @@ class Division(models.Model):
     is_hq = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return '%s - %s: %s' % (self.organization, self.division_type, self.name)
+    # def __str__(self):
+    #     return '%s - %s: %s' % (self.organization, self.division_type, self.name)
 
 class UserLevel(models.Model):
     code = models.CharField(max_length=100)
@@ -46,7 +46,7 @@ class UserLevel(models.Model):
     role = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
+    def __str__(self): 
         return '%s: %s' % (self.organization, self.displayName)
 
 class Profile(models.Model):
