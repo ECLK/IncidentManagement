@@ -17,11 +17,6 @@ from .services import get_police_division_summary, get_category_summary, \
     get_incident_date_summary, get_slip_data, getIncidentCount
 from .functions import apply_style, decode_column_names, incident_type_title, incident_type_query
 
-from incident.models import Incident
-# from User
-from custom_auth.models import Division, Profile
-
-
 '''
 middleware to access PDF-service
 '''
@@ -43,6 +38,7 @@ class ReportingAccessView(APIView):
     def get(self, request):
         endpoint_uri = settings.PDF_SERVICE_ENDPOINT
         json_dict = {}
+        file_dict = {}
         template_type = request.query_params.get('template_type')
 
         if(template_type == "simple-template"):
@@ -56,10 +52,12 @@ class ReportingAccessView(APIView):
             incident_id = request.query_params.get('id')
             json_dict["file"] = get_slip_data(incident_id)
         elif template_type == 'file':
-            json_dict["file"]["template"] = "incidents/complaints/daily_summary_report.js"
+            file_dict["template"] = "incidents/complaints/daily_summary_report.js"
             past24dict, summarydict = getIncidentCount()
-            json_dict["file"]["complaintsPast24hours"] = past24dict 
-            json_dict["file"]["complaintsSummary"] = summarydict 
+            file_dict["file"] = {}
+            file_dict["file"]["complaintsPast24hours"] = past24dict 
+            file_dict["file"]["complaintsSummary"] = summarydict 
+            json_dict["file"] = file_dict
 
         request_data = json.dumps(json_dict)
         res = requests.post(url=endpoint_uri, data = request_data, headers={'content-type': 'application/json'})

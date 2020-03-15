@@ -11,6 +11,8 @@ from .functions import get_detailed_report, get_general_report, encode_column_na
     incident_type_query, incident_list_query, date_list_query, encode_value, get_subcategory_categorized_report
 from ..common.data.Institutions import institutions
 from ..custom_auth.models import Profile, Division
+import datetime
+from django.contrib.auth.models import User
 
 # To get the incident counts
 def getIncidentCount():
@@ -19,26 +21,37 @@ def getIncidentCount():
     complaint_summary = {}
 
     date_from = datetime.datetime.now() - datetime.timedelta(days=1)
-    # if complaintBasis == "national":
-    division_ids = Division.object.filter(code__startswith="ec-", is_hq=True).values_list('', flat=True)
+    divisions = Division.objects.filter(code__startswith="ec-").filter(is_hq=True) #.values_list('id', flat=True)
+    # div = Incidents.objects.raw("""\
+    #     select incidents from incident_incidents where reported_id
+    # """)
+    # profile = divisions.profile
     user_ids = []
 
-    for division in division_ids:
-        user_ids_division = Profile.object.filter(division=division).values_list('user_id', flat=True) 
+    print(divisions)
+
+    for division in divisions:
+        user_ids_profile = Profile.objects.filter(division=division).values_list('id', flat=True) 
+        user_ids_division = User.objects.filter(id__in=user_ids_profile).values_list("id", flat=True)
+        print(division.code)
+        print(user_ids_division)
         user_ids.extend(user_ids_division)
         user_ids_division = None
 
-    national_incidents = Incident.object.filter(created_by__in=user_ids)
-    national_dispute_count = incidents.filter(category__startswith="A-").count()
-    national_violation_of_law_count = Incident.object.filter(category__startswith="B-").count()
-    national_other_complaints_count = Incident.object.filter(category__startswith="Other").count()
-    national_t_amount = national_dispute_count + national_violtation_of_law_count + national_other_complaints_count
+    national_incidents = Incident.objects.filter(created_by__in=user_ids)
+    national_dispute_count = Incident.objects.filter(category__startswith="A-").count()
+    national_violation_of_law_count = Incident.objects.filter(category__startswith="B-").count()
+    national_other_complaints_count = Incident.objects.filter(category__startswith="Other").count()
+    national_t_amount = national_dispute_count + national_violation_of_law_count + national_other_complaints_count
 
-    national_incidents_24 = Incident.object.filter(created_by__in=user_ids, created_date__gte=date_from)
-    national_dispute_count_24 = incidents.filter(category__startswith="A-").count()
-    national_violation_of_law_count_24 = Incident.object.filter(category__startswith="B-").count()
-    national_other_complaints_count_24 = Incident.object.filter(category__startswith="Other").count()
-    national_t_amount_24 = national_dispute_count_24 + national_violtation_of_law_count_24 + national_other_complaints_count_24
+    national_incidents_24 = Incident.objects.filter(created_by__in=user_ids, created_date__gte=date_from)
+    national_dispute_count_24 = Incident.objects.filter(category__startswith="A-").count()
+    national_violation_of_law_count_24 = Incident.objects.filter(category__startswith="B-").count()
+    national_other_complaints_count_24 = Incident.objects.filter(category__startswith="Other").count()
+    national_t_amount_24 = national_dispute_count_24 + national_violation_of_law_count_24 + national_other_complaints_count_24
+
+    complaint_past_24["national"] = {}
+    complaint_summary["national"] = {}
 
     complaint_past_24["national"]["disputes"] = national_dispute_count_24
     complaint_past_24["national"]["violationOfLaws"] = national_violation_of_law_count_24
@@ -53,40 +66,46 @@ def getIncidentCount():
     # elif complaintBasis == "district":
     district = {}
     district_24 = {}
-    division_ids = Division.object.filter(code__startswith="ec-", is_hq=False).values_list('', flat=True)
+    division_ids = Division.objects.filter(code__startswith='ec-', is_hq=False).values_list("code", flat=True)
     user_ids = []
     for division in division_ids:
-        user_ids_division = Profile.object.filter(division=division).values_list('user_id', flat=True) 
+        user_ids_division = Profile.objects.filter(division=division) #.values_list("user_id", flat=True) 
+        # query = "select user_ from Profile where code='"+ division +"'"
         user_ids.extend(user_ids_division)
         user_ids_division = None
-    district_incidents = Incident.object.filter(created_by__in=user_ids)
-    district_dispute_count = incidents.filter(category__startswith="A-").count()
-    district_violation_of_law_count = Incident.object.filter(category__startswith="B-").count()
-    district_other_complaints_count = Incident.object.filter(category__startswith="Other").count()
-    district_t_amount = district_dispute_count + district_violtation_of_law_count + district_other_complaints_count
+    district_incidents = Incident.objects.filter(created_by__in=user_ids)
+    district_dispute_count = Incident.objects.filter(category__startswith="A-").count()
+    district_violation_of_law_count = Incident.objects.filter(category__startswith="B-").count()
+    district_other_complaints_count = Incident.objects.filter(category__startswith="Other").count()
+    district_t_amount = district_dispute_count + district_violation_of_law_count + district_other_complaints_count
 
-    district_incidents_24 = Incident.object.filter(created_by__in=user_ids, created_date__gte=date_from)
-    district_dispute_count_24 = incidents.filter(category__startswith="A-").count()
-    district_violation_of_law_count_24 = Incident.object.filter(category__startswith="B-").count()
-    district_other_complaints_count_24 = Incident.object.filter(category__startswith="Other").count()
-    district_t_amount_24 = district_dispute_count_24 + district_violtation_of_law_count_24 + districtother_complaints_count_24
+    district_incidents_24 = Incident.objects.filter(created_by__in=user_ids, created_date__gte=date_from)
+    district_dispute_count_24 = Incident.objects.filter(category__startswith="A-").count()
+    district_violation_of_law_count_24 = Incident.objects.filter(category__startswith="B-").count()
+    district_other_complaints_count_24 = Incident.objects.filter(category__startswith="Other").count()
+    district_t_amount_24 = district_dispute_count_24 + district_violation_of_law_count_24 + district_other_complaints_count_24
+
+    complaint_past_24["district"] = {}
+    complaint_summary["district"] = {}
 
     complaint_past_24["district"]["disputes"] = district_dispute_count_24
     complaint_past_24["district"]["violationOfLaws"] = district_violation_of_law_count_24
     complaint_past_24["district"]["others"] = district_other_complaints_count_24
     complaint_past_24["district"]["amount"] = district_t_amount_24
-
+    
     complaint_summary["district"]["disputes"] = district_dispute_count
     complaint_summary["district"]["violationOfLaws"] = district_violation_of_law_count
     complaint_summary["district"]["others"] = district_other_complaints_count
     complaint_summary["district"]["amount"] = district_t_amount
 
     # elif complaintBasis == "totals":
+    complaint_past_24["totals"] = {}
     complaint_past_24["totals"]["disputes"] = complaint_past_24["national"]["disputes"] + complaint_past_24["district"]["disputes"]
     complaint_past_24["totals"]["violationOfLaws"] = complaint_past_24["national"]["violationOfLaws"] + complaint_past_24["district"]["violationOfLaws"]
     complaint_past_24["totals"]["others"] = complaint_past_24["national"]["others"] + complaint_past_24["district"]["others"]
     complaint_past_24["totals"]["amount"] = complaint_past_24["national"]["amount"] + complaint_past_24["district"]["amount"]
             
+    print(complaint_past_24, complaint_summary)
     return complaint_past_24, complaint_summary
 
 
