@@ -14,8 +14,13 @@ import os
 
 from .services import get_police_division_summary, get_category_summary, \
     get_mode_summary, get_severity_summary, get_status_summary, get_subcategory_summary, get_district_summary, \
-    get_incident_date_summary, get_slip_data
+    get_incident_date_summary, get_slip_data, getIncidentCount
 from .functions import apply_style, decode_column_names, incident_type_title, incident_type_query
+
+from incident.models import Incident
+# from User
+from custom_auth.models import Division, Profile
+
 
 '''
 middleware to access PDF-service
@@ -50,7 +55,11 @@ class ReportingAccessView(APIView):
         elif (template_type == "slip"):
             incident_id = request.query_params.get('id')
             json_dict["file"] = get_slip_data(incident_id)
-
+        elif template_type == 'file':
+            json_dict["file"]["template"] = "incidents/complaints/daily_summary_report.js"
+            past24dict, summarydict = getIncidentCount()
+            json_dict["file"]["complaintsPast24hours"] = past24dict 
+            json_dict["file"]["complaintsSummary"] = summarydict 
 
         request_data = json.dumps(json_dict)
         res = requests.post(url=endpoint_uri, data = request_data, headers={'content-type': 'application/json'})
