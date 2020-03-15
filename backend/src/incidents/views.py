@@ -76,7 +76,6 @@ class IncidentList(APIView, IncidentResultsSetPagination):
     # permission_classes = (IsAuthenticated,)
 
     serializer_class = IncidentSerializer
-    election_code = settings.ELECTION
 
     def get_paginated_response(self, data):
         return Response(
@@ -95,6 +94,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         # _user = get_guest_user()
         # _user = User.objects.get(username="police1")
         # print("assigneee", find_incident_assignee(_user))
+        election_code = settings.ELECTION
 
         incidents = Incident.objects.all().filter(election=election_code).order_by('created_date').reverse()
         user = request.user
