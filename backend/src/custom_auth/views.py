@@ -8,7 +8,7 @@ class UserList(APIView):
     serializer_class = UserSerializer
 
     def get(self, request, format=None):
-        users = User.objects.all().order_by('username')
+        users = User.objects.all().filter(is_active=True).exclude(first_name="").order_by('username')
 
         param_user_type = self.request.query_params.get('type', None)
         if param_user_type is not None and param_user_type != "":

@@ -63,6 +63,7 @@ import json
 from ..custom_auth.models import UserLevel
 from ..custom_auth.services import user_can
 from .permissions import *
+from django.conf import settings
 
 class IncidentResultsSetPagination(PageNumberPagination):
     page_size = 15
@@ -75,6 +76,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
     # permission_classes = (IsAuthenticated,)
 
     serializer_class = IncidentSerializer
+    election_code = settings.ELECTION
 
     def get_paginated_response(self, data):
         return Response(
@@ -94,7 +96,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         # _user = User.objects.get(username="police1")
         # print("assigneee", find_incident_assignee(_user))
 
-        incidents = Incident.objects.all().order_by('created_date').reverse()
+        incidents = Incident.objects.all().filter(election=election_code).order_by('created_date').reverse()
         user = request.user
 
         # for external entities, they can only view related incidents
