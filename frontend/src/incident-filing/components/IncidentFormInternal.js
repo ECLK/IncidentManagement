@@ -1585,6 +1585,7 @@ function IncidentFormInternal(props) {
                 }}
             />
 
+            {/* success notification */}
             <Snackbar
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 open={state.submitSuccessMessage}
@@ -1615,6 +1616,7 @@ function IncidentFormInternal(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+
         </div>
     );
 }

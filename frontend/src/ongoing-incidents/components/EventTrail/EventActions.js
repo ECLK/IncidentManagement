@@ -117,48 +117,20 @@ const EventActions = (props) => {
         return null
     }
 
-    function showChangeAssigneeModal(){
-        dispatch(showModal('CHANGE_ASSIGNEE_MODAL', { activeIncident, users, divisions }));
-    }
-
     async function printSlip(){
-        const config = {
-            responseType: 'blob'
-        }
-        const config2 = {
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": "true",
-                "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
-                "Access-Control-Allow-Headers": "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
-            },
-            responseType: 'blob'
-        }
         setIsSlipLoading(true)
-        const response = (await handler.get(`${API_BASE_URL}/pdfgen/?template_type=slip&id=`+activeIncident.id, config))
-        setIsSlipLoading(false)
-        const data = response.data
-        const blob = new Blob([data], { type: 'application/pdf' });
-        const uri = URL.createObjectURL(blob);
-        window.open(uri);
-
-        // axios(`${API_BASE_URL}/pdfgen/?template_type=slip&id=`+activeIncident.id, {
-        //     method: 'GET',
-        //     responseType: 'blob'
-        // })
-        // .then(response => {
-        // //Create a Blob from the PDF Stream
-        //     const file = new Blob(
-        //       [response.data],
-        //       {type: 'application/pdf'});
-        // //Build a URL from the file
-        //     const fileURL = URL.createObjectURL(file);
-        // //Open the URL on new Window
-        //     window.open(fileURL);
-        // })
-        // .catch(error => {
-        //     console.log(error);
-        // });
+        await handler.get(`${API_BASE_URL}/pdfgen/?template_type=slip&id=`+activeIncident.id, {
+            responseType: 'blob'
+        })
+        .then(response => {
+            setIsSlipLoading(false)
+            const file = new Blob( [response.data], {type: 'application/pdf'})
+            const fileURL = URL.createObjectURL(file)
+            window.open(fileURL)
+        })
+        .catch(error => {
+            console.log(error);
+        });
     }
 
     return (
@@ -177,7 +149,7 @@ const EventActions = (props) => {
                         activeIncident.currentStatus !== 'INVALIDATED' &&
                         userCan(currentUser, activeIncident, USER_ACTIONS.CAN_CHANGE_ASSIGNEE) &&
                         <ListItemSecondaryAction>
-                            <IconButton aria-label="Edit" onClick={showChangeAssigneeModal}>
+                            <IconButton aria-label="Edit" onClick={() => { props.modalAction('CHANGE_ASSIGNEE_MODAL') }}>
                                 <EditIcon />
                             </IconButton>
                         </ListItemSecondaryAction>
@@ -198,7 +170,7 @@ const EventActions = (props) => {
                     <ListItemText primary="Close within" secondary={activeIncident.response_time + " hours."} />
                     {activeIncident.currentStatus !== 'CLOSED'  &&
                         <ListItemSecondaryAction>
-                            <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('RESPOSE_TIME_EDIT', { activeIncident })) }}>
+                            <IconButton aria-label="Edit" onClick={() => { props.modalAction('RESPONSE_TIME_EDIT') }}>
                                 <EditIcon />
                             </IconButton>
                         </ListItemSecondaryAction>
@@ -236,7 +208,7 @@ const EventActions = (props) => {
               userCan(currentUser, activeIncident, USER_ACTIONS.CAN_RUN_WORKFLOW) &&
                 <>
                 {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_ESCALATE_INCIDENT) &&
-                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={props.escallateIncident}>
+                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => props.modalAction('ESCALATE_MODAL')}>
                         <ArrowUpwardIcon className={classes.actionButtonIcon} />
                         Escalate
                     </Button>
@@ -244,7 +216,7 @@ const EventActions = (props) => {
 
 
                 {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_ESCALATE_EXTERNAL) &&
-                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={()=>{dispatch(showModal('ESCALLATE_OUTSIDE', { incidentId: activeIncident.id }))}}>
+                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => props.modalAction('ESCALLATE_OUTSIDE')}>
                         <SubdirectoryArrowLeftIcon className={classes.actionButtonIcon} />
                         Refer to organization
                     </Button>
@@ -258,7 +230,7 @@ const EventActions = (props) => {
 
                 {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_CLOSE_INCIDENT) &&
 
-                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('CLOSE_MODAL', { activeIncident })) }}>
+                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => props.modalAction('CLOSE_MODAL')}>
                         <CancelIcon className={classes.actionButtonIcon} />
                         Close Incident
                     </Button>

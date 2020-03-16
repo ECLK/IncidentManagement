@@ -24,8 +24,11 @@ import { EventActions } from './EventTrail'
 import {showModal} from '../../modals/state/modal.actions'
 import { userCan, USER_ACTIONS } from '../../user/userUtils';
 import FileUploader from '../../files/components/FilePicker';
+
+// actions
 import { loadIncident, updateIncidentStatus } from '../../incident/state/incidentActions';
 import { getIncidentEvents } from '../../event/state/eventActions';
+import { showNotification } from '../../notifications/state/notifications.actions'
 
 const styles = theme => ({
     label: {
@@ -131,10 +134,37 @@ function NavTabs({ classes, match }) {
 
     const dispatch = useDispatch();
     const changeStatus = (incidentId, status) => dispatch(updateIncidentStatus(incidentId, status));
-    const onEscalateClick = () => dispatch(showModal('ESCALATE_MODAL', { incidentId: activeIncident.id }));
+    // const onEscalateClick = () => dispatch(showModal('ESCALATE_MODAL', { incidentId: activeIncident.id }));
     const onVerifyClick = () => dispatch(showModal('VERIFY_CONFIRM_MODAL', { incidentId: activeIncident.id }));
     const attachFiles = (incidentId, formData) => dispatch(attachFile(incidentId, formData));
     const onResolveEvent = (eventId, decision) => { /* do nothing, event resolving is depreciated */ }
+
+    const modalActionOnVerify = (modalType) => {
+        if (activeIncident.currentStatus != "NEW"){
+            switch (modalType) {
+                case 'ESCALATE_MODAL':
+                    dispatch(showModal('ESCALATE_MODAL', { incidentId: activeIncident.id }))
+                    break
+                case 'ESCALLATE_OUTSIDE':
+                    dispatch(showModal('ESCALLATE_OUTSIDE', { incidentId: activeIncident.id }))
+                    break
+                case 'CLOSE_MODAL':
+                    dispatch(showModal('CLOSE_MODAL', { activeIncident }))
+                    break
+                case 'RESPONSE_TIME_EDIT':
+                    dispatch(showModal('RESPONSE_TIME_EDIT', { activeIncident }))
+                    break
+                case 'CHANGE_ASSIGNEE_MODAL':
+                    dispatch(showModal('CHANGE_ASSIGNEE_MODAL', { activeIncident, users, divisions }))
+                    break
+
+                default:
+                    break;
+            }
+        } else {
+            dispatch(showNotification({ message: "Incident must be verified to proceed." }, null))
+        }
+    }
 
     const scrollToTop = () => {
         window.scrollTo(0, 0);
@@ -269,7 +299,8 @@ function NavTabs({ classes, match }) {
                             organizations={organizations}
                             divisions={divisions}
                             events={events}
-                            escallateIncident={onEscalateClick}
+                            // escallateIncident={onEscalateClick}
+                            modalAction={modalActionOnVerify}
                         />
                     </div>
 
