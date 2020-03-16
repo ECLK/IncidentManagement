@@ -110,10 +110,6 @@ DATABASES = {
     }
 }
 
-PDF_SERVICE_ENDPOINT = env_var('PDF_SERVICE_ENDPOINT')
-# Place to store the generated PDF files
-FILE_STORAGE_DIR = BASE_DIR + env_var("LOCAL_PDF_STORAGE", "/media/")
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -189,6 +185,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 FIXTURE_DIRS = [
     "./seeddata/"
 ]
+
+# PDF endpoint for report generation
+PDF_SERVICE_ENDPOINT = env_var('PDF_SERVICE_ENDPOINT')
 
 # election constant
 ELECTION = env_var('ELECTION')
