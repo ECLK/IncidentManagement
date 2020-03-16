@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -31,6 +31,8 @@ import ErrorIcon from '@material-ui/icons/Error'
 
 import IconButton from '@material-ui/core/IconButton';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import green from '@material-ui/core/colors/green';
 
 //actions
 import { showModal } from '../../../modals/state/modal.actions'
@@ -66,7 +68,19 @@ const styles = (theme) => ({
     },
     button: {
         textAlign: "left"
-    }
+    },
+    buttonProgress: {
+        color: green[500],
+        position: 'absolute',
+        top: '50%',
+        left: '30%',
+        marginTop: -12,
+        marginLeft: -6,
+    },
+    wrapper: {
+        margin: theme.spacing.unit,
+        position: 'relative',
+    },
 });
 
 const getLastActionTime = (events) => {
@@ -92,6 +106,7 @@ const EventActions = (props) => {
         hourlyResponseTimes.push(i);
     }
 
+    const [isSlipLoading, setIsSlipLoading] = useState(false);
     const dispatch = useDispatch()
     const activeIncident = props.activeIncident;
     const currentUser = useSelector(state => state.shared.signedInUser.data);
@@ -119,7 +134,9 @@ const EventActions = (props) => {
             },
             responseType: 'blob'
         }
+        setIsSlipLoading(true)
         const response = (await handler.get(`${API_BASE_URL}/pdfgen/?template_type=slip&id=`+activeIncident.id, config))
+        setIsSlipLoading(false)
         const data = response.data
         const blob = new Blob([data], { type: 'application/pdf' });
         const uri = URL.createObjectURL(blob);
@@ -272,10 +289,13 @@ const EventActions = (props) => {
             {
                 activeIncident.currentStatus != 'CLOSED' && activeIncident.incidentType === "INQUIRY" &&
                 (
-                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => printSlip()}>
-                        <PrintIcon className={classes.actionButtonIcon} />
-                        Print Slip
-                    </Button>
+                    <div className={classes.wrapper}>
+                        <Button disabled={isSlipLoading} color="primary" size="large" variant='text' className={classes.button} onClick={() => printSlip()}>
+                            <PrintIcon className={classes.actionButtonIcon} />
+                            Print Slip
+                        </Button>
+                        {isSlipLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                    </div>
                 )
             }
         </div>
