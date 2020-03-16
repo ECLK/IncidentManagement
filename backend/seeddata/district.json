@@ -17,7 +17,7 @@
         "model": "common.district",
         "pk": 2,
         "fields": {
-            "code": "MTL",
+            "code": "MAT",
             "name": "Matale",
             "province": "Central",
             "sn_name": "මාතලේ",
@@ -269,7 +269,7 @@
         "model": "common.district",
         "pk": 20,
         "fields": {
-            "code": "MAT",
+            "code": "MTR",
             "name": "Matara",
             "province": "Southern",
             "sn_name": "මාතර",
