@@ -117,7 +117,7 @@ Generates refId for inquiries
 '''
 def generate_inquiry_refId(election, category, institution):
     current_count = Incident.objects.filter(incidentType="INQUIRY").filter(election=election).count()
-    refID = "%s/%0.4d/%s/%s/%s" % (election, current_count+1, datetime.now().strftime("%m%d"), category, institution)
+    refID = "EC/EDR/%s/INQ/%s/%s/%0.4d/%s" % (election, institution, category, current_count+1, datetime.now().strftime("%Y"))
     return refID
 
 '''
@@ -125,7 +125,7 @@ Generate refId for complaints
 '''
 def generate_complaint_refId(election, district):
     current_count = Incident.objects.filter(incidentType="COMPLAINT").filter(election=election).count()
-    refID = "%s/%s/%s/%0.4d" % (election, district, datetime.now().strftime("%m%d"), current_count+1)
+    refID = "EC/EDR/%s/%s/%0.4d/%s" % (election, district, current_count+1, datetime.now().strftime("%Y"))
     return refID
 
 class Incident(models.Model):
