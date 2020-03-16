@@ -584,6 +584,7 @@ function IncidentFormInternal(props) {
                                     </Grid>
                                     <Grid item xs={12}>
                                         <TitleAutoComplete
+                                            value={values.title}
                                             incidentType={values.incidentType}
                                             data={similarIncidents}
                                             onChange={(event) => handleChange(event)}
