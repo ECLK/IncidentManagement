@@ -3,6 +3,7 @@
 from django.db import connection
 import pandas as pd
 import numpy as np
+from datetime import date, timedelta, datetime
 
 from ..common.models import Category, Channel
 from ..incidents.models import Incident
@@ -20,12 +21,67 @@ def get_slip_data(incident_id):
     template_dict["referenceNumber"] = incident.refId
     template_dict["date"] = "2020/03/05"
     template_dict["categoryCode"] = incident.category
-    print(institutions[incident.institution]["name"])
     template_dict["categoryNameEn"] = category.sub_category
     template_dict["categoryNameSn"] = category.sn_sub_category
     template_dict["categoryNameTm"] = category.tm_sub_category
     template_dict["institutionName"] = institutions[incident.institution]["name"]
     return template_dict
+
+def get_daily_category_data():
+    file_dict = {}
+
+    file_dict["template"] = "/incidents/complaints/daily_summery_report_categorywise.js"
+    file_dict["date"] = date.today().strftime("%Y/%m/%d")
+
+    # yesterday at 4pm
+    start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
+    # today at 3:59pm
+    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+
+    # get all complaint related incidents within the given date range
+    incidents = Incident.objects.all().filter(incidentType='COMPLAINT', occured_date__range=(start_datetime, end_datetime))
+    file_dict["total"] = incidents.count()
+
+    other_category = Category.objects.get(to)
+    file_dict["other"] = incidents.filter(category='Other').count()
+
+    # collecting all category data
+    category_dict = []
+
+    # collect 'violence' top category data
+    violence_category_dict = {}
+    violence_category_dict["categoryNameSinhala"] = "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා"
+    violence_category_dict["categoryNameTamil"] = "தேர்தல் வன்முறைகள்"
+
+    violence_subcategories = Category.objects.all().filter(top_category='Violence')
+    subcategory_dict = []
+    for category in violence_subcategories:
+        subcategory_data_dict = {}
+        subcategory_data_dict["name"] = category.sn_sub_category
+        subcategory_data_dict["count"] = incidents.filter(category=category.id).count()
+        subcategory_dict.append(subcategory_data_dict)
+    violence_category_dict["subCategories"] = subcategory_dict
+
+    # collect 'violation of law' top category data
+    violation_category_dict = {}
+    violation_category_dict["categoryNameSinhala"] = "මැතිවරණ නීති උල්ලංඝනය"
+    violation_category_dict["categoryNameTamil"] = "தேர்தல் சட்டங்களை மீறுதல்"
+
+    violation_subcategories = Category.objects.all().filter(top_category='Violation of election law')
+    subcategory_dict = []
+    for category in violation_subcategories:
+        subcategory_data_dict = {}
+        subcategory_data_dict["name"] = category.sn_sub_category
+        subcategory_data_dict["count"] = incidents.filter(category=category.id).count()
+        subcategory_dict.append(subcategory_data_dict)
+    violation_category_dict["subCategories"] = subcategory_dict
+
+    # complete category data
+    category_dict.append(violence_category_dict)
+    category_dict.append(violation_category_dict)
+    file_dict["categories"] = category_dict
+
+    return file_dict
 
 def get_category_summary(start_date, end_date, detailed_report, complain, inquiry):
     sql3 = incident_type_query(complain, inquiry)
