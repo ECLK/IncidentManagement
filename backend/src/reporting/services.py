@@ -12,6 +12,21 @@ from .functions import get_detailed_report, get_general_report, encode_column_na
     incident_type_query, incident_list_query, date_list_query, encode_value, get_subcategory_categorized_report
 from ..common.data.Institutions import institutions
 
+def get_daily_incidents(incidentType):
+    """
+    List dialy incidents to the given incident-type
+    Daily incidents concidered in election commission is, incidents logged from yesterday 4pm to today 4pm
+    """
+    # yesterday at 4pm
+    start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
+    # today at 3:59pm
+    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+    incidents = Incident.objects.all().filter(incidentType=incidentType, created_date__range=(start_datetime, end_datetime))
+    return incidents
+
+def get_daily_district_data():
+    return True
+
 def get_slip_data(incident_id):
     incident = get_incident_by_id(incident_id)
     category = Category.objects.get(id=incident.category)
@@ -33,16 +48,10 @@ def get_daily_category_data():
     file_dict["template"] = "/incidents/complaints/daily_summery_report_categorywise.js"
     file_dict["date"] = date.today().strftime("%Y/%m/%d")
 
-    # yesterday at 4pm
-    start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
-    # today at 3:59pm
-    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
-
-    # get all complaint related incidents within the given date range
-    incidents = Incident.objects.all().filter(incidentType='COMPLAINT', occured_date__range=(start_datetime, end_datetime))
+    incidents = get_daily_incidents("COMPLAINT")
     file_dict["total"] = incidents.count()
 
-    other_category = Category.objects.get(to)
+    other_category = Category.objects.get(top_category='Other')
     file_dict["other"] = incidents.filter(category='Other').count()
 
     # collecting all category data

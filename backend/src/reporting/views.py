@@ -14,7 +14,7 @@ import os
 
 from .services import get_police_division_summary, get_category_summary, \
     get_mode_summary, get_severity_summary, get_status_summary, get_subcategory_summary, get_district_summary, \
-    get_incident_date_summary, get_slip_data, get_daily_category_data
+    get_incident_date_summary, get_slip_data, get_daily_category_data, get_daily_district_data
 from .functions import apply_style, decode_column_names, incident_type_title, incident_type_query
 
 '''
@@ -56,6 +56,13 @@ class ReportingAccessView(APIView):
             GET parameters => /?template_type=daily_category
             """
             json_dict["file"] = get_daily_category_data()
+
+        elif (template_type == "daily_district"):
+            """
+            daily_summary_report_districtwise
+            GET parameters => /?template_type=daily_district
+            """
+            json_dict["file"] = get_daily_district_data()
 
 
         request_data = json.dumps(json_dict)
