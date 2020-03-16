@@ -70,7 +70,7 @@ class ReportingAccessView(APIView):
 
         if res.status_code == 200:
             pdf_file = requests.get(res.json()["url"])
-
+            
             response = HttpResponse(content=pdf_file.content, content_type='application/pdf')
             response['Access-Control-Expose-Headers'] = 'Title'
             response['Title'] = 'report_' + datetime.date.today().strftime("%Y%m%d%H%M%S") + ".pdf"

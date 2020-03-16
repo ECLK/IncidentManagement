@@ -6,11 +6,14 @@ import numpy as np
 from datetime import date, timedelta, datetime
 
 from ..common.models import Category, Channel
-from ..incidents.models import Incident
+from ..incidents.models import Incident, IncidentType
+from django.contrib.auth.models import User
 from ..incidents.services import get_incident_by_id
 from .functions import get_detailed_report, get_general_report, encode_column_names, get_subcategory_report, \
     incident_type_query, incident_list_query, date_list_query, encode_value, get_subcategory_categorized_report
 from ..common.data.Institutions import institutions
+from django.conf import settings
+from django.db.models import Count
 
 def get_daily_incidents(incidentType):
     """
@@ -24,8 +27,82 @@ def get_daily_incidents(incidentType):
     incidents = Incident.objects.all().filter(incidentType=incidentType, created_date__range=(start_datetime, end_datetime))
     return incidents
 
+def map_category(cat_voilence, cat_law, cat_other, total_list):
+    totals = {
+        "disputes": 0,
+        "violationOfLaws": 0,
+        "others": 0,
+        "amount": 0
+    }
+
+    for total in total_list:
+        key = total["category"]
+        val = total["category__count"]
+
+        if key == cat_voilence:
+            totals["disputes"] = val
+        
+        if key == cat_law:
+            totals["violationOfLaws"] = val
+
+        if key == cat_other:
+            totals["others"] = val
+        
+        totals["amount"] += val
+
+    return totals
+
+
 def get_daily_district_data():
-    return True
+    file_dict = {}
+
+    file_dict["template"] = "/incidents/complaints/daily_summary_report.js"
+    file_dict["date"] = date.today().strftime("%Y/%m/%d")
+
+    # preload categories
+    cat_voilence = str(Category.objects.get(top_category='Violence').id)
+    cat_law = str(Category.objects.get(top_category='Violation of election law').id)
+    cat_other = str(Category.objects.get(top_category='Other').id)
+
+    # for time / date ranges
+    start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
+    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+
+    # queryset - incidents
+
+    incidents = Incident.objects.all().filter(incidentType=IncidentType.COMPLAINT.name, election=settings.ELECTION)
+
+    # find eclk complaints
+    eclk_users = User.objects.all().filter(profile__organization__code="eclk")
+    eclk_hq_users = eclk_users.filter(profile__division__is_hq=True)
+    eclk_district_users = eclk_users.filter(profile__division__is_hq=False)
+
+    # filter incidents by created
+    eclk_incidents = incidents.filter(created_by__in=eclk_users)
+    eclk_hq_incidents = incidents.filter(created_by__in=eclk_hq_users)
+    eclk_district_incidents = incidents.filter(created_by__in=eclk_district_users)
+
+    # for total summary
+    file_dict["complaintsSummary"] = {
+        "national": map_category(cat_voilence, cat_law, cat_other, eclk_hq_incidents.values('category').annotate(Count("category")).order_by()),
+        "district": map_category(cat_voilence, cat_law, cat_other, eclk_district_incidents.values('category').annotate(Count("category")).order_by()),
+        "totals": map_category(cat_voilence, cat_law, cat_other, eclk_incidents.values('category').annotate(Count("category")).order_by())
+    }
+
+    # past 24 hours
+    eclk_incidents = eclk_incidents.filter(created_date__range=(start_datetime, end_datetime))
+    eclk_hq_incidents = eclk_hq_incidents.filter(created_date__range=(start_datetime, end_datetime))
+    eclk_district_incidents = eclk_district_incidents.filter(created_date__range=(start_datetime, end_datetime))
+
+    file_dict["complaintsPast24hours"] = {
+        "national": map_category(cat_voilence, cat_law, cat_other, eclk_hq_incidents.values('category').annotate(Count("category")).order_by()),
+        "district": map_category(cat_voilence, cat_law, cat_other, eclk_district_incidents.values('category').annotate(Count("category")).order_by()),
+        "totals": map_category(cat_voilence, cat_law, cat_other, eclk_incidents.values('category').annotate(Count("category")).order_by())
+    }
+
+    return file_dict
+
+
 
 def get_slip_data(incident_id):
     incident = get_incident_by_id(incident_id)
@@ -89,7 +166,7 @@ def get_daily_category_data():
     category_dict.append(violence_category_dict)
     category_dict.append(violation_category_dict)
     file_dict["categories"] = category_dict
-
+    
     return file_dict
 
 def get_category_summary(start_date, end_date, detailed_report, complain, inquiry):
