@@ -68,7 +68,7 @@ class AutosuggestInput extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: '',
+            value: this.props.value,
             popper: '',
             suggestions: [],
         };

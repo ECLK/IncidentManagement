@@ -476,12 +476,8 @@ function SummaryTabView(props) {
             <Tabs variant="fullWidth" value={currentTab} onChange={(e, val) => setCurrentTab(val)} indicatorColor="primary" >
                 <LinkTab label="Basic Information" href="page1" />
                 <LinkTab label="Contact Information" href="page2" />
-                {incident.incidentType === "COMPLAINT" &&
-                    <>
-                        <LinkTab label="Location Information" href="page3" />
-                        <LinkTab label="Police Information" href="page4" />
-                    </>
-                }
+                <LinkTab label="Location Information" href="page3" style={{ display: incident.incidentType === 'INQUIRY' ? 'none' : ''}}/>
+                <LinkTab label="Police Information" href="page4" style={{ display: incident.incidentType === 'INQUIRY' ? 'none' : ''}}/>
             </Tabs>
 
             {currentTab === 0 && <TabContainer>

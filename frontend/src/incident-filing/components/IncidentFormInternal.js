@@ -584,6 +584,7 @@ function IncidentFormInternal(props) {
                                     </Grid>
                                     <Grid item xs={12}>
                                         <TitleAutoComplete
+                                            value={values.title}
                                             incidentType={values.incidentType}
                                             data={similarIncidents}
                                             onChange={(event) => handleChange(event)}
@@ -1585,6 +1586,7 @@ function IncidentFormInternal(props) {
                 }}
             />
 
+            {/* success notification */}
             <Snackbar
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 open={state.submitSuccessMessage}
@@ -1615,6 +1617,7 @@ function IncidentFormInternal(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+
         </div>
     );
 }

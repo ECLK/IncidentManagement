@@ -98,8 +98,7 @@ class ReportList extends Component {
     };
 
     handleChange(key, value) {
-        this.setState({[key]: value});
-        console.log(value);
+        this.setState({[key]: value})
     }
 
     render() {
