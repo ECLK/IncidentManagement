@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from datetime import date, timedelta, datetime
 
-from ..common.models import Category, Channel
+from ..common.models import Category, Channel, District
 from ..incidents.models import Incident, IncidentType
 from django.contrib.auth.models import User
 from ..incidents.services import get_incident_by_id
@@ -14,6 +14,7 @@ from .functions import get_detailed_report, get_general_report, encode_column_na
 from ..common.data.Institutions import institutions
 from django.conf import settings
 from django.db.models import Count
+import collections, functools, operator
 
 def get_daily_incidents(incidentType):
     """
@@ -50,6 +51,32 @@ def map_category(cat_voilence, cat_law, cat_other, total_list):
         
         totals["amount"] += val
 
+    return totals
+
+def map_severity(total_list):
+    totals = {
+        "minor": 0,
+        "general": 0,
+        "major": 0,
+        "total": 0
+    }
+
+    for total in total_list:
+        key = total["severity"]
+        val = total["severity__count"]
+
+        # severity = 0 is unset
+        if key >= 0 and key <= 3:
+            totals["minor"] += val
+        
+        elif key > 3 and key <= 7:
+            totals["general"] += val
+
+        elif key > 7:
+            totals["major"] += val
+        
+        totals["total"] += val
+    
     return totals
 
 
@@ -102,6 +129,55 @@ def get_daily_district_data():
 
     return file_dict
 
+
+def get_daily_summary_districtwise_data():
+    file_dict = {}
+
+    file_dict["template"] = "/incidents/complaints/daily_summary_report_districtwise.js"
+    file_dict["delectionDateate"] = date.today().strftime("%Y/%m/%d")
+
+    # preload categories
+    cat_voilence = str(Category.objects.get(top_category='Violence').id)
+    cat_law = str(Category.objects.get(top_category='Violation of election law').id)
+    cat_other = str(Category.objects.get(top_category='Other').id)
+
+    # for time / date ranges
+    start_datetime = (date.today() - timedelta(days=100)).strftime("%Y-%m-%d 16:00:00")
+    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+
+    incidents = Incident.objects.all().filter(incidentType=IncidentType.COMPLAINT.name, election=settings.ELECTION, created_date__range=(start_datetime, end_datetime))
+
+    file_dict["complaintByDistrict"] = []
+
+    districts = District.objects.all()
+    for district in districts:
+        district_incidents = incidents.filter(district=district.code)
+        
+        category_counts = map_category(cat_voilence, cat_law, cat_other, district_incidents.values('category').annotate(Count("category")).order_by())
+        severity_counts = map_severity(district_incidents.values('severity').annotate(Count("severity")).order_by())
+    
+        file_dict["complaintByDistrict"].append({
+            "violence": category_counts["disputes"],
+            "breachOfElectionLaws": category_counts["violationOfLaws"],
+            "other": category_counts["others"],
+            "minor": severity_counts["minor"],
+            "general": severity_counts["general"],
+            "major": severity_counts["major"],
+            "total": severity_counts["total"]
+        })
+
+    file_dict["complaintTotalsByType"] = dict(functools.reduce(operator.add, 
+                                            map(collections.Counter, file_dict["complaintByDistrict"])))
+
+    # just fixing the case of not having a specific total
+    for key in file_dict["complaintByDistrict"][0]:
+        if key not in file_dict["complaintTotalsByType"]:
+            file_dict["complaintTotalsByType"][key] = 0
+
+    print(file_dict) 
+
+    return file_dict
+        
 
 
 def get_slip_data(incident_id):
