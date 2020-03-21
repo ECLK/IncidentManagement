@@ -173,9 +173,7 @@ def get_daily_summary_districtwise_data():
     for key in file_dict["complaintByDistrict"][0]:
         if key not in file_dict["complaintTotalsByType"]:
             file_dict["complaintTotalsByType"][key] = 0
-
-    print(file_dict) 
-
+            
     return file_dict
         
 
