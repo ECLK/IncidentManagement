@@ -81,15 +81,15 @@ const styles = theme => ({
     }
 });
 
-function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, handlePageChange }){
+function IncidentList({ classes, incidentType, incidents, pageNumber, count, handleRowClick, handlePageChange }){
 
-  const { channels, categories } = useSelector((state) => (state.shared));
+  const { channels, districts } = useSelector((state) => (state.shared));
+  console.log(districts);
     
     return (
         <Table className={classes.table}>
           <colgroup>
             <col style={{ width: "2%" }} />
-            <col style={{ width: "10%" }} />
             <col style={{ width: "10%" }} />
             <col style={{ width: "15%" }} />
             <col style={{ width: "15%" }} />
@@ -99,13 +99,11 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
           <TableHead>
             <TableRow>
               <CustomTableCell align="center">Ref Id</CustomTableCell>
-              <CustomTableCell align="center">Received Date</CustomTableCell>
-                <CustomTableCell align="center">Letter Date</CustomTableCell>
-              <CustomTableCell align="center">Mode of Receipt</CustomTableCell>
-              <CustomTableCell align="center">Category</CustomTableCell>
-              <CustomTableCell align="center">Institution</CustomTableCell>
+              <CustomTableCell align="center">Created Date</CustomTableCell>
+              <CustomTableCell align="center">{ incidentType === 'COMPLAINT' ? 'District' : 'Description'}</CustomTableCell>
+              <CustomTableCell align="center">Status</CustomTableCell>
               <CustomTableCell align="center">Title</CustomTableCell>
-              <CustomTableCell align="center">Decision</CustomTableCell>
+              <CustomTableCell align="center">Final Resolution</CustomTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -125,23 +123,20 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
                   <CustomTableCell align="center">
                     <p>{moment(row.createdDate).format('YYYY-MM-DD  h:mm a')}</p>
                   </CustomTableCell>
-                  <CustomTableCell scope="center">
-                    <p>{moment(row.occuredDate).format('YYYY-MM-DD  h:mm a')}</p>
+                  <CustomTableCell align="center">
+                    <p className="left">{ incidentType === 'COMPLAINT' ?
+                        districts.byCode[row.district] ? districts.byCode[row.district]['name'] : '' :
+                        row.description
+                    }</p>
                   </CustomTableCell>
                   <CustomTableCell align="center">
-                    <p className="left">{ channels.map((value, index)=>(value.id == row.infoChannel ? value.name : null)) }</p>
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    <p className="left">{ categories.map((value, index)=>(value.id==row.category? value.code+" | "+value.sub_category:null)) }</p>
-                  </CustomTableCell>
-                  <CustomTableCell align="center">
-                    <p>{row.policeStation}</p>
+                    <p>{row.currentStatus}</p>
                   </CustomTableCell>
                   <CustomTableCell align="center">
                     <p>{row.title}</p>
                   </CustomTableCell>
                   <CustomTableCell align="center">
-                    <p>{row.currentStatus}</p>
+                    <p>{row.current_decision}</p>
                   </CustomTableCell>
                 </TableRow>
                 )
