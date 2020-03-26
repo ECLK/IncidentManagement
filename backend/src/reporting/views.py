@@ -29,6 +29,7 @@ class ReportingAccessView(APIView):
 
     Response would be a pdf stream to be opened in a different tab
     '''
+    permission_classes = []
     def get(self, request):
         endpoint_uri = settings.PDF_SERVICE_ENDPOINT
         json_dict = {}

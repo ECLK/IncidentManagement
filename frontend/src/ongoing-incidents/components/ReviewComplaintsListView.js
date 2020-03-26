@@ -102,6 +102,7 @@ function ReviewComplaintsListView({ classes, ...props }) {
         </Grid>
       </Grid>
       <IncidentListReview
+          incidentType='COMPLAINT'
           incidents={incidents}
           pageNumber={incidents.paging.pageNumber-1}
           count={incidents.paging.count}
