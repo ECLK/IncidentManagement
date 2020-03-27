@@ -172,6 +172,14 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         else:
             incidents = incidents.exclude(current_status=StatusType.CLOSED.name)
 
+        param_institution = self.request.query_params.get('institution', None)
+        if param_institution is not None:
+            incidents = incidents.filter(institution=param_institution)
+
+        param_district = self.request.query_params.get('district', None)
+        if param_district is not None:
+            incidents = incidents.filter(district=param_district)
+
         param_export = self.request.query_params.get('export', None)
         if param_export is not None:
             # export path will send a different response

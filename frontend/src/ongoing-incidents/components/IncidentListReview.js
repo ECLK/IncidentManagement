@@ -84,7 +84,6 @@ const styles = theme => ({
 function IncidentList({ classes, incidentType, incidents, pageNumber, count, handleRowClick, handlePageChange }){
 
   const { channels, districts } = useSelector((state) => (state.shared));
-  console.log(districts);
     
     return (
         <Table className={classes.table}>

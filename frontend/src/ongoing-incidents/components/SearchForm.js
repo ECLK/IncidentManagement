@@ -91,7 +91,19 @@ function SearchForm(props) {
   const severityValues = Array(10).fill(0).map((e, i) => i + 1);
   const organizations = useSelector(state => state.user.organizations);
   const institutions = useSelector(state => state.shared.institutions);
+  const districts = useSelector(state => state.shared.districts);
   const [selectedInstitution, setSelectedInstitution] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+
+  let orgSearch = props.incidentType === 'INQUIRY' ?
+      (<Search
+          institutions={institutions}
+          onChange={setSelectedInstitution}
+      ></Search>) :
+      (<Search
+            districts={districts}
+            onChange={setSelectedDistrict}
+      ></Search>);
 
   return (
     <Formik
@@ -103,6 +115,7 @@ function SearchForm(props) {
           endTime: values.endTime ? moment(values.endTime).format("YYYY-MM-DD HH:mm") : null
         };
         if (selectedInstitution) { preparedValues.institution = selectedInstitution }
+        if (selectedDistrict) { preparedValues.district = selectedDistrict }
         // alert(JSON.stringify(preparedValues));
         filterIncidents(preparedValues);
       }}
@@ -181,40 +194,6 @@ function SearchForm(props) {
                         <MenuItem value={"ADVICE_PROVIDED"}>Advice Provided</MenuItem>
                         <MenuItem value={"ADVICE_REQESTED"}>Advice Requested</MenuItem>
                         <MenuItem value={"VERIFIED"}>Verified</MenuItem>
-                      </Select>
-                    </FormControl>
-                    <FormControl className={classes.formControl}>
-                      <InputLabel
-                        shrink
-                        htmlFor="response-time-label-placeholder"
-                      >
-                        Reponse time
-                      </InputLabel>
-                      <Select
-                        input={
-                          <Input
-                            name="responseTime"
-                            id="response-time-label-placeholder"
-                          />
-                        }
-                        displayEmpty
-                        name="maxResponseTime"
-                        value={values.maxResponseTime}
-                        onChange={handleChange}
-                        className={classes.selectEmpty}
-                      >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={"1"}>Less than 1 hour</MenuItem>
-                        <MenuItem value={"2"}>Less than 2 hours</MenuItem>
-                        <MenuItem value={"3"}>Less than 3 hours</MenuItem>
-                        <MenuItem value={"4"}>Less than 4 hours</MenuItem>
-                        <MenuItem value={"5"}>Less than 5 hour</MenuItem>
-                        <MenuItem value={"6"}>Less than 6 hours</MenuItem>
-                        <MenuItem value={"7"}>Less than 7 hours</MenuItem>
-                        <MenuItem value={"8"}>Less than 8 hours</MenuItem>
-                        <MenuItem value={"9"}>Less than 9 hours</MenuItem>
                       </Select>
                     </FormControl>
                     <FormControl className={classes.formControl}>
@@ -300,11 +279,7 @@ function SearchForm(props) {
                       />
                     </FormControl>
                     <FormControl className={classes.formControlSearch}>
-                      <Search
-                        institutions={institutions}
-                        onChange={setSelectedInstitution}
-                      >
-                      </Search>
+                      { orgSearch }
                     </FormControl>
                     <FormControl className={classes.buttonContainer}>
                       {/* Reset workflow is pending
