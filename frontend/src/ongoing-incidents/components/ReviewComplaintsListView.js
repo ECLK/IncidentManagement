@@ -83,7 +83,8 @@ function ReviewComplaintsListView({ classes, ...props }) {
   return (
     <Paper className={classes.root}>
       <h3>Review Complaints</h3>
-      <SearchForm 
+      <SearchForm
+        incidentType='COMPLAINT'
         categories={categories} 
         handleSearchClick={handleSearchClick}
         filters={filters}

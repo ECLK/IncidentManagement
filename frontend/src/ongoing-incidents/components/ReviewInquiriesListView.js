@@ -79,6 +79,7 @@ function ReviewInquiriesListView({ classes, ...props }) {
         <Paper className={classes.root}>
             <h3>Review Inquiries</h3>
             <SearchForm
+                incidentType='INQUIRY'
                 filters={filters}
                 categories={categories}
                 handleSearchClick={handleSearchClick}
