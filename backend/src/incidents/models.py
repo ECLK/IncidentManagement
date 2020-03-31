@@ -46,8 +46,8 @@ class SeverityType(enum.Enum):
         return self.name
 
 class IncidentType(enum.Enum):
-    INQUIRY = "Inquiry"
-    COMPLAINT = "Complaint"
+    INQUIRY = "INQUIRY"
+    COMPLAINT = "COMPLAINT"
 
     def __str__(self):
         return self.name
@@ -112,28 +112,22 @@ class IncidentComment(models.Model):
         ordering = ("id",)
 
 
-'''
-Generates refId for inquiries
-'''
 def generate_inquiry_refId(election, category, institution):
-    current_count = Incident.objects.filter(incidentType="INQUIRY").filter(election=election).count()
-    refID = "EC/EDR/%s/INQ/%s/%s/%0.4d/%s" % (election, institution, category, current_count+1, datetime.now().strftime("%Y"))
+    ''' Function to generate refId for inquiries '''
+    current_count = Incident.objects.filter(incidentType=IncidentType.INQUIRY).filter(election=election).count()
+    refID = "EC/EDR/%s/INQ/%s/%s/%0.4d" % (election, institution, category, current_count+1)
     return refID
 
-'''
-Generate refId for complaints
-'''
 def generate_complaint_refId(election, district):
-    current_count = Incident.objects.filter(incidentType="COMPLAINT").filter(election=election).count()
-    refID = "EC/EDR/%s/%s/%0.4d/%s" % (election, district, current_count+1, datetime.now().strftime("%Y"))
+    ''' Function to generate refId for complaints '''
+    current_count = Incident.objects.filter(incidentType=IncidentType.COMPLAINT).filter(election=election).count()
+    refID = "EC/EDR/%s/%s/%0.4d" % (election, district, current_count+1)
     return refID
 
 class Incident(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
     refId = models.CharField(max_length=200, blank=True, null=True)
-
     title = models.CharField(max_length=200)
     description = models.TextField()
     category = models.CharField(max_length=200, blank=True, null=True)
@@ -219,10 +213,10 @@ class Incident(models.Model):
     current_decision = models.CharField(max_length=50, default=None, null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        if self.incidentType == "COMPLAINT" :
-            self.refId = generate_complaint_refId(election=self.election, district=self.district)
-        else:
+        if self.incidentType == IncidentType.INQUIRY :
             self.refId = generate_inquiry_refId(election=self.election, category=self.category, institution=self.institution)
+        else:
+            self.refId = generate_complaint_refId(election=self.election, district=self.district)
         super(Incident, self).save(*args, **kwargs)
 
     class Meta:
