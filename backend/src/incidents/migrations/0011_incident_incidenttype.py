@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='incident',
             name='incidentType',
-            field=models.CharField(blank=True, choices=[('INQUIRY', 'Inquiry'), ('COMPLAINT', 'Complaint')], max_length=50, null=True),
+            field=models.CharField(blank=True, choices=[('INQUIRY', 'INQUIRY'), ('COMPLAINT', 'COMPLAINT')], max_length=50, null=True),
         ),
     ]

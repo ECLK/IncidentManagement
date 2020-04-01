@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='incident',
             name='incidentType',
-            field=models.CharField(choices=[('INQUIRY', 'Inquiry'), ('COMPLAINT', 'Complaint')], default=src.incidents.models.IncidentType('Complaint'), max_length=50),
+            field=models.CharField(choices=[('INQUIRY', 'INQUIRY'), ('COMPLAINT', 'COMPLAINT')], default=src.incidents.models.IncidentType('COMPLAINT'), max_length=50),
         ),
     ]
