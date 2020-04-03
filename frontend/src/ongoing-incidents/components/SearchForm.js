@@ -89,7 +89,6 @@ function SearchForm(props) {
   }, []);
   const { classes, categories } = props;
   const severityValues = Array(10).fill(0).map((e, i) => i + 1);
-  const organizations = useSelector(state => state.user.organizations);
   const institutions = useSelector(state => state.shared.institutions);
   const districts = useSelector(state => state.shared.districts);
   const [selectedInstitution, setSelectedInstitution] = useState("");

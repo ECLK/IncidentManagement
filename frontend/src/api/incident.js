@@ -56,6 +56,10 @@ export const getIncidents = async (filters, page = 1) => {
     query += "&institution=" + filters.institution;
   }
 
+  if (filters.district) {
+    query += "&district=" + filters.district;
+  }
+
   if (filters.startTime && filters.endTime) {
     const startDate = moment(filters.startTime).format("YYYY-MM-DD HH:mm");
     const endDate = moment(filters.endTime).format("YYYY-MM-DD HH:mm");
