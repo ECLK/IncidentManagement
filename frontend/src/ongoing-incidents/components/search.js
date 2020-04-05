@@ -81,13 +81,26 @@ class AutosuggestInput extends React.Component {
                         + this.props.institutions.byCode[code].sn_name + ', '
                         + this.props.institutions.byCode[code].tm_name,
                 })
-            })
+            });
+            this.setState({ allSuggestions: list });
+        }
+
+        if (this.props.districts && this.props.districts.allCodes && this.props.districts.allCodes.length > 0) {
+            const list = this.props.districts.allCodes.map(code => {
+                return ({
+                    label: this.props.districts.byCode[code].name,
+                    code: this.props.districts.byCode[code].code,
+                    text: this.props.districts.byCode[code].name + ', '
+                        + this.props.districts.byCode[code].sn_name + ', '
+                        + this.props.districts.byCode[code].tm_name,
+                })
+            });
             this.setState({ allSuggestions: list });
         }
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.institutions != prevProps.institutions && this.props.institutions.allCodes.length > 0) {
+        if (this.props.institutions !== prevProps.institutions && this.props.institutions.allCodes.length > 0) {
             const list = this.props.institutions.allCodes.map(code => {
                 return ({
                     label: this.props.institutions.byCode[code].name,
@@ -96,9 +109,22 @@ class AutosuggestInput extends React.Component {
                         + this.props.institutions.byCode[code].sn_name + ', '
                         + this.props.institutions.byCode[code].tm_name,
                 })
-            })
+            });
             this.setState({ allSuggestions: list });
         }
+        if (this.props.districts && this.props.districts !== prevProps.districts && this.props.districts.allCodes.length > 0) {
+            const list = this.props.districts.allCodes.map(code => {
+                return ({
+                    label: this.props.districts.byCode[code].name,
+                    code: this.props.districts.byCode[code].code,
+                    text: this.props.districts.byCode[code].name + ', '
+                        + this.props.districts.byCode[code].sn_name + ', '
+                        + this.props.districts.byCode[code].tm_name,
+                })
+            });
+            this.setState({ allSuggestions: list });
+        }
+
     }
 
     getSuggestionValue(suggestion) {
@@ -130,12 +156,12 @@ class AutosuggestInput extends React.Component {
 
     handleChange = () => (event, { newValue }) => {
         if (newValue && newValue.code) {
-            this.props.onChange(newValue.code)
+            this.props.onChange(newValue.code);
             this.setState({
                 value: newValue.text,
             });
         } else {
-            this.props.onChange(null)
+            this.props.onChange(null);
             this.setState({
                 value: newValue,
             });
@@ -159,7 +185,7 @@ class AutosuggestInput extends React.Component {
                 {...autosuggestProps}
                 inputProps={{
                     classes,
-                    placeholder: 'type in the institution name to select..',
+                    placeholder: this.props.institutions ? 'Type in the institution name to select' : 'Type in the district name to select',
                     value: this.state.value,
                     onChange: this.handleChange(),
                 }}
@@ -182,6 +208,7 @@ class AutosuggestInput extends React.Component {
 AutosuggestInput.propTypes = {
     classes: PropTypes.object.isRequired,
     institutions: PropTypes.array,
+    districts: PropTypes.array,
     onChange: PropTypes.func,
 };
 

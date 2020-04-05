@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from datetime import date, timedelta, datetime
 
-from ..common.models import Category, Channel
+from ..common.models import Category, Channel, District
 from ..incidents.models import Incident, IncidentType
 from django.contrib.auth.models import User
 from ..incidents.services import get_incident_by_id
@@ -14,11 +14,12 @@ from .functions import get_detailed_report, get_general_report, encode_column_na
 from ..common.data.Institutions import institutions
 from django.conf import settings
 from django.db.models import Count
+import collections, functools, operator
 
 def get_daily_incidents(incidentType):
     """
-    List dialy incidents to the given incident-type
-    Daily incidents concidered in election commission is, incidents logged from yesterday 4pm to today 4pm
+    List dialy incidents to the given incident-type.
+    Daily incidents concidered in election commission is, incidents logged from yesterday 4pm to today 4pm.
     """
     # yesterday at 4pm
     start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
@@ -41,36 +42,58 @@ def map_category(cat_voilence, cat_law, cat_other, total_list):
 
         if key == cat_voilence:
             totals["disputes"] = val
-        
+
         if key == cat_law:
             totals["violationOfLaws"] = val
 
         if key == cat_other:
             totals["others"] = val
-        
+
         totals["amount"] += val
 
     return totals
 
+def map_severity(total_list):
+    totals = {
+        "minor": 0,
+        "general": 0,
+        "major": 0,
+        "total": 0
+    }
 
-def get_daily_district_data():
+    for total in total_list:
+        key = total["severity"]
+        val = total["severity__count"]
+
+        # severity = 0 is unset
+        if key >= 0 and key <= 3:
+            totals["minor"] += val
+
+        elif key > 3 and key <= 7:
+            totals["general"] += val
+
+        elif key > 7:
+            totals["major"] += val
+
+        totals["total"] += val
+
+    return totals
+
+
+def get_daily_summary_data():
+    """ Function to get daily summary data on complaints for PDF export. """
     file_dict = {}
 
     file_dict["template"] = "/incidents/complaints/daily_summary_report.js"
     file_dict["date"] = date.today().strftime("%Y/%m/%d")
 
+    # get incident list
+    incidents = get_daily_incidents(IncidentType.COMPLAINT)
+
     # preload categories
-    cat_voilence = str(Category.objects.get(top_category='Violence').id)
-    cat_law = str(Category.objects.get(top_category='Violation of election law').id)
-    cat_other = str(Category.objects.get(top_category='Other').id)
-
-    # for time / date ranges
-    start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
-    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
-
-    # queryset - incidents
-
-    incidents = Incident.objects.all().filter(incidentType=IncidentType.COMPLAINT.name, election=settings.ELECTION)
+    cat_voilence = Category.objects.all().filter(top_category='Violence')
+    cat_law = Category.objects.all().filter(top_category='Violation of election law')
+    cat_other = Category.objects.all().filter(top_category='Other')
 
     # find eclk complaints
     eclk_users = User.objects.all().filter(profile__organization__code="eclk")
@@ -103,8 +126,57 @@ def get_daily_district_data():
     return file_dict
 
 
+def get_daily_district_data():
+    """ Function to get daily district data on complaints for PDF export. """
+    file_dict = {}
+
+    file_dict["template"] = "/incidents/complaints/daily_summary_report_districtwise.js"
+    file_dict["delectionDateate"] = date.today().strftime("%Y/%m/%d")
+
+    # preload categories
+    cat_voilence = str(Category.objects.get(top_category='Violence').id)
+    cat_law = str(Category.objects.get(top_category='Violation of election law').id)
+    cat_other = str(Category.objects.get(top_category='Other').id)
+
+    # for time / date ranges
+    start_datetime = (date.today() - timedelta(days=100)).strftime("%Y-%m-%d 16:00:00")
+    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+
+    incidents = Incident.objects.all().filter(incidentType=IncidentType.COMPLAINT.name, election=settings.ELECTION, created_date__range=(start_datetime, end_datetime))
+
+    file_dict["complaintByDistrict"] = []
+
+    districts = District.objects.all()
+    for district in districts:
+        district_incidents = incidents.filter(district=district.code)
+
+        category_counts = map_category(cat_voilence, cat_law, cat_other, district_incidents.values('category').annotate(Count("category")).order_by())
+        severity_counts = map_severity(district_incidents.values('severity').annotate(Count("severity")).order_by())
+
+        file_dict["complaintByDistrict"].append({
+            "violence": category_counts["disputes"],
+            "breachOfElectionLaws": category_counts["violationOfLaws"],
+            "other": category_counts["others"],
+            "minor": severity_counts["minor"],
+            "general": severity_counts["general"],
+            "major": severity_counts["major"],
+            "total": severity_counts["total"]
+        })
+
+    file_dict["complaintTotalsByType"] = dict(functools.reduce(operator.add,
+                                            map(collections.Counter, file_dict["complaintByDistrict"])))
+
+    # just fixing the case of not having a specific total
+    for key in file_dict["complaintByDistrict"][0]:
+        if key not in file_dict["complaintTotalsByType"]:
+            file_dict["complaintTotalsByType"][key] = 0
+
+    return file_dict
+
+
 
 def get_slip_data(incident_id):
+    """ Function to return inquiry slip data for PDF export. """
     incident = get_incident_by_id(incident_id)
     category = Category.objects.get(id=incident.category)
 
@@ -120,12 +192,14 @@ def get_slip_data(incident_id):
     return template_dict
 
 def get_daily_category_data():
+    """ Function to get daily categories data on complaints for PDF export. """
+    # TODO: signify the category types, so that helps to pull up category values without hardcoding as bellow
     file_dict = {}
 
     file_dict["template"] = "/incidents/complaints/daily_summery_report_categorywise.js"
     file_dict["date"] = date.today().strftime("%Y/%m/%d")
 
-    incidents = get_daily_incidents("COMPLAINT")
+    incidents = get_daily_incidents(IncidentType.COMPLAINT)
     file_dict["total"] = incidents.count()
 
     other_category = Category.objects.get(top_category='Other')
@@ -166,7 +240,7 @@ def get_daily_category_data():
     category_dict.append(violence_category_dict)
     category_dict.append(violation_category_dict)
     file_dict["categories"] = category_dict
-    
+
     return file_dict
 
 def get_category_summary(start_date, end_date, detailed_report, complain, inquiry):

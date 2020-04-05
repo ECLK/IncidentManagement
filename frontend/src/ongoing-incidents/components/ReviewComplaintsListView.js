@@ -83,7 +83,8 @@ function ReviewComplaintsListView({ classes, ...props }) {
   return (
     <Paper className={classes.root}>
       <h3>Review Complaints</h3>
-      <SearchForm 
+      <SearchForm
+        incidentType='COMPLAINT'
         categories={categories} 
         handleSearchClick={handleSearchClick}
         filters={filters}
@@ -102,6 +103,7 @@ function ReviewComplaintsListView({ classes, ...props }) {
         </Grid>
       </Grid>
       <IncidentListReview
+          incidentType='COMPLAINT'
           incidents={incidents}
           pageNumber={incidents.paging.pageNumber-1}
           count={incidents.paging.count}
