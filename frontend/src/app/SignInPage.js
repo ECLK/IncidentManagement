@@ -62,12 +62,12 @@ class SignInPage extends Component {
     handleSignIn = () => {
         const {signIn} = this.props;
         signIn(this.state.userName, this.state.password);
-    } 
+    }
 
     render() {
         const { classes, isSignedIn, location, rememberMe, toggleRememberMe } = this.props;
         let { from } = location.state || { from: { pathname: "/app/home" } };
-    
+
 
         if(isSignedIn){
             return <Redirect to={from} />;
@@ -83,16 +83,16 @@ class SignInPage extends Component {
                     <Typography component="h1" variant="h5">
                         Sign in
                 </Typography>
-                    <form className={classes.form} onSubmit={(e)=>{e.preventDefault(); this.handleSignIn()}}>
+                    <form className={classes.form} onSubmit={(e)=>{e.preventDefault(); this.handleSignIn()}} autoComplete="off">
                         <FormControl margin="normal" required fullWidth>
                             <InputLabel htmlFor="email">User Name</InputLabel>
-                            <Input id="email" name="email" value={this.state.userName} 
-                                onChange={(e)=>{this.setState({userName:e.target.value})}} autoFocus />
+                            <Input id="email" name="email" value={this.state.userName}
+                                onChange={(e)=>{this.setState({userName:e.target.value})}} autoFocus autoComplete="nope"/>
                         </FormControl>
                         <FormControl margin="normal" required fullWidth>
                             <InputLabel htmlFor="password">Password</InputLabel>
-                            <Input name="password" type="password" id="password" autoComplete="current-password"
-                                onChange={(e)=>{this.setState({password:e.target.value})}} />
+                            <Input name="password" type="password" id="password"
+                                onChange={(e)=>{this.setState({password:e.target.value})}} autoComplete="new-password" />
                             <input type="submit" style={{height: 0, width: 0, border: 'none', padding: 0,}} hidefocus="true" />
                         </FormControl>
                         <FormControlLabel
