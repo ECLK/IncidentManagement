@@ -36,8 +36,7 @@ def env_var(key, default=None):
 DEBUG = env_var('django_debug', True)
 
 ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost"
+    env_var('API_BASE_HOST', 'localhost'),
 ]
 
 
@@ -174,8 +173,15 @@ JWT_AUTH = {
     'JWT_VERIFY_EXPIRATION': False
 }
 
-CORS_ORIGIN_ALLOW_ALL = True
-X_FRAME_OPTIONS = "ALLOW ALL"
+# Application security
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = "DENY" # used to prevent clickjacking
+
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = [
+    env_var('APP_BASE_URL', 'http://localhost:3000'),
+]
 
 # file uload parameters
 MEDIA_URL = '/app/media/'
