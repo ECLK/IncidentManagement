@@ -166,6 +166,7 @@ REST_FRAMEWORK = {
     )
 }
 
+#TODO: set timeout settings
 JWT_AUTH = {
     'JWT_RESPONSE_PAYLOAD_HANDLER':
     'src.jwt.jwt_response_payload_handler',

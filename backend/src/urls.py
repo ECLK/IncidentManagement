@@ -29,7 +29,7 @@ from .file_upload import views as file_views
 from .reporting import views as report_views
 
 # JWT
-from rest_framework_jwt.views import obtain_jwt_token
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 
 #swagger
 from rest_framework_swagger.views import get_swagger_view
@@ -41,7 +41,7 @@ urlpatterns = [
 
     path("admin/", admin.site.urls),
     path("auth-jwt/", obtain_jwt_token),
-
+    path("auth-jwt-refresh/", refresh_jwt_token),
     path("categories/", common_views.CategoryList.as_view()),
     path("channels/", common_views.ChannelList.as_view()),
     path("districts/", common_views.DistrictList.as_view()),
