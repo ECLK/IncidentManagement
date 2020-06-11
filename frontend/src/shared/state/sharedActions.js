@@ -67,6 +67,10 @@ import {
     SIGN_IN_REQUEST_SUCCESS,
     SIGN_IN_REQUEST_ERROR,
 
+    SIGN_IN_REFRESH_TOKEN_REQUEST,
+    SIGN_IN_REFRESH_TOKEN_REQUEST_SUCCESS,
+    SIGN_IN_REFRESH_TOKEN_REQUEST_ERROR,
+
     TOGGLE_REMEBER_USER,
     SIGN_OUT,
     SIGN_OUT_ERROR,
@@ -77,7 +81,7 @@ import {
 
 } from './Shared.types'
 
-import { getIncident, getReporter  } from '../../api/incident';
+import { getIncident, getReporter } from '../../api/incident';
 import {
     getChannels,
     getElections,
@@ -94,7 +98,7 @@ import {
     getWards,
     getPoliticalParties
 } from '../../api/shared';
-import { signIn } from '../../api/user';
+import { signIn, refreshToken } from '../../api/user';
 import * as localStorage from '../../utils/localStorage';
 
 
@@ -692,6 +696,52 @@ export function fetchSignIn(userName, password) {
         }
     }
 }
+
+// refresh token
+
+export function requestSignInRefreshToken() {
+    return {
+        type: SIGN_IN_REFRESH_TOKEN_REQUEST,
+        isLoading: true
+    }
+}
+
+export function requestSignInRefreshTokenSuccess(response) {
+    return {
+        type: SIGN_IN_REFRESH_TOKEN_REQUEST_SUCCESS,
+        data: response,
+        error: null,
+        isLoading: false
+    }
+}
+
+export function requestSignInRefreshTokenError(errorResponse) {
+    return {
+        type: SIGN_IN_REFRESH_TOKEN_REQUEST_ERROR,
+        data: null,
+        error: errorResponse,
+        isLoading: false
+    }
+}
+
+export function fetchSignInRefreshToken() {
+    return async function (dispatch, getState) {
+        dispatch(requestSignInRefreshToken());
+        try {
+            const signInData = localStorage.read('ECIncidentManagementUser');
+            const signInRefreshTokenData = (await refreshToken(signInData.token)).data;
+
+            localStorage.write('ECIncidentManagementUser', signInRefreshTokenData.data);
+            const token = signInRefreshTokenData.data.token;
+
+            axios.defaults.headers.common['Authorization'] = "JWT " + token;
+            dispatch(requestSignInRefreshTokenSuccess(signInRefreshTokenData.data));
+        } catch (error) {
+            dispatch(requestSignInRefreshTokenError({ message: "Current token has expired"}))
+        }
+    }
+}
+
 
 //Remeber user
 export function toggleRememberUser(){

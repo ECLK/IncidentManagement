@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -171,7 +172,14 @@ JWT_AUTH = {
     'JWT_RESPONSE_PAYLOAD_HANDLER':
     'src.jwt.jwt_response_payload_handler',
 
-    'JWT_VERIFY_EXPIRATION': False
+    'JWT_VERIFY': True,
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_LEEWAY': 0,
+    # 'JWT_EXPIRATION_DELTA': timedelta(seconds=10),
+    'JWT_EXPIRATION_DELTA': timedelta(minutes=20),
+
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
 }
 
 # Application security

@@ -14,3 +14,7 @@ export const signIn = async (username, password) => {
     // return mockapi.signIn(username, password);
     return handler.post('/auth-jwt/', { username, password })
 }
+
+export const refreshToken = async (token) => {
+    return handler.post('/auth-jwt-refresh/', { token })
+}
