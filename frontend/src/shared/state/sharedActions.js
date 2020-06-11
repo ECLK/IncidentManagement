@@ -737,7 +737,7 @@ export function fetchSignInRefreshToken() {
             axios.defaults.headers.common['Authorization'] = "JWT " + token;
             dispatch(requestSignInRefreshTokenSuccess(signInRefreshTokenData.data));
         } catch (error) {
-            dispatch(requestSignInRefreshTokenError({ message: "Current token has expired"}))
+            dispatch(requestSignInRefreshTokenError({ message: "Signature has expired."}))
         }
     }
 }
