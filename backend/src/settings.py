@@ -205,4 +205,6 @@ FIXTURE_DIRS = [
 PDF_SERVICE_ENDPOINT = env_var('PDF_SERVICE_ENDPOINT')
 
 # election constant
+# with this constant all incident lists will be filtered
+# expectation is to strict dealings with current election only, to avoid confusion
 ELECTION = env_var('ELECTION')
