@@ -80,7 +80,8 @@ class ReportingAccessView(APIView):
             pdf_file = requests.get(res.json()["url"])
 
             response = HttpResponse(content=pdf_file.content, content_type='application/pdf')
-            response['Access-Control-Expose-Headers'] = 'Title'
+            response['Access-Control-Expose-Headers'] = 'Content-Length, Content-Type'
+            response['Access-Control-Allow-Origin'] = '*'
             response['Title'] = 'report_' + datetime.date.today().strftime("%Y%m%d%H%M%S") + ".pdf"
 
             return response
