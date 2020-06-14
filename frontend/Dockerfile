@@ -9,9 +9,9 @@ COPY . /app
 
 # set baseurl to get connected with backend API
 # ENV REACT_APP_API_BASE_URL=http://localhost:8000
-ENV REACT_APP_API_BASE_URL=https://api.incidents.ecdev.opensource.lk
+# ENV REACT_APP_API_BASE_URL=https://api.incidents.ecdev.opensource.lk
 
-ENV REACT_APP_RECAPTCHA_SITEKEY=6Lfk68EUAAAAAFjPNNX0Ht6JWG-BnioxuiaTAIvO
+# ENV REACT_APP_RECAPTCHA_SITEKEY=6Lfk68EUAAAAAFjPNNX0Ht6JWG-BnioxuiaTAIvO
 ENV NODE_OPTIONS=--max_old_space_size=4096
 RUN npm run build
 
