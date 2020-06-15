@@ -111,19 +111,6 @@ class IncidentComment(models.Model):
     class Meta:
         ordering = ("id",)
 
-
-def generate_inquiry_refId(election, category, institution):
-    ''' Function to generate refId for inquiries '''
-    current_count = Incident.objects.filter(incidentType=IncidentType.INQUIRY).filter(election=election).count()
-    refID = "EC/EDR/%s/INQ/%s/%s/%0.4d" % (election, institution, category, current_count+1)
-    return refID
-
-def generate_complaint_refId(election, district):
-    ''' Function to generate refId for complaints '''
-    current_count = Incident.objects.filter(incidentType=IncidentType.COMPLAINT).filter(election=election).count()
-    refID = "EC/EDR/%s/%s/%0.4d" % (election, district, current_count+1)
-    return refID
-
 class Incident(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -211,13 +198,6 @@ class Incident(models.Model):
     institution = models.CharField(max_length=200, blank=True, null=True) # this will save `code` of institute pulled from location-service API endpoint
 
     current_decision = models.CharField(max_length=50, default=None, null=True, blank=True)
-
-    def save(self, *args, **kwargs):
-        if self.incidentType == IncidentType.INQUIRY :
-            self.refId = generate_inquiry_refId(election=self.election, category=self.category, institution=self.institution)
-        else:
-            self.refId = generate_complaint_refId(election=self.election, district=self.district)
-        super(Incident, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ("created_date",)

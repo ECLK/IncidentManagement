@@ -20,6 +20,7 @@ from .serializers import (
     IncidentPoliceReportSerializer,
 )
 from .services import (
+    generate_refId,
     get_incident_by_id,
     create_incident_postscript,
     update_incident_postscript,
@@ -190,7 +191,10 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         return self.get_paginated_response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = IncidentSerializer(data=request.data)
+        incident_data = request.data
+        incident_data["refId"] = generate_refId(incident_data)
+
+        serializer = IncidentSerializer(data=incident_data)
 
         if serializer.is_valid() == False:
             print("errors: ", serializer.errors)
