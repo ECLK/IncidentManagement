@@ -51,19 +51,19 @@ class ReportingAccessView(APIView):
             incident_id = request.query_params.get('id')
             json_dict["file"] = get_slip_data(incident_id)
 
+        elif (template_type == "daily_summary"):
+            """
+            daily_summary_report_main
+            GET parameters => /?template_type=daily_summary
+            """
+            json_dict["file"] = get_daily_summary_data()
+
         elif (template_type == "daily_category"):
             """
             daily_summery_report_categorywise
             GET parameters => /?template_type=daily_category
             """
             json_dict["file"] = get_daily_category_data()
-
-        elif (template_type == "daily_summary"):
-            """
-            daily_summary_report_main
-            GET parameters => /?template_type=daily_district
-            """
-            json_dict["file"] = get_daily_summary_data()
 
         elif (template_type == "daily_district"):
             """
@@ -74,6 +74,9 @@ class ReportingAccessView(APIView):
 
 
         request_data = json.dumps(json_dict)
+        print("<<<<<<<<<<>>>>>>>>>>>")
+        print(request_data)
+        print("<<<<<<<<<<>>>>>>>>>>>")
         res = requests.post(url=endpoint_uri, data = request_data, headers={'content-type': 'application/json'})
 
         if res.status_code == 200:
