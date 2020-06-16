@@ -84,7 +84,7 @@ def get_daily_summary_data():
     """ Function to get daily summary data on complaints for PDF export. """
     file_dict = {}
 
-    file_dict["template"] = "/incidents/complaints/daily_summary_report.js"
+    file_dict["template"] = "incidents/complaints/daily_summary_report.js"
     file_dict["date"] = date.today().strftime("%Y/%m/%d")
 
     # preload categories
@@ -134,7 +134,7 @@ def get_daily_district_data():
     """ Function to get daily district data on complaints for PDF export. """
     file_dict = {}
 
-    file_dict["template"] = "/incidents/complaints/daily_summary_report_districtwise.js"
+    file_dict["template"] = "incidents/complaints/daily_summary_report_districtwise.js"
     file_dict["delectionDateate"] = date.today().strftime("%Y/%m/%d")
 
     # preload categories
@@ -200,7 +200,7 @@ def get_daily_category_data():
     # TODO: signify the category types, so that helps to pull up category values without hardcoding as bellow
     file_dict = {}
 
-    file_dict["template"] = "/incidents/complaints/daily_summery_report_categorywise.js"
+    file_dict["template"] = "incidents/complaints/daily_summery_report_categorywise.js"
     file_dict["date"] = date.today().strftime("%Y/%m/%d")
 
     incidents = get_daily_incidents(IncidentType.COMPLAINT)
