@@ -61,6 +61,10 @@ import {
     SIGN_IN_REQUEST_SUCCESS,
     SIGN_IN_REQUEST_ERROR,
 
+    SIGN_IN_REFRESH_TOKEN_REQUEST,
+    SIGN_IN_REFRESH_TOKEN_REQUEST_SUCCESS,
+    SIGN_IN_REFRESH_TOKEN_REQUEST_ERROR,
+
     TOGGLE_REMEBER_USER,
     SIGN_OUT,
     SIGN_OUT_ERROR,
@@ -286,6 +290,21 @@ export default function sharedReducer(state, action) {
             case SIGN_IN_REQUEST_ERROR:
                 draft.signedInUser.error = action.error;
                 return draft;
+
+            case SIGN_IN_REFRESH_TOKEN_REQUEST:
+                draft.signedInUser.isLoading = true;
+                return draft
+            case SIGN_IN_REFRESH_TOKEN_REQUEST_SUCCESS:
+                if (action.data.authenticated) {
+                    draft.signedInUser.data = action.data.user
+                    draft.signedInUser.isSignedIn = true;
+                }
+                draft.signedInUser.isLoading = false;
+                return draft;
+            case SIGN_IN_REFRESH_TOKEN_REQUEST_ERROR:
+                draft.signedInUser.error = action.error;
+                return draft;
+
             case TOGGLE_REMEBER_USER:
                 draft.signedInUser.rememberMe = !state.signedInUser.rememberMe
                 return draft;

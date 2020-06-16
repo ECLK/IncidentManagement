@@ -28,7 +28,7 @@ export default function TempReportList(){
                 <Grid item xs>
                     <Typography variant="h6"> View Daily Reports </Typography>
                     <List>
-                        <ListItemLink href={`${API_BASE_URL}/pdfgen/?template_type=daily_district`} target="_blank">
+                        <ListItemLink href={`${API_BASE_URL}/pdfgen/?template_type=daily_summary`} target="_blank">
                             <ListItemText primary="Daily Summary Report" />
                         </ListItemLink>
                         <ListItemLink href={`${API_BASE_URL}/pdfgen/?template_type=daily_category`} target="_blank">

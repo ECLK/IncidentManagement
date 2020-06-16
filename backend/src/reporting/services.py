@@ -87,13 +87,17 @@ def get_daily_summary_data():
     file_dict["template"] = "/incidents/complaints/daily_summary_report.js"
     file_dict["date"] = date.today().strftime("%Y/%m/%d")
 
-    # get incident list
-    incidents = get_daily_incidents(IncidentType.COMPLAINT)
-
     # preload categories
     cat_voilence = Category.objects.all().filter(top_category='Violence')
     cat_law = Category.objects.all().filter(top_category='Violation of election law')
     cat_other = Category.objects.all().filter(top_category='Other')
+
+    # for time / date ranges
+    start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
+    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+
+    # get incident list
+    incidents = Incident.objects.all().filter(incidentType=IncidentType.COMPLAINT.name, election=settings.ELECTION)
 
     # find eclk complaints
     eclk_users = User.objects.all().filter(profile__organization__code="eclk")

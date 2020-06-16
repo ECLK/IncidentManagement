@@ -3,6 +3,7 @@ import requests
 
 from .models import (
     Incident,
+    IncidentType,
     IncidentStatus,
     StatusType,
     SeverityType,
@@ -36,6 +37,24 @@ import json
 from rest_framework.renderers import StaticHTMLRenderer
 from django.db.models import Q
 from .permissions import *
+
+def generate_refId(incident_data) -> str:
+    incidentType = incident_data["incidentType"]
+    election = incident_data["election"]
+
+    if incident_data["incidentType"] == IncidentType.INQUIRY.name:
+        current_count = Incident.objects.filter(incidentType=IncidentType.INQUIRY).filter(election=election).count()
+        institution = incident_data["institution"]
+        category = incident_data["category"]
+        refID = "EC/EDR/%s/INQ/%s/%s/%0.4d" % (election, institution, category, current_count+1)
+        return refID
+    else:
+        current_count = Incident.objects.filter(incidentType=IncidentType.COMPLAINT).filter(election=election).count()
+        district = incident_data["district"]
+        refID = "EC/EDR/%s/%s/%0.4d" % (election, district, current_count+1)
+        return refID
+
+    return null
 
 def is_valid_incident(incident_id: str) -> bool:
     try:

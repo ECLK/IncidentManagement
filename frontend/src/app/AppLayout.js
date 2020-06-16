@@ -6,6 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import IdleTimer from "react-idle-timer";
 
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -17,8 +18,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
 import { Link, withRouter } from 'react-router-dom';
+import * as localStorage from "../utils/localStorage";
 
 import {
+    fetchSignInRefreshToken,
     initiateSignOut,
     fetchChannels,
     fetchElections,
@@ -32,9 +35,11 @@ import {
     fetchPollingStations,
     fetchPoliceStations,
     fetchPoliceDivisions,
-    fetchWards } from '../shared/state/sharedActions'
-import { changeLanguage } from '../shared/state/sharedActions';
+    fetchWards,
+    changeLanguage
+} from '../shared/state/sharedActions';
 import { loadUsers } from '../user/state/userActions'
+import { showModal, hideModal } from "../modals/state/modal.actions";
 
 import RootModal from '../modals/components/RootModal'
 
@@ -130,12 +135,63 @@ const styles = theme => ({
 });
 
 class DomainContainer extends React.Component {
-  state = {
-    open: true,
-    anchorEl: null,
-    anchorLang: null,
-    menuAnchorEl: null
-  };
+    constructor(props) {
+        super(props)
+        
+        this.state = {
+            open: true,
+            anchorEl: null,
+            anchorLang: null,
+            menuAnchorEl: null,
+            authToken: null,
+            anchorNotification: null,
+            notifications: [],
+            unreadNotificationCount: 0,
+
+            timeout: 1000 * 60 * 15,
+            // timeout: 1000 * 5 * 1,
+            isTimedOut: false,
+        }
+        this.idleTimer = null
+        this.onAction = this._onAction.bind(this)
+        this.onActive = this._onActive.bind(this)
+        this.onIdle = this._onIdle.bind(this)
+    }
+
+    /**
+     * user idle actions
+     */
+
+    _onAction(e) {
+        // console.log("user did something", e);
+        this.setState({ isTimedOut: false });
+    }
+
+    _onActive(e) {
+        // console.log("user is active", e);
+        this.setState({ isTimedOut: false });
+    }
+
+    _onIdle(e) {
+        // console.log("user is idle", e);
+        const isTimedOut = this.state.isTimedOut;
+        if (isTimedOut) {
+        this.props.hideIdleTimeOutModal();
+        this.handleSignOut();
+        } else {
+        this.props.showIdleTimeOutModal()
+        this.idleTimer.reset();
+        this.setState({ isTimedOut: true });
+        }
+    }
+
+    refreshTokenScheduler = (signInData) => {
+        if(!this.state.isTimedOut && signInData){
+        this.props.refreshToken()
+        }
+    }
+
+
 
   componentDidMount() {
     this.props.getChannels();
@@ -152,6 +208,12 @@ class DomainContainer extends React.Component {
     this.props.getPoliceDivisions();
     this.props.getWards();
     this.props.loadAllUsers();
+    const signInData = localStorage.read("ECIncidentManagementUser");
+    signInData && this.setState({ authToken: signInData.token });
+
+    // following is only neccessary when you have to periodically get new tokens
+    this.interval = setInterval(() => (localStorage.read("ECIncidentManagementUser")) ? this.refreshTokenScheduler(signInData) : "", 1000 * 60 * 15);
+    // this.interval = setInterval(() => (localStorage.read("ECIncidentManagementUser")) ? this.refreshTokenScheduler(signInData) : "", 1000 * 5 * 1);
   }
 
   handleDrawerOpen = () => {
@@ -214,6 +276,15 @@ class DomainContainer extends React.Component {
 
     return (
       <div className={classes.root}>
+
+        <IdleTimer
+            ref={ref => { this.idleTimer = ref }}
+            element={document}
+            onActive={this.onActive}
+            onIdle={this.onIdle}
+            onAction={this.onAction}
+            debounce={250}
+            timeout={this.state.timeout} />
         <CssBaseline />
         <AppBar
           position="static"
@@ -409,6 +480,15 @@ const mapDispatchToProps = (dispatch) => {
         },
         loadAllUsers: () => {
             dispatch(loadUsers())
+        },
+        showIdleTimeOutModal: () => {
+          dispatch(showModal('IDLE_TIME_OUT_MODAL'))
+        },
+        hideIdleTimeOutModal: () => {
+          dispatch(hideModal())
+        },
+        refreshToken: () => {
+          dispatch(fetchSignInRefreshToken())
         }
     }
 }

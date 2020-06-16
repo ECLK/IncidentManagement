@@ -363,6 +363,7 @@ function IncidentFormInternal(props) {
             files: selectedFiles
         });
     };
+    const [fileError, setFileError] = useState(false);
 
     const tableRowAdd = (setFieldValue, fieldName, tableData, record) => {
         return new Promise((resolve, reject) => {
@@ -1051,7 +1052,7 @@ function IncidentFormInternal(props) {
                                             <InputLabel htmlFor="election">
                                                 Upload File (You can upload multiple files)
                                             </InputLabel>
-                                            <FileUploader files={state.files} setFiles={handleFileSelect} />
+                                            <FileUploader files={state.files} setFiles={handleFileSelect} setFileError={setFileError} />
                                         </Grid>
                                     )}
                                 </Grid>
@@ -1575,7 +1576,9 @@ function IncidentFormInternal(props) {
                                         type="submit"
                                         variant="contained"
                                         color="primary"
-                                        className={classes.button}>
+                                        className={classes.button}
+                                        disabled={fileError}
+                                        >
                                         {" "}
                                         Submit
                                     </Button>
