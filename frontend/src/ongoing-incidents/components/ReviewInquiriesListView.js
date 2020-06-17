@@ -101,7 +101,7 @@ function ReviewInquiriesListView({ classes, ...props }) {
                 incidents={incidents}
                 pageNumber={incidents.paging.pageNumber-1}
                 count={incidents.paging.count}
-                handleRowClick={incidentId => props.history.push(`/app/review/${incidentId}`)}
+                handleRowClick={incidentId => window.open(`/app/review/${incidentId}`, '_blank')}
                 handlePageChange={handlePageChange}
             />
         </Paper>
