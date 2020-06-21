@@ -53,13 +53,16 @@ const styles = (theme) => ({
   submit: {
     marginTop: theme.spacing.unit * 3,
   },
+  recaptcha: {
+    display: (process.env.NODE_ENV === "production") ? "" : "none"
+  }
 });
 
 class SignInPage extends Component {
   state = {
     userName: null,
     password: null,
-    incidentRecaptcha: null,
+    incidentRecaptcha: (process.env.NODE_ENV === "production") ? null : true,
   };
 
   handleSignIn = (e) => {
@@ -155,6 +158,7 @@ class SignInPage extends Component {
               onChange={(e) => {
                 this.setIncidentRecaptcha(recaptchaRef.current.getValue());
               }}
+              className={classes.recaptcha}
             />
             <Button
               type="button"
@@ -163,6 +167,7 @@ class SignInPage extends Component {
               color="primary"
               className={classes.submit}
               onClick={(e) => this.handleSignIn(e)}
+              // disabled={!this.state.incidentRecaptcha}
               disabled={!this.state.incidentRecaptcha}
             >
               Sign in
