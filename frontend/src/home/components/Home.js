@@ -34,7 +34,7 @@ const Home = ({classes, ...props}) =>{
                     </Card>
                 </Grid>
                 
-                <Grid item style={{paddingTop:"10px"}}>
+                {/* <Grid item style={{paddingTop:"10px"}}>
                     <Card xs={6}>
                         <CardHeader 
                             title="Incidents Linked to You"
@@ -45,7 +45,7 @@ const Home = ({classes, ...props}) =>{
                             />
                         </CardContent>
                     </Card>
-                </Grid>
+                </Grid> */}
                 </>
             )}
 
