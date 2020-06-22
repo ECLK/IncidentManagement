@@ -78,6 +78,8 @@ class Reporter(models.Model):
 
     class Meta:
         ordering = ("id",)
+    def __str__(self):
+        return '%s -- (m):%s' % (self.name, self.mobile)
 
 
 class IncidentStatus(models.Model):

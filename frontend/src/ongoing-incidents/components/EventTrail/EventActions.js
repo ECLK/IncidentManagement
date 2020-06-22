@@ -144,7 +144,7 @@ const EventActions = (props) => {
                         <PermIdentityIcon />
                     </Avatar>
                     <ListItemText primary="Assigned to" secondary={activeIncident.assignee ? activeIncident.assignee.displayname : ""} />
-
+{/* 
                     {activeIncident.currentStatus !== 'CLOSED' &&
                         activeIncident.currentStatus !== 'INVALIDATED' &&
                         userCan(currentUser, activeIncident, USER_ACTIONS.CAN_CHANGE_ASSIGNEE) &&
@@ -153,7 +153,7 @@ const EventActions = (props) => {
                                 <EditIcon />
                             </IconButton>
                         </ListItemSecondaryAction>
-                    }
+                    } */}
                 </ListItem>
 
                 <ListItem>
@@ -210,7 +210,7 @@ const EventActions = (props) => {
                 {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_ESCALATE_INCIDENT) &&
                     <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => props.modalAction('ESCALATE_MODAL')}>
                         <ArrowUpwardIcon className={classes.actionButtonIcon} />
-                        Escalate
+                        Escalate Incident
                     </Button>
                 }
 
@@ -218,7 +218,7 @@ const EventActions = (props) => {
                 {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_ESCALATE_EXTERNAL) &&
                     <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => props.modalAction('ESCALLATE_OUTSIDE')}>
                         <SubdirectoryArrowLeftIcon className={classes.actionButtonIcon} />
-                        Refer to organization
+                        Assign Incident
                     </Button>
                 }
 

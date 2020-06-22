@@ -160,6 +160,7 @@ function IncidentFormInternal(props) {
         elections,
         politicalParties
     } = useSelector((state) => state.shared);
+    const reporters = useSelector(state => state.incident.reporters)
 
     const [state, setState] = useState({
         incidentType: "COMPLAINT",
@@ -336,13 +337,13 @@ function IncidentFormInternal(props) {
         }
         const incident = incidentUtils.getIncident(paramIncidentId);
         var initData = { ...state, ...incident };
-        const reporter = reporter;
+        const reporter = incident ? reporters.byIds[incident.reporter] : "";
         if (reporter) {
             Object.assign(initData, {
                 reporterName: reporter.name,
                 reporterType: reporter.reporter_type,
                 reporterEmail: reporter.email,
-                reporterMobile: reporter.telephone,
+                reporterMobile: reporter.mobile,
                 reporterAddress: reporter.address,
                 reporterAffiliation: reporter.politicalAffiliation,
                 accusedName: reporter.accusedName,

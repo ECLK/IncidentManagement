@@ -19,6 +19,8 @@ handler.interceptors.response.use(function (response) {
   // handling session expire
   if (error.response.status == 401 && error.response.data.data.message == "Signature has expired."){
     signOut()
+  } else if (error.response.status == 400 && error.response.data.data.non_field_errors.includes("Signature has expired.")){
+    signOut()
   }
   return Promise.reject(error);
 });
