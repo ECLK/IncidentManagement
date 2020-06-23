@@ -29,6 +29,10 @@ export const getIncidents = async (filters, page = 1) => {
     query += "&severity=" + filters.severity;
   }
 
+  if (filters.category) {
+    query += "&category=" + filters.category;
+  }
+
   if (filters.status) {
     query += "&status=" + filters.status;
   }
