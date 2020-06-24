@@ -223,6 +223,8 @@ def get_daily_category_data():
         subcategory_data_dict = {}
         subcategory_data_dict["name"] = category.sn_sub_category
         subcategory_data_dict["count"] = incidents.filter(category=category.id).count()
+        if incidents.filter(category=category.id).count() == 0:
+            continue
         subcategory_dict.append(subcategory_data_dict)
     violence_category_dict["subCategories"] = subcategory_dict
 
@@ -237,6 +239,8 @@ def get_daily_category_data():
         subcategory_data_dict = {}
         subcategory_data_dict["name"] = category.sn_sub_category
         subcategory_data_dict["count"] = incidents.filter(category=category.id).count()
+        if incidents.filter(category=category.id).count() == 0:
+            continue
         subcategory_dict.append(subcategory_data_dict)
     violation_category_dict["subCategories"] = subcategory_dict
 
