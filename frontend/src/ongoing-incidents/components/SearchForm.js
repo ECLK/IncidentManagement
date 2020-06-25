@@ -240,8 +240,8 @@ function SearchForm(props) {
                         <MenuItem value="">
                           <em>None</em>
                         </MenuItem>
-                        {categories.map(({ sub_category }) => (
-                          <MenuItem value={sub_category}>
+                        {categories.map(({ id, sub_category }) => (
+                          <MenuItem value={id}>
                             {sub_category}
                           </MenuItem>
                         ))}
