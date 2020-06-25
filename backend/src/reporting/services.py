@@ -154,12 +154,6 @@ def get_incidents_filtered_by_division(incidents: Incident, division: Division):
     incidents_filtered = incidents.filter(q_objects)
     return incidents_filtered
 
-def get_top_category_counts(type=IncidentType.COMPLAINT.name):
-    """ returns top categories with the counts """
-    # TODO: update this function with type checking on Category model, when model is updated
-    count = []
-
-
 def get_daily_district_center_data():
     """ function to get dialy incident data for district center report generation """
     file_dict = {}
@@ -167,11 +161,16 @@ def get_daily_district_center_data():
     file_dict["template"] = "incidents/complaints/daily_summary_report_districtwise.js"
     file_dict["electionDate"] = date.today().strftime("%Y/%m/%d")
 
-    # TODO: use the line below when pushing full work
-    # incidents = get_daily_incidents(IncidentType.COMPLAINT)
+    # totals
+    violence=0
+    breachOfElectionLaws=0
+    other=0
+    minor=0
+    general=0
+    major=0
+    total=0
 
-    # TODO: will be using all incidents for test purposes at the moment
-    incidents = Incident.objects.all()
+    incidents = get_daily_incidents(IncidentType.COMPLAINT)
 
     districts_centers = []
     districts = District.objects.all()
@@ -193,7 +192,7 @@ def get_daily_district_center_data():
             district["breachOfElectionLaws"] = 0
             district["minor"] = 0
             district["general"] = 0
-            district["minor"] = 0
+            district["major"] = 0
             districts_centers.append(district)
             continue
 
@@ -206,15 +205,15 @@ def get_daily_district_center_data():
             district["breachOfElectionLaws"] = 0
             district["minor"] = 0
             district["general"] = 0
-            district["minor"] = 0
+            district["major"] = 0
             districts_centers.append(district)
             continue
 
         district["name"] = dt.name
         district["total"] = dc_incidents.count()
+        total += dc_incidents.count()
 
         # get category wise counts
-        # preload categories
         cat_voilence = Category.objects.all().filter(top_category='Violence')
         cat_law = Category.objects.all().filter(top_category='Violation of election law')
         cat_other = Category.objects.all().filter(top_category='Other')
@@ -222,18 +221,32 @@ def get_daily_district_center_data():
         district["other"] = category_counts["others"]
         district["violence"] = category_counts["disputes"]
         district["breachOfElectionLaws"] = category_counts["violationOfLaws"]
+        other += category_counts["others"]
+        violence += category_counts["disputes"]
+        breachOfElectionLaws += category_counts["violationOfLaws"]
 
         # get serverity wise counts
         severity_counts = map_severity(dc_incidents.values('severity').annotate(Count("severity")).order_by())
         district["minor"] = severity_counts["minor"]
         district["general"] = severity_counts["general"]
-        district["minor"] = severity_counts["minor"]
+        district["major"] = severity_counts["major"]
+        minor += severity_counts["minor"]
+        general += severity_counts["general"]
+        major += severity_counts["major"]
 
         districts_centers.append(district)
 
     file_dict["complaintByDistrict"] = districts_centers
 
-    # TODO: need to get the full totals
+    file_dict["complaintTotalsByType"] = {
+        "violence": violence,
+        "breachOfElectionLaws": breachOfElectionLaws,
+        "other": other,
+        "minor": minor,
+        "general": general,
+        "major": major,
+        "total": total
+    }
 
     return file_dict
 

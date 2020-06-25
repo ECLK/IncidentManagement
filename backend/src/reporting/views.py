@@ -65,12 +65,12 @@ class ReportingAccessView(APIView):
             """
             json_dict["file"] = get_daily_category_data()
 
-        elif (template_type == "daily_district"):
-            """
-            daily_summary_report_districtwise
-            GET parameters => /?template_type=daily_district
-            """
-            json_dict["file"] = get_daily_district_data()
+        # elif (template_type == "daily_district"):
+        #     """
+        #     daily_summary_report_districtwise
+        #     GET parameters => /?template_type=daily_district
+        #     """
+        #     json_dict["file"] = get_daily_district_data()
 
         elif (template_type == "daily_district_centers"):
             """
@@ -81,24 +81,19 @@ class ReportingAccessView(APIView):
 
 
         request_data = json.dumps(json_dict)
-        # TODO: remove below line once done with this function
-        # eg url to test: http://localhost:8000/pdfgen/?template_type=daily_district_centers
-        return HttpResponse(status='200', content=request_data, content_type='application/json')
+        res = requests.post(url=endpoint_uri, data = request_data, headers={'content-type': 'application/json'})
 
-        # TODO: commented below for test purposes...
-        # res = requests.post(url=endpoint_uri, data = request_data, headers={'content-type': 'application/json'})
+        if res.status_code == 200:
+            pdf_file = requests.get(res.json()["url"])
 
-        # if res.status_code == 200:
-        #     pdf_file = requests.get(res.json()["url"])
+            response = HttpResponse(content=pdf_file.content, content_type='application/pdf')
+            response['Access-Control-Expose-Headers'] = 'Content-Length, Content-Type'
+            response['Access-Control-Allow-Origin'] = '*'
+            response['Title'] = 'report_' + datetime.date.today().strftime("%Y%m%d%H%M%S") + ".pdf"
 
-        #     response = HttpResponse(content=pdf_file.content, content_type='application/pdf')
-        #     response['Access-Control-Expose-Headers'] = 'Content-Length, Content-Type'
-        #     response['Access-Control-Allow-Origin'] = '*'
-        #     response['Title'] = 'report_' + datetime.date.today().strftime("%Y%m%d%H%M%S") + ".pdf"
-
-        #     return response
-        # else:
-        #     return HttpResponse(status=res.status_code, content=res.text, content_type='application/json')
+            return response
+        else:
+            return HttpResponse(status=res.status_code, content=res.text, content_type='application/json')
 
 class ReportingView(APIView):
     """
