@@ -182,7 +182,7 @@ def get_daily_district_center_data():
             continue
 
         try:
-            center = Division.objects.get(Q(name__icontains=dt.name) & Q(organization_id=1))
+            center = Division.objects.get(Q(name__contains=dt.name) & Q(organization_id=1))
         except ObjectDoesNotExist:
             district["name"] = dt.name
             district["total"] = 0
