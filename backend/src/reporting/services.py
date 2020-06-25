@@ -4,11 +4,15 @@ from django.db import connection
 import pandas as pd
 import numpy as np
 from datetime import date, timedelta, datetime
+from django.db.models import Q
 
 from ..common.models import Category, Channel, District
 from ..incidents.models import Incident, IncidentType
+from ..custom_auth.models import Organization, Division, Profile
 from django.contrib.auth.models import User
+
 from ..incidents.services import get_incident_by_id
+
 from .functions import get_detailed_report, get_general_report, encode_column_names, get_subcategory_report, \
     incident_type_query, incident_list_query, date_list_query, encode_value, get_subcategory_categorized_report
 from ..common.data.Institutions import institutions
@@ -129,6 +133,26 @@ def get_daily_summary_data():
 
     return file_dict
 
+def get_incidents_filtered_by_division(incidents: Incident, division: Division):
+    """
+    function to filter incidents by given division
+    if users found, return Incident queryset
+    if user not found, return False
+    """
+
+    profiles = Profile.objects.filter(division=division)
+
+    # return false if no users found
+    if (len(profiles) == 0):
+        return False
+
+    q_objects = Q()
+    for profile in profiles:
+        q_objects |= Q(created_by=profile.user)
+
+    incidents_filtered = incidents.filter(q_objects)
+    return incidents_filtered
+
 def get_daily_district_center_data():
     """ function to get dialy incident data for district center report generation """
     file_dict = {}
@@ -141,18 +165,34 @@ def get_daily_district_center_data():
 
     # TODO: will be using all incidents for test purposes at the moment
     incidents = Incident.objects.all()
+    # TODO: following should be the incident count of all incident only falls under EC district centers except EC HQ
     file_dict["total"] = incidents.count()
 
     # Other count is not required on the report. yet will be adding it.
     file_dict["other"] = incidents.filter(category='Other').count()
 
-    # TODO:2) Get User object list in Division-wise
-    # TODO:3) iterate and filter by division eg: Colombo
-    # TODO:4) get the total count for Colombo division
+    # TODO:2) Get User object list in Division-wise -- done
+    org_eclk = Organization.objects.get(code="eclk")
+    district_centers = Division.objects.filter(Q(organization=org_eclk) & Q(is_hq=False))
+
+    districts = []
+    for center in district_centers:
+        district = {}
+        dc_incidents = get_incidents_filtered_by_division(incidents, center)
+        if (not dc_incidents):
+            continue
+        district["name"] = center.name
+        district["total"] = dc_incidents.count()
+        districts.append(district)
+
+    file_dict["complaintByDistrict"] = districts
+
+    # TODO:3) iterate and filter by division eg: Colombo -- done
+    # TODO:4) get the total count for Colombo division -- done
     # TODO:5) Get Category object list in top_category-wise
     # TODO:6) iterate and get, within Colombo top-category counts
-    # TODO:7) Create object list for Severity 
-    # TODO:8) iterate and get, within Colombo severity counts 
+    # TODO:7) Create object list for Severity
+    # TODO:8) iterate and get, within Colombo severity counts
 
     return file_dict
 

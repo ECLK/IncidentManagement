@@ -12,7 +12,7 @@ from django.conf import settings
 import urllib
 import os
 
-from .services import get_police_division_summary, get_category_summary, \
+from .services import get_police_division_summary, get_category_summary, get_daily_district_center_data, \
     get_mode_summary, get_severity_summary, get_status_summary, get_subcategory_summary, get_district_summary, \
     get_incident_date_summary, get_slip_data, get_daily_category_data, get_daily_summary_data, get_daily_district_data
 from .functions import apply_style, decode_column_names, incident_type_title, incident_type_query
@@ -72,21 +72,33 @@ class ReportingAccessView(APIView):
             """
             json_dict["file"] = get_daily_district_data()
 
+        elif (template_type == "daily_district_centers"):
+            """
+            daily_summary_report_districtwise
+            GET parameters => /?template_type=daily_district_centers
+            """
+            json_dict["file"] = get_daily_district_center_data()
+
 
         request_data = json.dumps(json_dict)
-        res = requests.post(url=endpoint_uri, data = request_data, headers={'content-type': 'application/json'})
+        # TODO: remove below line once done with this function
+        # eg url to test: http://localhost:8000/pdfgen/?template_type=daily_district_centers
+        return HttpResponse(status='200', content=request_data, content_type='application/json')
 
-        if res.status_code == 200:
-            pdf_file = requests.get(res.json()["url"])
+        # TODO: commented below for test purposes...
+        # res = requests.post(url=endpoint_uri, data = request_data, headers={'content-type': 'application/json'})
 
-            response = HttpResponse(content=pdf_file.content, content_type='application/pdf')
-            response['Access-Control-Expose-Headers'] = 'Content-Length, Content-Type'
-            response['Access-Control-Allow-Origin'] = '*'
-            response['Title'] = 'report_' + datetime.date.today().strftime("%Y%m%d%H%M%S") + ".pdf"
+        # if res.status_code == 200:
+        #     pdf_file = requests.get(res.json()["url"])
 
-            return response
-        else:
-            return HttpResponse(status=res.status_code, content=res.text, content_type='application/json')
+        #     response = HttpResponse(content=pdf_file.content, content_type='application/pdf')
+        #     response['Access-Control-Expose-Headers'] = 'Content-Length, Content-Type'
+        #     response['Access-Control-Allow-Origin'] = '*'
+        #     response['Title'] = 'report_' + datetime.date.today().strftime("%Y%m%d%H%M%S") + ".pdf"
+
+        #     return response
+        # else:
+        #     return HttpResponse(status=res.status_code, content=res.text, content_type='application/json')
 
 class ReportingView(APIView):
     """
