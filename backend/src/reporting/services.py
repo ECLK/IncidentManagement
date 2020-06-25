@@ -129,6 +129,32 @@ def get_daily_summary_data():
 
     return file_dict
 
+def get_daily_district_center_data():
+    """ function to get dialy incident data for district center report generation """
+    file_dict = {}
+
+    file_dict["template"] = "incidents/complaints/daily_summary_report_districtwise.js"
+    file_dict["delectionDateate"] = date.today().strftime("%Y/%m/%d")
+
+    # TODO: use the line below when pushing full work
+    # incidents = get_daily_incidents(IncidentType.COMPLAINT)
+
+    # TODO: will be using all incidents for test purposes at the moment
+    incidents = Incident.objects.all()
+    file_dict["total"] = incidents.count()
+
+    # Other count is not required on the report. yet will be adding it.
+    file_dict["other"] = incidents.filter(category='Other').count()
+
+    # TODO:2) Get User object list in Division-wise
+    # TODO:3) iterate and filter by division eg: Colombo
+    # TODO:4) get the total count for Colombo division
+    # TODO:5) Get Category object list in top_category-wise
+    # TODO:6) iterate and get, within Colombo top-category counts
+    # TODO:7) Create object list for Severity 
+    # TODO:8) iterate and get, within Colombo severity counts 
+
+    return file_dict
 
 def get_daily_district_data():
     """ Function to get daily district data on complaints for PDF export. """
