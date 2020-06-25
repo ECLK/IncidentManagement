@@ -4,16 +4,21 @@ from django.db import connection
 import pandas as pd
 import numpy as np
 from datetime import date, timedelta, datetime
+from django.db.models import Q
+from django.db.models import Count
+from django.core.exceptions import ObjectDoesNotExist
 
 from ..common.models import Category, Channel, District
 from ..incidents.models import Incident, IncidentType
+from ..custom_auth.models import Organization, Division, Profile
 from django.contrib.auth.models import User
+
 from ..incidents.services import get_incident_by_id
+
 from .functions import get_detailed_report, get_general_report, encode_column_names, get_subcategory_report, \
     incident_type_query, incident_list_query, date_list_query, encode_value, get_subcategory_categorized_report
 from ..common.data.Institutions import institutions
 from django.conf import settings
-from django.db.models import Count
 import collections, functools, operator
 
 def get_daily_incidents(incidentType):
@@ -129,6 +134,121 @@ def get_daily_summary_data():
 
     return file_dict
 
+def get_incidents_filtered_by_division(incidents: Incident, division: Division):
+    """
+    function to filter incidents by given division
+    if users found, returns Incident queryset
+    if user not found, returns False
+    """
+
+    profiles = Profile.objects.filter(division=division)
+
+    # return false if no users found
+    if (len(profiles) == 0):
+        return False
+
+    q_objects = Q()
+    for profile in profiles:
+        q_objects |= Q(created_by=profile.user)
+
+    incidents_filtered = incidents.filter(q_objects)
+    return incidents_filtered
+
+def get_daily_district_center_data():
+    """ function to get dialy incident data for district center report generation """
+    file_dict = {}
+
+    file_dict["template"] = "incidents/complaints/daily_summary_report_districtwise.js"
+    file_dict["electionDate"] = date.today().strftime("%Y/%m/%d")
+
+    # totals
+    violence=0
+    breachOfElectionLaws=0
+    other=0
+    minor=0
+    general=0
+    major=0
+    total=0
+
+    incidents = get_daily_incidents(IncidentType.COMPLAINT)
+
+    districts_centers = []
+    districts = District.objects.all()
+    for dt in districts:
+        district = {}
+
+        # removing 'All Island from districts'
+        if dt.name in "All Island":
+            continue
+
+        try:
+            center = Division.objects.get(Q(name__icontains=dt.name) & Q(organization_id=1))
+            print(center)
+        except ObjectDoesNotExist:
+            district["name"] = dt.name
+            district["total"] = 0
+            district["other"] = 0
+            district["violence"] = 0
+            district["breachOfElectionLaws"] = 0
+            district["minor"] = 0
+            district["general"] = 0
+            district["major"] = 0
+            districts_centers.append(district)
+            continue
+
+        dc_incidents = get_incidents_filtered_by_division(incidents, center)
+        if (not dc_incidents):
+            district["name"] = dt.name
+            district["total"] = 0
+            district["other"] = 0
+            district["violence"] = 0
+            district["breachOfElectionLaws"] = 0
+            district["minor"] = 0
+            district["general"] = 0
+            district["major"] = 0
+            districts_centers.append(district)
+            continue
+
+        district["name"] = dt.name
+        district["total"] = dc_incidents.count()
+        total += dc_incidents.count()
+
+        # get category wise counts
+        cat_voilence = Category.objects.all().filter(top_category='Violence')
+        cat_law = Category.objects.all().filter(top_category='Violation of election law')
+        cat_other = Category.objects.all().filter(top_category='Other')
+        category_counts = map_category(cat_voilence, cat_law, cat_other, dc_incidents.values('category').annotate(Count("category")).order_by())
+        district["other"] = category_counts["others"]
+        district["violence"] = category_counts["disputes"]
+        district["breachOfElectionLaws"] = category_counts["violationOfLaws"]
+        other += category_counts["others"]
+        violence += category_counts["disputes"]
+        breachOfElectionLaws += category_counts["violationOfLaws"]
+
+        # get serverity wise counts
+        severity_counts = map_severity(dc_incidents.values('severity').annotate(Count("severity")).order_by())
+        district["minor"] = severity_counts["minor"]
+        district["general"] = severity_counts["general"]
+        district["major"] = severity_counts["major"]
+        minor += severity_counts["minor"]
+        general += severity_counts["general"]
+        major += severity_counts["major"]
+
+        districts_centers.append(district)
+
+    file_dict["complaintByDistrict"] = districts_centers
+
+    file_dict["complaintTotalsByType"] = {
+        "violence": violence,
+        "breachOfElectionLaws": breachOfElectionLaws,
+        "other": other,
+        "minor": minor,
+        "general": general,
+        "major": major,
+        "total": total
+    }
+
+    return file_dict
 
 def get_daily_district_data():
     """ Function to get daily district data on complaints for PDF export. """
@@ -138,9 +258,9 @@ def get_daily_district_data():
     file_dict["delectionDateate"] = date.today().strftime("%Y/%m/%d")
 
     # preload categories
-    cat_voilence = str(Category.objects.get(top_category='Violence').id)
-    cat_law = str(Category.objects.get(top_category='Violation of election law').id)
-    cat_other = str(Category.objects.get(top_category='Other').id)
+    cat_voilence = Category.objects.all().filter(top_category='Violence')
+    cat_law = Category.objects.all().filter(top_category='Violation of election law')
+    cat_other = Category.objects.all().filter(top_category='Other')
 
     # for time / date ranges
     start_datetime = (date.today() - timedelta(days=100)).strftime("%Y-%m-%d 16:00:00")
