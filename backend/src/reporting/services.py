@@ -183,7 +183,6 @@ def get_daily_district_center_data():
 
         try:
             center = Division.objects.get(Q(name__icontains=dt.name) & Q(organization_id=1))
-            print(center)
         except ObjectDoesNotExist:
             district["name"] = dt.name
             district["total"] = 0
@@ -324,10 +323,14 @@ def get_daily_category_data():
     file_dict["date"] = date.today().strftime("%Y/%m/%d")
 
     incidents = get_daily_incidents(IncidentType.COMPLAINT)
+
+    # TODO: is fixed for EC HQ atm. change this to filter by requested EC division.
+    ec_hq = Division.objects.get(is_default_division=True)
+    incidents = get_incidents_filtered_by_division(incidents, ec_hq)
     file_dict["total"] = incidents.count()
 
     other_category = Category.objects.get(top_category='Other')
-    file_dict["other"] = incidents.filter(category='Other').count()
+    file_dict["other"] = incidents.filter(category=other_category.id).count()
 
     # collecting all category data
     category_dict = []
@@ -337,7 +340,7 @@ def get_daily_category_data():
     violence_category_dict["categoryNameSinhala"] = "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා"
     violence_category_dict["categoryNameTamil"] = "தேர்தல் வன்முறைகள்"
 
-    violence_subcategories = Category.objects.all().filter(top_category='Violence')
+    violence_subcategories = Category.objects.filter(top_category='Violence')
     subcategory_dict = []
     for category in violence_subcategories:
         subcategory_data_dict = {}
@@ -353,7 +356,7 @@ def get_daily_category_data():
     violation_category_dict["categoryNameSinhala"] = "මැතිවරණ නීති උල්ලංඝනය"
     violation_category_dict["categoryNameTamil"] = "தேர்தல் சட்டங்களை மீறுதல்"
 
-    violation_subcategories = Category.objects.all().filter(top_category='Violation of election law')
+    violation_subcategories = Category.objects.filter(top_category='Violation of election law')
     subcategory_dict = []
     for category in violation_subcategories:
         subcategory_data_dict = {}
