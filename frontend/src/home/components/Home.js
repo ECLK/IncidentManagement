@@ -12,6 +12,9 @@ const drawerWidth = 240;
 const styles = theme => ({
     root: {
         display: 'flex',
+    },
+    card: {
+        marginBottom: '2rem'
     }
 });
 const Home = ({classes, ...props}) =>{
@@ -22,42 +25,42 @@ const Home = ({classes, ...props}) =>{
             {userCan(user, null, USER_ACTIONS.CAN_REVIEW_ALL_INCIDENTS) && (
                 <>
                 <Grid item>
-                    <Card xs={6}>
-                        <CardHeader 
+                    <Card xs={6} className={classes.card}>
+                        <CardHeader
                             title="Incidents Assigned to You"
                         />
                         <CardContent>
-                            <ManagedIncidentList 
+                            <ManagedIncidentList
                                 filters={ { assignee: "me" } }
                             />
                         </CardContent>
                     </Card>
                 </Grid>
-                
-                <Grid item style={{paddingTop:"10px"}}>
+
+                {/* <Grid item style={{paddingTop:"10px"}}>
                     <Card xs={6}>
-                        <CardHeader 
+                        <CardHeader
                             title="Incidents Linked to You"
                         />
                         <CardContent>
-                            <ManagedIncidentList 
+                            <ManagedIncidentList
                                 filters={ { user_linked: "me" } }
                             />
                         </CardContent>
                     </Card>
-                </Grid>
+                </Grid> */}
                 </>
             )}
 
             {!userCan(user, null, USER_ACTIONS.CAN_REVIEW_ALL_INCIDENTS) && (
                 <>
                 <Grid item style={{paddingTop:"10px"}}>
-                    <Card xs={6}>
-                        <CardHeader 
+                    <Card xs={6} className={classes.card}>
+                        <CardHeader
                             title="Your Incidents"
                         />
                         <CardContent>
-                            <ManagedIncidentList 
+                            <ManagedIncidentList
                                 filters={ { user_linked: "me" } }
                             />
                         </CardContent>
@@ -66,7 +69,7 @@ const Home = ({classes, ...props}) =>{
                 </>
             )}
         </Grid>
-        
+
     )
 }
 

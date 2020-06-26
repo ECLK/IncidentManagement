@@ -18,6 +18,8 @@ An Incident Management System specialized for Elections.
 
 ## Getting started
 
+[Quick Start](#quick-start-use-docker-compose){: .btn .btn-green .fs-3 .mb-4 .mb-md-0 .mr-2 } [Local Setup For Developers](#local-installation-for-development){: .btn .btn-green .fs-3 .mb-4 .mb-md-0 }
+
 ### Dependencies
 
 #### BACKEND
@@ -84,26 +86,26 @@ This is production build, runs locally, therefore not development friendly. For 
 #### BACKEND
 1. Make sure you have Python 3 and Mysql 8 installed. (for multiple versions you can use multiple environments with [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/install.html)).
 2. Navigate to `/backend` directory on terminal.
-3. Create new database and update database connection data on `/backend/src/settings.py` or `/backend/.env/` file.
+3. Create new database and update database connection data on `/backend/src/settings.py` or `/backend/.env/` file (you can change the values in `.env.example` and rename the file to `.env`)
 4. Install all necessary python packages along with Django.
 ```bash
 $ pip install -r requirements.txt
 ```
 5. Run migrations for populate tables to DB.
 ```bash
-$ python manage.py migate
+$ python manage.py migrate
 ```
 6. Create superuser account and enter information when prompted.
 ```bash
-$ docker-compose exec djangoapp python manage.py createsuperuser
+$ python manage.py createsuperuser
 ```
 7. Run the seeder to populate data on the DB.
 ```bash
-$ docker-compose exec djangoapp python manage.py loaddata category channel province district police politicalparty segment
+$ python manage.py loaddata category channel province district police politicalparty segment
 ```
 8. In order to add predefined users, run users seeder. <small>You may skip this step to implement you own user hierarchy.</small>
-```bash 
-$ docker-compose exec djangoapp python manage.py loaddata users
+```bash
+$ python manage.py loaddata users
 ```
 9. Run the server locally on port 8000 and point your web browser to [http://localhost:8000](http://localhost:8000) to view swagger view for API implementation.
 ```bash
@@ -117,14 +119,14 @@ You may also use the [Docker-Compose implementation](#backend-1) for development
 #### FRONTEND
 1. Make sure Node is installed and then backend API server is running.
 2. Set required configurations [Check configuration options]({{ site.baseurl }}{% link docs/configuration.md %}).
-3. Navigate to `/frontend` directory on terminal. 
+3. Navigate to `/frontend` directory on terminal.
 4. Install required packages
 ```bash
 npm install
 ```
 5. Run the frontend server.
 ```bash
-npm start
+REACT_APP_API_BASE_URL=http://localhost:8000 npm start
 ```
 6. Server now runs at [http://localhost:3000/](http://localhost:3000/). 
 

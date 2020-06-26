@@ -6,12 +6,94 @@ from xhtml2pdf import pisa
 import datetime
 from django.db import connection
 import pandas as pd
+import requests
+import json
+from django.conf import settings
+import urllib
+import os
 
-from .services import get_police_division_summary, get_category_summary, \
+from .services import get_police_division_summary, get_category_summary, get_daily_district_center_data, \
     get_mode_summary, get_severity_summary, get_status_summary, get_subcategory_summary, get_district_summary, \
-    get_incident_date_summary
+    get_incident_date_summary, get_slip_data, get_daily_category_data, get_daily_summary_data, get_daily_district_data
 from .functions import apply_style, decode_column_names, incident_type_title, incident_type_query
 
+'''
+middleware to access PDF-service
+'''
+class ReportingAccessView(APIView):
+    '''
+    Based on https://github.com/ECLK/pdf-service
+    Generates PDF
+
+    GET request with required parameters
+
+    Response would be a pdf stream to be opened in a different tab
+    '''
+    permission_classes = []
+    def get(self, request):
+        endpoint_uri = settings.PDF_SERVICE_ENDPOINT
+        json_dict = {}
+        template_type = request.query_params.get('template_type')
+
+        if(template_type == "simple-template"):
+            file_dict = {}
+            file_dict['template'] = "exTemplateBootstrap.js"
+            file_dict['title'] = "This is my title on test"
+
+            # prepare all data to be on json object 'file'
+            json_dict['file'] = file_dict
+
+        elif (template_type == "slip"):
+            '''
+            Inquiry Slip
+            GET parameters => /?template_type=slip&id=<incident_id>
+            '''
+            incident_id = request.query_params.get('id')
+            json_dict["file"] = get_slip_data(incident_id)
+
+        elif (template_type == "daily_summary"):
+            """
+            daily_summary_report_main
+            GET parameters => /?template_type=daily_summary
+            """
+            json_dict["file"] = get_daily_summary_data()
+
+        elif (template_type == "daily_category"):
+            """
+            daily_summery_report_categorywise
+            GET parameters => /?template_type=daily_category
+            """
+            json_dict["file"] = get_daily_category_data()
+
+        # elif (template_type == "daily_district"):
+        #     """
+        #     daily_summary_report_districtwise
+        #     GET parameters => /?template_type=daily_district
+        #     """
+        #     json_dict["file"] = get_daily_district_data()
+
+        elif (template_type == "daily_district_centers"):
+            """
+            daily_summary_report_districtwise
+            GET parameters => /?template_type=daily_district_centers
+            """
+            json_dict["file"] = get_daily_district_center_data()
+
+
+        request_data = json.dumps(json_dict)
+        res = requests.post(url=endpoint_uri, data = request_data, headers={'content-type': 'application/json'})
+
+        if res.status_code == 200:
+            pdf_file = requests.get(res.json()["url"])
+
+            response = HttpResponse(content=pdf_file.content, content_type='application/pdf')
+            response['Access-Control-Expose-Headers'] = 'Content-Length, Content-Type'
+            response['Access-Control-Allow-Origin'] = '*'
+            response['Title'] = 'report_' + datetime.date.today().strftime("%Y%m%d%H%M%S") + ".pdf"
+
+            return response
+        else:
+            return HttpResponse(status=res.status_code, content=res.text, content_type='application/json')
 
 class ReportingView(APIView):
     """
@@ -101,7 +183,7 @@ class ReportingView(APIView):
 
         # Prepare report header
         sql3 = incident_type_query(complain, inquiry)
-        sql = """SELECT 
+        sql = """SELECT
                      Count(id) as TotalCount
                  FROM   incidents_incident WHERE %s""" % sql3
         dataframe = pd.read_sql_query(sql, connection)

@@ -3,12 +3,398 @@
 from django.db import connection
 import pandas as pd
 import numpy as np
+from datetime import date, timedelta, datetime
+from django.db.models import Q
+from django.db.models import Count
+from django.core.exceptions import ObjectDoesNotExist
 
-from ..common.models import Category, Channel
-from ..incidents.models import Incident
+from ..common.models import Category, Channel, District
+from ..incidents.models import Incident, IncidentType
+from ..custom_auth.models import Organization, Division, Profile
+from django.contrib.auth.models import User
+
+from ..incidents.services import get_incident_by_id
+
 from .functions import get_detailed_report, get_general_report, encode_column_names, get_subcategory_report, \
     incident_type_query, incident_list_query, date_list_query, encode_value, get_subcategory_categorized_report
+from ..common.data.Institutions import institutions
+from django.conf import settings
+import collections, functools, operator
 
+def get_daily_incidents(incidentType):
+    """
+    List dialy incidents to the given incident-type.
+    Daily incidents concidered in election commission is, incidents logged from yesterday 4pm to today 4pm.
+    """
+    # yesterday at 4pm
+    start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
+    # today at 3:59pm
+    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+    incidents = Incident.objects.all().filter(incidentType=incidentType, created_date__range=(start_datetime, end_datetime))
+    return incidents
+
+def map_category(cat_voilence, cat_law, cat_other, total_list):
+    totals = {
+        "disputes": 0,
+        "violationOfLaws": 0,
+        "others": 0,
+        "amount": 0
+    }
+
+    for total in total_list:
+        key = total["category"]
+        val = total["category__count"]
+
+        if key == cat_voilence:
+            totals["disputes"] = val
+
+        if key == cat_law:
+            totals["violationOfLaws"] = val
+
+        if key == cat_other:
+            totals["others"] = val
+
+        totals["amount"] += val
+
+    return totals
+
+def map_severity(total_list):
+    totals = {
+        "minor": 0,
+        "general": 0,
+        "major": 0,
+        "total": 0
+    }
+
+    for total in total_list:
+        key = total["severity"]
+        val = total["severity__count"]
+
+        # severity = 0 is unset
+        if key >= 0 and key <= 3:
+            totals["minor"] += val
+
+        elif key > 3 and key <= 7:
+            totals["general"] += val
+
+        elif key > 7:
+            totals["major"] += val
+
+        totals["total"] += val
+
+    return totals
+
+
+def get_daily_summary_data():
+    """ Function to get daily summary data on complaints for PDF export. """
+    file_dict = {}
+
+    file_dict["template"] = "incidents/complaints/daily_summary_report.js"
+    file_dict["date"] = date.today().strftime("%Y/%m/%d")
+
+    # preload categories
+    cat_voilence = Category.objects.all().filter(top_category='Violence')
+    cat_law = Category.objects.all().filter(top_category='Violation of election law')
+    cat_other = Category.objects.all().filter(top_category='Other')
+
+    # for time / date ranges
+    start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
+    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+
+    # get incident list
+    incidents = Incident.objects.all().filter(incidentType=IncidentType.COMPLAINT.name, election=settings.ELECTION)
+
+    # find eclk complaints
+    eclk_users = User.objects.all().filter(profile__organization__code="eclk")
+    eclk_hq_users = eclk_users.filter(profile__division__is_hq=True)
+    eclk_district_users = eclk_users.filter(profile__division__is_hq=False)
+
+    # filter incidents by created
+    eclk_incidents = incidents.filter(created_by__in=eclk_users)
+    eclk_hq_incidents = incidents.filter(created_by__in=eclk_hq_users)
+    eclk_district_incidents = incidents.filter(created_by__in=eclk_district_users)
+
+    # for total summary
+    file_dict["complaintsSummary"] = {
+        "national": map_category(cat_voilence, cat_law, cat_other, eclk_hq_incidents.values('category').annotate(Count("category")).order_by()),
+        "district": map_category(cat_voilence, cat_law, cat_other, eclk_district_incidents.values('category').annotate(Count("category")).order_by()),
+        "totals": map_category(cat_voilence, cat_law, cat_other, eclk_incidents.values('category').annotate(Count("category")).order_by())
+    }
+
+    # past 24 hours
+    eclk_incidents = eclk_incidents.filter(created_date__range=(start_datetime, end_datetime))
+    eclk_hq_incidents = eclk_hq_incidents.filter(created_date__range=(start_datetime, end_datetime))
+    eclk_district_incidents = eclk_district_incidents.filter(created_date__range=(start_datetime, end_datetime))
+
+    file_dict["complaintsPast24hours"] = {
+        "national": map_category(cat_voilence, cat_law, cat_other, eclk_hq_incidents.values('category').annotate(Count("category")).order_by()),
+        "district": map_category(cat_voilence, cat_law, cat_other, eclk_district_incidents.values('category').annotate(Count("category")).order_by()),
+        "totals": map_category(cat_voilence, cat_law, cat_other, eclk_incidents.values('category').annotate(Count("category")).order_by())
+    }
+
+    return file_dict
+
+def get_incidents_filtered_by_division(incidents: Incident, division: Division):
+    """
+    function to filter incidents by given division
+    if users found, returns Incident queryset
+    if user not found, returns False
+    """
+
+    profiles = Profile.objects.filter(division=division)
+
+    # return false if no users found
+    if (len(profiles) == 0):
+        return False
+
+    q_objects = Q()
+    for profile in profiles:
+        q_objects |= Q(created_by=profile.user)
+
+    incidents_filtered = incidents.filter(q_objects)
+    return incidents_filtered
+
+def get_daily_district_center_data():
+    """ function to get dialy incident data for district center report generation """
+    file_dict = {}
+
+    file_dict["template"] = "incidents/complaints/daily_summary_report_districtwise.js"
+    file_dict["electionDate"] = date.today().strftime("%Y/%m/%d")
+
+    # totals
+    violence=0
+    breachOfElectionLaws=0
+    other=0
+    minor=0
+    general=0
+    major=0
+    total=0
+
+    incidents = get_daily_incidents(IncidentType.COMPLAINT)
+
+    districts_centers = []
+    districts = [
+        "Colombo",
+        "Gampaha",
+        "Kalutara",
+        "Kandy",
+        "Matale",
+        "Nuwaraeliya",
+        "Galle",
+        "Matara",
+        "Hambantota",
+        "Jaffna",
+        "Killinochchi",
+        "Vavuniya",
+        "Mannar",
+        "Mulaitivu",
+        "Baticaloa",
+        "Ampara",
+        "Trincomalee",
+        "Kurunagala",
+        "Puttalam",
+        "Anuradhapura",
+        "Polonnaruwa",
+        "Badulla",
+        "Monaragala",
+        "Ratnapura",
+        "Kagalle"
+    ]
+    for dt in districts:
+        district = {}
+
+        try:
+            center = Division.objects.get(Q(name__contains=dt) & Q(organization_id=1))
+        except ObjectDoesNotExist:
+            district["name"] = dt
+            district["total"] = 0
+            district["other"] = 0
+            district["violence"] = 0
+            district["breachOfElectionLaws"] = 0
+            district["minor"] = 0
+            district["general"] = 0
+            district["major"] = 0
+            districts_centers.append(district)
+            continue
+
+        dc_incidents = get_incidents_filtered_by_division(incidents, center)
+        if (not dc_incidents):
+            district["name"] = dt
+            district["total"] = 0
+            district["other"] = 0
+            district["violence"] = 0
+            district["breachOfElectionLaws"] = 0
+            district["minor"] = 0
+            district["general"] = 0
+            district["major"] = 0
+            districts_centers.append(district)
+            continue
+
+        district["name"] = dt
+        district["total"] = dc_incidents.count()
+        total += dc_incidents.count()
+
+        # get category wise counts
+        cat_voilence = Category.objects.all().filter(top_category='Violence')
+        cat_law = Category.objects.all().filter(top_category='Violation of election law')
+        cat_other = Category.objects.all().filter(top_category='Other')
+        category_counts = map_category(cat_voilence, cat_law, cat_other, dc_incidents.values('category').annotate(Count("category")).order_by())
+        district["other"] = category_counts["others"]
+        district["violence"] = category_counts["disputes"]
+        district["breachOfElectionLaws"] = category_counts["violationOfLaws"]
+        other += category_counts["others"]
+        violence += category_counts["disputes"]
+        breachOfElectionLaws += category_counts["violationOfLaws"]
+
+        # get serverity wise counts
+        severity_counts = map_severity(dc_incidents.values('severity').annotate(Count("severity")).order_by())
+        district["minor"] = severity_counts["minor"]
+        district["general"] = severity_counts["general"]
+        district["major"] = severity_counts["major"]
+        minor += severity_counts["minor"]
+        general += severity_counts["general"]
+        major += severity_counts["major"]
+
+        districts_centers.append(district)
+
+    file_dict["complaintByDistrict"] = districts_centers
+
+    file_dict["complaintTotalsByType"] = {
+        "violence": violence,
+        "breachOfElectionLaws": breachOfElectionLaws,
+        "other": other,
+        "minor": minor,
+        "general": general,
+        "major": major,
+        "total": total
+    }
+
+    return file_dict
+
+def get_daily_district_data():
+    """ Function to get daily district data on complaints for PDF export. """
+    file_dict = {}
+
+    file_dict["template"] = "incidents/complaints/daily_summary_report_districtwise.js"
+    file_dict["delectionDateate"] = date.today().strftime("%Y/%m/%d")
+
+    # preload categories
+    cat_voilence = Category.objects.all().filter(top_category='Violence')
+    cat_law = Category.objects.all().filter(top_category='Violation of election law')
+    cat_other = Category.objects.all().filter(top_category='Other')
+
+    # for time / date ranges
+    start_datetime = (date.today() - timedelta(days=100)).strftime("%Y-%m-%d 16:00:00")
+    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+
+    incidents = Incident.objects.all().filter(incidentType=IncidentType.COMPLAINT.name, election=settings.ELECTION, created_date__range=(start_datetime, end_datetime))
+
+    file_dict["complaintByDistrict"] = []
+
+    districts = District.objects.all()
+    for district in districts:
+        district_incidents = incidents.filter(district=district.code)
+
+        category_counts = map_category(cat_voilence, cat_law, cat_other, district_incidents.values('category').annotate(Count("category")).order_by())
+        severity_counts = map_severity(district_incidents.values('severity').annotate(Count("severity")).order_by())
+
+        file_dict["complaintByDistrict"].append({
+            "violence": category_counts["disputes"],
+            "breachOfElectionLaws": category_counts["violationOfLaws"],
+            "other": category_counts["others"],
+            "minor": severity_counts["minor"],
+            "general": severity_counts["general"],
+            "major": severity_counts["major"],
+            "total": severity_counts["total"]
+        })
+
+    file_dict["complaintTotalsByType"] = dict(functools.reduce(operator.add,
+                                            map(collections.Counter, file_dict["complaintByDistrict"])))
+
+    # just fixing the case of not having a specific total
+    for key in file_dict["complaintByDistrict"][0]:
+        if key not in file_dict["complaintTotalsByType"]:
+            file_dict["complaintTotalsByType"][key] = 0
+
+    return file_dict
+
+
+
+def get_slip_data(incident_id):
+    """ Function to return inquiry slip data for PDF export. """
+    incident = get_incident_by_id(incident_id)
+    category = Category.objects.get(id=incident.category)
+
+    template_dict = {}
+    template_dict["template"] = "incidents/inquiry/inquiry_slip.js"
+    template_dict["referenceNumber"] = incident.refId
+    template_dict["date"] = "2020/03/05"
+    template_dict["categoryCode"] = incident.category
+    template_dict["categoryNameEn"] = category.sub_category
+    template_dict["categoryNameSn"] = category.sn_sub_category
+    template_dict["categoryNameTm"] = category.tm_sub_category
+    template_dict["institutionName"] = institutions[incident.institution]["name"]
+    return template_dict
+
+def get_daily_category_data():
+    """ Function to get daily categories data on complaints for PDF export. """
+    # TODO: signify the category types, so that helps to pull up category values without hardcoding as bellow
+    file_dict = {}
+
+    file_dict["template"] = "incidents/complaints/daily_summery_report_categorywise.js"
+    file_dict["date"] = date.today().strftime("%Y/%m/%d")
+
+    incidents = get_daily_incidents(IncidentType.COMPLAINT)
+
+    # TODO: is fixed for EC HQ atm. change this to filter by requested EC division.
+    ec_hq = Division.objects.get(is_default_division=True)
+    incidents = get_incidents_filtered_by_division(incidents, ec_hq)
+    file_dict["total"] = incidents.count()
+
+    other_category = Category.objects.get(top_category='Other')
+    file_dict["other"] = incidents.filter(category=other_category.id).count()
+
+    # collecting all category data
+    category_dict = []
+
+    # collect 'violence' top category data
+    violence_category_dict = {}
+    violence_category_dict["categoryNameSinhala"] = "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා"
+    violence_category_dict["categoryNameTamil"] = "தேர்தல் வன்முறைகள்"
+
+    violence_subcategories = Category.objects.filter(top_category='Violence')
+    subcategory_dict = []
+    for category in violence_subcategories:
+        subcategory_data_dict = {}
+        subcategory_data_dict["name"] = category.sn_sub_category
+        subcategory_data_dict["count"] = incidents.filter(category=category.id).count()
+        if incidents.filter(category=category.id).count() == 0:
+            continue
+        subcategory_dict.append(subcategory_data_dict)
+    violence_category_dict["subCategories"] = subcategory_dict
+
+    # collect 'violation of law' top category data
+    violation_category_dict = {}
+    violation_category_dict["categoryNameSinhala"] = "මැතිවරණ නීති උල්ලංඝනය"
+    violation_category_dict["categoryNameTamil"] = "தேர்தல் சட்டங்களை மீறுதல்"
+
+    violation_subcategories = Category.objects.filter(top_category='Violation of election law')
+    subcategory_dict = []
+    for category in violation_subcategories:
+        subcategory_data_dict = {}
+        subcategory_data_dict["name"] = category.sn_sub_category
+        subcategory_data_dict["count"] = incidents.filter(category=category.id).count()
+        if incidents.filter(category=category.id).count() == 0:
+            continue
+        subcategory_dict.append(subcategory_data_dict)
+    violation_category_dict["subCategories"] = subcategory_dict
+
+    # complete category data
+    category_dict.append(violence_category_dict)
+    category_dict.append(violation_category_dict)
+    file_dict["categories"] = category_dict
+
+    return file_dict
 
 def get_category_summary(start_date, end_date, detailed_report, complain, inquiry):
     sql3 = incident_type_query(complain, inquiry)
@@ -73,28 +459,28 @@ def get_incident_date_summary(start_date, end_date, detailed_report, complain, i
     sql3 = incident_type_query(complain, inquiry)
     incident_list = incident_list_query(start_date, end_date, sql3)
     sql = """
-            SELECT incident_date as 'Incident Date', 
-       Total 
-FROM   (SELECT incident_date, 
-               Sum(Total) AS Total 
-        FROM   (SELECT Date_format(occured_date + INTERVAL 8 HOUR, '%s') 
-                       AS 
-                       incident_date 
-                               , 
-                       '1' 
-                               AS Total 
-                FROM   incidents_incident 
+            SELECT incident_date as 'Incident Date',
+       Total
+FROM   (SELECT incident_date,
+               Sum(Total) AS Total
+        FROM   (SELECT Date_format(occured_date + INTERVAL 8 HOUR, '%s')
+                       AS
+                       incident_date
+                               ,
+                       '1'
+                               AS Total
+                FROM   incidents_incident
                 %s
-                UNION ALL 
-                SELECT selected_date, 
-                       '0' 
-                FROM   (%s) AS dateranges) AS result 
-        GROUP  BY result.incident_date 
-        ORDER  BY incident_date) AS result2 
-UNION 
-SELECT '(Total No. of Incidents)', 
-       Count(id) 
-FROM   incidents_incident 
+                UNION ALL
+                SELECT selected_date,
+                       '0'
+                FROM   (%s) AS dateranges) AS result
+        GROUP  BY result.incident_date
+        ORDER  BY incident_date) AS result2
+UNION
+SELECT '(Total No. of Incidents)',
+       Count(id)
+FROM   incidents_incident
 %s
             """ % (
         "%Y-%m-%d", incident_list, date_list_query(start_date, end_date), incident_list)
@@ -154,13 +540,13 @@ def get_severity_summary(start_date, end_date, detailed_report, complain, inquir
                             FROM     incidents_incident
                             %s
                             GROUP BY currentstate) AS incidents
-         ON        currentstate = d.name 
+         ON        currentstate = d.name
          UNION ALL
         SELECT '(Total No. of Incidents)',
                Count(id)
         FROM   incidents_incident
         %s
-        ORDER  BY Field(Severity, 'High', 'Medium', 'Low', '(Total No. of Incidents)') 
+        ORDER  BY Field(Severity, 'High', 'Medium', 'Low', '(Total No. of Incidents)')
     """ % (incident_list, incident_list)
     dataframe = pd.read_sql_query(sql, connection)
     dataframe = dataframe.fillna(0)
@@ -172,7 +558,7 @@ def get_status_summary(start_date, end_date, detailed_report, complain, inquiry)
     incident_list = incident_list_query(start_date, end_date, sql3)
     if detailed_report:
         sql1 = """
-        SELECT district,( 
+        SELECT district,(
                CASE WHEN Ifnull(current_status, 'Unassigned') LIKE 'CLOSED' THEN 1 ELSE 0 END )AS Resolved,
                (CASE WHEN Ifnull(current_status, 'Unassigned')  NOT LIKE 'CLOSED' THEN 1 ELSE 0 END )AS Unresolved,
                              1 AS Total
@@ -204,7 +590,7 @@ def get_status_summary(start_date, end_date, detailed_report, complain, inquiry)
                Count(id)
         FROM   incidents_incident
         %s
-        ORDER  BY Field(status, 'Resolved', 'Unresolved', '(Total No. of Incidents)') 
+        ORDER  BY Field(status, 'Resolved', 'Unresolved', '(Total No. of Incidents)')
     """ % (incident_list, incident_list)
     dataframe = pd.read_sql_query(sql, connection)
     dataframe = dataframe.fillna(0)
@@ -213,7 +599,7 @@ def get_status_summary(start_date, end_date, detailed_report, complain, inquiry)
 
 def get_police_division_summary():
     sql = """
-          SELECT 
+          SELECT
             incident.province,
             incident.di_division,
             incident.police_division,
@@ -222,16 +608,16 @@ def get_police_division_summary():
             COUNT(CASE WHEN cs.current_status <> "CLOSED" THEN 1 ELSE NULL END) AS open_total,
             COUNT(CASE WHEN cs.current_status = "CLOSED" THEN 1 ELSE NULL END) AS closed_total
           FROM incidents_incident incident,
-          ( 
+          (
             SELECT b.incident_id, b.current_status
             FROM incidents_incidentstatus b
             INNER JOIN (
               SELECT i.incident_id, max(i.created_date) cdate
               FROM incidents_incidentstatus i
               GROUP BY i.incident_id
-            ) c 
+            ) c
             ON c.incident_id = b.incident_id AND c.cdate = b.created_date
-          ) AS cs 
+          ) AS cs
           WHERE cs.incident_id = incident.id
           GROUP BY incident.province, incident.di_division, incident.police_division
         """

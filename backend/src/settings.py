@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -35,9 +37,7 @@ def env_var(key, default=None):
 DEBUG = env_var('django_debug', True)
 
 ALLOWED_HOSTS = [
-    "api.incidents.ecdev.opensource.lk",
-    "127.0.0.1",
-    "localhost"
+    env_var('API_BASE_HOST', 'localhost'),
 ]
 
 
@@ -101,15 +101,14 @@ WSGI_APPLICATION = 'src.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mysql.connector.django', 
-        'NAME': env_var('DATABASE_NAME', 'incident_prod'),
+        'ENGINE': 'mysql.connector.django',
+        'NAME': env_var('DATABASE_NAME', 'incidents'),
         'USER': env_var('DATABASE_USER', 'root'),
         'PASSWORD': env_var('DATABASE_PWD', 'root'),
         'HOST': env_var('DATABASE_HOST', 'localhost'),   # Or an IP Address that your DB is hosted on
         'PORT': env_var("DATABASE_PORT", '3306'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -172,11 +171,25 @@ JWT_AUTH = {
     'JWT_RESPONSE_PAYLOAD_HANDLER':
     'src.jwt.jwt_response_payload_handler',
 
-    'JWT_VERIFY_EXPIRATION': False
+    'JWT_VERIFY': True,
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_LEEWAY': 0,
+    # 'JWT_EXPIRATION_DELTA': timedelta(seconds=10),
+    'JWT_EXPIRATION_DELTA': timedelta(minutes=20),
+
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
 }
 
-CORS_ORIGIN_ALLOW_ALL = True
-X_FRAME_OPTIONS = "ALLOW ALL"
+# Application security
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = "DENY" # used to prevent clickjacking
+
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = [
+    env_var('APP_BASE_URL', 'http://localhost:3000'),
+]
 
 # file uload parameters
 MEDIA_URL = '/app/media/'
@@ -186,3 +199,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 FIXTURE_DIRS = [
     "./seeddata/"
 ]
+
+# PDF endpoint for report generation
+PDF_SERVICE_ENDPOINT = env_var('PDF_SERVICE_ENDPOINT')
+
+# election constant
+# with this constant all incident lists will be filtered
+# expectation is to strict dealings with current election only, to avoid confusion
+ELECTION = env_var('ELECTION')

@@ -11,23 +11,27 @@ import {
     REQUEST_INCIDENT_ELECTIONS_SUCCESS,
     REQUEST_INCIDENT_ELECTIONS_FAILURE,
 
-    REQUEST_INCIDENT_CATAGORIES, 
-    REQUEST_INCIDENT_CATAGORIES_SUCCESS, 
+    REQUEST_INCIDENT_CATAGORIES,
+    REQUEST_INCIDENT_CATAGORIES_SUCCESS,
     REQUEST_INCIDENT_CATAGORIES_FAILURE,
 
-    REQUEST_INCIDENT_PROVINCES, 
-    REQUEST_INCIDENT_PROVINCES_SUCCESS, 
+    REQUEST_INCIDENT_INSTITUTIONS,
+    REQUEST_INCIDENT_INSTITUTIONS_SUCCESS,
+    REQUEST_INCIDENT_INSTITUTIONS_FAILURE,
+
+    REQUEST_INCIDENT_PROVINCES,
+    REQUEST_INCIDENT_PROVINCES_SUCCESS,
     REQUEST_INCIDENT_PROVINCES_FAILURE,
 
-    REQUEST_INCIDENT_DISTRICTS, 
-    REQUEST_INCIDENT_DISTRICTS_SUCCESS, 
+    REQUEST_INCIDENT_DISTRICTS,
+    REQUEST_INCIDENT_DISTRICTS_SUCCESS,
     REQUEST_INCIDENT_DISTRICTS_FAILURE,
 
-    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS, 
-    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_SUCCESS, 
+    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS,
+    REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_SUCCESS,
     REQUEST_INCIDENT_DIVISIONAL_SECRETARIATS_FAILURE,
 
-    REQUEST_INCIDENT_GRAMA_NILADHARIS, 
+    REQUEST_INCIDENT_GRAMA_NILADHARIS,
     REQUEST_INCIDENT_GRAMA_NILADHARIS_SUCCESS,
     REQUEST_INCIDENT_GRAMA_NILADHARIS_FAILURE,
 
@@ -59,9 +63,13 @@ import {
     ACTIVE_INCIDENT_GET_DATA_SUCCESS,
     ACTIVE_INCIDENT_GET_DATA_ERROR,
 
-    SIGN_IN_REQUEST, 
+    SIGN_IN_REQUEST,
     SIGN_IN_REQUEST_SUCCESS,
     SIGN_IN_REQUEST_ERROR,
+
+    SIGN_IN_REFRESH_TOKEN_REQUEST,
+    SIGN_IN_REFRESH_TOKEN_REQUEST_SUCCESS,
+    SIGN_IN_REFRESH_TOKEN_REQUEST_ERROR,
 
     TOGGLE_REMEBER_USER,
     SIGN_OUT,
@@ -73,23 +81,24 @@ import {
 
 } from './Shared.types'
 
-import { getIncident, getReporter  } from '../../api/incident';
-import { 
+import { getIncident, getReporter } from '../../api/incident';
+import {
     getChannels,
     getElections,
-    getCategories, 
-    getProvinces, 
+    getCategories,
+    getInstitutions,
+    getProvinces,
     getDistricts,
     getDivisionalSecretariats,
     getGramaNiladharis,
-    getPollingStations, 
+    getPollingStations,
     getPollingDivisions,
-    getPoliceStations, 
-    getPoliceDivisions, 
+    getPoliceStations,
+    getPoliceDivisions,
     getWards,
     getPoliticalParties
 } from '../../api/shared';
-import { signIn } from '../../api/user';
+import { signIn, refreshToken } from '../../api/user';
 import * as localStorage from '../../utils/localStorage';
 
 
@@ -203,7 +212,45 @@ export function fetchCategories(){
     }
 }
 
-// Provinces 
+
+// Institutions
+
+export function requestIncidentInstitutions() {
+    return {
+        type: REQUEST_INCIDENT_INSTITUTIONS,
+    };
+}
+
+export function receiveIncidentInstitutions(institutions) {
+    return {
+        type: REQUEST_INCIDENT_INSTITUTIONS_SUCCESS,
+        data: institutions,
+        error: null
+    };
+}
+
+export function receiveIncidentInstitutionsError(errorResponse) {
+    return {
+        type: REQUEST_INCIDENT_INSTITUTIONS_FAILURE,
+        data: null,
+        error: errorResponse
+    };
+}
+
+export function fetchInstitutions() {
+    return async function(dispatch){
+        dispatch(requestIncidentInstitutions());
+        try {
+            const response = await getInstitutions();
+            await dispatch(receiveIncidentInstitutions(response.data));
+        } catch(error) {
+            await dispatch(receiveIncidentInstitutionsError(error));
+        }
+    };
+}
+
+
+// Provinces
 
 export function requestIncidentProvinces() {
     return {
@@ -630,7 +677,7 @@ export function fetchSignIn(userName, password) {
 
             if(!signInData){
                 signInData = (await signIn(userName, password)).data;
-                
+
                 if(signInData.data.token != ""){
                     if(getState().shared.signedInUser.rememberMe){
                         localStorage.write('ECIncidentManagementUser', signInData.data);
@@ -649,6 +696,52 @@ export function fetchSignIn(userName, password) {
         }
     }
 }
+
+// refresh token
+
+export function requestSignInRefreshToken() {
+    return {
+        type: SIGN_IN_REFRESH_TOKEN_REQUEST,
+        isLoading: true
+    }
+}
+
+export function requestSignInRefreshTokenSuccess(response) {
+    return {
+        type: SIGN_IN_REFRESH_TOKEN_REQUEST_SUCCESS,
+        data: response,
+        error: null,
+        isLoading: false
+    }
+}
+
+export function requestSignInRefreshTokenError(errorResponse) {
+    return {
+        type: SIGN_IN_REFRESH_TOKEN_REQUEST_ERROR,
+        data: null,
+        error: errorResponse,
+        isLoading: false
+    }
+}
+
+export function fetchSignInRefreshToken() {
+    return async function (dispatch, getState) {
+        dispatch(requestSignInRefreshToken());
+        try {
+            const signInData = localStorage.read('ECIncidentManagementUser');
+            const signInRefreshTokenData = (await refreshToken(signInData.token)).data;
+
+            localStorage.write('ECIncidentManagementUser', signInRefreshTokenData.data);
+            const token = signInRefreshTokenData.data.token;
+
+            axios.defaults.headers.common['Authorization'] = "JWT " + token;
+            dispatch(requestSignInRefreshTokenSuccess(signInRefreshTokenData.data));
+        } catch (error) {
+            dispatch(requestSignInRefreshTokenError({ message: "Signature has expired."}))
+        }
+    }
+}
+
 
 //Remeber user
 export function toggleRememberUser(){

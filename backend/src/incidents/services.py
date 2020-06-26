@@ -3,6 +3,7 @@ import requests
 
 from .models import (
     Incident,
+    IncidentType,
     IncidentStatus,
     StatusType,
     SeverityType,
@@ -36,6 +37,24 @@ import json
 from rest_framework.renderers import StaticHTMLRenderer
 from django.db.models import Q
 from .permissions import *
+
+def generate_refId(incident_data) -> str:
+    incidentType = incident_data["incidentType"]
+    election = incident_data["election"]
+
+    if incident_data["incidentType"] == IncidentType.INQUIRY.name:
+        current_count = Incident.objects.filter(incidentType=IncidentType.INQUIRY).filter(election=election).count()
+        institution = incident_data["institution"]
+        category = incident_data["category"]
+        refID = "EC/EDR/%s/INQ/%s/%s/%0.4d" % (election, institution, category, current_count+1)
+        return refID
+    else:
+        current_count = Incident.objects.filter(incidentType=IncidentType.COMPLAINT).filter(election=election).count()
+        district = incident_data["district"]
+        refID = "EC/EDR/%s/%s/%0.4d" % (election, district, current_count+1)
+        return refID
+
+    return null
 
 def is_valid_incident(incident_id: str) -> bool:
     try:
@@ -123,16 +142,15 @@ def user_level_has_permission(user_level: UserLevel, permission: Permission):
     return permission in permissions
 
 def get_user_from_level(user_level: UserLevel, division: Division) -> User:
-    print(user_level, division)
     """ This function would take in a user level and find the user
         within the level that has the least workload
-        It will query the assignee counts for each user and get the 
+        It will query the assignee counts for each user and get the
         one with lowest assignments
     """
-    
+
     sql = """
-            SELECT usr.id, COUNT(incident.id) as incident_count FROM `auth_user` as usr 
-            LEFT JOIN incidents_incident as incident on incident.assignee_id = usr.id 
+            SELECT usr.id, COUNT(incident.id) as incident_count FROM `auth_user` as usr WHERE usr.is_active = true
+            LEFT JOIN incidents_incident as incident on incident.assignee_id = usr.id
             INNER JOIN custom_auth_profile as prf on prf.user_id = usr.id
             INNER JOIN custom_auth_userlevel as ulvl on prf.level_id = ulvl.id
             INNER JOIN auth_group as grp on ulvl.role_id = grp.id
@@ -145,10 +163,10 @@ def get_user_from_level(user_level: UserLevel, division: Division) -> User:
     with connection.cursor() as cursor:
         cursor.execute(sql)
         row = cursor.fetchone()
-        
+
         if row is None:
             return None
-        
+
         try:
             assignee = User.objects.get(id=row[0])
             return assignee
@@ -164,7 +182,7 @@ def find_candidate_from_division(current_division: Division, current_level: User
         if parent_level is None:
             # reached the top most position of current division
             break
-        
+
         if required_permission is None or (
             required_permission is not None and user_level_has_permission(parent_level, required_permission)
         ):
@@ -179,7 +197,7 @@ def find_candidate_from_division(current_division: Division, current_level: User
         # check the parent user level of the current parent
         # ie: traversing upwards the user hierarchy
         parent_level = parent_level.parent
-    
+
     return new_assignee
 
 
@@ -197,14 +215,14 @@ def find_escalation_candidate(current_user: User) -> User:
     # either found an assignee or exhausted the current division
     if new_assignee is not None:
         return new_assignee
-    
+
     # this part means we have to search in the HQ of the organization
     # for an assignee
-    hq_division = Division.objects.get(Q(is_hq=True) & 
+    hq_division = Division.objects.get(Q(is_hq=True) &
                                         Q(organization=current_user.profile.organization))
     if hq_division is None:
         raise WorkflowException("Organization Hierarchy Configure Error - No HQ defined")
-    
+
     # in the new divsion, we start the search from the
     # same level as the current user's parent
     # if current user is Cordinator, we start with Managers in HQ
@@ -223,7 +241,7 @@ def find_incident_assignee(current_user: User):
     # first if a public user case
     if current_user.username == "guest":
         # guest is a user level under EC organization
-        # ideally we can check if the parent of the current user has 
+        # ideally we can check if the parent of the current user has
         # permissions
         assignee = find_candidate_from_division(default_division, current_user.profile.level)
 
@@ -247,7 +265,7 @@ def find_incident_assignee(current_user: User):
 
     if assignee is None:
         raise WorkflowException("Error in finding assignee")
-    
+
     return assignee
 def create_reporter():
     return Reporter()
@@ -258,7 +276,7 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
         # public user case
         # if no auth token, then we assign the guest user as public user
         user = get_guest_user()
-        
+
     reporter = Reporter()
     reporter.save()
 
@@ -279,7 +297,7 @@ def create_incident_postscript(incident: Incident, user: User) -> None:
         incident.linked_individuals.add(user)
 
     incident.save()
-    
+
 
     status = IncidentStatus(current_status=StatusType.NEW,
                             incident=incident, approved=True)
@@ -365,16 +383,16 @@ def get_incidents_before_date(date: str) -> Incident:
 def incident_escalate(user: User, incident: Incident, escalate_dir: str = "UP", comment=None, response_time=None):
     if incident.assignee != user:
         raise WorkflowException("Only current incident assignee can escalate the incident")
-    
+
     if (
-        # incident.current_status == StatusType.VERIFIED.name 
+        # incident.current_status == StatusType.VERIFIED.name
         incident.current_status == StatusType.NEW.name
         or incident.current_status == StatusType.REOPENED.name
         or incident.current_status == StatusType.ACTION_PENDING.name
         or incident.current_status == StatusType.ADVICE_REQESTED.name
     ) :
         raise WorkflowException("Incident cannot be escalated at this Status")
-    
+
     # find the rank of the current incident assignee
     # assignee_groups = incident.assignee.groups.all()
     # if len(assignee_groups) == 0:
@@ -476,7 +494,7 @@ def incident_escalate_external_action(user: User, incident: Incident, entity: ob
         actioned_user=user,
         comment=comment
     )
-    
+
     if is_internal_user:
         escalated_user = get_user_by_id(entity["name"])
         incident.linked_individuals.add(escalated_user)
@@ -486,7 +504,7 @@ def incident_escalate_external_action(user: User, incident: Incident, entity: ob
     else:
         workflow.escalated_entity_other = entity["type"]
         workflow.escalated_user_other = entity["name"]
-    
+
     workflow.save()
 
     status = IncidentStatus(
@@ -539,7 +557,7 @@ def incident_complete_external_action(user: User, incident: Incident, comment: s
 def incident_request_advice(user: User, incident: Incident, assignee: User, comment: str):
     if incident.current_status == StatusType.ADVICE_REQESTED.name:
         raise WorkflowException("Incident already has a pending advice request")
-    
+
     # request workflow
     workflow = RequestAdviceWorkflow(
         incident=incident,
@@ -548,7 +566,7 @@ def incident_request_advice(user: User, incident: Incident, assignee: User, comm
         assigned_user=assignee
     )
     workflow.save()
-    
+
     status = IncidentStatus(
         current_status=StatusType.ADVICE_REQESTED,
         previous_status=incident.current_status,
@@ -622,7 +640,7 @@ def incident_verify(user: User, incident: Incident, comment: str, proof: bool):
         approved=True
     )
     status.save()
-    
+
     if proof :
         incident.proof = True
         incident.save()
@@ -694,7 +712,7 @@ def get_incidents_to_escalate():
               SELECT i.incident_id, max(i.created_date) cdate
               FROM incidents_incidentstatus i
               GROUP BY i.incident_id
-            ) c 
+            ) c
             ON c.incident_id = b.incident_id AND c.cdate = b.created_date
      	WHERE b.`created_date` >  NOW() - interval 120 minute AND
                 b.`current_status` <> 'CLOSED' AND
@@ -702,7 +720,7 @@ def get_incidents_to_escalate():
                 b.`current_status` <> 'NEW' AND
                 b.`current_status` <> 'ADVICE_REQESTED'
     """
-    
+
     with connection.cursor() as cursor:
         cursor.execute(sql)
         incidents = cursor.fetchall()
@@ -725,28 +743,28 @@ def attach_media(user:User, incident:Incident, uploaded_file:File):
 
 def get_fitlered_incidents_report(incidents: Incident, output_format: str):
 
-    
+
     dataframe = pd.DataFrame(list(incidents.values("refId", "title", "description", "current_status", "current_severity", "response_time", "category")))
     dataframe.columns = ["Ref ID", "Title", "Description", "Status", "Severity", "Response Time", "Category"]
-    
+
     if output_format == "csv":
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename=incidents.csv'
         dataframe.to_csv(path_or_buf=response,sep=';',float_format='%.2f',index=False,decimal=",")
         return response
-    
+
     if output_format == "html":
         # output = dataframe.to_html(float_format='%.2f',index=False)
         output = write_to_html_file(dataframe, "Incidents")
         output = output.encode('utf-8')
-    
+
         response = HttpResponse(content_type='text/html')
 
-        # response = HttpResponse(content_type='application/pdf')        
+        # response = HttpResponse(content_type='application/pdf')
         # response['Content-Disposition'] = 'attachment; filename="incidents.pdf"'
         # pisa.CreatePDF(output, dest=response)
         # pisa.CreatePDF(output.encode('utf-8'), dest=response)
-        # pisa.CreatePDF(output.encode("ISO-8859-1"), dest=response)        
+        # pisa.CreatePDF(output.encode("ISO-8859-1"), dest=response)
         # return response
 
         return HttpResponse(output)
@@ -766,7 +784,7 @@ def write_to_html_file(df, title=''):
 <style>
 
     @media print
-    {    
+    {
         button
         {
             display: none !important;
@@ -776,7 +794,7 @@ def write_to_html_file(df, title=''):
     h2 {
         text-align: center;
     }
-    table { 
+    table {
         margin-left: auto;
         margin-right: auto;
     }
@@ -793,7 +811,7 @@ def write_to_html_file(df, title=''):
         background-color: #dddddd;
     }
     .wide {
-        width: 90%; 
+        width: 90%;
     }
 
 </style>

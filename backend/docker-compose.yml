@@ -31,6 +31,8 @@ services:
       - DATABASE_USER=root
       - DATABASE_PWD=toor
       - DATABASE_NAME=lsf
+      - ELECTION=${ELECTION}
+      - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
     volumes:
       - './src:/app/src'
       - './seeddata:/app/seeddata'

@@ -13,7 +13,8 @@ import { ReportList, ReportViewer } from "../reporting";
 import SignInPage from "../app/SignInPage";
 import PrivateRoute from "./PrivateRoute";
 
-import {ReviewIncidentListView} from '../ongoing-incidents';
+import ReviewComplaintsListView from '../ongoing-incidents/components/ReviewComplaintsListView';
+import ReviewInquiriesListView from "../ongoing-incidents/components/ReviewInquiriesListView";
 import AppLayout from '../app/AppLayout';
 
 import { LandingPage } from '../guest-view';
@@ -23,6 +24,8 @@ import GuestIncidentForm from '../guest-view/components/GuestIncidentForm'
 import IncidentView from "../ongoing-incidents/components/IncidentView";
 import ArchiveIncidentListView from "../ongoing-incidents/components/ArchiveIncidentListView";
 import GuestIncidentFormSuccessPage from "../guest-view/components/GuestFormSuccessPage"
+import TempReportList from "../reporting/components/TempReportList";
+
 
 
 class MainRouter extends Component {
@@ -40,10 +43,11 @@ class MainRouter extends Component {
             <PrivateRoute path="/app" component={AppLayout}>
               <Switch>
                 <PrivateRoute exact path="/app/home" component={Home} /> 
-                <PrivateRoute exact path="/app/reports" component={ReportList} /> 
+                <PrivateRoute exact path="/app/reports" component={TempReportList} /> 
                 <PrivateRoute exact path="/app/reports/view" component={ReportViewer} /> 
                 <PrivateRoute exact path="/app/create" component={IncidentFormInternal} />
-                <PrivateRoute exact path="/app/review" component={ReviewIncidentListView} />
+                <PrivateRoute exact path="/app/review-complaints" component={ReviewComplaintsListView} />
+                <PrivateRoute exact path="/app/review-inquiries" component={ReviewInquiriesListView} />
                 <PrivateRoute exact path="/app/review/:paramIncidentId" component={IncidentView} />
                 <PrivateRoute exact path="/app/review/:paramIncidentId/edit" component={IncidentFormInternal} />
                 <PrivateRoute exact path="/app/archive" component={ArchiveIncidentListView} />

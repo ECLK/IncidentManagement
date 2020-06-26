@@ -4,10 +4,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
 
-
 import { hideModal } from '../state/modal.actions'
 
-import  ResponseTimeEditModal from './ResponseTimeEditModal';
+import ResponseTimeEditModal from './ResponseTimeEditModal';
 import VerifyConfirmModal from './VerifyConfirmModal'
 import EscalateModal from './EscalateModal';
 import EscallateOutsideModal from './EscallateOutsideModal';
@@ -18,9 +17,10 @@ import CloseModal from './CloseModal';
 import CompleteOutsideActionModal from './CompleteOutsideActionModal'
 import InvalidateModal from './InvalidateModal';
 import ReopenModal from './ReopenModal';
+import IdleTimeOutModal from './IdleTimeOutModal'
 
 const MODAL_COMPONENTS = {
-    'RESPOSE_TIME_EDIT': ResponseTimeEditModal,
+    'RESPONSE_TIME_EDIT': ResponseTimeEditModal,
     'VERIFY_CONFIRM_MODAL': VerifyConfirmModal,
     'ESCALATE_MODAL': EscalateModal,
     'ESCALLATE_OUTSIDE': EscallateOutsideModal,
@@ -30,7 +30,8 @@ const MODAL_COMPONENTS = {
     'CLOSE_MODAL': CloseModal,
     'COMPLETE_OUTSIDE_ACTION_MODAL':CompleteOutsideActionModal,
     'INVALIDATE_MODAL': InvalidateModal,
-    'REOPEN_MODAL': ReopenModal
+    'REOPEN_MODAL': ReopenModal,
+    'IDLE_TIME_OUT_MODAL': IdleTimeOutModal,
     /* other modals */
 }
 

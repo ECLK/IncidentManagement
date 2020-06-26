@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -25,15 +25,25 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import WhereToVoteIcon from '@material-ui/icons/WhereToVote';
+import PrintIcon from '@material-ui/icons/Print'
+import CancelIcon from '@material-ui/icons/Cancel'
+import ErrorIcon from '@material-ui/icons/Error'
 
 import IconButton from '@material-ui/core/IconButton';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import green from '@material-ui/core/colors/green';
 
 //actions
 import { showModal } from '../../../modals/state/modal.actions'
 
 //utils
 import { userCan, USER_ACTIONS } from '../../../user/userUtils';
+
+// pdf output
+import axios from 'axios'
+import handler from '../../../api/apiHandler'
+import { API_BASE_URL } from '../../../config'
 
 const styles = (theme) => ({
     card: {
@@ -58,11 +68,23 @@ const styles = (theme) => ({
     },
     button: {
         textAlign: "left"
-    }
+    },
+    buttonProgress: {
+        color: green[500],
+        position: 'absolute',
+        top: '50%',
+        left: '30%',
+        marginTop: -12,
+        marginLeft: -6,
+    },
+    wrapper: {
+        margin: theme.spacing.unit,
+        position: 'relative',
+    },
 });
 
 const getLastActionTime = (events) => {
-    
+
     if (events.allIds.length === 0) {
         return "No action taken yet";
     }
@@ -73,7 +95,7 @@ const getLastActionTime = (events) => {
 
 const EventActions = (props) => {
 
-    const { 
+    const {
         classes,
         users,
         divisions
@@ -84,6 +106,7 @@ const EventActions = (props) => {
         hourlyResponseTimes.push(i);
     }
 
+    const [isSlipLoading, setIsSlipLoading] = useState(false);
     const dispatch = useDispatch()
     const activeIncident = props.activeIncident;
     const currentUser = useSelector(state => state.shared.signedInUser.data);
@@ -94,8 +117,20 @@ const EventActions = (props) => {
         return null
     }
 
-    function showChangeAssigneeModal(){
-        dispatch(showModal('CHANGE_ASSIGNEE_MODAL', { activeIncident, users, divisions }));
+    async function printSlip(){
+        setIsSlipLoading(true)
+        await handler.get(`${API_BASE_URL}/pdfgen/?template_type=slip&id=`+activeIncident.id, {
+            responseType: 'blob'
+        })
+        .then(response => {
+            setIsSlipLoading(false)
+            const file = new Blob( [response.data], {type: 'application/pdf'})
+            const fileURL = URL.createObjectURL(file)
+            window.open(fileURL)
+        })
+        .catch(error => {
+            console.log(error);
+        });
     }
 
     return (
@@ -109,16 +144,16 @@ const EventActions = (props) => {
                         <PermIdentityIcon />
                     </Avatar>
                     <ListItemText primary="Assigned to" secondary={activeIncident.assignee ? activeIncident.assignee.displayname : ""} />
-                    
+{/* 
                     {activeIncident.currentStatus !== 'CLOSED' &&
-                        activeIncident.currentStatus !== 'INVALIDATED' && 
+                        activeIncident.currentStatus !== 'INVALIDATED' &&
                         userCan(currentUser, activeIncident, USER_ACTIONS.CAN_CHANGE_ASSIGNEE) &&
                         <ListItemSecondaryAction>
-                            <IconButton aria-label="Edit" onClick={showChangeAssigneeModal}>
+                            <IconButton aria-label="Edit" onClick={() => { props.modalAction('CHANGE_ASSIGNEE_MODAL') }}>
                                 <EditIcon />
                             </IconButton>
                         </ListItemSecondaryAction>
-                    }
+                    } */}
                 </ListItem>
 
                 <ListItem>
@@ -133,9 +168,9 @@ const EventActions = (props) => {
                         <AccessTimeIcon />
                     </Avatar>
                     <ListItemText primary="Close within" secondary={activeIncident.response_time + " hours."} />
-                    {activeIncident.currentStatus !== 'CLOSED'  && 
+                    {activeIncident.currentStatus !== 'CLOSED'  &&
                         <ListItemSecondaryAction>
-                            <IconButton aria-label="Edit" onClick={() => { dispatch(showModal('RESPOSE_TIME_EDIT', { activeIncident })) }}>
+                            <IconButton aria-label="Edit" onClick={() => { props.modalAction('RESPONSE_TIME_EDIT') }}>
                                 <EditIcon />
                             </IconButton>
                         </ListItemSecondaryAction>
@@ -146,8 +181,8 @@ const EventActions = (props) => {
                     <Avatar>
                         <HourglassEmptyIcon />
                     </Avatar>
-                    <ListItemText 
-                        primary="Close this before" 
+                    <ListItemText
+                        primary="Close this before"
                         secondary={timeLimitText}
                         classes = {{
                             // inset:true,
@@ -168,47 +203,48 @@ const EventActions = (props) => {
 
             <Divider variant="middle" className={classes.divider} />
 
-            {activeIncident.currentStatus !== 'CLOSED'  && 
-            activeIncident.currentStatus !== 'INVALIDATED'  && 
-              userCan(currentUser, activeIncident, USER_ACTIONS.CAN_RUN_WORKFLOW) && 
+            {activeIncident.currentStatus !== 'CLOSED'  &&
+            activeIncident.currentStatus !== 'INVALIDATED'  &&
+              userCan(currentUser, activeIncident, USER_ACTIONS.CAN_RUN_WORKFLOW) &&
                 <>
-                {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_ESCALATE_INCIDENT) && 
-                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={props.escallateIncident}>
+                {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_ESCALATE_INCIDENT) &&
+                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => props.modalAction('ESCALATE_MODAL')}>
                         <ArrowUpwardIcon className={classes.actionButtonIcon} />
-                        Escalate
+                        Escalate Incident
                     </Button>
                 }
-                
-            
-                {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_ESCALATE_EXTERNAL) && 
-                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={()=>{dispatch(showModal('ESCALLATE_OUTSIDE', { incidentId: activeIncident.id }))}}>
+
+
+                {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_ESCALATE_EXTERNAL) &&
+                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => props.modalAction('ESCALLATE_OUTSIDE')}>
                         <SubdirectoryArrowLeftIcon className={classes.actionButtonIcon} />
-                        Refer to organization 
+                        Assign Incident
                     </Button>
                 }
-                
-                <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REQUEST_ADVICE_MODAL', { activeIncident, users, divisions })) }}>
+
+                {/* TODO: add User Action permissions here */}
+                {/* <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('REQUEST_ADVICE_MODAL', { activeIncident, users, divisions })) }}>
                     <HelpIcon className={classes.actionButtonIcon} />
                     Request for advice
-                </Button>
+                </Button> */}
 
                 {userCan(currentUser, activeIncident, USER_ACTIONS.CAN_CLOSE_INCIDENT) &&
-                    
-                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('CLOSE_MODAL', { activeIncident })) }}>
-                        <WhereToVoteIcon className={classes.actionButtonIcon} />
+
+                    <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => props.modalAction('CLOSE_MODAL')}>
+                        <CancelIcon className={classes.actionButtonIcon} />
                         Close Incident
                     </Button>
                 }
-                
-                { (activeIncident.currentStatus === "NEW" || activeIncident.currentStatus === "REOPENED") && 
+
+                { (activeIncident.currentStatus === "NEW" || activeIncident.currentStatus === "REOPENED") &&
                     userCan(currentUser, activeIncident, USER_ACTIONS.CAN_INVALIDATE_INCIDENT) &&
                 (
                         <Button color="primary" size="large" variant='text' className={classes.button} onClick={() => { dispatch(showModal('INVALIDATE_MODAL', { activeIncident })) }}>
-                            <WhereToVoteIcon className={classes.actionButtonIcon} />
+                            <ErrorIcon className={classes.actionButtonIcon} />
                             Invalidate Incident
                         </Button>
                 )}
-                 
+
                 </>
             }
 
@@ -219,6 +255,19 @@ const EventActions = (props) => {
                     <WhereToVoteIcon className={classes.actionButtonIcon} />
                     Reopen Incident
                 </Button>
+                )
+            }
+
+            {
+                activeIncident.currentStatus != 'CLOSED' && activeIncident.incidentType === "INQUIRY" &&
+                (
+                    <div className={classes.wrapper}>
+                        <Button disabled={isSlipLoading} color="primary" size="large" variant='text' className={classes.button} onClick={() => printSlip()}>
+                            <PrintIcon className={classes.actionButtonIcon} />
+                            Print Slip
+                        </Button>
+                        {isSlipLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                    </div>
                 )
             }
         </div>

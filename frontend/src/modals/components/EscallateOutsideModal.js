@@ -14,12 +14,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { hideModal  } from '../state/modal.actions'
 import { fetchUpdateWorkflow } from '../../ongoing-incidents/state/OngoingIncidents.actions'
 
-// const entities = [
-//     { label:"Police", value:'Police'},
-//     { label:"Legal", value:'Legal'},
-//     { label:"Other", value:'other'},
-// ]
-
 const onSubmit = (dispatch, incidentId, escallationInfo) => {
     let entity = {};
 
@@ -37,7 +31,7 @@ const onSubmit = (dispatch, incidentId, escallationInfo) => {
         };
     }
 
-    dispatch(fetchUpdateWorkflow(incidentId, 'request-action', 
+    dispatch(fetchUpdateWorkflow(incidentId, 'request-action',
         {
             entity: entity,
             comment: escallationInfo.comment
@@ -60,7 +54,7 @@ const EscallateOutsideModal = (props) => {
     const divisions = useSelector(state => state.user.divisions);
     const organizations = useSelector(state => state.user.organizations);
     const {incidentId} = props
-    
+
     //maintains selected value in local state until change is confirmed
     const [escallationInfo, setEscallationInfo] = useState({
         entity_type: null,
@@ -70,12 +64,6 @@ const EscallateOutsideModal = (props) => {
     });
     const [division, setDivision] = useState(null);
 
-    // function handleEntityTypeChange(value){
-    //     if(value === "other"){
-
-    //     }
-    // }
-    console.log(escallationInfo);
     return (
         <div>
             <DialogTitle id="form-dialog-title">Refer to organization entity: </DialogTitle>
@@ -84,7 +72,7 @@ const EscallateOutsideModal = (props) => {
                 <DialogContentText>
                     Describe outside entity.
                 </DialogContentText>
-                
+
                 <TextField
                     autoFocus
                     id="entity"
@@ -104,7 +92,7 @@ const EscallateOutsideModal = (props) => {
                       shrink: true,
                     }}
                     >
-                    {organizations.allIds.map(id => (   
+                    {organizations.allIds.map(id => (
                         <MenuItem key={id} value={id}>
                             {organizations.byIds[id].name}
                         </MenuItem>
@@ -154,13 +142,13 @@ const EscallateOutsideModal = (props) => {
                           shrink: true,
                         }}
                         >
-                        {divisions.idsByOrganization[escallationInfo.entity_type].map(did => (   
+                        {divisions.idsByOrganization[escallationInfo.entity_type].map(did => (
                             <MenuItem key={did} value={did}>
                                 {divisions.byIds[did].name}
                             </MenuItem>
                         ))}
                     </TextField>
-                    
+
                     { division !== null && (
                         <>
                         <DialogContentText>
@@ -184,7 +172,7 @@ const EscallateOutsideModal = (props) => {
                               shrink: true,
                             }}
                             >
-                            {users.idsByDivision[division].map(option => (   
+                            {users.idsByDivision[division].map(option => (
                                 <MenuItem key={option} value={option}>
                                     {users.byIds[option].displayname}
                                 </MenuItem>
@@ -192,11 +180,11 @@ const EscallateOutsideModal = (props) => {
                         </TextField>
                         </>
                     )}
-                
+
                     </>
                 ) }
 
-                
+
                 <TextField
                     margin="dense"
                     id="comment"
@@ -207,16 +195,16 @@ const EscallateOutsideModal = (props) => {
                     onChange = {(e)=>{handleValueChange(escallationInfo, 'comment', e.target.value, setEscallationInfo)}}
                 />
             </DialogContent>
-            
+
 
             <DialogActions>
                 <Button onClick={()=>{dispatch(hideModal())}} color="primary">
                     Close
                 </Button>
-                <Button 
-                    onClick={()=>{  onSubmit(dispatch, incidentId, escallationInfo) }} 
+                <Button
+                    onClick={()=>{  onSubmit(dispatch, incidentId, escallationInfo) }}
                     color="primary">
-                    Refer to organization 
+                    Refer to organization
                 </Button>
             </DialogActions>
         </div>

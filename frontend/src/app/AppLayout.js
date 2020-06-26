@@ -6,33 +6,40 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import IdleTimer from "react-idle-timer";
 
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Button } from '@material-ui/core';
 
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
 import { Link, withRouter } from 'react-router-dom';
+import * as localStorage from "../utils/localStorage";
 
-import { 
-    initiateSignOut, 
-    fetchChannels, 
-    fetchElections, 
-    fetchCategories, 
-    fetchProvinces, 
-    fetchDistricts, 
-    fetchDivisionalSecretariats, 
-    fetchGramaNiladharis, 
-    fetchPollingDivisions, 
-    fetchPollingStations, 
-    fetchPoliceStations, 
-    fetchPoliceDivisions, 
-    fetchWards } from '../shared/state/sharedActions'
-import { changeLanguage } from '../shared/state/sharedActions';
+import {
+    fetchSignInRefreshToken,
+    initiateSignOut,
+    fetchChannels,
+    fetchElections,
+    fetchCategories,
+    fetchInstitutions,
+    fetchProvinces,
+    fetchDistricts,
+    fetchDivisionalSecretariats,
+    fetchGramaNiladharis,
+    fetchPollingDivisions,
+    fetchPollingStations,
+    fetchPoliceStations,
+    fetchPoliceDivisions,
+    fetchWards,
+    changeLanguage
+} from '../shared/state/sharedActions';
 import { loadUsers } from '../user/state/userActions'
+import { showModal, hideModal } from "../modals/state/modal.actions";
 
 import RootModal from '../modals/components/RootModal'
 
@@ -43,7 +50,8 @@ import { userCan, USER_ACTIONS } from '../user/userUtils';
 
 const HomeLink = props => <Link to="/app/home" {...props} />
 const ReportLink = props => <Link to="/app/create" {...props} />
-const ReviewLink = props => <Link to="/app/review" {...props} />
+const ReviewComplaintsLink = props => <Link to="/app/review-complaints" {...props} />
+const ReviewInquiriesLink = props => <Link to="/app/review-inquiries" {...props} />
 const StaticReportLink = props => <Link to="/app/reports" {...props} />
 const ArchiveLink = props => <Link to="/app/archive" {...props} />
 
@@ -93,6 +101,13 @@ const styles = theme => ({
         ...theme.mixins.toolbar,
         justifyContent: 'flex-end',
     },
+    reviewMenu: {
+        li: {
+            paddingTop: 8,
+            paddingBottom: 8
+        },
+        boxShadow: 'none'
+    },
     content: {
         flexGrow: 1,
         paddingTop: theme.spacing.unit * 3,
@@ -120,16 +135,69 @@ const styles = theme => ({
 });
 
 class DomainContainer extends React.Component {
-  state = {
-    open: true,
-    anchorEl: null,
-    anchorLang: null
-  };
+    constructor(props) {
+        super(props)
+        
+        this.state = {
+            open: true,
+            anchorEl: null,
+            anchorLang: null,
+            menuAnchorEl: null,
+            authToken: null,
+            anchorNotification: null,
+            notifications: [],
+            unreadNotificationCount: 0,
+
+            timeout: 1000 * 60 * 15,
+            // timeout: 1000 * 5 * 1,
+            isTimedOut: false,
+        }
+        this.idleTimer = null
+        this.onAction = this._onAction.bind(this)
+        this.onActive = this._onActive.bind(this)
+        this.onIdle = this._onIdle.bind(this)
+    }
+
+    /**
+     * user idle actions
+     */
+
+    _onAction(e) {
+        // console.log("user did something", e);
+        this.setState({ isTimedOut: false });
+    }
+
+    _onActive(e) {
+        // console.log("user is active", e);
+        this.setState({ isTimedOut: false });
+    }
+
+    _onIdle(e) {
+        // console.log("user is idle", e);
+        const isTimedOut = this.state.isTimedOut;
+        if (isTimedOut) {
+        this.props.hideIdleTimeOutModal();
+        this.handleSignOut();
+        } else {
+        this.props.showIdleTimeOutModal()
+        this.idleTimer.reset();
+        this.setState({ isTimedOut: true });
+        }
+    }
+
+    refreshTokenScheduler = (signInData) => {
+        if(!this.state.isTimedOut && signInData){
+        this.props.refreshToken()
+        }
+    }
+
+
 
   componentDidMount() {
     this.props.getChannels();
     this.props.getElections();
     this.props.getCategories();
+    this.props.getInstitutions();
     this.props.getProvinces();
     this.props.getDistricts();
     this.props.getDivisionalSecretariats();
@@ -140,6 +208,12 @@ class DomainContainer extends React.Component {
     this.props.getPoliceDivisions();
     this.props.getWards();
     this.props.loadAllUsers();
+    const signInData = localStorage.read("ECIncidentManagementUser");
+    signInData && this.setState({ authToken: signInData.token });
+
+    // following is only neccessary when you have to periodically get new tokens
+    this.interval = setInterval(() => (localStorage.read("ECIncidentManagementUser")) ? this.refreshTokenScheduler(signInData) : "", 1000 * 60 * 15);
+    // this.interval = setInterval(() => (localStorage.read("ECIncidentManagementUser")) ? this.refreshTokenScheduler(signInData) : "", 1000 * 5 * 1);
   }
 
   handleDrawerOpen = () => {
@@ -180,6 +254,18 @@ class DomainContainer extends React.Component {
     window.open(API_BASE_URL+'/admin/password_change/', '_blank');
   }
 
+  handleOnClickReviewMenuOpenButton = (e) => {
+    this.setState({ menuAnchorEl: e.currentTarget });
+  }
+
+  handleReviewMenuClose = () => {
+      this.setState({ menuAnchorEl: null });
+  }
+
+  handleOnClickReviewMenuItem = (e) => {
+      this.setState({ menuAnchorEl: null });
+  }
+
   render() {
     const { classes, selectedLanguage, signedInUser, location } = this.props;
     const { open, anchorEl, anchorLang } = this.state;
@@ -190,6 +276,15 @@ class DomainContainer extends React.Component {
 
     return (
       <div className={classes.root}>
+
+        <IdleTimer
+            ref={ref => { this.idleTimer = ref }}
+            element={document}
+            onActive={this.onActive}
+            onIdle={this.onIdle}
+            onAction={this.onAction}
+            debounce={250}
+            timeout={this.state.timeout} />
         <CssBaseline />
         <AppBar
           position="static"
@@ -198,25 +293,44 @@ class DomainContainer extends React.Component {
 
                 <Typography variant="h6" color="inherit" className={classes.grow}>
                     Incident Management
-                    
-                    <Button 
-                        variant={selectedMainSection==='home'?'outlined': 'flat'} 
+
+                    <Button
+                        variant={selectedMainSection==='home'?'outlined': 'flat'}
                         color="inherit" component={HomeLink} className={classes.homeButton}>Home</Button>
-                    <Button variant={selectedMainSection==='create'?'outlined': 'flat'} 
+                    <Button variant={selectedMainSection==='create'?'outlined': 'flat'}
                         color="inherit" component={ReportLink}>Create</Button>
-                    
+
                     {userCan(signedInUser, null, USER_ACTIONS.CAN_REVIEW_INCIDENTS) && (
-                        <Button variant={selectedMainSection==='review'?'outlined': 'flat'} 
-                            color="inherit" component={ReviewLink}>Review</Button>
+                        <spanner>
+                            <Button variant={selectedMainSection==='review-complaints' || selectedMainSection === 'review-inquiries'?'outlined': 'flat'}
+                                    color="inherit" onClick={this.handleOnClickReviewMenuOpenButton} aria-owns="review-menu">Review <ArrowDropDown/></Button>
+                            <Menu id="review-menu" open={Boolean(this.state.menuAnchorEl)}
+                                  onClose={this.handleReviewMenuClose} anchorEl={this.state.menuAnchorEl} className={classes.reviewMenu}
+                                  anchorOrigin={{
+                                      horizontal: 'center',
+                                  }}
+                                  transformOrigin={{
+                                      vertical: 'top',
+                                      horizontal: 'center',
+                                  }}>
+                                <MenuItem component={ReviewComplaintsLink} onClick={this.handleOnClickReviewMenuItem}>
+                                    Complaints
+                                </MenuItem>
+                                <MenuItem component={ReviewInquiriesLink} onClick={this.handleOnClickReviewMenuItem}>
+                                    Inquiries
+                                </MenuItem>
+
+                            </Menu>
+                        </spanner>
                     )}
-                    
+
                     {userCan(signedInUser, null, USER_ACTIONS.CAN_VIEW_REPORTS) && (
-                        <Button variant={selectedMainSection==='reports'?'outlined': 'flat'} 
+                        <Button variant={selectedMainSection==='reports'?'outlined': 'flat'}
                             color="inherit" component={StaticReportLink}>Reports</Button>
                     )}
 
                     {userCan(signedInUser, null, USER_ACTIONS.CAN_REVIEW_INCIDENTS) && (
-                        <Button variant={selectedMainSection==='archive'?'outlined': 'flat'} 
+                        <Button variant={selectedMainSection==='archive'?'outlined': 'flat'}
                             color="inherit" component={ArchiveLink}>Archive</Button>
                     )}
 
@@ -334,6 +448,9 @@ const mapDispatchToProps = (dispatch) => {
         getCategories: () => {
             dispatch(fetchCategories())
         },
+        getInstitutions: () => {
+            dispatch(fetchInstitutions())
+        },
         getProvinces: () => {
             dispatch(fetchProvinces())
         },
@@ -363,6 +480,15 @@ const mapDispatchToProps = (dispatch) => {
         },
         loadAllUsers: () => {
             dispatch(loadUsers())
+        },
+        showIdleTimeOutModal: () => {
+          dispatch(showModal('IDLE_TIME_OUT_MODAL'))
+        },
+        hideIdleTimeOutModal: () => {
+          dispatch(hideModal())
+        },
+        refreshToken: () => {
+          dispatch(fetchSignInRefreshToken())
         }
     }
 }

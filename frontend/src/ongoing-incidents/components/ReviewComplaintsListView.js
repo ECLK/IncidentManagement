@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import { useSelector, useDispatch } from "react-redux";
-import { loadAllIncidents } from "../../incident/state/incidentActions";
+import {
+    loadAllIncidents,
+    loadAllIncidentsRequest,
+    updateIncidentSearchFilter
+} from "../../incident/state/incidentActions";
 import * as incidentsApi from '../../api/incident';
 
 import SearchForm from "./SearchForm";
@@ -28,15 +32,19 @@ const styles = theme => ({
   }
 });
 
-function ReviewIncidentListView({ classes, ...props }) {
-  const [filters, setFilters] = useState({});
-
+function ReviewComplaintsListView({ classes, ...props }) {
+  const [filters, setFilters] = useState({ });
+  filters['incidentType'] = "COMPLAINT";
+  const dispatch = useDispatch();
+  useEffect(() => {
+      dispatch(updateIncidentSearchFilter(filters));
+  });
   const categories = useSelector(state => state.shared.categories);
   const incidentSearchFilter = useSelector(state => state.incident.incidents.searchFilter);
-  const incidents = useSelector(state => state.incident.incidents);
+  let incidents = useSelector(state => state.incident.incidents);
 
-  const dispatch = useDispatch();
   const handlePageChange = (event, newPage) => dispatch(loadAllIncidents(incidentSearchFilter, newPage+1));
+
 
   const handleSearchClick = (filters, page) => {
     if(filters){
@@ -45,7 +53,7 @@ function ReviewIncidentListView({ classes, ...props }) {
       setFilters({});
     }
     dispatch(loadAllIncidents(filters, page))
-  }
+  };
 
   const handleExportClick = async (exportType) => {
     filters["export"] = exportType;
@@ -74,9 +82,12 @@ function ReviewIncidentListView({ classes, ...props }) {
     
   return (
     <Paper className={classes.root}>
-      <SearchForm 
+      <h3>Review Complaints</h3>
+      <SearchForm
+        incidentType='COMPLAINT'
         categories={categories} 
-        handleSearchClick={handleSearchClick} 
+        handleSearchClick={handleSearchClick}
+        filters={filters}
         showClosed={false}
         {...props} />
       <Grid container direction={"row"} className={classes.exportContainer}>
@@ -92,14 +103,15 @@ function ReviewIncidentListView({ classes, ...props }) {
         </Grid>
       </Grid>
       <IncidentListReview
+          incidentType='COMPLAINT'
           incidents={incidents}
           pageNumber={incidents.paging.pageNumber-1}
           count={incidents.paging.count}
-          handleRowClick={incidentId => props.history.push(`/app/review/${incidentId}`)}
+          handleRowClick={incidentId => window.open(`/app/review/${incidentId}`, '_blank')}
           handlePageChange={handlePageChange}
       />
     </Paper>
   );
 }
 
-export default withStyles(styles)(ReviewIncidentListView);
+export default withStyles(styles)(ReviewComplaintsListView);

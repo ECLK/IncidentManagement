@@ -13,6 +13,10 @@ import {
     REQUEST_INCIDENT_ELECTIONS_SUCCESS,
     REQUEST_INCIDENT_ELECTIONS_FAILURE,
 
+    REQUEST_INCIDENT_INSTITUTIONS,
+    REQUEST_INCIDENT_INSTITUTIONS_SUCCESS,
+    REQUEST_INCIDENT_INSTITUTIONS_FAILURE,
+
     REQUEST_INCIDENT_CATAGORIES,
     REQUEST_INCIDENT_CATAGORIES_SUCCESS,
     REQUEST_INCIDENT_CATAGORIES_FAILURE,
@@ -57,6 +61,10 @@ import {
     SIGN_IN_REQUEST_SUCCESS,
     SIGN_IN_REQUEST_ERROR,
 
+    SIGN_IN_REFRESH_TOKEN_REQUEST,
+    SIGN_IN_REFRESH_TOKEN_REQUEST_SUCCESS,
+    SIGN_IN_REFRESH_TOKEN_REQUEST_ERROR,
+
     TOGGLE_REMEBER_USER,
     SIGN_OUT,
     SIGN_OUT_ERROR,
@@ -72,7 +80,7 @@ import {
 } from './Shared.types';
 
 
-// transforms arrays from backend to objects. 
+// transforms arrays from backend to objects.
 // this helps to maintain better state shape.
 
 const transformArray = (array) => {
@@ -91,6 +99,10 @@ const initialState = {
     channels: [],
     elections: [],
     categories: [],
+    institutions: {
+        byCode:{},
+        allCodes:[]
+    },
     provinces: {
         byCode:{},
         allCodes:[]
@@ -149,7 +161,7 @@ export default function sharedReducer(state, action) {
         }
         return initialState;
     }
-    
+
     return produce(state, draft => {
         switch (action.type) {
 
@@ -168,13 +180,21 @@ export default function sharedReducer(state, action) {
                 return draft
             case REQUEST_INCIDENT_ELECTIONS_FAILURE:
                 return draft
-                
+
             case REQUEST_INCIDENT_CATAGORIES:
                 return draft
             case REQUEST_INCIDENT_CATAGORIES_SUCCESS:
                 draft.categories = action.data;
                 return draft
             case REQUEST_INCIDENT_CATAGORIES_FAILURE:
+                return draft
+
+            case REQUEST_INCIDENT_INSTITUTIONS:
+                return draft
+            case REQUEST_INCIDENT_INSTITUTIONS_SUCCESS:
+                draft.institutions = transformArray(action.data);
+                return draft
+            case REQUEST_INCIDENT_INSTITUTIONS_FAILURE:
                 return draft
 
             case REQUEST_INCIDENT_PROVINCES:
@@ -240,7 +260,7 @@ export default function sharedReducer(state, action) {
                 return draft
             case REQUEST_INCIDENT_POLICE_DIVISIONS_FAILURE:
                 return draft
-    
+
             case REQUEST_INCIDENT_WARDS:
                 return draft
             case REQUEST_INCIDENT_WARDS_SUCCESS:
@@ -270,6 +290,21 @@ export default function sharedReducer(state, action) {
             case SIGN_IN_REQUEST_ERROR:
                 draft.signedInUser.error = action.error;
                 return draft;
+
+            case SIGN_IN_REFRESH_TOKEN_REQUEST:
+                draft.signedInUser.isLoading = true;
+                return draft
+            case SIGN_IN_REFRESH_TOKEN_REQUEST_SUCCESS:
+                if (action.data.authenticated) {
+                    draft.signedInUser.data = action.data.user
+                    draft.signedInUser.isSignedIn = true;
+                }
+                draft.signedInUser.isLoading = false;
+                return draft;
+            case SIGN_IN_REFRESH_TOKEN_REQUEST_ERROR:
+                draft.signedInUser.error = action.error;
+                return draft;
+
             case TOGGLE_REMEBER_USER:
                 draft.signedInUser.rememberMe = !state.signedInUser.rememberMe
                 return draft;

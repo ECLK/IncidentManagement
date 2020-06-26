@@ -1,23 +1,24 @@
-import React, { useEffect } from "react";
-
 import { Formik, withFormik } from "formik";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
+import React, { useEffect, useState } from "react";
+
+import Button from "@material-ui/core/Button";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import FormControl from "@material-ui/core/FormControl";
+import Grid from "@material-ui/core/Grid";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import moment from "moment";
-import { withStyles } from "@material-ui/core/styles";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import MenuItem from "@material-ui/core/MenuItem";
+import Search from './search'
 import SearchIcon from "@material-ui/icons/Search";
-
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Select from "@material-ui/core/Select";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import moment from "moment";
+import { useSelector } from 'react-redux'
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
   root: {
@@ -55,6 +56,11 @@ const styles = theme => ({
     margin: theme.spacing.unit * 2,
     minWidth: 300
   },
+  formControlSearch: {
+    margin: theme.spacing.unit * 2,
+    minWidth: 1200 + theme.spacing.unit * 12,
+
+  },
   buttonContainer: {
     margin: theme.spacing.unit * 2,
     minWidth: 300,
@@ -79,20 +85,36 @@ function SearchForm(props) {
   };
 
   useEffect(() => {
-    filterIncidents();
+    filterIncidents(props.filters);
   }, []);
   const { classes, categories } = props;
-  const severityValues = Array(10).fill(0).map((e,i)=>i+1);
-  console.log(props);
+  const severityValues = Array(10).fill(0).map((e, i) => i + 1);
+  const institutions = useSelector(state => state.shared.institutions);
+  const districts = useSelector(state => state.shared.districts);
+  const [selectedInstitution, setSelectedInstitution] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+
+  let orgSearch = props.incidentType === 'INQUIRY' ?
+      (<Search
+          institutions={institutions}
+          onChange={setSelectedInstitution}
+      ></Search>) :
+      (<Search
+            districts={districts}
+            onChange={setSelectedDistrict}
+      ></Search>);
+
   return (
     <Formik
       initialValues={props.incidentSearchFilter}
       onSubmit={(values, { setSubmitting }) => {
         let preparedValues = {
           ...values,
-          startTime: values.startTime !== null ? moment(values.startTime).format("YYYY-MM-DD HH:mm") : null,
-          endTime: values.endTime !== null ? moment(values.endTime).format("YYYY-MM-DD HH:mm") : null
+          startTime: values.startTime ? moment(values.startTime).format("YYYY-MM-DD HH:mm") : null,
+          endTime: values.endTime ? moment(values.endTime).format("YYYY-MM-DD HH:mm") : null
         };
+        if (selectedInstitution) { preparedValues.institution = selectedInstitution }
+        if (selectedDistrict) { preparedValues.district = selectedDistrict }
         // alert(JSON.stringify(preparedValues));
         filterIncidents(preparedValues);
       }}
@@ -174,40 +196,6 @@ function SearchForm(props) {
                       </Select>
                     </FormControl>
                     <FormControl className={classes.formControl}>
-                      <InputLabel
-                        shrink
-                        htmlFor="response-time-label-placeholder"
-                      >
-                        Reponse time
-                      </InputLabel>
-                      <Select
-                        input={
-                          <Input
-                            name="responseTime"
-                            id="response-time-label-placeholder"
-                          />
-                        }
-                        displayEmpty
-                        name="maxResponseTime"
-                        value={values.maxResponseTime}
-                        onChange={handleChange}
-                        className={classes.selectEmpty}
-                      >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={"1"}>Less than 1 hour</MenuItem>
-                        <MenuItem value={"2"}>Less than 2 hours</MenuItem>
-                        <MenuItem value={"3"}>Less than 3 hours</MenuItem>
-                        <MenuItem value={"4"}>Less than 4 hours</MenuItem>
-                        <MenuItem value={"5"}>Less than 5 hour</MenuItem>
-                        <MenuItem value={"6"}>Less than 6 hours</MenuItem>
-                        <MenuItem value={"7"}>Less than 7 hours</MenuItem>
-                        <MenuItem value={"8"}>Less than 8 hours</MenuItem>
-                        <MenuItem value={"9"}>Less than 9 hours</MenuItem>
-                      </Select>
-                    </FormControl>
-                    <FormControl className={classes.formControl}>
                       <InputLabel shrink htmlFor="status-label-placeholder">
                         Severity
                       </InputLabel>
@@ -229,7 +217,7 @@ function SearchForm(props) {
                         </MenuItem>
                         {severityValues.map((val) => (
                           <MenuItem value={val} key={val}>{val}</MenuItem>
-                        ))}                        
+                        ))}
                       </Select>
                     </FormControl>
                     <FormControl className={classes.formControl}>
@@ -252,8 +240,8 @@ function SearchForm(props) {
                         <MenuItem value="">
                           <em>None</em>
                         </MenuItem>
-                        {categories.map(({ sub_category }) => (
-                          <MenuItem value={sub_category}>
+                        {categories.map(({ id, sub_category }) => (
+                          <MenuItem value={id}>
                             {sub_category}
                           </MenuItem>
                         ))}
@@ -288,6 +276,9 @@ function SearchForm(props) {
                         }}
                         onChange={handleChange}
                       />
+                    </FormControl>
+                    <FormControl className={classes.formControlSearch}>
+                      { orgSearch }
                     </FormControl>
                     <FormControl className={classes.buttonContainer}>
                       {/* Reset workflow is pending
