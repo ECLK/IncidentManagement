@@ -173,18 +173,40 @@ def get_daily_district_center_data():
     incidents = get_daily_incidents(IncidentType.COMPLAINT)
 
     districts_centers = []
-    districts = District.objects.all()
+    districts = [
+        "Colombo",
+        "Gampaha",
+        "Kalutara",
+        "Kandy",
+        "Matale",
+        "Nuwaraeliya",
+        "Galle",
+        "Matara",
+        "Hambantota",
+        "Jaffna",
+        "Killinochchi",
+        "Vavuniya",
+        "Mannar",
+        "Mulaitivu",
+        "Baticaloa",
+        "Ampara",
+        "Trincomalee",
+        "Kurunagala",
+        "Puttalam",
+        "Anuradhapura",
+        "Polonnaruwa",
+        "Badulla",
+        "Monaragala",
+        "Ratnapura",
+        "Kagalle"
+    ]
     for dt in districts:
         district = {}
 
-        # removing 'All Island from districts'
-        if dt.name in "All Island":
-            continue
-
         try:
-            center = Division.objects.get(Q(name__contains=dt.name) & Q(organization_id=1))
+            center = Division.objects.get(Q(name__contains=dt) & Q(organization_id=1))
         except ObjectDoesNotExist:
-            district["name"] = dt.name
+            district["name"] = dt
             district["total"] = 0
             district["other"] = 0
             district["violence"] = 0
@@ -197,7 +219,7 @@ def get_daily_district_center_data():
 
         dc_incidents = get_incidents_filtered_by_division(incidents, center)
         if (not dc_incidents):
-            district["name"] = dt.name
+            district["name"] = dt
             district["total"] = 0
             district["other"] = 0
             district["violence"] = 0
@@ -208,7 +230,7 @@ def get_daily_district_center_data():
             districts_centers.append(district)
             continue
 
-        district["name"] = dt.name
+        district["name"] = dt
         district["total"] = dc_incidents.count()
         total += dc_incidents.count()
 
