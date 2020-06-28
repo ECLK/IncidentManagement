@@ -106,6 +106,7 @@ function NavTabs({ classes, match }) {
     });
 
     const [files, setFiles] = useState([]);
+    const [fileError, setFileError] = useState(false);
     const [activeIncident, setActiveIncident] = useState(null);
     const [activeReporter, setActiveReporter] = useState(null);
 
@@ -196,6 +197,18 @@ function NavTabs({ classes, match }) {
         setFiles([]);
     }
 
+    const disableUploadButton = () => {
+        let disable
+        if (!files.length){
+            disable = true
+        } else if (fileError){
+            disable = true
+        } else {
+            disable = false
+        }
+        return disable
+    }
+
     const EditIncidentLink = props => <Link to={`/app/review/${activeIncident.id}/edit`} {...props} />
 
     if(!activeIncident){
@@ -240,12 +253,13 @@ function NavTabs({ classes, match }) {
                                     <FileUploader
                                         files={files}
                                         setFiles={setFiles}
+                                        setFileError={setFileError}
                                         watchedActions={[
                                             attachFileRequest()
                                         ]}
                                     />
                                     <div className={classes.uploadButtonWrapper}>
-                                    <Button disabled={!files.length} onClick={onUploadClick}>
+                                    <Button disabled={disableUploadButton()} onClick={onUploadClick}>
                                         Upload
                                     </Button>
                                     </div>

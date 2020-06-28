@@ -22,18 +22,18 @@ export default function FileUploader({
   const FilePondLanguage = {
     labelIdle: `Drag and Drop your files or <span class="filepond--label-action">Browse</span>
             </br><span style="font-size:8pt">maximum upload size is 100MB</span>.
-            </br><span style="font-size:8pt">all common video,audio and image formats are accepted</span>.`,
+            </br><span style="font-size:8pt">all common video, audio, image and pdf formats are accepted</span>.`,
   };
   const acceptedFileTypes = [
+    "application/pdf",
+    // "application/zip",
+    // "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/x-mpegURL",
     "image/jpeg",
     "image/heic",
-    "application/pdf",
-    "application/zip",
     "image/png",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "video/x-flv",
     "video/mp4",
-    "application/x-mpegURL",
     "video/MP2T",
     "video/3gpp",
     "video/quicktime",
@@ -57,7 +57,7 @@ export default function FileUploader({
       <FilePond
         ref={pond}
         files={files}
-        acceptedFileTypes={["image/*", "audio/*", "video/*"]}
+        acceptedFileTypes={["image/*", "audio/*", "video/*", "application/pdf"]}
         allowMultiple={true}
         maxTotalFileSize="100MB"
         {...FilePondLanguage}
