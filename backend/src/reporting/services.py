@@ -7,6 +7,7 @@ from datetime import date, timedelta, datetime
 from django.db.models import Q
 from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.timezone import localtime
 
 from ..common.models import Category, Channel, District
 from ..incidents.models import Incident, IncidentType
@@ -27,10 +28,12 @@ def get_daily_incidents(incidentType):
     Daily incidents concidered in election commission is, incidents logged from yesterday 4pm to today 4pm.
     """
     # yesterday at 4pm
-    start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
+    # start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
+    start_datetime = (localtime() - timedelta(days=1)).replace(hour=16, minute=00)
     # today at 3:59pm
-    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
-    incidents = Incident.objects.all().filter(incidentType=incidentType, created_date__range=(start_datetime, end_datetime))
+    # end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+    end_datetime = localtime().replace(hour=16, minute=59)
+    incidents = Incident.objects.all().filter(incidentType=incidentType, election=settings.ELECTION, created_date__range=(start_datetime, end_datetime))
     return incidents
 
 def map_category(cat_voilence, cat_law, cat_other, total_list):
@@ -99,11 +102,14 @@ def get_daily_summary_data():
     cat_other = Category.objects.all().filter(top_category='Other')
 
     # for time / date ranges
-    start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
-    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+    # start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
+    # end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+    start_datetime = (localtime() - timedelta(days=1)).replace(hour=16, minute=00)
+    end_datetime = localtime().replace(hour=16, minute=59)
 
-    # get incident list
-    incidents = Incident.objects.all().filter(incidentType=IncidentType.COMPLAINT.name, election=settings.ELECTION)
+    # get all incidents only upto 4pm today
+    initial_datetime = end_datetime - timedelta(weeks=40)
+    incidents = Incident.objects.all().filter(incidentType=IncidentType.COMPLAINT.name, election=settings.ELECTION, created_date__range=(initial_datetime, end_datetime))
 
     # find eclk complaints
     eclk_users = User.objects.filter(profile__organization__code="eclk")
@@ -291,8 +297,10 @@ def get_daily_district_data():
     cat_other = Category.objects.all().filter(top_category='Other')
 
     # for time / date ranges
-    start_datetime = (date.today() - timedelta(days=100)).strftime("%Y-%m-%d 16:00:00")
-    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+    # start_datetime = (date.today() - timedelta(days=100)).strftime("%Y-%m-%d 16:00:00")
+    # end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+    start_datetime = (localtime() - timedelta(days=1)).replace(hour=16, minute=00)
+    end_datetime = localtime().replace(hour=16, minute=59)
 
     incidents = Incident.objects.all().filter(incidentType=IncidentType.COMPLAINT.name, election=settings.ELECTION, created_date__range=(start_datetime, end_datetime))
 
