@@ -91,7 +91,7 @@ def get_daily_summary_data():
 
     file_dict["template"] = "incidents/complaints/daily_summary_report.js"
     file_dict["date"] = date.today().strftime("%Y/%m/%d")
-    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d"), " 4:00pm - ", date.today().strftime("%Y/%m/%d"),  " 4:00pm"
+    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + date.today().strftime("%Y/%m/%d") + " 4:00pm"
 
     # preload categories
     cat_voilence = Category.objects.all().filter(top_category='Violence')
@@ -163,9 +163,9 @@ def get_daily_district_center_data():
 
     file_dict["template"] = "incidents/complaints/daily_summary_report_districtwise.js"
     file_dict["electionDate"] = date.today().strftime("%Y/%m/%d")
-    
+
     file_dict["date"] = date.today().strftime("%Y/%m/%d")
-    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d"), " 4:00pm - ", date.today().strftime("%Y/%m/%d"),  " 4:00pm"
+    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + date.today().strftime("%Y/%m/%d") + " 4:00pm"
 
     # totals
     violence=0
@@ -204,7 +204,8 @@ def get_daily_district_center_data():
         "Badulla",
         "Monaragala",
         "Ratnapura",
-        "Kegalle"
+        "Kegalle",
+        "HQ"
     ]
     for dt in districts:
         district = {}
@@ -349,7 +350,7 @@ def get_daily_category_data():
 
     file_dict["template"] = "incidents/complaints/daily_summery_report_categorywise.js"
     file_dict["date"] = date.today().strftime("%Y/%m/%d")
-    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d"), " 4:00pm - ", date.today().strftime("%Y/%m/%d"),  " 4:00pm"
+    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + date.today().strftime("%Y/%m/%d") + " 4:00pm"
 
     incidents = get_daily_incidents(IncidentType.COMPLAINT)
 

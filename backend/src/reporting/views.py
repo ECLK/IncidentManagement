@@ -81,6 +81,8 @@ class ReportingAccessView(APIView):
 
 
         request_data = json.dumps(json_dict)
+        # return HttpResponse(status=200, content=request_data, content_type='application/json')
+
         res = requests.post(url=endpoint_uri, data = request_data, headers={'content-type': 'application/json'})
 
         if res.status_code == 200:
