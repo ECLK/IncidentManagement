@@ -42,17 +42,17 @@ def map_category(cat_voilence, cat_law, cat_other, total_list):
     }
 
     for total in total_list:
-        key = total["category"]
+        key = Category.objects.get(id=total["category"])
         val = total["category__count"]
 
-        if key == cat_voilence:
-            totals["disputes"] = val
+        if key in cat_voilence:
+            totals["disputes"] += val
 
-        if key == cat_law:
-            totals["violationOfLaws"] = val
+        if key in cat_law:
+            totals["violationOfLaws"] += val
 
-        if key == cat_other:
-            totals["others"] = val
+        if key in cat_other:
+            totals["others"] += val
 
         totals["amount"] += val
 
@@ -91,6 +91,7 @@ def get_daily_summary_data():
 
     file_dict["template"] = "incidents/complaints/daily_summary_report.js"
     file_dict["date"] = date.today().strftime("%Y/%m/%d")
+    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d"), " 4:00pm - ", date.today().strftime("%Y/%m/%d"),  " 4:00pm"
 
     # preload categories
     cat_voilence = Category.objects.all().filter(top_category='Violence')
@@ -105,7 +106,7 @@ def get_daily_summary_data():
     incidents = Incident.objects.all().filter(incidentType=IncidentType.COMPLAINT.name, election=settings.ELECTION)
 
     # find eclk complaints
-    eclk_users = User.objects.all().filter(profile__organization__code="eclk")
+    eclk_users = User.objects.filter(profile__organization__code="eclk")
     eclk_hq_users = eclk_users.filter(profile__division__is_hq=True)
     eclk_district_users = eclk_users.filter(profile__division__is_hq=False)
 
@@ -114,6 +115,7 @@ def get_daily_summary_data():
     eclk_hq_incidents = incidents.filter(created_by__in=eclk_hq_users)
     eclk_district_incidents = incidents.filter(created_by__in=eclk_district_users)
 
+    # second table of the template
     # for total summary
     file_dict["complaintsSummary"] = {
         "national": map_category(cat_voilence, cat_law, cat_other, eclk_hq_incidents.values('category').annotate(Count("category")).order_by()),
@@ -121,6 +123,7 @@ def get_daily_summary_data():
         "totals": map_category(cat_voilence, cat_law, cat_other, eclk_incidents.values('category').annotate(Count("category")).order_by())
     }
 
+    # first table of the template
     # past 24 hours
     eclk_incidents = eclk_incidents.filter(created_date__range=(start_datetime, end_datetime))
     eclk_hq_incidents = eclk_hq_incidents.filter(created_date__range=(start_datetime, end_datetime))
@@ -160,6 +163,9 @@ def get_daily_district_center_data():
 
     file_dict["template"] = "incidents/complaints/daily_summary_report_districtwise.js"
     file_dict["electionDate"] = date.today().strftime("%Y/%m/%d")
+    
+    file_dict["date"] = date.today().strftime("%Y/%m/%d")
+    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d"), " 4:00pm - ", date.today().strftime("%Y/%m/%d"),  " 4:00pm"
 
     # totals
     violence=0
@@ -198,7 +204,7 @@ def get_daily_district_center_data():
         "Badulla",
         "Monaragala",
         "Ratnapura",
-        "Kagalle"
+        "Kegalle"
     ]
     for dt in districts:
         district = {}
@@ -343,6 +349,7 @@ def get_daily_category_data():
 
     file_dict["template"] = "incidents/complaints/daily_summery_report_categorywise.js"
     file_dict["date"] = date.today().strftime("%Y/%m/%d")
+    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d"), " 4:00pm - ", date.today().strftime("%Y/%m/%d"),  " 4:00pm"
 
     incidents = get_daily_incidents(IncidentType.COMPLAINT)
 
