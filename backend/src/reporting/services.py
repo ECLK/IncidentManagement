@@ -10,9 +10,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.timezone import localtime
 
 from ..common.models import Category, Channel, District
-from ..incidents.models import Incident, IncidentType
+from ..incidents.models import Incident, IncidentType, severity_dict
 from ..custom_auth.models import Organization, Division, Profile
 from django.contrib.auth.models import User
+
+from ..common.serializers import ChannelSerializer, DistrictSerializer, CategorySerializer
 
 from ..incidents.services import get_incident_by_id
 
@@ -87,6 +89,38 @@ def map_severity(total_list):
 
     return totals
 
+def get_daily_incident_detail_list():
+    # TODO: this method is not complete.
+    file_dict = {}
+    file_dict["template"] = "incidents/complaints/daily_summary_report.js"
+    file_dict["date"] = date.today().strftime("%Y/%m/%d")
+    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + date.today().strftime("%Y/%m/%d") + " 4:00pm"
+
+    # TODO: get daily incidents only here
+    # incidents = get_daily_incidents(IncidentType.COMPLAINT)
+    incidents = Incident.objects.filter(incidentType=IncidentType.COMPLAINT)
+
+    incident_list = []
+    for incident in incidents:
+        incident_dict = {}
+        incident_dict["refId"] = incident.refId
+        incident_dict["channel"] = ChannelSerializer(Channel.objects.get(id=incident.infoChannel)).data["name"]
+        incident_dict["created_date"] = localtime(incident.created_date).strftime("%Y/%m/%d")
+        incident_dict["reporter"] = incident.reporter.name
+        incident_dict["location"] = incident.location+" - " if len(incident.location) else ""
+        incident_dict["location"] += DistrictSerializer(District.objects.get(code=incident.district)).data["name"]
+        incident_dict["description"] = incident.description
+        incident_dict["category"] = CategorySerializer(Category.objects.get(id=incident.category)).data["code"]
+        incident_dict["severity"] = severity_dict[str(incident.severity)]
+
+        # TODO: retrieve from comment update
+        incident_dict["handling_by"] = "consectetur adipiscing"
+        incident_dict["progress"] = "Lorem ipsum dolor sit amet"
+        incident_list.append(incident_dict)
+
+    file_dict["incidents"] = incident_list
+
+    return file_dict
 
 def get_daily_summary_data():
     """ Function to get daily summary data on complaints for PDF export. """

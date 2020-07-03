@@ -14,7 +14,8 @@ import os
 
 from .services import get_police_division_summary, get_category_summary, get_daily_district_center_data, \
     get_mode_summary, get_severity_summary, get_status_summary, get_subcategory_summary, get_district_summary, \
-    get_incident_date_summary, get_slip_data, get_daily_category_data, get_daily_summary_data, get_daily_district_data
+    get_incident_date_summary, get_slip_data, get_daily_category_data, get_daily_summary_data, get_daily_district_data, \
+    get_daily_incident_detail_list
 from .functions import apply_style, decode_column_names, incident_type_title, incident_type_query
 
 '''
@@ -79,8 +80,17 @@ class ReportingAccessView(APIView):
             """
             json_dict["file"] = get_daily_district_center_data()
 
+        elif (template_type == "dialy_incident_detail_list"):
+            """
+            dialy_incident_list
+            GET parameters => /?template_type=dialy_incident_detail_list
+            """
+            json_dict["file"] = get_daily_incident_detail_list()
+
 
         request_data = json.dumps(json_dict)
+
+        # following line is to debug the json on development only
         # return HttpResponse(status=200, content=request_data, content_type='application/json')
 
         res = requests.post(url=endpoint_uri, data = request_data, headers={'content-type': 'application/json'})

@@ -45,6 +45,19 @@ class SeverityType(enum.Enum):
     def __str__(self):
         return self.name
 
+severity_dict = {
+    "1":"Minor",
+    "2":"Minor",
+    "3":"Minor",
+    "4":"General",
+    "5":"General",
+    "6":"General",
+    "7":"General",
+    "8":"Major",
+    "9":"Major",
+    "10":"Major"
+}
+
 class IncidentType(enum.Enum):
     INQUIRY = "INQUIRY"
     COMPLAINT = "COMPLAINT"
