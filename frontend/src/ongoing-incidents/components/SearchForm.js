@@ -88,7 +88,17 @@ function SearchForm(props) {
     filterIncidents(props.filters);
   }, []);
   const { classes, categories } = props;
-  const severityValues = Array(10).fill(0).map((e, i) => i + 1);
+  const severityValues = Array(10).fill(0).map((e, i) => {
+    let val = i + 1;
+    switch(val) {
+      case 1 <= val && val <= 3:
+        return {category: 'Low', severityValue: val}
+      case 4 <= val && val <= 7:
+        return {category: 'Medium', severityValue: val}
+      default:
+        return {category: 'High', severityValue: val}
+    }
+  });
   const institutions = useSelector(state => state.shared.institutions);
   const districts = useSelector(state => state.shared.districts);
   const [selectedInstitution, setSelectedInstitution] = useState("");
@@ -196,7 +206,7 @@ function SearchForm(props) {
                       </Select>
                     </FormControl>
                     <FormControl className={classes.formControl}>
-                      <InputLabel shrink htmlFor="status-label-placeholder">
+                      <InputLabel shrink htmlFor="severity-label-placeholder">
                         Severity
                       </InputLabel>
                       <Select
@@ -216,7 +226,7 @@ function SearchForm(props) {
                           <em>None</em>
                         </MenuItem>
                         {severityValues.map((val) => (
-                          <MenuItem value={val} key={val}>{val}</MenuItem>
+                          <MenuItem value={val.severityValue} key={val.severityValue}>{val.category}</MenuItem>
                         ))}
                       </Select>
                     </FormControl>
