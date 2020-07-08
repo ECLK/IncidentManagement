@@ -85,6 +85,12 @@ class ReportingAccessView(APIView):
             dialy_incident_list
             GET parameters => /?template_type=dialy_incident_detail_list
             """
+            json_dict["margin.top"] = "15"
+            json_dict["margin.right"] = "1"
+            json_dict["margin.bottom"] = "0.5"
+            json_dict["margin.left"] = "1.5"
+            json_dict["format"] = "A3"
+            json_dict["landscape"] = True
             json_dict["file"] = get_daily_incident_detail_list()
 
 

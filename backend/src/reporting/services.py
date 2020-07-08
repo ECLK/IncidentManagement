@@ -92,7 +92,7 @@ def map_severity(total_list):
 def get_daily_incident_detail_list():
     # TODO: this method is not complete.
     file_dict = {}
-    file_dict["template"] = "incidents/complaints/daily_summary_report.js"
+    file_dict["template"] = "incidents/complaints/full_summary_report.js"
     file_dict["date"] = date.today().strftime("%Y/%m/%d")
     file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + date.today().strftime("%Y/%m/%d") + " 4:00pm"
 
@@ -103,22 +103,61 @@ def get_daily_incident_detail_list():
     incident_list = []
     for incident in incidents:
         incident_dict = {}
-        incident_dict["refId"] = incident.refId
-        incident_dict["channel"] = ChannelSerializer(Channel.objects.get(id=incident.infoChannel)).data["name"]
-        incident_dict["created_date"] = localtime(incident.created_date).strftime("%Y/%m/%d")
+        incident_dict["complaintNo"] = incident.refId
+
+        # channel data
+        incident_dict["channelLtr"] = ""
+        incident_dict["channelTel"] = ""
+        incident_dict["channelFax"] = ""
+        incident_dict["channelMail"] = ""
+        channel = ChannelSerializer(Channel.objects.get(id=incident.infoChannel)).data["name"]
+        if channel == "Letter":
+            incident_dict["channelLtr"] = "x"
+        elif channel == "Telephone":
+            incident_dict["channelTel"] = "x"
+        elif channel == "Fax":
+            incident_dict["channelFax"] = "x"
+        elif channel == "Email":
+            incident_dict["channelMail"] = "x"
+
+        incident_dict["complaintDate"] = localtime(incident.created_date).strftime("%Y/%m/%d")
         incident_dict["reporter"] = incident.reporter.name
+
+        # location = location + district
         incident_dict["location"] = incident.location+" - " if len(incident.location) else ""
         incident_dict["location"] += DistrictSerializer(District.objects.get(code=incident.district)).data["name"]
-        incident_dict["description"] = incident.description
-        incident_dict["category"] = CategorySerializer(Category.objects.get(id=incident.category)).data["code"]
-        incident_dict["severity"] = severity_dict[str(incident.severity)]
+
+        incident_dict["complainSummery"] = incident.description
+
+        # category data
+        incident_dict["violentAction"] = ""
+        incident_dict["violationOfElectionLaw"] = ""
+        incident_dict["other"] = ""
+        category_serializer = CategorySerializer(Category.objects.get(id=incident.category))
+        if category_serializer.data["top_category"] == "Violence":
+            incident_dict["violentAction"] = category_serializer.data["code"]
+        elif category_serializer.data["top_category"] == "Violation of election law":
+            incident_dict["violationOfElectionLaw"] = category_serializer.data["code"]
+        else:
+            incident_dict["other"] = category_serializer.data["code"]
+
+        severity = severity_dict[str(incident.severity)]
+        incident_dict["law"] = ""
+        incident_dict["medium"] = ""
+        incident_dict["critical"] = ""
+        if severity == "Low":
+            incident_dict["law"] = "x"
+        elif severity == "Medium":
+            incident_dict["medium"] = "x"
+        else:
+            incident_dict["critical"] = "x"
 
         # TODO: retrieve from comment update
-        incident_dict["handling_by"] = "consectetur adipiscing"
+        incident_dict["reportedParty"] = "consectetur adipiscing"
         incident_dict["progress"] = "Lorem ipsum dolor sit amet"
         incident_list.append(incident_dict)
 
-    file_dict["incidents"] = incident_list
+    file_dict["complaints"] = incident_list
 
     return file_dict
 

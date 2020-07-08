@@ -46,16 +46,16 @@ class SeverityType(enum.Enum):
         return self.name
 
 severity_dict = {
-    "1":"Minor",
-    "2":"Minor",
-    "3":"Minor",
-    "4":"General",
-    "5":"General",
-    "6":"General",
-    "7":"General",
-    "8":"Major",
-    "9":"Major",
-    "10":"Major"
+    "1":"Low",
+    "2":"Low",
+    "3":"Low",
+    "4":"Medium",
+    "5":"Medium",
+    "6":"Medium",
+    "7":"Medium",
+    "8":"High",
+    "9":"High",
+    "10":"High"
 }
 
 class IncidentType(enum.Enum):
