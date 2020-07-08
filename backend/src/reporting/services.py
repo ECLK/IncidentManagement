@@ -7,11 +7,14 @@ from datetime import date, timedelta, datetime
 from django.db.models import Q
 from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.timezone import localtime
 
 from ..common.models import Category, Channel, District
-from ..incidents.models import Incident, IncidentType
+from ..incidents.models import Incident, IncidentType, severity_dict
 from ..custom_auth.models import Organization, Division, Profile
 from django.contrib.auth.models import User
+
+from ..common.serializers import ChannelSerializer, DistrictSerializer, CategorySerializer
 
 from ..incidents.services import get_incident_by_id
 
@@ -27,10 +30,12 @@ def get_daily_incidents(incidentType):
     Daily incidents concidered in election commission is, incidents logged from yesterday 4pm to today 4pm.
     """
     # yesterday at 4pm
-    start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
+    # start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
+    start_datetime = (localtime() - timedelta(days=1)).replace(hour=16, minute=00)
     # today at 3:59pm
-    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
-    incidents = Incident.objects.all().filter(incidentType=incidentType, created_date__range=(start_datetime, end_datetime))
+    # end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+    end_datetime = localtime().replace(hour=16, minute=59)
+    incidents = Incident.objects.all().filter(incidentType=incidentType, election=settings.ELECTION, created_date__range=(start_datetime, end_datetime))
     return incidents
 
 def map_category(cat_voilence, cat_law, cat_other, total_list):
@@ -42,17 +47,17 @@ def map_category(cat_voilence, cat_law, cat_other, total_list):
     }
 
     for total in total_list:
-        key = total["category"]
+        key = Category.objects.get(id=total["category"])
         val = total["category__count"]
 
-        if key == cat_voilence:
-            totals["disputes"] = val
+        if key in cat_voilence:
+            totals["disputes"] += val
 
-        if key == cat_law:
-            totals["violationOfLaws"] = val
+        if key in cat_law:
+            totals["violationOfLaws"] += val
 
-        if key == cat_other:
-            totals["others"] = val
+        if key in cat_other:
+            totals["others"] += val
 
         totals["amount"] += val
 
@@ -84,6 +89,77 @@ def map_severity(total_list):
 
     return totals
 
+def get_daily_incident_detail_list():
+    # TODO: this method is not complete.
+    file_dict = {}
+    file_dict["template"] = "incidents/complaints/full_summary_report.js"
+    file_dict["date"] = date.today().strftime("%Y/%m/%d")
+    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + date.today().strftime("%Y/%m/%d") + " 4:00pm"
+
+    # TODO: get daily incidents only here
+    # incidents = get_daily_incidents(IncidentType.COMPLAINT)
+    incidents = Incident.objects.filter(incidentType=IncidentType.COMPLAINT)
+
+    incident_list = []
+    for incident in incidents:
+        incident_dict = {}
+        incident_dict["complaintNo"] = incident.refId
+
+        # channel data
+        incident_dict["channelLtr"] = ""
+        incident_dict["channelTel"] = ""
+        incident_dict["channelFax"] = ""
+        incident_dict["channelMail"] = ""
+        channel = ChannelSerializer(Channel.objects.get(id=incident.infoChannel)).data["name"]
+        if channel == "Letter":
+            incident_dict["channelLtr"] = "x"
+        elif channel == "Telephone":
+            incident_dict["channelTel"] = "x"
+        elif channel == "Fax":
+            incident_dict["channelFax"] = "x"
+        elif channel == "Email":
+            incident_dict["channelMail"] = "x"
+
+        incident_dict["complaintDate"] = localtime(incident.created_date).strftime("%Y/%m/%d")
+        incident_dict["reporter"] = incident.reporter.name
+
+        # location = location + district
+        incident_dict["location"] = incident.location+" - " if len(incident.location) else ""
+        incident_dict["location"] += DistrictSerializer(District.objects.get(code=incident.district)).data["name"]
+
+        incident_dict["complainSummery"] = incident.description
+
+        # category data
+        incident_dict["violentAction"] = ""
+        incident_dict["violationOfElectionLaw"] = ""
+        incident_dict["other"] = ""
+        category_serializer = CategorySerializer(Category.objects.get(id=incident.category))
+        if category_serializer.data["top_category"] == "Violence":
+            incident_dict["violentAction"] = category_serializer.data["code"]
+        elif category_serializer.data["top_category"] == "Violation of election law":
+            incident_dict["violationOfElectionLaw"] = category_serializer.data["code"]
+        else:
+            incident_dict["other"] = category_serializer.data["code"]
+
+        severity = severity_dict[str(incident.severity)]
+        incident_dict["law"] = ""
+        incident_dict["medium"] = ""
+        incident_dict["critical"] = ""
+        if severity == "Low":
+            incident_dict["law"] = "x"
+        elif severity == "Medium":
+            incident_dict["medium"] = "x"
+        else:
+            incident_dict["critical"] = "x"
+
+        # TODO: retrieve from comment update
+        incident_dict["reportedParty"] = "consectetur adipiscing"
+        incident_dict["progress"] = "Lorem ipsum dolor sit amet"
+        incident_list.append(incident_dict)
+
+    file_dict["complaints"] = incident_list
+
+    return file_dict
 
 def get_daily_summary_data():
     """ Function to get daily summary data on complaints for PDF export. """
@@ -91,6 +167,7 @@ def get_daily_summary_data():
 
     file_dict["template"] = "incidents/complaints/daily_summary_report.js"
     file_dict["date"] = date.today().strftime("%Y/%m/%d")
+    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + date.today().strftime("%Y/%m/%d") + " 4:00pm"
 
     # preload categories
     cat_voilence = Category.objects.all().filter(top_category='Violence')
@@ -98,14 +175,17 @@ def get_daily_summary_data():
     cat_other = Category.objects.all().filter(top_category='Other')
 
     # for time / date ranges
-    start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
-    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+    # start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
+    # end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+    start_datetime = (localtime() - timedelta(days=1)).replace(hour=16, minute=00)
+    end_datetime = localtime().replace(hour=16, minute=59)
 
-    # get incident list
-    incidents = Incident.objects.all().filter(incidentType=IncidentType.COMPLAINT.name, election=settings.ELECTION)
+    # get all incidents only upto 4pm today
+    initial_datetime = end_datetime - timedelta(weeks=40)
+    incidents = Incident.objects.all().filter(incidentType=IncidentType.COMPLAINT.name, election=settings.ELECTION, created_date__range=(initial_datetime, end_datetime))
 
     # find eclk complaints
-    eclk_users = User.objects.all().filter(profile__organization__code="eclk")
+    eclk_users = User.objects.filter(profile__organization__code="eclk")
     eclk_hq_users = eclk_users.filter(profile__division__is_hq=True)
     eclk_district_users = eclk_users.filter(profile__division__is_hq=False)
 
@@ -114,6 +194,7 @@ def get_daily_summary_data():
     eclk_hq_incidents = incidents.filter(created_by__in=eclk_hq_users)
     eclk_district_incidents = incidents.filter(created_by__in=eclk_district_users)
 
+    # second table of the template
     # for total summary
     file_dict["complaintsSummary"] = {
         "national": map_category(cat_voilence, cat_law, cat_other, eclk_hq_incidents.values('category').annotate(Count("category")).order_by()),
@@ -121,6 +202,7 @@ def get_daily_summary_data():
         "totals": map_category(cat_voilence, cat_law, cat_other, eclk_incidents.values('category').annotate(Count("category")).order_by())
     }
 
+    # first table of the template
     # past 24 hours
     eclk_incidents = eclk_incidents.filter(created_date__range=(start_datetime, end_datetime))
     eclk_hq_incidents = eclk_hq_incidents.filter(created_date__range=(start_datetime, end_datetime))
@@ -161,6 +243,9 @@ def get_daily_district_center_data():
     file_dict["template"] = "incidents/complaints/daily_summary_report_districtwise.js"
     file_dict["electionDate"] = date.today().strftime("%Y/%m/%d")
 
+    file_dict["date"] = date.today().strftime("%Y/%m/%d")
+    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + date.today().strftime("%Y/%m/%d") + " 4:00pm"
+
     # totals
     violence=0
     breachOfElectionLaws=0
@@ -198,7 +283,8 @@ def get_daily_district_center_data():
         "Badulla",
         "Monaragala",
         "Ratnapura",
-        "Kagalle"
+        "Kegalle",
+        "HQ"
     ]
     for dt in districts:
         district = {}
@@ -284,8 +370,10 @@ def get_daily_district_data():
     cat_other = Category.objects.all().filter(top_category='Other')
 
     # for time / date ranges
-    start_datetime = (date.today() - timedelta(days=100)).strftime("%Y-%m-%d 16:00:00")
-    end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+    # start_datetime = (date.today() - timedelta(days=100)).strftime("%Y-%m-%d 16:00:00")
+    # end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
+    start_datetime = (localtime() - timedelta(days=1)).replace(hour=16, minute=00)
+    end_datetime = localtime().replace(hour=16, minute=59)
 
     incidents = Incident.objects.all().filter(incidentType=IncidentType.COMPLAINT.name, election=settings.ELECTION, created_date__range=(start_datetime, end_datetime))
 
@@ -343,6 +431,7 @@ def get_daily_category_data():
 
     file_dict["template"] = "incidents/complaints/daily_summery_report_categorywise.js"
     file_dict["date"] = date.today().strftime("%Y/%m/%d")
+    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + date.today().strftime("%Y/%m/%d") + " 4:00pm"
 
     incidents = get_daily_incidents(IncidentType.COMPLAINT)
 
