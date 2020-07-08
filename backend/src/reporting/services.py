@@ -10,9 +10,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.timezone import localtime
 
 from ..common.models import Category, Channel, District
-from ..incidents.models import Incident, IncidentType
+from ..incidents.models import Incident, IncidentType, severity_dict
 from ..custom_auth.models import Organization, Division, Profile
 from django.contrib.auth.models import User
+
+from ..common.serializers import ChannelSerializer, DistrictSerializer, CategorySerializer
 
 from ..incidents.services import get_incident_by_id
 
@@ -87,6 +89,77 @@ def map_severity(total_list):
 
     return totals
 
+def get_daily_incident_detail_list():
+    # TODO: this method is not complete.
+    file_dict = {}
+    file_dict["template"] = "incidents/complaints/full_summary_report.js"
+    file_dict["date"] = date.today().strftime("%Y/%m/%d")
+    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + date.today().strftime("%Y/%m/%d") + " 4:00pm"
+
+    # TODO: get daily incidents only here
+    # incidents = get_daily_incidents(IncidentType.COMPLAINT)
+    incidents = Incident.objects.filter(incidentType=IncidentType.COMPLAINT)
+
+    incident_list = []
+    for incident in incidents:
+        incident_dict = {}
+        incident_dict["complaintNo"] = incident.refId
+
+        # channel data
+        incident_dict["channelLtr"] = ""
+        incident_dict["channelTel"] = ""
+        incident_dict["channelFax"] = ""
+        incident_dict["channelMail"] = ""
+        channel = ChannelSerializer(Channel.objects.get(id=incident.infoChannel)).data["name"]
+        if channel == "Letter":
+            incident_dict["channelLtr"] = "x"
+        elif channel == "Telephone":
+            incident_dict["channelTel"] = "x"
+        elif channel == "Fax":
+            incident_dict["channelFax"] = "x"
+        elif channel == "Email":
+            incident_dict["channelMail"] = "x"
+
+        incident_dict["complaintDate"] = localtime(incident.created_date).strftime("%Y/%m/%d")
+        incident_dict["reporter"] = incident.reporter.name
+
+        # location = location + district
+        incident_dict["location"] = incident.location+" - " if len(incident.location) else ""
+        incident_dict["location"] += DistrictSerializer(District.objects.get(code=incident.district)).data["name"]
+
+        incident_dict["complainSummery"] = incident.description
+
+        # category data
+        incident_dict["violentAction"] = ""
+        incident_dict["violationOfElectionLaw"] = ""
+        incident_dict["other"] = ""
+        category_serializer = CategorySerializer(Category.objects.get(id=incident.category))
+        if category_serializer.data["top_category"] == "Violence":
+            incident_dict["violentAction"] = category_serializer.data["code"]
+        elif category_serializer.data["top_category"] == "Violation of election law":
+            incident_dict["violationOfElectionLaw"] = category_serializer.data["code"]
+        else:
+            incident_dict["other"] = category_serializer.data["code"]
+
+        severity = severity_dict[str(incident.severity)]
+        incident_dict["law"] = ""
+        incident_dict["medium"] = ""
+        incident_dict["critical"] = ""
+        if severity == "Low":
+            incident_dict["law"] = "x"
+        elif severity == "Medium":
+            incident_dict["medium"] = "x"
+        else:
+            incident_dict["critical"] = "x"
+
+        # TODO: retrieve from comment update
+        incident_dict["reportedParty"] = "consectetur adipiscing"
+        incident_dict["progress"] = "Lorem ipsum dolor sit amet"
+        incident_list.append(incident_dict)
+
+    file_dict["complaints"] = incident_list
+
+    return file_dict
 
 def get_daily_summary_data():
     """ Function to get daily summary data on complaints for PDF export. """
