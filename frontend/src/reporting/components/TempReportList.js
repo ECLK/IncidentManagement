@@ -35,7 +35,10 @@ export default function TempReportList(){
                             <ListItemText primary="Categorywise Daily Summary Report" />
                         </ListItemLink>
                         <ListItemLink href={`${API_BASE_URL}/pdfgen/?template_type=daily_district_centers`} target="_blank">
-                            <ListItemText primary="Districtwise Daily Summary Report" />
+                            <ListItemText primary="District-Center-wise Daily Summary Report" />
+                        </ListItemLink>
+                        <ListItemLink href={`${API_BASE_URL}/pdfgen/?template_type=dialy_incident_detail_list`} target="_blank">
+                            <ListItemText primary="Daily Detailed Summary Report" />
                         </ListItemLink>
                     </List>
                 </Grid>
