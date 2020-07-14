@@ -97,7 +97,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         # print("assigneee", find_incident_assignee(_user))
         election_code = settings.ELECTION
 
-        incidents = Incident.objects.all().filter(election=election_code).order_by('created_date').reverse()
+        incidents = Incident.objects.filter(election=election_code).order_by('created_date').reverse()
         user = request.user
 
         # for external entities, they can only view related incidents
@@ -111,21 +111,15 @@ class IncidentList(APIView, IncidentResultsSetPagination):
                 Q(refId__icontains=param_query) | Q(title__icontains=param_query) |
                 Q(description__icontains=param_query))
 
-        # this will help the separation for 'review' page and 'archive' page
-        # TODO: remove param_closed section after frontend is updated
-        param_closed = self.request.query_params.get('show_closed', None)
-        if param_closed is not None and param_closed == "true":
-            incidents = incidents.filter(current_status=StatusType.CLOSED.name | Q(current_status=StatusType.INVALIDATED.name))
-
+        # for archive page
         param_archived_only = self.request.query_params.get('show_archived_only', None)
         if param_archived_only is not None and param_archived_only == "true":
             incidents = incidents.filter(Q(current_status=StatusType.CLOSED.name) | Q(current_status=StatusType.INVALIDATED.name))
 
-        # by default exclude archive status: 'CLOSED' & 'INVALIDATED'
-        # archived filter value passed to include all
+        # by default exclude archive status: CLOSED and INVALIDATED
+        # if show_archived is true; then shows all
         param_archived = self.request.query_params.get('show_archived', None)
-        if param_archived is None or param_archived == "false" and param_closed != "true" and param_archived_only != "true":
-            # TODO: remove param_closed variable check after it's condition is removed
+        if param_archived is None and not (param_archived == "false" or param_archived_only == "true"):
             # this conditions is always true when no value is given for 'show_archived'
             incidents = incidents.exclude(Q(current_status=StatusType.CLOSED.name) | Q(current_status=StatusType.INVALIDATED.name))
 

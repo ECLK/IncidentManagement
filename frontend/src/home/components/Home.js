@@ -23,14 +23,14 @@ const Home = ({classes, ...props}) =>{
     const user = useSelector(state => state.shared.signedInUser.data);
     const [state, setState] = useState({checked: false});
 
-    
+
     const handleChange = (event) => {
         setState({...state, checked: event.target.checked});
     }
     var obj = {}
 
     if(state.checked == true){
-        obj = { show_closed: "closed" }
+        obj = { show_archived: "true", assignee: "me" }
     }else{
         obj = { assignee: "me" }
     }
@@ -44,19 +44,23 @@ const Home = ({classes, ...props}) =>{
                         <CardHeader
                             title="Incidents Assigned to You"
                         />
-                        <Grid container>
-                         <Grid style={{marginLeft:1150}} item>
+                        <Grid container
+                            direction="row"
+                            justify="flex-end"
+                            alignItems="baseline"
+                        >
+                         <Grid item
+                                style={{marginRight:'2rem'}}
+                            >
                             <FormControlLabel
-                            style={{textAlign:'right'}}
-                            value="start"
-                            control={<Checkbox checked={state.checked} onChange={handleChange}  color="primary" />}
-                            label="With Archive"
-                            labelPlacement="start"
+                                value="start"
+                                control={<Checkbox checked={state.checked} onChange={handleChange}  color="primary" />}
+                                label="Show Archived"
+                                labelPlacement="start"
                             />
                          </Grid>
                         </Grid>
 
-                        
                         <CardContent>
                             <ManagedIncidentList
                                 filters={ obj }
