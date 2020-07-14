@@ -153,7 +153,7 @@ def get_daily_incident_detail_list():
         # get last assignment comment
         incident_dict["reportedParty"] = "-"
         incident_dict["progress"] = "-"
-        comment = get_incident_assignment_comment(incident.refId)
+        comment = get_incident_assignment_comment(incident.id)
         if (comment):
             incident_dict["reportedParty"] = comment[0]
             incident_dict["progress"] = comment[1]
@@ -164,8 +164,8 @@ def get_daily_incident_detail_list():
 
     return file_dict
 
-def get_incident_assignment_comment(refId):
-    incident = Incident.objects.get(refId=refId)
+def get_incident_assignment_comment(id):
+    incident = Incident.objects.get(id=id)
     comment = IncidentComment.objects.filter(Q(incident=incident) & Q(body__contains="---")).order_by("-created_date").first()
 
     # check if there's any comment for the incident

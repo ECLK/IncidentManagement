@@ -56,6 +56,13 @@ const styles = theme => ({
       },
       cursor: "pointer"
     },
+    row2: {
+      backgroundColor: "#EBEBE4",
+      cursor: "pointer",
+    },
+    cell2: {
+      color: "#7b7a7a",
+    },
     root: {
       display: "flex",
       flexWrap: "wrap",
@@ -111,32 +118,32 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
               <TableRow
                 onClick={() => handleRowClick(row.id)}
                 hover
-                className={classes.row}
+                className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.row2 : classes.row}
                 key={row.id}
               >
                 <CustomTableCell scope="center">
-                  <p>{row.refId}</p>
+                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""}>{row.refId}</p>
                 </CustomTableCell>
                 <CustomTableCell scope="center">
-                  <p>{row.title}</p>
+                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{row.title}</p>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <p className="description">{row.description}</p>
+                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""}>{row.description}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
-                  <p>{row.currentStatus}</p>
+                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{row.currentStatus}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
-                  <p>{row.severity}</p>
+                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{row.severity}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
-                  <p>{row.response_time} h</p>
+                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{row.response_time} h</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
-                  <p>{row.category}</p>
+                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{row.category}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
-                  <p>{row.subCategory}</p>
+                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{row.subCategory}</p>
                 </CustomTableCell>
               </TableRow>
             ))}
