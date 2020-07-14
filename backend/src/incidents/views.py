@@ -111,6 +111,24 @@ class IncidentList(APIView, IncidentResultsSetPagination):
                 Q(refId__icontains=param_query) | Q(title__icontains=param_query) |
                 Q(description__icontains=param_query))
 
+        # this will help the separation for 'review' page and 'archive' page
+        # TODO: remove param_closed section after frontend is updated
+        param_closed = self.request.query_params.get('show_closed', None)
+        if param_closed is not None and param_closed == "true":
+            incidents = incidents.filter(current_status=StatusType.CLOSED.name | Q(current_status=StatusType.INVALIDATED.name))
+
+        param_archived_only = self.request.query_params.get('show_archived_only', None)
+        if param_archived_only is not None and param_archived_only == "true":
+            incidents = incidents.filter(Q(current_status=StatusType.CLOSED.name) | Q(current_status=StatusType.INVALIDATED.name))
+
+        # by default exclude archive status: 'CLOSED' & 'INVALIDATED'
+        # archived filter value passed to include all
+        param_archived = self.request.query_params.get('show_archived', None)
+        if param_archived is None or param_archived == "false" and param_closed != "true" and param_archived_only != "true":
+            # TODO: remove param_closed variable check after it's condition is removed
+            # this conditions is always true when no value is given for 'show_archived'
+            incidents = incidents.exclude(Q(current_status=StatusType.CLOSED.name) | Q(current_status=StatusType.INVALIDATED.name))
+
         # filter by title
         param_title = self.request.query_params.get('title', None)
         if param_title is not None:
@@ -164,14 +182,6 @@ class IncidentList(APIView, IncidentResultsSetPagination):
                 incidents = incidents.filter(severity=param_severity)
             except:
                 raise IncidentException("Severity level must be a number")
-
-        param_closed = self.request.query_params.get('show_closed', None)
-
-        if param_closed is not None and param_closed == "true":
-            # by default CLOSED incidents are not shown
-            incidents = incidents.filter(current_status=StatusType.CLOSED.name)
-        else:
-            incidents = incidents.exclude(current_status=StatusType.CLOSED.name)
 
         param_institution = self.request.query_params.get('institution', None)
         if param_institution is not None:
