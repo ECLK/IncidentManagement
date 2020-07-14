@@ -56,6 +56,10 @@ const styles = theme => ({
       },
       cursor: "pointer"
     },
+    row2: {
+        backgroundColor: "#EBEBE4",
+      cursor: "pointer"
+    },
     root: {
       display: "flex",
       flexWrap: "wrap",
@@ -111,7 +115,7 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
               <TableRow
                 onClick={() => handleRowClick(row.id)}
                 hover
-                className={classes.row}
+                className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.row2 : classes.row}
                 key={row.id}
               >
                 <CustomTableCell scope="center">

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { withRouter } from "react-router";
 
@@ -7,6 +7,8 @@ import { Card, Grid, CardContent, CardHeader } from '@material-ui/core';
 import ManagedIncidentList from './ManagedIncidentList';
 import { useSelector } from 'react-redux';
 import { userCan, USER_ACTIONS } from '../../user/userUtils';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 const drawerWidth = 240;
 const styles = theme => ({
@@ -19,6 +21,19 @@ const styles = theme => ({
 });
 const Home = ({classes, ...props}) =>{
     const user = useSelector(state => state.shared.signedInUser.data);
+    const [state, setState] = useState({checked: false});
+
+    
+    const handleChange = (event) => {
+        setState({...state, checked: event.target.checked});
+    }
+    var obj = {}
+
+    if(state.checked == true){
+        obj = { show_closed: "closed" }
+    }else{
+        obj = { assignee: "me" }
+    }
 
     return (
         <Grid container>
@@ -29,9 +44,22 @@ const Home = ({classes, ...props}) =>{
                         <CardHeader
                             title="Incidents Assigned to You"
                         />
+                        <Grid container>
+                         <Grid style={{marginLeft:1150}} item>
+                            <FormControlLabel
+                            style={{textAlign:'right'}}
+                            value="start"
+                            control={<Checkbox checked={state.checked} onChange={handleChange}  color="primary" />}
+                            label="With Archive"
+                            labelPlacement="start"
+                            />
+                         </Grid>
+                        </Grid>
+
+                        
                         <CardContent>
                             <ManagedIncidentList
-                                filters={ { assignee: "me" } }
+                                filters={ obj }
                             />
                         </CardContent>
                     </Card>
