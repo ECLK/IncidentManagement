@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { withRouter } from 'react-router';
 import IncidentList from '../../incident/components/IncidentList';
 import { getIncidents } from '../../api/incident';
@@ -17,8 +17,10 @@ export function ManagedIncidentList({ filters, history }){
 
     useEffect(() => {
         callAPI();
-    }, []);
+    }, [filters]);
+
     
+
     return (
         <IncidentList 
             incidents={incidents}
