@@ -88,17 +88,11 @@ function SearchForm(props) {
     filterIncidents(props.filters);
   }, []);
   const { classes, categories } = props;
-  const severityValues = Array(10).fill(0).map((e, i) => {
-    let val = i + 1;
-    switch(val) {
-      case 1 <= val && val <= 3:
-        return {category: 'Low', severityValue: val}
-      case 4 <= val && val <= 7:
-        return {category: 'Medium', severityValue: val}
-      default:
-        return {category: 'High', severityValue: val}
-    }
-  });
+  const severityValues = [
+        {category: 'Low', severityValue: 'low'},
+        {category: 'Medium', severityValue: 'medium'},
+        {category: 'High', severityValue: 'high'}
+      ];
   const institutions = useSelector(state => state.shared.institutions);
   const districts = useSelector(state => state.shared.districts);
   const [selectedInstitution, setSelectedInstitution] = useState("");
