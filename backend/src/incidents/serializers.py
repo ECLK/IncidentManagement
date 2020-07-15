@@ -70,7 +70,7 @@ class IncidentSerializer(serializers.ModelSerializer):
 
     lastAssignment = serializers.SerializerMethodField(method_name="get_last_assignment")
 
-    severity = serializers.IntegerField(initial=0, allow_null=True)
+    severity = serializers.IntegerField(initial=1, allow_null=True)
 
     # refId = serializers.CharField(required=False)
     # election = serializers.CharField(required=False)
