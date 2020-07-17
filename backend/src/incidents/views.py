@@ -77,6 +77,12 @@ class IncidentList(APIView, IncidentResultsSetPagination):
     # permission_classes = (IsAuthenticated,)
 
     serializer_class = IncidentSerializer
+    severity_mapping = {
+        'low': {'low_value': 1, 'high_value': 3},
+        'medium': {'low_value': 4, 'high_value': 7},
+        'high': {'low_value': 8, 'high_value': 10}
+    }
+
 
     def get_paginated_response(self, data):
         return Response(
@@ -170,12 +176,13 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         param_severity = self.request.query_params.get('severity', None)
         if param_severity is not None:
             try:
-                param_severity = int(param_severity)
-                if param_severity < 1 or param_severity > 10:
-                    raise IncidentException("Severity level must be between 1 - 10")
-                incidents = incidents.filter(severity=param_severity)
+                if param_severity not in ['low', 'medium', 'high']:
+                    raise IncidentException("Severity must be one of 'low', 'medium', 'high'")
+                severity_filter = self.severity_mapping[param_severity]
+                incidents = incidents.filter(severity__gte=severity_filter['low_value'],
+                                             severity__lte=severity_filter['high_value'])
             except:
-                raise IncidentException("Severity level must be a number")
+                raise IncidentException("Invalid severity level")
 
         param_institution = self.request.query_params.get('institution', None)
         if param_institution is not None:
