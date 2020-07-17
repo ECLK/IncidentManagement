@@ -25,10 +25,6 @@ export const getIncidents = async (filters, page = 1) => {
     query += "&q=" + filters.textSearch;
   }
 
-  if (filters.severity) {
-    query += "&severity=" + filters.severity;
-  }
-
   if (filters.category) {
     query += "&category=" + filters.category;
   }
