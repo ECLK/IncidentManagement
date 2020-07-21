@@ -8,8 +8,8 @@
       "sub_category": "Verbal intimidation",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
       "sn_sub_category": "වාචික බිය ගැන්වීම්",
-      "tm_top_category": "தேர்தல் வன்முறைகள்",
-      "tm_sub_category": "சொல்லால் பயமுறுத்துதல்",
+      "tm_top_category": "வன்செயல்கள்",
+      "tm_sub_category": "சொல் சார்ந்த மிரட்டல்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -22,8 +22,8 @@
       "sub_category": "Threaten with weapons / attempted murder by shooting",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
       "sn_sub_category": "ආයුධ පෙන්වා බිය ගැන්වීම / වෙඩි තබා මැරීමට තැත් කිරීම ",
-      "tm_top_category": "தேர்தல் வன்முறைகள்",
-      "tm_sub_category": "தாக்குதல்",
+      "tm_top_category": "வன்செயல்கள்",
+      "tm_sub_category": "ஆயூதங்களைக் காட்டி அச்சுறுத்தல் / துப்பாக்கியால் சுட்டுக் கொல்ல எத்தனித்தல்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -36,8 +36,8 @@
       "sub_category": "Assault / mob attack",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
       "sn_sub_category": "පහරදීම / මැර ප්‍රහාර එල්ල කිරීම",
-      "tm_top_category": "தேர்தல் வன்முறைகள்",
-      "tm_sub_category": "உயிர் சேதம்",
+      "tm_top_category": "வன்செயல்கள்",
+      "tm_sub_category": "வலிந்து தாககுதல் / கும்பலாகத் தாக்குதல்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -50,8 +50,8 @@
       "sub_category": "Cause serious injuries / attempted murder",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
       "sn_sub_category": "බරපතල තුවාල සිදු කිරීම / මනුෂ්‍ය ඝාතනයට තැත්කිරීම",
-      "tm_top_category": "தேர்தல் வன்முறைகள்",
-      "tm_sub_category": "சொத்து சேதம்",
+      "tm_top_category": "வன்செயல்கள்",
+      "tm_sub_category": "படுகாயம் ஏற்படுத்தல் / கொலை எத்தனம்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -64,8 +64,8 @@
       "sub_category": "Murder",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
       "sn_sub_category": "මනුෂ්‍ය ඝාතන",
-      "tm_top_category": "தேர்தல் வன்முறைகள்",
-      "tm_sub_category": "படப்பிடிப்பு",
+      "tm_top_category": "வன்செயல்கள்",
+      "tm_sub_category": "மனிதக்கொலை",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -78,8 +78,8 @@
       "sub_category": "Abduction",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
       "sn_sub_category": "පුද්ගල පැහැරගෙන යාම්",
-      "tm_top_category": "தேர்தல் வன்முறைகள்",
-      "tm_sub_category": "அலுவலகங்கள் / சுவரொட்டி / பதாகைகளுக்கு சேதம் விளைவித்தல்",
+      "tm_top_category": "வன்செயல்கள்",
+      "tm_sub_category": "ஆட்கடத்தல்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -92,8 +92,8 @@
       "sub_category": "Shooting",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
       "sn_sub_category": "වෙඩි තැබීම",
-      "tm_top_category": "தேர்தல் வன்முறைகள்",
-      "tm_sub_category": "கலகம் விளைவித்தல்",
+      "tm_top_category": "வன்செயல்கள்",
+      "tm_sub_category": "துப்பாக்கி சூடு",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -106,8 +106,8 @@
       "sub_category": "Arson",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
       "sn_sub_category": "ගිනි තැබීම",
-      "tm_top_category": "தேர்தல் வன்முறைகள்",
-      "tm_sub_category": "கொலை செய்வதற்கு முயற்சித்தல்",
+      "tm_top_category": "வன்செயல்கள்",
+      "tm_sub_category": "தீ வைப்பு (எரியூட்டல)",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -117,11 +117,11 @@
     "fields": {
       "code": "A-9",
       "top_category": "Violence",
-      "sub_category": "Riots/ disrupting meetings",
+      "sub_category": "Riots / disrupting meetings",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
-      "sn_sub_category": "කෝලහාල කිරීම/ රැස්වීම් පැවැත්වීමට බාධා කිරීම",
-      "tm_top_category": "தேர்தல் வன்முறைகள்",
-      "tm_sub_category": "துப்பாக்கியால் சுட்டுக் கொலை செய்ய முயற்சித்தல்",
+      "sn_sub_category": "කෝලහාල කිරීම / රැස්වීම් පැවැත්වීමට බාධා කිරීම",
+      "tm_top_category": "வன்செயல்கள்",
+      "tm_sub_category": "கலவரம் / கூட்டங்களை நடாத்துவதற்கு தடங்கல் ஏற்படுத்தல்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -134,8 +134,8 @@
       "sub_category": "Damage to property / property theft",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
       "sn_sub_category": "දේපළවලට හානි කිරීම / දේපළ පැහැර ගෙන යාම",
-      "tm_top_category": "தேர்தல் வன்முறைகள்",
-      "tm_sub_category": "தீ வைப்புக்கள்",
+      "tm_top_category": "வன்செயல்கள்",
+      "tm_sub_category": "சொத்துக்களுக்கு சேதம் ஏற்படுத்தல் / சொத்துகக் ளை அபகரித்துச் செல்லல்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -148,8 +148,8 @@
       "sub_category": "Damage to election offices / posters / banners etc.",
       "sn_top_category": "මැතිවරණ ප්‍රචණ්ඩ ක්‍රියා",
       "sn_sub_category": "මැතිවරණ ප්‍රචාරක කාර්යාලවලට / පෝස්ටර් / බැනර් ආදියට හානි කිරීම",
-      "tm_top_category": "தேர்தல் வன்முறைகள்",
-      "tm_sub_category": "கடும் காயங்களை ஏற்படுத்தல்",
+      "tm_top_category": "வன்செயல்கள்",
+      "tm_sub_category": "தேர்தல் பிரசார அலுவலகங்களுக்கு / சுவரொட்டிகளுக்கு / பதாகைகளுக்கு சேதம் விளைவித்தல்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -164,8 +164,8 @@
       "sub_category": "Misuse of public property",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "චංචල හා නිශ්චල පොදු දේපළ අයථා පරිහරණය",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
-      "tm_sub_category": "பொதுச் சொத்துக்களை முறைகேடாகப் பயன்படுத்துதல்",
+      "tm_top_category": "சட்டமீறல்கள்",
+      "tm_sub_category": "அசையும், அசையா பொதுச் சொத்துகளின் துபிரயோகம்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -178,8 +178,8 @@
       "sub_category": "Involvement of public officers in politics",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "රාජ්‍ය නිලධාරින් දේශපාලන කටයුතු වලට යොදවා ගැනීම",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
-      "tm_sub_category": "அரச அலுவலர்களை அரசியல் நடவடிக்கைகளில் ஈடுபடுதல் / ஈடுபடுத்தல்",
+      "tm_top_category": "சட்டமீறல்கள்",
+      "tm_sub_category": "அரச அலுவலர்களின் அரசியல் நடவடிக்கைகளில் ஈடுபடுதல் / ஈடுபடுதல்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -192,8 +192,8 @@
       "sub_category": "Appointment/ promotion/ transfer of officers/ extension of service period/ conducting examinations",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "නිලධාරින් පත් කිරීම/ උසස් කිරීම/ මාරු කිරීම/ ස්වවා කාලය දීර්ඝ කිරීම/ විභාග පැවැත්වීම",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
-      "tm_sub_category": "அதிகாரிகளின் நியமனம் மற்றும் பதவி உயர்வு",
+      "tm_top_category": "சட்டமீறல்கள்",
+      "tm_sub_category": "அலுவலர்களின் நியமனம் / பதவியூயர்வூ / இடமாற்றம் / சேவைக்கால நீடிப்பு / பரீட்சைகளை நடாத்துதல்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -206,8 +206,8 @@
       "sub_category": "Misuse of the electronic media",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "විද්‍යුත්ව මාධය අවභාවිතය",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
-      "tm_sub_category": "ஊடகங்களை தவறாகப் பயன்படுத்தல்",
+      "tm_top_category": "சட்டமீறல்கள்",
+      "tm_sub_category": "இலத்திரனியல் ஊடக துபிரயோகம்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -220,8 +220,8 @@
       "sub_category": "False information/ forgery/ hate speech/ insulting/ racist remarks",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "අසත්‍ය ප්‍රචාර/ ව්‍යාජ පුවත් මැවීම/ වෛරී ප්‍රකාශ/ අපහාස් කිරීම/ ජාතිවාදී ප්‍රකාශ",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
-      "tm_sub_category": "ஊடகங்களை தவறாகப் பயன்படுத்தல்",
+      "tm_top_category": "சட்டமீறல்கள்",
+      "tm_sub_category": "பொய்ப் பரப்புரைகள் / போலிச் செய்திகளைப் புனைதல் / வெறுப்பட்டும் பேச்சுக்கள் / இழிவூபடுத்தல் / இனவாத இழிவூரை",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -234,8 +234,8 @@
       "sub_category": "Obstructing propaganda / campaign",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "මැතිවරණ ප්‍රචාරණ කටයුතුවලට බාධා කිරීම",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
-      "tm_sub_category": "பிரசார நடவடிக்கைகளுக்கு இடையூறு விளைவித்தல்",
+      "tm_top_category": "சட்டமீறல்கள்",
+      "tm_sub_category": "தேர்தல் பிரசார நடவடிக்கைகளுக்கு இடையூறு விளைவித்தல்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -248,8 +248,8 @@
       "sub_category": "Illegal posters/ banners/ cutouts on display/ distribution of leaflets",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "නීති විරෝධී පෝස්ටර්/ බැනර්/ කටවුට් ප්‍රදර්ශනය කිරීම/ අත්පත්‍රිකා බෙදීම",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
-      "tm_sub_category": "சட்ட விரோத போஸ்ட்டர் / பதாகை / பெரிய உருவப்படங்களை காட்சிப்படுத்தல்",
+      "tm_top_category": "சட்டமீறல்கள்",
+      "tm_sub_category": "சட்டவிரோதமான சுவரொட்டிகள் / பதாகைகள் / கடஅவூட்களை வெளிகக்ட்டி வைத்திருத்தல்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -262,8 +262,8 @@
       "sub_category": "Distribution of goods/ treatment of goods/ distribution of money/ distribution of land deeds/ openings",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "ද්‍රව්‍ය බෙදාහැරීම/ පරිත්‍යාග කිරීම/ මුද්‍යල් බෙදාදීම/ ඉඩම් ඔප්පු බෙදාදීම/ විවෘත කිරීම",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
-      "tm_sub_category": "பொருட்களை விநியோகித்தல் / அன்பளிப்புச் செய்தல்",
+      "tm_top_category": "சட்டமீறல்கள்",
+      "tm_sub_category": "பொருள்கள் விநியோகித்தல் / அன்பளிப்புகள் / பணம் பகிரந் தளித்தல் / காணி உறுதிகளைப் பகிர்ந்தளித்தல் / திறப்பு விழாக்கள்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -276,8 +276,8 @@
       "sub_category": "Conducting of rallies / processions / illegal political offices",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "රැස්වීම් / පෙළපාලි පැවැත්වීම / නීති විරෝධී දේශපාලන කාර්යාල පවත්වාගෙන යාම",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
-      "tm_sub_category": "கூட்டங்கள் / ஊர்வலங்களை நடாத்துதல்",
+      "tm_top_category": "சட்டமீறல்கள்",
+      "tm_sub_category": "கூட்டங்களை / ஊர்வலங்களை நடாத்துதல் / சட்டவிரோதமாக அரசியல் அலுவலகங்களை நடாத்திச் செல்லல்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -290,8 +290,8 @@
       "sub_category": "By religious leaders and place(s) involving propaganda",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "ආගමික නායකයන් හරහා ප්‍රචාරණ කටයුතු කිරීම / ප්‍රචාරණ කටයුතු සඳහා ආගමික ස්ථාන හා උත්සව යොදා ගැනීම",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
-      "tm_sub_category": "மதத் தலைவர்கள் ஊடாக பிரசார நடவடிக்கைகளை பிரசாரம் செய்தல்",
+      "tm_top_category": "சட்டமீறல்கள்",
+      "tm_sub_category": "மதத் தலைவர்கள் ஊடாக பிரசாரம் செய்தல் / பிரசார நடவடிக்கைகளுக்கு மதத்தலங்களையூம் வைபவங்களையூம் பயன்படுத்துதல்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -304,8 +304,8 @@
       "sub_category": "Complaints related to postal votes",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "තැපැල් ඡන්ද වලට අදාල පැමිණිලි ",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
-      "tm_sub_category": "அஞ்சல் மூல வாக்கு தொடர்பான முறைப்பாடுகள்",
+      "tm_top_category": "சட்டமீறல்கள்",
+      "tm_sub_category": "அஞ்சல் வாக்குகள் தொடர்பான முறைப்பாடுகள்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -318,8 +318,8 @@
       "sub_category": "Complaint related to polling booth / election committee / electoral materials",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "ඡන්ද පොළ / මැතිවරණ කාර්යමණ්ඩලය / මැතිවරණ ද්‍රව්‍ය හා උපකරණ පිළිබඳ පැමිණිලි",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
-      "tm_sub_category": "வாக்கெடுப்பு நிலையங்கள் / தேர்தலுடன் தொடர்பான பொருட்கள் மற்றும் உபகரணங்கள் சம்பந்தமான முறைப்பாடுகள்",
+      "tm_top_category": "சட்டமீறல்கள்",
+      "tm_sub_category": "வாக்கெடுப்பு நிலையம் / தேர்தல் பணியாட்டொகுதி / தேர்தல் பொருட்களும் உபகரணங்களும் பற்றிய முறைப்பாடுகள்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -332,8 +332,8 @@
       "sub_category": "Obstructing in casting voting",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "ඡන්දය ප්‍රකාශ කිරීමට බාධා කිරීම",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
-      "tm_sub_category": "வாக்களிப்பதற்கு இடையூறு விளைத்தல்",
+      "tm_top_category": "சட்டமீறல்கள்",
+      "tm_sub_category": "வாக்களிப்பதற்கு இடையூறு விளைவித்தல்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -346,8 +346,8 @@
       "sub_category": "Organizing illegal events",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "නීති විරෝධි උත්සව සංවිධානය",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
-      "tm_sub_category": "வாக்களிப்பதற்கு இடையூறு விளைத்தல்",
+      "tm_top_category": "சட்டமீறல்கள்",
+      "tm_sub_category": "சட்டவிரோதமான நிகழ்வூகளை ஏற்பாடுசெய்தல்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -360,8 +360,8 @@
       "sub_category": "Treats for voters",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "ඡන්ද දායකයින්ට සංග්‍රහ කිරීම",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
-      "tm_sub_category": "அரசியல் பிரசார அலுவல்களுக்காக மத ஸ்தலங்கள் மற்றும் வைபவங்களைப் பயன்படுத்தல்",
+      "tm_top_category": "சட்டமீறல்கள்",
+      "tm_sub_category": "வாக்காளர்களுக்கு உபசரிப்பு செய்தல்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -374,8 +374,8 @@
       "sub_category": "Social media advertising",
       "sn_top_category": "මැතිවරණ නීති උල්ලංඝනය",
       "sn_sub_category": "සමාජ මාධ්‍ය මඟින් සිදුකරන ප්‍රචාරණ කටයුතු",
-      "tm_top_category": "தேர்தல் சட்டங்களை மீறுதல்",
-      "tm_sub_category": "சமூக ஊடக விளம்பரம்",
+      "tm_top_category": "சட்டமீறல்கள்",
+      "tm_sub_category": "சமூக ஊடகங்கள் வாயிலாக மேற்கொள்ளப்படும் பிரச்சாரங்கள்",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
@@ -388,8 +388,8 @@
       "sub_category": "Other",
       "sn_top_category": "වෙනත්",
       "sn_sub_category": "වෙනත්",
-      "tm_top_category": "இதர",
-      "tm_sub_category": "இதர",
+      "tm_top_category": "ஏனையவை",
+      "tm_sub_category": "ஏனையவை",
       "created_date": "2019-06-27T00:00:00Z"
     }
   },
