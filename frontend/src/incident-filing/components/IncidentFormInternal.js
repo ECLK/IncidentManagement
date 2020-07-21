@@ -64,6 +64,7 @@ import { withRouter } from "react-router";
 import { withStyles } from "@material-ui/core/styles";
 import yellow from "@material-ui/core/colors/yellow";
 import TitleAutoComplete from "./TitleAutoComplete";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = (theme) => ({
     root: {
@@ -227,7 +228,9 @@ function IncidentFormInternal(props) {
         court_case_no: "",
 
         showConfirmationModal: false,
-        handleConfirmSubmit: false
+        handleConfirmSubmit: false,
+        stepInProgress: false,
+        submitted: false
     });
 
     const [complaintCategories, setComplaintCategories] = useState();
@@ -293,6 +296,10 @@ function IncidentFormInternal(props) {
         //         values["detainedVehicles"][v]["is_private"] = false;
         //     }
         // }
+        setState({
+            stepInProgress: true,
+            submitted: true
+        });
         if (values.occured_date_date) {
             const time = values.occured_date_time || "12:00";
             const date = values.occured_date_date;
@@ -513,6 +520,7 @@ function IncidentFormInternal(props) {
                             }}>
                             {/* <div style={{ display: "none" }}>{incident?incident.id:null}</div> */}
                             {/* basic incident detail information */}
+                            
                             <Paper className={classes.paper}>
                                 <Typography variant="h5" gutterBottom>
                                     Basic Information
@@ -1565,7 +1573,7 @@ function IncidentFormInternal(props) {
                             </div>
                             </>
                         )}
-
+                            
                             {/* action panel */}
                             <Grid container spacing={24}>
                                 <Grid item xs={12} style={{ textAlign: "center" }}>
@@ -1578,11 +1586,12 @@ function IncidentFormInternal(props) {
                                         variant="contained"
                                         color="primary"
                                         className={classes.button}
-                                        disabled={fileError}
+                                        disabled={fileError || state.submitted}
                                         >
                                         {" "}
                                         Submit
                                     </Button>
+                                    {state.stepInProgress && <CircularProgress size={38} />}
                                 </Grid>
                             </Grid>
                         </form>
@@ -1616,9 +1625,10 @@ function IncidentFormInternal(props) {
                     <Button onClick={() => hideConfirmModal(false)} color="primary">
                         Back
                     </Button>
-                    <Button disabled={isProcessing} onClick={() => hideConfirmModal(true)} color="primary" autoFocus>
+                    <Button disabled={isProcessing || state.submitted} onClick={() => hideConfirmModal(true)} color="primary" autoFocus>
                         Submit
                     </Button>
+                    {state.stepInProgress && <CircularProgress size={38} />}
                 </DialogActions>
             </Dialog>
 
