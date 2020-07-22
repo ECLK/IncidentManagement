@@ -50,7 +50,6 @@ const occurrence = {
  */
 function BasicDetailTab(props) {
     const { classes, incident, elections, categories, channels, institutions } = props;
-debugger;
     return (
         <div>
             <Grid container spacing={24}>
