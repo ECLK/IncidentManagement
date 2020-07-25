@@ -88,7 +88,11 @@ function SearchForm(props) {
     filterIncidents(props.filters);
   }, []);
   const { classes, categories } = props;
-  const severityValues = Array(10).fill(0).map((e, i) => i + 1);
+  const severityValues = [
+        {category: 'Low', severityValue: 'low'},
+        {category: 'Medium', severityValue: 'medium'},
+        {category: 'High', severityValue: 'high'}
+      ];
   const institutions = useSelector(state => state.shared.institutions);
   const districts = useSelector(state => state.shared.districts);
   const [selectedInstitution, setSelectedInstitution] = useState("");
@@ -103,7 +107,7 @@ function SearchForm(props) {
             districts={districts}
             onChange={setSelectedDistrict}
       ></Search>);
-
+ let showSeverity = props.incidentType === 'COMPLAINT';
   return (
     <Formik
       initialValues={props.incidentSearchFilter}
@@ -195,31 +199,32 @@ function SearchForm(props) {
                         <MenuItem value={"VERIFIED"}>Verified</MenuItem>
                       </Select>
                     </FormControl>
-                    <FormControl className={classes.formControl}>
-                      <InputLabel shrink htmlFor="status-label-placeholder">
+                    { showSeverity ? <FormControl className={classes.formControl}>
+                      <InputLabel shrink htmlFor="severity-label-placeholder">
                         Severity
                       </InputLabel>
                       <Select
-                        input={
-                          <Input
-                            name="severity"
-                            id="severity-label-placeholder"
-                          />
-                        }
-                        displayEmpty
-                        name="severity"
-                        value={values.severity}
-                        onChange={handleChange}
-                        className={classes.selectEmpty}
+                          input={
+                            <Input
+                                name="severity"
+                                id="severity-label-placeholder"
+                            />
+                          }
+                          displayEmpty
+                          name="severity"
+                          value={values.severity}
+                          onChange={handleChange}
+                          className={classes.selectEmpty}
                       >
                         <MenuItem value="">
                           <em>None</em>
                         </MenuItem>
                         {severityValues.map((val) => (
-                          <MenuItem value={val} key={val}>{val}</MenuItem>
+                            <MenuItem value={val.severityValue} key={val.severityValue}>{val.category}</MenuItem>
                         ))}
                       </Select>
-                    </FormControl>
+                    </FormControl> : null}
+
                     <FormControl className={classes.formControl}>
                       <InputLabel shrink htmlFor="status-label-placeholder">
                         Category

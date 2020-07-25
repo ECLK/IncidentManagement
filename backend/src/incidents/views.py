@@ -77,6 +77,12 @@ class IncidentList(APIView, IncidentResultsSetPagination):
     # permission_classes = (IsAuthenticated,)
 
     serializer_class = IncidentSerializer
+    severity_mapping = {
+        'low': {'low_value': 1, 'high_value': 3},
+        'medium': {'low_value': 4, 'high_value': 7},
+        'high': {'low_value': 8, 'high_value': 10}
+    }
+
 
     def get_paginated_response(self, data):
         return Response(
@@ -97,7 +103,7 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         # print("assigneee", find_incident_assignee(_user))
         election_code = settings.ELECTION
 
-        incidents = Incident.objects.all().filter(election=election_code).order_by('created_date').reverse()
+        incidents = Incident.objects.filter(election=election_code).order_by('created_date').reverse()
         user = request.user
 
         # for external entities, they can only view related incidents
@@ -110,6 +116,18 @@ class IncidentList(APIView, IncidentResultsSetPagination):
             incidents = incidents.filter(
                 Q(refId__icontains=param_query) | Q(title__icontains=param_query) |
                 Q(description__icontains=param_query))
+
+        # for archive page
+        param_archived_only = self.request.query_params.get('show_archived_only', None)
+        if param_archived_only is not None and param_archived_only == "true":
+            incidents = incidents.filter(Q(current_status=StatusType.CLOSED.name) | Q(current_status=StatusType.INVALIDATED.name))
+
+        # by default exclude archive status: CLOSED and INVALIDATED
+        # if show_archived is true; then shows all
+        param_archived = self.request.query_params.get('show_archived', None)
+        if param_archived is None and not (param_archived == "false" or param_archived_only == "true"):
+            # this conditions is always true when no value is given for 'show_archived'
+            incidents = incidents.exclude(Q(current_status=StatusType.CLOSED.name) | Q(current_status=StatusType.INVALIDATED.name))
 
         # filter by title
         param_title = self.request.query_params.get('title', None)
@@ -158,20 +176,13 @@ class IncidentList(APIView, IncidentResultsSetPagination):
         param_severity = self.request.query_params.get('severity', None)
         if param_severity is not None:
             try:
-                param_severity = int(param_severity)
-                if param_severity < 1 or param_severity > 10:
-                    raise IncidentException("Severity level must be between 1 - 10")
-                incidents = incidents.filter(severity=param_severity)
+                if param_severity not in ['low', 'medium', 'high']:
+                    raise IncidentException("Severity must be one of 'low', 'medium', 'high'")
+                severity_filter = self.severity_mapping[param_severity]
+                incidents = incidents.filter(severity__gte=severity_filter['low_value'],
+                                             severity__lte=severity_filter['high_value'])
             except:
-                raise IncidentException("Severity level must be a number")
-
-        param_closed = self.request.query_params.get('show_closed', None)
-
-        if param_closed is not None and param_closed == "true":
-            # by default CLOSED incidents are not shown
-            incidents = incidents.filter(current_status=StatusType.CLOSED.name)
-        else:
-            incidents = incidents.exclude(current_status=StatusType.CLOSED.name)
+                raise IncidentException("Invalid severity level")
 
         param_institution = self.request.query_params.get('institution', None)
         if param_institution is not None:

@@ -43,7 +43,7 @@ class MainRouter extends Component {
             <PrivateRoute path="/app" component={AppLayout}>
               <Switch>
                 <PrivateRoute exact path="/app/home" component={Home} /> 
-                <PrivateRoute exact path="/app/reports" component={TempReportList} /> 
+                <PrivateRoute exact path="/app/reports" component={ReportList} /> 
                 <PrivateRoute exact path="/app/reports/view" component={ReportViewer} /> 
                 <PrivateRoute exact path="/app/create" component={IncidentFormInternal} />
                 <PrivateRoute exact path="/app/review-complaints" component={ReviewComplaintsListView} />

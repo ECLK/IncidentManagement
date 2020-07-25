@@ -41,7 +41,7 @@ function ArchiveIncidentListView({ classes, ...props }) {
     if(!filters){
       filters = {};
     }
-    filters["show_closed"] = true;
+    filters["show_archived_only"] = true;
     setFilters(filters);
     dispatch(loadAllIncidents(filters, page))
   }
@@ -54,7 +54,7 @@ function ArchiveIncidentListView({ classes, ...props }) {
       if (exportType === "csv") {
           const url = window.URL.createObjectURL(new Blob([response]));
           const link = document.createElement('a');
-          link.href = url;     
+          link.href = url;
           link.setAttribute('download', 'incidents.' + exportType);
           document.body.appendChild(link);
           link.click();
@@ -70,12 +70,12 @@ function ArchiveIncidentListView({ classes, ...props }) {
 
     }
   }
-    
+
   return (
     <Paper className={classes.root}>
-      <SearchForm 
-        categories={categories} 
-        handleSearchClick={handleSearchClick} 
+      <SearchForm
+        categories={categories}
+        handleSearchClick={handleSearchClick}
         showClosed={false}
         {...props} />
       <Grid container direction={"row"} className={classes.exportContainer}>

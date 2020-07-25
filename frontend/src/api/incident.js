@@ -25,10 +25,6 @@ export const getIncidents = async (filters, page = 1) => {
     query += "&q=" + filters.textSearch;
   }
 
-  if (filters.severity) {
-    query += "&severity=" + filters.severity;
-  }
-
   if (filters.category) {
     query += "&category=" + filters.category;
   }
@@ -74,8 +70,12 @@ export const getIncidents = async (filters, page = 1) => {
     query += "&export=" + filters.export;
   }
 
-  if (filters.show_closed) {
-    query += "&show_closed=" + filters.show_closed;
+  if (filters.show_archived_only) {
+    query += "&show_archived_only=" + filters.show_archived_only;
+  }
+
+  if (filters.show_archived) {
+    query += "&show_archived=" + filters.show_archived
   }
 
   if (filters.title) {
