@@ -99,7 +99,7 @@ urlpatterns = [
     ),
     path(
         "reports/",
-        report_views.ReportingView.as_view(),
+        report_views.ReportingAccessView.as_view(),
     ),
     path('pdfgen/',
         report_views.ReportingAccessView.as_view(),
