@@ -92,9 +92,9 @@ function IncidentList({ classes, incidentType, incidents, pageNumber, count, han
           <colgroup>
             <col style={{ width: "2%" }} />
             <col style={{ width: "10%" }} />
+            <col style={{ width: "10%" }} />
             <col style={{ width: "15%" }} />
-            <col style={{ width: "15%" }} />
-            <col style={{ width: "30%" }} />
+            <col style={{ width: incidentType === 'COMPLAINT' ? '10%' : '30%' }} />
             <col style={{ width: "10%" }} />
           </colgroup>
           <TableHead>
