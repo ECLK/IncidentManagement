@@ -90,18 +90,17 @@ const styles = theme => ({
 
 function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, handlePageChange }){
 
-  const { category, categories } = useSelector((state) => (state.shared));
-
+  const { category, categories, districts } = useSelector((state) => (state.shared));
     return (
         <Table className={classes.table}>
           <colgroup>
             <col style={{ width: "2%" }} />
             <col style={{ width: "20%" }} />
-            <col style={{ width: "45%" }} />
-            <col style={{ width: "5%" }} />
-            <col style={{ width: "5%" }} />
+            <col style={{ width: "10%" }} />
             <col style={{ width: "15%" }} />
-            <col style={{ width: "2%" }} />
+            <col style={{ width: "15%" }} />
+            <col style={{ width: "15%" }} />
+            <col style={{ width: "17%" }} />
           </colgroup>
           <TableHead>
             <TableRow>
@@ -109,7 +108,7 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
               <CustomTableCell align="center">Created Date</CustomTableCell>
               <CustomTableCell align="center">Status</CustomTableCell>
               <CustomTableCell align="center">Title</CustomTableCell>
-              <CustomTableCell align="center">Description</CustomTableCell>
+              <CustomTableCell align="center">District</CustomTableCell>
               <CustomTableCell align="center">Category</CustomTableCell>
             </TableRow>
           </TableHead>
@@ -134,7 +133,11 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
                   <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{row.title}</p>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""}>{row.description}</p>
+                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""}>{districts.allCodes.map((c, k) => {
+                                                    let currDistrict = districts.byCode[c];
+                                                    return currDistrict.code == row.district ? currDistrict.name : ""
+              
+                                                })}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
                   <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{categories.map((value, index) => (value.id == row.category ? value.sub_category : null))}</p>
