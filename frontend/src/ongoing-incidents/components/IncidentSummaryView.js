@@ -50,7 +50,6 @@ const occurrence = {
  */
 function BasicDetailTab(props) {
     const { classes, incident, elections, categories, channels, institutions } = props;
-
     return (
         <div>
             <Grid container spacing={24}>
@@ -152,6 +151,10 @@ function BasicDetailTab(props) {
                                     {categories.map((value, index) => (value.id == incident.category ? value.sub_category : null))}
                                 </Typography>
                             </Grid>
+                            {incident.incidentType !== "INQUIRY" ? <Grid item xs>
+                                <Typography variant="caption" className={classes.label}> Severity </Typography>
+                                <Typography gutterBottom> {incident.severity == 1 || incident.severity == 2 || incident.severity == 3 ? "Low" : incident.severity == 4 || incident.severity == 5 || incident.severity == 6 || incident.severity == 7 ? "Medium" : "High" } </Typography>
+                            </Grid> : ""}
                             {/* <Grid item xs>
                                 <Typography variant="caption" className={classes.label}> Sub Category </Typography>
                                 <Typography gutterBottom> {this.state.category.sub_category} </Typography>

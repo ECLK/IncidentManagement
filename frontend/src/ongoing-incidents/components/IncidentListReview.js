@@ -84,6 +84,8 @@ const styles = theme => ({
 function IncidentList({ classes, incidentType, incidents, pageNumber, count, handleRowClick, handlePageChange }){
 
   const { channels, districts } = useSelector((state) => (state.shared));
+  const { category, categories } = useSelector((state) => (state.shared));
+
     
     return (
         <Table className={classes.table}>
@@ -99,10 +101,10 @@ function IncidentList({ classes, incidentType, incidents, pageNumber, count, han
             <TableRow>
               <CustomTableCell align="center">Ref Id</CustomTableCell>
               <CustomTableCell align="center">Created Date</CustomTableCell>
-              <CustomTableCell align="center">{ incidentType === 'COMPLAINT' ? 'District' : 'Description'}</CustomTableCell>
               <CustomTableCell align="center">Status</CustomTableCell>
               <CustomTableCell align="center">Title</CustomTableCell>
-              <CustomTableCell align="center">Final Resolution</CustomTableCell>
+              <CustomTableCell align="center">{ incidentType === 'COMPLAINT' ? 'District' : 'Description'}</CustomTableCell>
+              <CustomTableCell align="center">Category</CustomTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -123,19 +125,19 @@ function IncidentList({ classes, incidentType, incidents, pageNumber, count, han
                     <p>{moment(row.createdDate).format('YYYY-MM-DD  h:mm a')}</p>
                   </CustomTableCell>
                   <CustomTableCell align="center">
-                    <p className="left">{ incidentType === 'COMPLAINT' ?
-                        districts.byCode[row.district] ? districts.byCode[row.district]['name'] : '' :
-                        row.description
-                    }</p>
-                  </CustomTableCell>
-                  <CustomTableCell align="center">
                     <p>{row.currentStatus}</p>
                   </CustomTableCell>
                   <CustomTableCell align="center">
                     <p>{row.title}</p>
                   </CustomTableCell>
                   <CustomTableCell align="center">
-                    <p>{row.current_decision}</p>
+                    <p className="left">{ incidentType === 'COMPLAINT' ?
+                        districts.byCode[row.district] ? districts.byCode[row.district]['name'] : '' :
+                        row.description
+                    }</p>
+                  </CustomTableCell>
+                  <CustomTableCell align="center">
+                    <p>{categories.map((value, index) => (value.id == row.category ? value.sub_category : null))}</p>
                   </CustomTableCell>
                 </TableRow>
                 )
