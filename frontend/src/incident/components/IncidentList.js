@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { Table, TableHead, TableRow, TableCell, TableBody, withStyles, TableFooter, TablePagination } from '@material-ui/core';
 import { withRouter } from 'react-router';
+import moment from 'moment';
 
 const CustomTableCell = withRouter(
     withStyles(theme => ({
@@ -88,7 +89,9 @@ const styles = theme => ({
 });
 
 function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, handlePageChange }){
-    
+
+  const { category, categories } = useSelector((state) => (state.shared));
+
     return (
         <Table className={classes.table}>
           <colgroup>
@@ -103,14 +106,11 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
           <TableHead>
             <TableRow>
               <CustomTableCell align="center">Ref Id</CustomTableCell>
-
+              <CustomTableCell align="center">Created Date</CustomTableCell>
+              <CustomTableCell align="center">Status</CustomTableCell>
               <CustomTableCell align="center">Title</CustomTableCell>
               <CustomTableCell align="center">Description</CustomTableCell>
-              <CustomTableCell align="center">Status</CustomTableCell>
-              <CustomTableCell align="center">Severity</CustomTableCell>
-              <CustomTableCell align="center">Response Time</CustomTableCell>
               <CustomTableCell align="center">Category</CustomTableCell>
-              <CustomTableCell align="center">Last Action At</CustomTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -124,6 +124,12 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
                 <CustomTableCell scope="center">
                   <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""}>{row.refId}</p>
                 </CustomTableCell>
+                <CustomTableCell align="center">
+                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{moment(row.createdDate).format('YYYY-MM-DD  h:mm a')}</p>
+                </CustomTableCell>
+                <CustomTableCell align="center">
+                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{row.currentStatus}</p>
+                </CustomTableCell>
                 <CustomTableCell scope="center">
                   <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{row.title}</p>
                 </CustomTableCell>
@@ -131,19 +137,7 @@ function IncidentList({ classes, incidents, pageNumber, count, handleRowClick, h
                   <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""}>{row.description}</p>
                 </CustomTableCell>
                 <CustomTableCell align="center">
-                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{row.currentStatus}</p>
-                </CustomTableCell>
-                <CustomTableCell align="center">
-                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{row.severity}</p>
-                </CustomTableCell>
-                <CustomTableCell align="center">
-                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{row.response_time} h</p>
-                </CustomTableCell>
-                <CustomTableCell align="center">
-                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{row.category}</p>
-                </CustomTableCell>
-                <CustomTableCell align="center">
-                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{row.subCategory}</p>
+                  <p className={(row.currentStatus == "CLOSED" || row.currentStatus == "INVALIDATED" )? classes.cell2 : ""} >{categories.map((value, index) => (value.id == row.category ? value.sub_category : null))}</p>
                 </CustomTableCell>
               </TableRow>
             ))}
