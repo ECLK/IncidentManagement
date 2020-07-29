@@ -65,6 +65,7 @@ import { withStyles } from "@material-ui/core/styles";
 import yellow from "@material-ui/core/colors/yellow";
 import TitleAutoComplete from "./TitleAutoComplete";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import CustomAutocompleteCategory from "../../ongoing-incidents/components/AutocompleteCategory"
 
 const styles = (theme) => ({
     root: {
@@ -80,6 +81,10 @@ const styles = (theme) => ({
     },
     formControl: {
         width: "100%"
+    },
+    formControl2: {
+        width: "100%",
+        marginTop: 11
     },
     datetime: {
         marginLeft: theme.spacing.unit,
@@ -143,6 +148,8 @@ function IncidentFormInternal(props) {
     const dispatch = useDispatch();
     const [similarIncidents, setSimilarIncidents] = useState([]);
     const [selectedInstitution, setSelectedInstitution] = useState("");
+    const { selectedLanguage } = useSelector((state) => (state.shared));
+
     const {
         incident,
         reporter,
@@ -477,6 +484,21 @@ function IncidentFormInternal(props) {
         receivedDate: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'INQUIRY' ? IncidentSchema.required("Required") : IncidentSchema)),
         letterDate: Yup.mixed().when('incidentType', (incidentType, IncidentSchema) => (incidentType == 'INQUIRY' ? IncidentSchema.required("Required") : IncidentSchema)),
     });
+    var suggestionsComplaint = [];
+    var suggestionsInquiry = [];
+
+        selectedLanguage=="en" ? 
+        suggestionsComplaint = complaintCategories ? complaintCategories.map((o) => ( {label: o.sub_category, value: o.id }) ) : [] :
+      selectedLanguage=="si" ? 
+      suggestionsComplaint = complaintCategories ? complaintCategories.map((o) => ( {label: o.sn_sub_category, value: o.id }) ) : [] :
+      suggestionsComplaint = complaintCategories ? complaintCategories.map((o) => ( {label: o.tm_sub_category, value: o.id }) ) : []  
+        
+        selectedLanguage=="en" ? 
+        suggestionsInquiry = inquiryCategories ? inquiryCategories.map((o) => ( {label: o.sub_category, value: o.id }) ) : [] :
+      selectedLanguage=="si" ? 
+      suggestionsInquiry = inquiryCategories ? inquiryCategories.map((o) => ( {label: o.sn_sub_category, value: o.id }) ) : [] :
+      suggestionsInquiry = inquiryCategories ? inquiryCategories.map((o) => ( {label: o.tm_sub_category, value: o.id }) ) : []  
+ 
 
     return (
         <div className={classes.root}>
@@ -651,9 +673,18 @@ function IncidentFormInternal(props) {
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                         <FormControl
-                                            className={classes.formControl}
+                                            className={classes.formControl2}
                                             error={touched.category && errors.category}>
-                                            <InputLabel htmlFor="category">Category*</InputLabel>
+                                                <CustomAutocompleteCategory  
+                                                    suggestions={values.incidentType === "COMPLAINT" && suggestionsComplaint ? suggestionsComplaint : values.incidentType === "INQUIRY" && suggestionsInquiry ? suggestionsInquiry : []} 
+                                                    selectedLanguage={selectedLanguage}
+                                                    value={values.category} 
+                                                    handleChange={(event) => handleChange(event)}
+                                                    error={(errors.category) == 'Category is Required' ? true : false}
+                                                    categories={values.incidentType === "COMPLAINT" && complaintCategories ? complaintCategories : values.incidentType === "INQUIRY" && inquiryCategories ? inquiryCategories : []}
+                                                    categoryLable={"Search category by name*"} />
+
+                                            {/* <InputLabel htmlFor="category">Category*</InputLabel>
                                             <Select
                                                 value={values.category}
                                                 onChange={handleChange}
@@ -691,7 +722,7 @@ function IncidentFormInternal(props) {
                                                         </MenuItem>
                                                     ))
                                                 }
-                                            </Select>
+                                            </Select> */}
                                             <FormHelperText>
                                                 {touched.category && errors.category ? errors.category : ""}
                                             </FormHelperText>

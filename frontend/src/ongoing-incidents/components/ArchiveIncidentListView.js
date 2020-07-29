@@ -35,7 +35,7 @@ function ArchiveIncidentListView({ classes, ...props }) {
   const incidents = useSelector(state => state.incident.incidents);
 
   const dispatch = useDispatch();
-  const handlePageChange = (event, newPage) => dispatch(loadAllIncidents(incidentSearchFilter, newPage+1));
+  const handlePageChange = (event, newPage) => { incidentSearchFilter["show_archived_only"] = true; dispatch(loadAllIncidents(incidentSearchFilter, newPage+1));}
 
   const handleSearchClick = (filters, page) => {
     if(!filters){

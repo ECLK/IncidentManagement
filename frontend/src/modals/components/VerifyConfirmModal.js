@@ -20,7 +20,7 @@ const VerifyConfirmModal = (props) => {
     const {incidentId} = props;
     
     const [comment, setComment] = useState("");
-    let proof = false;
+    const [proof, setProof] = useState(false);
 
     return (
         <div>
@@ -41,9 +41,7 @@ const VerifyConfirmModal = (props) => {
             />
             <Checkbox
               id="proof"
-              onChange={(e)=>{
-                  proof = !proof
-              }}
+              onChange={(e)=>{setProof(e.target.checked)}}
             /> verified with proof
           </DialogContent>
             <DialogActions>
