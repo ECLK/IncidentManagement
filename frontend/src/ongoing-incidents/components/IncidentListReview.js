@@ -86,7 +86,7 @@ function IncidentList({ classes, incidentType, incidents, pageNumber, count, han
   const { channels, districts } = useSelector((state) => (state.shared));
   const { category, categories } = useSelector((state) => (state.shared));
 
-    
+
     return (
         <Table className={classes.table}>
           <colgroup>
@@ -95,7 +95,7 @@ function IncidentList({ classes, incidentType, incidents, pageNumber, count, han
             <col style={{ width: "10%" }} />
             <col style={{ width: "15%" }} />
             <col style={{ width: incidentType === 'COMPLAINT' ? '10%' : '30%' }} />
-            <col style={{ width: "10%" }} />
+            <col style={{ width: "15%" }} />
           </colgroup>
           <TableHead>
             <TableRow>
