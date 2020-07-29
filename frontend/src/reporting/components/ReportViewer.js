@@ -29,14 +29,15 @@ const ReportViewer = ({ classes, ...props }) => {
 
     useEffect(() => {
         const values = queryString.parse(props.location.search);
-        loadPDF(API_BASE_URL + "/reports/?report=" + values.report + "&start_date=" + values.start_date +
+        loadPDF(API_BASE_URL + "/pdfgen/?template_type=" + values.template_type + 
+            "&start_date=" + values.start_date +
             "&end_date=" + values.end_date +
             "&detailed_report=" + values.detailed_report +
             "&complain=" + values.complain +
             "&inquiry=" + values.inquiry
         );
 
-        setReport(values.report);
+        setReport(values.template_type);
         setDetailedReport(values.detailed_report);
         setStartDate(values.start_date);
         setEndDate(values.end_date);
@@ -45,7 +46,7 @@ const ReportViewer = ({ classes, ...props }) => {
     }, []);
 
     async function loadPDF(url) {
-        const response = (await handler.get(url));
+        const response = (await handler.get(url, {responseType: 'blob'}));
         const data = response.data;
         const blob = new Blob([data], { type: 'application/pdf' });
         const uri = URL.createObjectURL(blob);
@@ -56,7 +57,7 @@ const ReportViewer = ({ classes, ...props }) => {
         < Paper className={classes.root}>
             {
                 report && (
-                    <iframe src={uri} width="100%" height="1000px"> </iframe>
+                    <iframe src={uri} width="100%" height="1000px" type="application/pdf"> </iframe>
                 )
             }
         </Paper>
