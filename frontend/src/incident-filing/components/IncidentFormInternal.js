@@ -1012,7 +1012,7 @@ function IncidentFormInternal(props) {
                                         <Grid item xs={12} sm={3}>
                                             <TextField
                                                 id="receivedDate"
-                                                label="Received date"
+                                                label="Received date*"
                                                 type="date"
                                                 value={values.receivedDate}
                                                 InputLabelProps={{ shrink: true }}
@@ -1027,7 +1027,7 @@ function IncidentFormInternal(props) {
                                         <Grid item xs={12} sm={3}>
                                             <TextField
                                                 id="letterDate"
-                                                label="Letter date"
+                                                label="Letter date*"
                                                 type="date"
                                                 value={values.letterDate}
                                                 InputLabelProps={{ shrink: true }}
@@ -1075,7 +1075,7 @@ function IncidentFormInternal(props) {
                                             <FormControl
                                                 error={touched.institution && errors.institution}
                                                 className={classes.formControl}>
-                                                Institution
+                                                Institution*
                                             </FormControl>
                                             <Search
                                                 institutions={institutions}
