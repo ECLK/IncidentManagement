@@ -98,6 +98,11 @@ def get_daily_incident_detail_list():
 
     incidents = get_daily_incidents(IncidentType.COMPLAINT)
 
+    #TODO: add filter by condition on request here
+    # EC HQ incidents
+    ec_hq = Division.objects.get(is_default_division=True)
+    incidents = filter_incidents_by_division(incidents, ec_hq)
+
     incident_list = []
     for incident in incidents:
         incident_dict = {}
@@ -231,7 +236,7 @@ def get_daily_summary_data():
 
     return file_dict
 
-def get_incidents_filtered_by_division(incidents: Incident, division: Division):
+def filter_incidents_by_division(incidents: Incident, division: Division):
     """
     function to filter incidents by given division
     if users found, returns Incident queryset
@@ -318,7 +323,7 @@ def get_daily_district_center_data():
             districts_centers.append(district)
             continue
 
-        dc_incidents = get_incidents_filtered_by_division(incidents, center)
+        dc_incidents = filter_incidents_by_division(incidents, center)
         if (not dc_incidents):
             district["name"] = dt
             district["total"] = 0
@@ -452,7 +457,7 @@ def get_daily_category_data():
 
     # TODO: is fixed for EC HQ atm. change this to filter by requested EC division.
     ec_hq = Division.objects.get(is_default_division=True)
-    incidents = get_incidents_filtered_by_division(incidents, ec_hq)
+    incidents = filter_incidents_by_division(incidents, ec_hq)
     file_dict["total"] = incidents.count()
 
     other_category = Category.objects.get(top_category='Other')
