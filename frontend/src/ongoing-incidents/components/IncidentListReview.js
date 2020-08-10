@@ -137,7 +137,7 @@ function IncidentList({ classes, incidentType, incidents, pageNumber, count, han
                     }</p>
                   </CustomTableCell>
                   <CustomTableCell align="center">
-                    <p>{categories.map((value, index) => (value.id == row.category ? value.sub_category : null))}</p>
+                    <p>{categories.map((value, index) => (value.id == row.category ? value.code+' ::: '+value.sub_category : null))}</p>
                   </CustomTableCell>
                 </TableRow>
                 )
