@@ -216,7 +216,7 @@ function IncidentList({
                 }
               >
                 {categories.map((value, index) =>
-                  value.id == row.category ? value.sub_category : null
+                  value.id == row.category ? value.code +' ::: '+value.sub_category : null
                 )}
               </p>
             </CustomTableCell>
