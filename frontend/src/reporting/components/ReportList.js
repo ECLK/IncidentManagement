@@ -88,6 +88,7 @@ class ReportList extends Component {
       complain: true,
       inquiry: true,
       reportId: 0,
+      reportDate: moment().format("YYYY-MM-DD"),
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -113,7 +114,10 @@ class ReportList extends Component {
       (this.state.complain || this.state.inquiry)
     ) {
       this.props.history.push(
-        `/app/reports/view?template_type=` + this.state.template_type
+        `/app/reports/view?template_type=` +
+          this.state.template_type +
+          "&report_date=" +
+          this.state.reportDate
         // this.props.history.push(`/app/reports/view?template_type=` + this.state.template_type +
         // "&start_date=" + this.state.start_date +
         // "&end_date=" + this.state.end_date +
@@ -160,10 +164,10 @@ class ReportList extends Component {
                       <ListItem
                         button
                         onClick={(e) => {
-                            this.handleChange("reportId", index)
-                            this.handleChange("template_type", report.template)
+                          this.handleChange("reportId", index);
+                          this.handleChange("template_type", report.template);
                         }}
-                        selected={ this.state.reportId === index ? true : false }
+                        selected={this.state.reportId === index ? true : false}
                       >
                         <ListItemText primary={report.name} />
                       </ListItem>
@@ -239,21 +243,41 @@ class ReportList extends Component {
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid> */}
+                <Grid item xs={12}>
+                  <TextField
+                    margin="normal"
+                    id="reportDate"
+                    label="Report date"
+                    type="date"
+                    error={this.state.reportDate === ""}
+                    helperText={
+                      this.state.reportDate === "" ? "Invalid Date!" : " "
+                    }
+                    value={this.state.reportDate}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) =>
+                      this.handleChange("reportDate", e.target.value)
+                    }
+                  />
+                </Grid>
                 {/* <Grid item xs={12}>
-                                    <TextField
-                                        margin="normal"
-                                        id="start_date"
-                                        label="Start Date"
-                                        type="datetime-local"
-                                        error={this.state.start_date === ""}
-                                        helperText={this.state.start_date === "" ? 'Invalid Date!' : ' '}
-                                        value={this.state.start_date}
-                                        InputLabelProps={{shrink: true}}
-                                        onChange={(e) => this.handleChange("start_date", e.target.value)}
-
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
+                  <TextField
+                    margin="normal"
+                    id="start_date"
+                    label="Start Date"
+                    type="datetime-local"
+                    error={this.state.start_date === ""}
+                    helperText={
+                      this.state.start_date === "" ? "Invalid Date!" : " "
+                    }
+                    value={this.state.start_date}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) =>
+                      this.handleChange("start_date", e.target.value)
+                    }
+                  />
+                </Grid> */}
+                {/* <Grid item xs={12}>
                                     <TextField
                                         margin="normal"
                                         id="end_date"

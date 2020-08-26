@@ -36,6 +36,10 @@ class ReportingAccessView(APIView):
         json_dict = {}
         template_type = request.query_params.get('template_type')
 
+        report_request_data = {
+            "date": request.query_params.get('report_date')
+        }
+
         if(template_type == "simple-template"):
             file_dict = {}
             file_dict['template'] = "exTemplateBootstrap.js"
@@ -57,14 +61,14 @@ class ReportingAccessView(APIView):
             daily_summary_report_main
             GET parameters => /?template_type=daily_summary
             """
-            json_dict["file"] = get_daily_summary_data()
+            json_dict["file"] = get_daily_summary_data(report_request_data)
 
         elif (template_type == "daily_category"):
             """
             daily_summery_report_categorywise
             GET parameters => /?template_type=daily_category
             """
-            json_dict["file"] = get_daily_category_data()
+            json_dict["file"] = get_daily_category_data(report_request_data)
 
         # elif (template_type == "daily_district"):
         #     """
@@ -78,7 +82,7 @@ class ReportingAccessView(APIView):
             daily_summary_report_districtwise
             GET parameters => /?template_type=daily_district_centers
             """
-            json_dict["file"] = get_daily_district_center_data()
+            json_dict["file"] = get_daily_district_center_data(report_request_data)
 
         elif (template_type == "dialy_incident_detail_list"):
             """
@@ -91,13 +95,9 @@ class ReportingAccessView(APIView):
             json_dict["margin.left"] = "1.5"
             json_dict["format"] = "A3"
             json_dict["landscape"] = True
-            json_dict["file"] = get_daily_incident_detail_list()
-
+            json_dict["file"] = get_daily_incident_detail_list(report_request_data)
 
         request_data = json.dumps(json_dict)
-
-        # following line is to debug the json on development only
-        # return HttpResponse(status=200, content=request_data, content_type='application/json')
 
         res = requests.post(url=endpoint_uri, data = request_data, headers={'content-type': 'application/json'})
 
