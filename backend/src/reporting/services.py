@@ -25,18 +25,45 @@ from ..common.data.Institutions import institutions
 from django.conf import settings
 import collections, functools, operator
 
-def get_daily_incidents(incidentType):
+def get_start_and_end_datetime_for_daily_reports(report_date=False):
+    """
+    function to return start and end datetime in datetime format with settings timezone
+
+    Parameters:
+        report_date (datetime): given date for the report.
+
+    Returns(tuple):
+        start_datetime (datetime): a day before at 4pm, to the given date
+        end_datetime (datetime): given date at 4pm
+    """
+
+    # localtime is called here to get date object with timezone set by the settings.py
+    if report_date:
+        localtimeValue = localtime().replace(year=report_date.year, month=report_date.month, day=report_date.day)
+    else:
+        # if report is not given will use current date and time
+        localtimeValue = localtime()
+    start_datetime = (localtimeValue - timedelta(days=1)).replace(hour=16, minute=00)
+    end_datetime = localtimeValue.replace(hour=15, minute=59)
+
+    return start_datetime, end_datetime
+
+def get_daily_incidents(incident_type, report_date=False):
     """
     List dialy incidents to the given incident-type.
     Daily incidents concidered in election commission is, incidents logged from yesterday 4pm to today 4pm.
+
+    Parameters:
+        incident_type (str): Complaint or Inquiry
+        report_date (datetime): Given datetime
+
+    Returns:
+        incidents (Incident): incidents derived from Incident Model
     """
-    # yesterday at 4pm
-    # start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
-    start_datetime = (localtime() - timedelta(days=1)).replace(hour=16, minute=00)
-    # today at 3:59pm
-    # end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
-    end_datetime = localtime().replace(hour=15, minute=59)
-    incidents = Incident.objects.all().filter(incidentType=incidentType, election=settings.ELECTION, created_date__range=(start_datetime, end_datetime))
+
+    # get start and end datetimes
+    start_datetime, end_datetime = get_start_and_end_datetime_for_daily_reports(report_date)
+    incidents = Incident.objects.all().filter(incidentType=incident_type, election=settings.ELECTION, created_date__range=(start_datetime, end_datetime))
     return incidents
 
 def map_category(cat_voilence, cat_law, cat_other, total_list):
@@ -90,13 +117,15 @@ def map_severity(total_list):
 
     return totals
 
-def get_daily_incident_detail_list():
+def get_daily_incident_detail_list(report_request_data):
     file_dict = {}
     file_dict["template"] = "incidents/complaints/full_summary_report.js"
-    file_dict["date"] = date.today().strftime("%Y/%m/%d")
-    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + date.today().strftime("%Y/%m/%d") + " 4:00pm"
 
-    incidents = get_daily_incidents(IncidentType.COMPLAINT)
+    report_date = date.fromisoformat(report_request_data['date'])
+    file_dict["date"] = report_date.strftime("%Y/%m/%d")
+    file_dict["dateInfo"] = (report_date - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + report_date.strftime("%Y/%m/%d") + " 4:00pm"
+
+    incidents = get_daily_incidents(IncidentType.COMPLAINT, report_date)
 
     #TODO: add filter by condition on request here
     # EC HQ incidents
@@ -181,24 +210,22 @@ def get_incident_assignment_comment(id):
         return comment
 
 
-def get_daily_summary_data():
+def get_daily_summary_data(report_request_data):
     """ Function to get daily summary data on complaints for PDF export. """
     file_dict = {}
 
     file_dict["template"] = "incidents/complaints/daily_summary_report.js"
-    file_dict["date"] = date.today().strftime("%Y/%m/%d")
-    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + date.today().strftime("%Y/%m/%d") + " 4:00pm"
+    report_date = date.fromisoformat(report_request_data['date'])
+    file_dict["date"] = report_date.strftime("%Y/%m/%d")
+    file_dict["dateInfo"] = (report_date - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + report_date.strftime("%Y/%m/%d") + " 4:00pm"
 
     # preload categories
     cat_voilence = Category.objects.all().filter(top_category='Violence')
     cat_law = Category.objects.all().filter(top_category='Violation of election law')
     cat_other = Category.objects.all().filter(top_category='Other')
 
-    # for time / date ranges
-    # start_datetime = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d 16:00:00")
-    # end_datetime = date.today().strftime("%Y-%m-%d 15:59:00")
-    start_datetime = (localtime() - timedelta(days=1)).replace(hour=16, minute=00)
-    end_datetime = localtime().replace(hour=15, minute=59)
+    # get start and end datetime
+    start_datetime, end_datetime = get_start_and_end_datetime_for_daily_reports(report_date)
 
     # get all incidents only upto 4pm today
     initial_datetime = end_datetime - timedelta(weeks=40)
@@ -256,15 +283,16 @@ def filter_incidents_by_division(incidents: Incident, division: Division):
     incidents_filtered = incidents.filter(q_objects)
     return incidents_filtered
 
-def get_daily_district_center_data():
+def get_daily_district_center_data(report_request_data):
     """ function to get dialy incident data for district center report generation """
     file_dict = {}
 
     file_dict["template"] = "incidents/complaints/daily_summary_report_districtwise.js"
     file_dict["electionDate"] = date.today().strftime("%Y/%m/%d")
 
-    file_dict["date"] = date.today().strftime("%Y/%m/%d")
-    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + date.today().strftime("%Y/%m/%d") + " 4:00pm"
+    report_date = date.fromisoformat(report_request_data['date'])
+    file_dict["date"] = report_date.strftime("%Y/%m/%d")
+    file_dict["dateInfo"] = (report_date - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + report_date.strftime("%Y/%m/%d") + " 4:00pm"
 
     # totals
     violence=0
@@ -275,7 +303,7 @@ def get_daily_district_center_data():
     major=0
     total=0
 
-    incidents = get_daily_incidents(IncidentType.COMPLAINT)
+    incidents = get_daily_incidents(IncidentType.COMPLAINT, report_date)
 
     districts_centers = []
     districts = [
@@ -444,16 +472,17 @@ def get_slip_data(incident_id):
     template_dict["institutionName"] = institutions[incident.institution]["name"]
     return template_dict
 
-def get_daily_category_data():
+def get_daily_category_data(report_request_data):
     """ Function to get daily categories data on complaints for PDF export. """
     # TODO: signify the category types, so that helps to pull up category values without hardcoding as bellow
     file_dict = {}
 
     file_dict["template"] = "incidents/complaints/daily_summery_report_categorywise.js"
-    file_dict["date"] = date.today().strftime("%Y/%m/%d")
-    file_dict["dateInfo"] = (date.today() - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + date.today().strftime("%Y/%m/%d") + " 4:00pm"
+    report_date = date.fromisoformat(report_request_data['date'])
+    file_dict["date"] = report_date.strftime("%Y/%m/%d")
+    file_dict["dateInfo"] = (report_date - timedelta(days=1)).strftime("%Y/%m/%d") + " 4:00pm - " + report_date.strftime("%Y/%m/%d") + " 4:00pm"
 
-    incidents = get_daily_incidents(IncidentType.COMPLAINT)
+    incidents = get_daily_incidents(IncidentType.COMPLAINT, report_date)
 
     # TODO: is fixed for EC HQ atm. change this to filter by requested EC division.
     ec_hq = Division.objects.get(is_default_division=True)
