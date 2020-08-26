@@ -20,6 +20,7 @@ const styles = theme => ({
 });
 const ReportViewer = ({ classes, ...props }) => {
     const [report, setReport] = useState(null);
+    const [reportDate, setReportDate] = useState(null)
     const [detailed_report, setDetailedReport] = useState(null);
     const [complain, setComplain] = useState(null);
     const [inquiry, setInquiry] = useState(null);
@@ -30,14 +31,16 @@ const ReportViewer = ({ classes, ...props }) => {
     useEffect(() => {
         const values = queryString.parse(props.location.search);
         loadPDF(API_BASE_URL + "/reports/?template_type=" + values.template_type + 
-            "&start_date=" + values.start_date +
-            "&end_date=" + values.end_date +
-            "&detailed_report=" + values.detailed_report +
-            "&complain=" + values.complain +
-            "&inquiry=" + values.inquiry
+            "&report_date=" + values.report_date
+            // "&start_date=" + values.start_date +
+            // "&end_date=" + values.end_date +
+            // "&detailed_report=" + values.detailed_report +
+            // "&complain=" + values.complain +
+            // "&inquiry=" + values.inquiry
         );
 
         setReport(values.template_type);
+        setReportDate(values.report_date);
         setDetailedReport(values.detailed_report);
         setStartDate(values.start_date);
         setEndDate(values.end_date);
