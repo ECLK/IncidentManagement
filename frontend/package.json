@@ -18,7 +18,7 @@
     "filepond-plugin-file-validate-size": "^2.2.0",
     "filepond-plugin-file-validate-type": "^1.2.5",
     "formik": "^1.5.8",
-    "immer": "^2.1.4",
+    "immer": "^8.0.1",
     "immutable": "^4.0.0-rc.12",
     "material-table": "1.35.0",
     "material-ui-pickers": "^2.2.4",
