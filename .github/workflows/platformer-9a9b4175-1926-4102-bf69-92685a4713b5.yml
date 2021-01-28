@@ -25,7 +25,7 @@ jobs:
       - name: Build the Docker image
         run: docker build --tag
           ${SERVICE_NAME}:${{steps.event-version.outputs.SOURCE_TAG }} --file
-          Dockerfile ./backend/
+          Dockerfile ./backend/Dockerfile
       - name: GitHub Image Push
         run: docker push $SERVICE_NAME:${{steps.event-version.outputs.SOURCE_TAG }}
       - name: Platformer Deploy
