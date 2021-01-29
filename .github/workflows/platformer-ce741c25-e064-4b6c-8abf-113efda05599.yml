@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     runs-on:
-      - ubuntu-latest
+      - ubuntu-20.04
     env:
       SERVICE_NAME: ghcr.io/eclk/incidentmanagement
       CONTAINER_REGISTRY: ghcr.io
