@@ -142,7 +142,7 @@ An Incident Management System specialized for Elections specifically designed fo
 
 ### License
 
-Incident Management System is distributed by an [MIT license](https://github.com/ECLK/IncidentManagement/blob/master/LICENSE.md).
+Incident Management System is distributed by an [APACHE-2.0 license](https://github.com/ECLK/IncidentManagement/blob/master/LICENSE.md).
 
 ### Contributing
 
