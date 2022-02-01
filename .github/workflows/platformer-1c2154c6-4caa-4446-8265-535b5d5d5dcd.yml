@@ -22,7 +22,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKER_PASSWORD_1C2154C6_4CAA_4446_8265_535B5D5D5DCD }}
       - name: Build the Docker image
-        run: docker build --tag ${SERVICE_NAME}:${{steps.event-version.outputs.SOURCE_TAG }} --file ./backend/Dockerfile ./backend/
+        run: docker build --tag ${SERVICE_NAME}:ecloal-api-${{steps.event-version.outputs.SOURCE_TAG }} --file ./backend/Dockerfile ./backend/
       - name: GitHub Image Push
         run: docker push $SERVICE_NAME:${{steps.event-version.outputs.SOURCE_TAG }}
       - name: Platformer Deploy
