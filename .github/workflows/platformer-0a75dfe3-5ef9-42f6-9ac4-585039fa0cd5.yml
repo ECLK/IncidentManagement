@@ -22,7 +22,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKER_PASSWORD_0A75DFE3_5EF9_42F6_9AC4_585039FA0CD5 }}
       - name: Build the Docker image
-        run: docker build --tag ${SERVICE_NAME}:eclocal-ui-${{steps.event-version.outputs.SOURCE_TAG }} --file ./frontend/eclocal.Dockerfile ./frontend/
+        run: docker build --tag ${SERVICE_NAME}:eclocal-ui-${{steps.event-version.outputs.SOURCE_TAG }} --file ./frontend/Dockerfile ./frontend/ --build-arg API_BASE_URL=http://api.incident.dev.local
       - name: GitHub Image Push
         run: docker push $SERVICE_NAME:eclocal-ui-${{steps.event-version.outputs.SOURCE_TAG }}
       - name: Platformer Deploy
