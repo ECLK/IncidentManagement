@@ -22,7 +22,7 @@
     "immutable": "^4.0.0-rc.12",
     "material-table": "1.35.0",
     "material-ui-pickers": "^2.2.4",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "query-string": "^6.8.3",
     "react": "^16.10.1",
     "react-autosuggest": "9.4.3",
