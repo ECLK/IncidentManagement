@@ -158,7 +158,7 @@ REST_FRAMEWORK = {
     ),
     'EXCEPTION_HANDLER': 'src.exception_handler.custom_exception_handler',
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
