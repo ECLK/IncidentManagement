@@ -8,7 +8,7 @@
     "@material-ui/icons": "^3.0.2",
     "@material-ui/lab": "^3.0.0-alpha.30",
     "@material-ui/styles": "^4.10.0",
-    "axios": "^0.18.1",
+    "axios": "^0.21.2",
     "blueimp-md5": "^2.12.0",
     "draft-js": "^0.11.1",
     "draft-js-image-plugin": "^2.0.7",
