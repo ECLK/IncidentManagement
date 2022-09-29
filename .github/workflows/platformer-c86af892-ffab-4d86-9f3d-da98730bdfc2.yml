@@ -1,4 +1,4 @@
-name: Platformer Generated api-stag-ui Build
+name: Platformer Generated api-stag Build
 'on':
   push:
     tags:
