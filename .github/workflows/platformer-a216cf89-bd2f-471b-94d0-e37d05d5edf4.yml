@@ -22,7 +22,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKER_PASSWORD_A216CF89_BD2F_471B_94D0_E37D05D5EDF4 }}
       - name: Build the Docker image
-        run: docker build --tag ${SERVICE_NAME}:stag-ui-${{steps.event-version.outputs.SOURCE_TAG }} --file ./frontend/Dockerfile ./frontend/ --build-arg API_BASE_URL=https://api.incident.ecstag.opensource.lk
+        run: docker build --tag ${SERVICE_NAME}:stag-ui-${{steps.event-version.outputs.SOURCE_TAG }} --file ./frontend/Dockerfile ./frontend/ --build-arg API_BASE_URL=https://api.incidents.ecstag.opensource.lk
       - name: GitHub Image Push
         run: docker push $SERVICE_NAME:stag-ui-${{steps.event-version.outputs.SOURCE_TAG }}
       - name: Platformer Deploy
