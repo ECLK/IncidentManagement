@@ -37,7 +37,7 @@ from rest_framework_swagger.views import get_swagger_view
 schema_view = get_swagger_view(title='Incident Backend API')
 
 urlpatterns = [
-    path('', schema_view),
+    # path('', schema_view),
 
     path("admin/", admin.site.urls),
     path("auth-jwt/", obtain_jwt_token),

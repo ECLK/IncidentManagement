@@ -132,7 +132,7 @@ class SignInPage extends Component {
                 onChange={(e) => {
                   this.setState({ password: e.target.value });
                 }}
-                autoComplete="new-password"
+                autoComplete="off"
               />
               <input
                 type="submit"
