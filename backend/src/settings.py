@@ -37,7 +37,7 @@ def env_var(key, default=None):
 DEBUG = env_var('django_debug', True)
 
 ALLOWED_HOSTS = [
-    env_var('API_BASE_HOST', 'localhost', '*'),
+    env_var('API_BASE_HOST', '*'),
 ]
 
 
