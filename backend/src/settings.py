@@ -34,7 +34,7 @@ def env_var(key, default=None):
     return val
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env_var('django_debug', True)
+DEBUG = env_var('django_debug', False)
 
 ALLOWED_HOSTS = [
     env_var('API_BASE_HOST','localhost'),
