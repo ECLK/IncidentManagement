@@ -7,6 +7,6 @@ django-filter==2.2.0
 gunicorn==19.9.0
 django-rest-swagger==2.2.0
 xhtml2pdf==0.2.3
-numpy==1.17.2
+numpy==1.22.0
 pandas==0.25.1
 reportlab==3.6.6
