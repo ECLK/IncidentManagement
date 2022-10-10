@@ -39,7 +39,7 @@ schema_view = get_swagger_view(title='Incident Backend API')
 urlpatterns = [
     # path('', schema_view),
 
-    path("admin/", admin.site.urls),
+    # path("admin/", admin.site.urls),
     path("auth-jwt/", obtain_jwt_token),
     path("auth-jwt-refresh/", refresh_jwt_token),
     path("categories/", common_views.CategoryList.as_view()),
